@@ -66,6 +66,7 @@ HardwareOptimizer.sln
 │   │   ├── Collector/               Coletor read-only (Linux real + Windows/CIM)
 │   │   ├── Backup/                  Backup obrigatório e bloqueante
 │   │   ├── Execution/               Executor controlado, comandos, estado, rollback
+│   │   ├── Validation/              Runner de estresse: parser + análise de regressão
 │   │   ├── Bios/                    Orquestrador do fluxo de BIOS + cache do fabricante
 │   │   └── Persistence/             Repositório SQLite (inventário, auditoria, cache BIOS)
 │   ├── HardwareOptimizer.Cerebro/   Plano Cérebro: matriz de decisão, guard, local + LLM
@@ -227,7 +228,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 6 | Visão | ✅ Pipeline (leitura estruturada + confiança), conferência com o inventário e cliente multimodal (SDK Anthropic) |
 | 7 | Backup obrigatório | ✅ Serviço bloqueante com verificação de integridade |
 | 8 | Executor controlado | ✅ Catálogo, validador, perfis, consentimento, rollback por categoria |
-| 9 | Validação e testes | ◐ Hook `IValidadorCategoria` + rollback em regressão; runners reais pendentes |
+| 9 | Validação e testes | ✅ Runner de estresse (parser + análise: WHEA/memória/artefatos/TDR/BSOD/temperatura/queda de score) ligado ao rollback automático |
 | 10 | Relatório e score | ✅ Notas 0-100 por domínio + nota final ponderada + relatório executivo |
 | 11 | Hardening e distribuição | ⏳ Assinatura de código e instalador pendentes |
 

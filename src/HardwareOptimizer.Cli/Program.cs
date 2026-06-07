@@ -3,6 +3,7 @@ using HardwareOptimizer.Agent.Bios;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Persistence;
+using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Cerebro;
 using HardwareOptimizer.Cerebro.Visao;
 using HardwareOptimizer.Cli;
@@ -437,13 +438,33 @@ internal static class Program
             catalogo,
             RegistroComandos.Padrao(estado),
             new VerificadorPreCondicoes(),
-            new ValidadorCategoriaSempreEstavel(),
+            new RunnerValidacao(FerramentaEstresseSimulada.Saudavel(), logger: Log<RunnerValidacao>()),
             Log<ExecutorControlado>());
 
         var contexto = new ContextoExecucao { BackupConfirmado = backup.Sucesso };
         var relatorio = await executor.AplicarPerfilAsync(perfilSeguro, contexto);
         ImprimirRelatorio(relatorio);
         await repositorio.RegistrarExecucaoAsync(relatorio);
+
+        // Passo 5b — Validação detecta regressão simulada e reverte automaticamente.
+        Apresentacao.Titulo("Passo 5b — Validação detecta regressão e reverte automaticamente");
+        var estadoRegressao = new EstadoSistemaSimulado(new Dictionary<string, string>
+        {
+            ["registro:SystemResponsiveness"] = "20",
+        });
+        var executorRegressao = new ExecutorControlado(
+            catalogo,
+            RegistroComandos.Padrao(estadoRegressao),
+            new VerificadorPreCondicoes(),
+            new RunnerValidacao(FerramentaEstresseSimulada.ComRegressao("whea"), logger: Log<RunnerValidacao>()),
+            Log<ExecutorControlado>());
+        var perfilRegressao = construtor.CriarPerfilSeguro("teste-regressao", new[] { "SO_SYSTEM_RESPONSIVENESS" }).Perfil!;
+        var relRegressao = await executorRegressao.AplicarPerfilAsync(perfilRegressao, contexto);
+        var categoriaRegressao = relRegressao.Categorias.Single();
+        Apresentacao.Item("Categoria", categoriaRegressao.Categoria.ToString());
+        Apresentacao.Item("Validação", categoriaRegressao.Validacao?.Estabilidade);
+        Apresentacao.Item("Situação", categoriaRegressao.Situacao.ToString());
+        Apresentacao.Item("Estado após rollback", estadoRegressao.Ler("registro:SystemResponsiveness") ?? "(restaurado)");
 
         // Passo 7 — Demonstração do perfil customizado e do consentimento.
         Apresentacao.Titulo("Passo 6 — Perfil customizado: bloqueio rígido por limite absoluto");
@@ -526,7 +547,7 @@ internal static class Program
             catalogo,
             RegistroComandos.Padrao(estado),
             new VerificadorPreCondicoes(),
-            new ValidadorCategoriaSempreEstavel(),
+            new RunnerValidacao(FerramentaEstresseSimulada.Saudavel(), logger: Log<RunnerValidacao>()),
             Log<ExecutorControlado>());
 
         var relatorio = await executor.AplicarPerfilAsync(
