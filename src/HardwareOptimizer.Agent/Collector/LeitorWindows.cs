@@ -119,7 +119,7 @@ public sealed class LeitorWindows : ILeitorPlataforma
     {
         var interfaces = new List<InterfaceRede>();
         foreach (var item in Itens(
-            "Win32_NetworkAdapter -Filter \"PhysicalAdapter=True\"", "NetConnectionID,MACAddress"))
+            "Win32_NetworkAdapter -Filter 'PhysicalAdapter=True'", "NetConnectionID,MACAddress"))
         {
             var nome = Texto(item, "NetConnectionID");
             if (!string.IsNullOrWhiteSpace(nome))

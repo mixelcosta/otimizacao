@@ -58,7 +58,8 @@ HardwareOptimizer.sln
 │   │   ├── Catalog/                 Catálogo whitelisted + validador de limites
 │   │   ├── Profiles/                Perfil seguro / customizado + validação ao salvar
 │   │   ├── Consent/                 Termo, checkboxes, auditoria de consentimento
-│   │   └── Privacy/                 Pipeline de sanitização
+│   │   ├── Privacy/                 Pipeline de sanitização
+│   │   └── Reporting/               Notas 0-100 por domínio + relatório executivo
 │   ├── HardwareOptimizer.Agent/     Agente local (efeitos colaterais isolados)
 │   │   ├── Collector/               Coletor read-only (Linux real + Windows/CIM)
 │   │   ├── Backup/                  Backup obrigatório e bloqueante
@@ -114,6 +115,9 @@ dotnet run --project src/HardwareOptimizer.Cli -- sanitizar
 # Listar o catálogo de ações e seus limites
 dotnet run --project src/HardwareOptimizer.Cli -- catalogo
 
+# Relatório executivo e nota 0-100 do equipamento
+dotnet run --project src/HardwareOptimizer.Cli -- relatorio
+
 # Fluxo completo ponta a ponta (modo simulação seguro)
 dotnet run --project src/HardwareOptimizer.Cli -- demo
 ```
@@ -141,7 +145,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 7 | Backup obrigatório | ✅ Serviço bloqueante com verificação de integridade |
 | 8 | Executor controlado | ✅ Catálogo, validador, perfis, consentimento, rollback por categoria |
 | 9 | Validação e testes | ◐ Hook `IValidadorCategoria` + rollback em regressão; runners reais pendentes |
-| 10 | Relatório e score | ⏳ Contrato `ResultadoValidacao` + relatório de execução parciais |
+| 10 | Relatório e score | ✅ Notas 0-100 por domínio + nota final ponderada + relatório executivo |
 | 11 | Hardening e distribuição | ⏳ Assinatura de código e instalador pendentes |
 
 Legenda: ✅ entregue · ◐ parcial/estrutural · ⏳ planejado.

@@ -4,9 +4,12 @@ using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Persistence;
 using HardwareOptimizer.Cli;
 using HardwareOptimizer.Core.Catalog;
+using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Consent;
+using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Core.Profiles;
 using HardwareOptimizer.Core.Privacy;
+using HardwareOptimizer.Core.Reporting;
 
 internal static class Program
 {
@@ -26,6 +29,9 @@ internal static class Program
                     return 0;
                 case "catalogo":
                     ComandoCatalogo();
+                    return 0;
+                case "relatorio":
+                    await ComandoRelatorio();
                     return 0;
                 case "demo":
                     await ComandoDemo();
@@ -52,6 +58,7 @@ internal static class Program
         Apresentacao.Linha("  coletar     Coleta o inventário (read-only) e imprime em JSON.");
         Apresentacao.Linha("  sanitizar   Coleta e mostra a versão segura para nuvem + relatório de privacidade.");
         Apresentacao.Linha("  catalogo    Lista o catálogo de ações whitelisted e seus limites.");
+        Apresentacao.Linha("  relatorio   Gera o relatório executivo e a nota 0-100 do equipamento.");
         Apresentacao.Linha("  demo        Executa o fluxo completo ponta a ponta (modo simulação seguro).");
     }
 
@@ -105,6 +112,72 @@ internal static class Program
                 {
                     Apresentacao.Item($"param {l.Nome}", "lista segura: " + string.Join(", ", l.ValoresSeguros));
                 }
+            }
+        }
+    }
+
+    private static async Task ComandoRelatorio()
+    {
+        var inventario = await new ColetorInventario().ColetarAsync();
+        var relatorio = GerarRelatorioExecutivo(inventario, execucao: null);
+
+        Apresentacao.Titulo("Relatório executivo (diagnóstico do equipamento)");
+        ImprimirRelatorioExecutivo(relatorio);
+    }
+
+    private static RelatorioExecutivo GerarRelatorioExecutivo(Inventario inventario, RelatorioExecucao? execucao)
+    {
+        var validacoes = new List<ResultadoValidacao>();
+        var alteracoes = new List<AlteracaoResumo>();
+        var dominiosOtimizados = new HashSet<Dominio>();
+
+        if (execucao is not null)
+        {
+            foreach (var categoria in execucao.Categorias)
+            {
+                if (categoria.Validacao is not null)
+                {
+                    validacoes.Add(categoria.Validacao);
+                }
+
+                if (categoria.Situacao == SituacaoCategoria.Aplicada)
+                {
+                    dominiosOtimizados.Add(MapearDominio(categoria.Categoria));
+                }
+            }
+
+            foreach (var alteracao in execucao.TodasAlteracoes)
+            {
+                alteracoes.Add(new AlteracaoResumo(alteracao.Alvo, alteracao.ValorAnterior, alteracao.ValorNovo));
+            }
+        }
+
+        return new GeradorRelatorio().Gerar(inventario, validacoes, alteracoes, dominiosOtimizados);
+    }
+
+    private static Dominio MapearDominio(CategoriaAcao categoria) => categoria switch
+    {
+        CategoriaAcao.Cpu => Dominio.Cpu,
+        CategoriaAcao.Memoria => Dominio.Ram,
+        CategoriaAcao.Gpu => Dominio.Gpu,
+        _ => Dominio.Windows,
+    };
+
+    private static void ImprimirRelatorioExecutivo(RelatorioExecutivo relatorio)
+    {
+        Apresentacao.Item("Nota final", $"{relatorio.NotaFinal}/100 ({relatorio.Classificacao})");
+        foreach (var score in relatorio.Scores.OrderBy(s => s.Dominio))
+        {
+            Apresentacao.Item(score.Dominio.ToString(), $"{score.Valor}/100 ({score.Classificacao})");
+        }
+
+        if (relatorio.Alteracoes.Count > 0)
+        {
+            Apresentacao.Linha("  Alterações:");
+            foreach (var alteracao in relatorio.Alteracoes)
+            {
+                Apresentacao.Linha(
+                    $"      {alteracao.Alvo}: {alteracao.Antes ?? "(não definido)"} -> {alteracao.Depois}");
             }
         }
     }
@@ -211,6 +284,11 @@ internal static class Program
         Apresentacao.Item("Execuções", (await repositorio.ContarExecucoesAsync()).ToString());
         Apresentacao.Linha();
         Apresentacao.Linha($"Banco: {caminhoBanco}");
+
+        // Passo 9 — Relatório executivo e nota final.
+        Apresentacao.Titulo("Passo 9 — Relatório executivo e nota final");
+        var relatorioExecutivo = GerarRelatorioExecutivo(inventario, relatorio);
+        ImprimirRelatorioExecutivo(relatorioExecutivo);
     }
 
     private static async Task ProcessarConsentimento(
