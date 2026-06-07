@@ -1,8 +1,10 @@
 using HardwareOptimizer.Agent.Backup;
+using HardwareOptimizer.Agent.Bios;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Persistence;
 using HardwareOptimizer.Cli;
+using HardwareOptimizer.Core.Bios;
 using HardwareOptimizer.Core.Catalog;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Consent;
@@ -33,6 +35,9 @@ internal static class Program
                 case "relatorio":
                     await ComandoRelatorio();
                     return 0;
+                case "bios":
+                    await ComandoBios();
+                    return 0;
                 case "demo":
                     await ComandoDemo();
                     return 0;
@@ -59,6 +64,7 @@ internal static class Program
         Apresentacao.Linha("  sanitizar   Coleta e mostra a versão segura para nuvem + relatório de privacidade.");
         Apresentacao.Linha("  catalogo    Lista o catálogo de ações whitelisted e seus limites.");
         Apresentacao.Linha("  relatorio   Gera o relatório executivo e a nota 0-100 do equipamento.");
+        Apresentacao.Linha("  bios        Identifica a BIOS, verifica com o fabricante e gera o guia (não aplica).");
         Apresentacao.Linha("  demo        Executa o fluxo completo ponta a ponta (modo simulação seguro).");
     }
 
@@ -179,6 +185,56 @@ internal static class Program
                 Apresentacao.Linha(
                     $"      {alteracao.Alvo}: {alteracao.Antes ?? "(não definido)"} -> {alteracao.Depois}");
             }
+        }
+    }
+
+    private static async Task ComandoBios()
+    {
+        var inventario = await new ColetorInventario().ColetarAsync();
+        var repositorio = RepositorioSqlite.DeArquivo(
+            Path.Combine(AppContext.BaseDirectory, "data", "otimizador.db"));
+        await repositorio.InicializarAsync();
+
+        // Banco curado com cache em SQLite (a busca web entraria como provedor interno futuro).
+        var provedor = new ProvedorBiosComCache(new BancoCuradoBios(), repositorio);
+        var relatorio = await new ModuloBios(provedor).AnalisarAsync(inventario);
+
+        ImprimirRelatorioBios(relatorio);
+    }
+
+    private static void ImprimirRelatorioBios(RelatorioBios relatorio)
+    {
+        var id = relatorio.Identificacao;
+        Apresentacao.Titulo("BIOS — Identificação");
+        Apresentacao.Item("Fabricante", $"{id.Fabricante} (bruto: {id.FabricanteBruto})");
+        Apresentacao.Item("Modelo", id.Modelo);
+        Apresentacao.Item("Versão atual", id.VersaoAtual);
+        Apresentacao.Item("Modo", id.Modo);
+        Apresentacao.Item("Secure Boot", id.SecureBoot?.ToString());
+        Apresentacao.Item("Fonte encontrada", relatorio.FonteEncontrada ? "sim (banco curado)" : "não");
+
+        var decisao = relatorio.Decisao;
+        Apresentacao.Titulo("BIOS — Decisão conservadora");
+        Apresentacao.Item("Recomenda atualizar", decisao.RecomendaAtualizar ? "sim" : "não");
+        Apresentacao.Item("Versão recomendada", decisao.VersaoRecomendada);
+        Apresentacao.Item("Ganho", decisao.Ganho.ToString());
+        Apresentacao.Item("Risco", decisao.Risco.ToString());
+        Apresentacao.Item("Justificativa", decisao.Justificativa);
+        Apresentacao.Item("Fonte", decisao.Fonte);
+
+        var guia = relatorio.Guia;
+        Apresentacao.Titulo("BIOS — Guia passo a passo");
+        Apresentacao.Item("Tecla de setup", guia.TeclaSetup);
+        Apresentacao.Item("Utilitário", guia.Utilitario);
+        foreach (var passo in guia.Passos)
+        {
+            Apresentacao.Linha("   - " + passo);
+        }
+
+        Apresentacao.Linha("  Avisos:");
+        foreach (var aviso in guia.Avisos)
+        {
+            Apresentacao.Linha("   ! " + aviso);
         }
     }
 

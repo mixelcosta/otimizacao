@@ -59,6 +59,12 @@ public sealed class RepositorioSqlite : IRepositorioOtimizacao
                 executado_em TEXT NOT NULL,
                 relatorio_json TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS cache_bios (
+                chave_busca TEXT PRIMARY KEY,
+                dados_json TEXT NOT NULL,
+                atualizado_em TEXT NOT NULL
+            );
             """;
         await comando.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -118,6 +124,38 @@ public sealed class RepositorioSqlite : IRepositorioOtimizacao
         comando.Parameters.AddWithValue("$em", DateTimeOffset.UtcNow.ToString("O"));
         comando.Parameters.AddWithValue("$relatorio", JsonSerializer.Serialize(relatorio, Json));
         return Convert.ToInt64(await comando.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
+    }
+
+    public async Task<string?> ObterCacheBiosAsync(
+        string chaveBusca, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(chaveBusca);
+
+        await using var conexao = await AbrirAsync(cancellationToken).ConfigureAwait(false);
+        await using var comando = conexao.CreateCommand();
+        comando.CommandText = "SELECT dados_json FROM cache_bios WHERE chave_busca = $chave;";
+        comando.Parameters.AddWithValue("$chave", chaveBusca);
+        var resultado = await comando.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+        return resultado as string;
+    }
+
+    public async Task SalvarCacheBiosAsync(
+        string chaveBusca, string dadosJson, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(chaveBusca);
+        ArgumentNullException.ThrowIfNull(dadosJson);
+
+        await using var conexao = await AbrirAsync(cancellationToken).ConfigureAwait(false);
+        await using var comando = conexao.CreateCommand();
+        comando.CommandText = """
+            INSERT INTO cache_bios (chave_busca, dados_json, atualizado_em)
+            VALUES ($chave, $dados, $em)
+            ON CONFLICT(chave_busca) DO UPDATE SET dados_json = $dados, atualizado_em = $em;
+            """;
+        comando.Parameters.AddWithValue("$chave", chaveBusca);
+        comando.Parameters.AddWithValue("$dados", dadosJson);
+        comando.Parameters.AddWithValue("$em", DateTimeOffset.UtcNow.ToString("O"));
+        await comando.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public Task<long> ContarInventariosAsync(CancellationToken cancellationToken = default) =>

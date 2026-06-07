@@ -26,4 +26,9 @@ public interface IRepositorioOtimizacao
     Task<long> ContarConsentimentosAsync(CancellationToken cancellationToken = default);
 
     Task<long> ContarExecucoesAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Recupera o JSON de informação de BIOS cacheado para a chave, ou nulo.</summary>
+    Task<string?> ObterCacheBiosAsync(string chaveBusca, CancellationToken cancellationToken = default);
+
+    Task SalvarCacheBiosAsync(string chaveBusca, string dadosJson, CancellationToken cancellationToken = default);
 }

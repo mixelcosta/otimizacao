@@ -59,12 +59,14 @@ HardwareOptimizer.sln
 │   │   ├── Profiles/                Perfil seguro / customizado + validação ao salvar
 │   │   ├── Consent/                 Termo, checkboxes, auditoria de consentimento
 │   │   ├── Privacy/                 Pipeline de sanitização
+│   │   ├── Bios/                    Normalização, comparação de versão, decisão e guia
 │   │   └── Reporting/               Notas 0-100 por domínio + relatório executivo
 │   ├── HardwareOptimizer.Agent/     Agente local (efeitos colaterais isolados)
 │   │   ├── Collector/               Coletor read-only (Linux real + Windows/CIM)
 │   │   ├── Backup/                  Backup obrigatório e bloqueante
 │   │   ├── Execution/               Executor controlado, comandos, estado, rollback
-│   │   └── Persistence/             Repositório SQLite (inventário, auditoria)
+│   │   ├── Bios/                    Orquestrador do fluxo de BIOS + cache do fabricante
+│   │   └── Persistence/             Repositório SQLite (inventário, auditoria, cache BIOS)
 │   └── HardwareOptimizer.Cli/       Demonstração ponta a ponta + cérebro simulado
 ├── tests/
 │   ├── HardwareOptimizer.Core.Tests/    Regras invariantes do domínio
@@ -118,6 +120,9 @@ dotnet run --project src/HardwareOptimizer.Cli -- catalogo
 # Relatório executivo e nota 0-100 do equipamento
 dotnet run --project src/HardwareOptimizer.Cli -- relatorio
 
+# Identificar a BIOS, verificar com o fabricante e gerar o guia (sem aplicar)
+dotnet run --project src/HardwareOptimizer.Cli -- bios
+
 # Fluxo completo ponta a ponta (modo simulação seguro)
 dotnet run --project src/HardwareOptimizer.Cli -- demo
 ```
@@ -140,7 +145,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 2 | Sensores | ⏳ Interface prevista; integração LibreHardwareMonitor pendente |
 | 3 | UI e IPC | ⏳ CLI no lugar da UI Avalonia; IPC pendente |
 | 4 | Cérebro / LLM | ◐ `CerebroSimulado` determinístico + **pipeline de sanitização pronto** |
-| 5 | Módulo BIOS | ⏳ Contrato e fluxo documentados; lookup de fabricante pendente |
+| 5 | Módulo BIOS | ✅ Identificação, normalização, banco curado + cache SQLite, decisão conservadora e guia por fabricante |
 | 6 | Visão | ⏳ Fluxo documentado |
 | 7 | Backup obrigatório | ✅ Serviço bloqueante com verificação de integridade |
 | 8 | Executor controlado | ✅ Catálogo, validador, perfis, consentimento, rollback por categoria |
