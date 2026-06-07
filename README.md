@@ -77,11 +77,13 @@ HardwareOptimizer.sln
 │   │   ├── CerebroLocal / CerebroLlm  Offline (padrão) e via LLM
 │   │   ├── ClienteLlmAnthropic        Adapter do SDK oficial da Anthropic
 │   │   └── Visao/                     Leitura de fotos + confiança + conferência com inventário
+│   ├── HardwareOptimizer.Ipc/       Camada IPC: protocolo, roteador, servidor/cliente named pipe
 │   └── HardwareOptimizer.Cli/       Demonstração ponta a ponta (orquestra todos os planos)
 ├── tests/
 │   ├── HardwareOptimizer.Core.Tests/    Regras invariantes do domínio
-│   ├── HardwareOptimizer.Agent.Tests/   Executor, coletor, persistência, backup
-│   └── HardwareOptimizer.Cerebro.Tests/ Guard, matriz, cérebro local/LLM, privacidade
+│   ├── HardwareOptimizer.Agent.Tests/   Executor, coletor, persistência, backup, sensores, validação
+│   ├── HardwareOptimizer.Cerebro.Tests/ Guard, matriz, cérebro local/LLM, visão, privacidade
+│   └── HardwareOptimizer.Ipc.Tests/     Roteador + loopback real de named pipe
 ├── schemas/                         JSON Schemas dos contratos (draft 2020-12)
 └── docs/arquitetura_otimizador.json Documento de arquitetura de referência
 ```
@@ -133,6 +135,11 @@ dotnet run --project src/HardwareOptimizer.Cli -- relatorio
 
 # Sensores em tempo real (temperatura, clock, voltagem, fan, consumo)
 dotnet run --project src/HardwareOptimizer.Cli -- sensores
+
+# IPC: demonstra o servidor + cliente (named pipe) no mesmo processo
+dotnet run --project src/HardwareOptimizer.Cli -- ipc-demo
+# IPC: hospeda o servidor para a UI (named pipe; Ctrl+C encerra)
+dotnet run --project src/HardwareOptimizer.Cli -- servir
 
 # Identificar a BIOS, verificar com o fabricante e gerar o guia (sem aplicar)
 dotnet run --project src/HardwareOptimizer.Cli -- bios
@@ -226,7 +233,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 0 | Fundação e setup | ✅ Solução .NET, CI, contratos + schemas, limites de segurança |
 | 1 | Coletor read-only | ✅ Linux (real) + Windows/CIM (estruturado); orquestrador multiplataforma |
 | 2 | Sensores | ✅ Leitura em tempo real (Linux `/sys/class/hwmon` real + clock; Windows WMI; LibreHardwareMonitor previsto p/ produção) |
-| 3 | UI e IPC | ⏳ CLI no lugar da UI Avalonia; IPC pendente |
+| 3 | UI e IPC | ◐ IPC (named pipe) completo: protocolo, roteador, servidor/cliente + aprovação por ação; UI Avalonia pendente |
 | 4 | Cérebro / LLM | ✅ Matriz de decisão + guard contra alucinação + cérebro local e LLM (SDK Anthropic); sanitização aplicada antes do envio |
 | 5 | Módulo BIOS | ✅ Identificação, normalização, banco curado + cache SQLite, decisão conservadora e guia por fabricante |
 | 6 | Visão | ✅ Pipeline (leitura estruturada + confiança), conferência com o inventário e cliente multimodal (SDK Anthropic) |

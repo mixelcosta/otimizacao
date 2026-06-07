@@ -1,3 +1,4 @@
+using System.Text.Json;
 using HardwareOptimizer.Agent.Backup;
 using HardwareOptimizer.Agent.Bios;
 using HardwareOptimizer.Agent.Collector;
@@ -6,6 +7,7 @@ using HardwareOptimizer.Agent.Persistence;
 using HardwareOptimizer.Agent.Sensors;
 using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Cerebro;
+using HardwareOptimizer.Ipc;
 using HardwareOptimizer.Cerebro.Visao;
 using HardwareOptimizer.Cli;
 using HardwareOptimizer.Core.Bios;
@@ -61,6 +63,12 @@ internal static class Program
                 case "sensores":
                     await ComandoSensores();
                     return 0;
+                case "servir":
+                    await ComandoServir(args);
+                    return 0;
+                case "ipc-demo":
+                    await ComandoIpcDemo();
+                    return 0;
                 case "bios":
                     await ComandoBios();
                     return 0;
@@ -104,6 +112,8 @@ internal static class Program
         Apresentacao.Linha("  catalogo    Lista o catálogo de ações whitelisted e seus limites.");
         Apresentacao.Linha("  relatorio   Gera o relatório executivo e a nota 0-100 do equipamento.");
         Apresentacao.Linha("  sensores    Lê os sensores (temperatura, clock, voltagem, fan, consumo) em tempo real.");
+        Apresentacao.Linha("  servir      Hospeda o servidor IPC (named pipe) para a UI. Ctrl+C encerra.");
+        Apresentacao.Linha("  ipc-demo    Demonstra o IPC (servidor + cliente no mesmo processo).");
         Apresentacao.Linha("  bios        Identifica a BIOS, verifica com o fabricante e gera o guia (não aplica).");
         Apresentacao.Linha("  proposta    Cérebro propõe a matriz de decisão a partir do inventário sanitizado.");
         Apresentacao.Linha("  visao <img> Interpreta uma foto (BIOS/etiqueta/erro/benchmark) e cruza com o inventário.");
@@ -227,6 +237,67 @@ internal static class Program
                 Apresentacao.Linha(
                     $"      {alteracao.Alvo}: {alteracao.Antes ?? "(não definido)"} -> {alteracao.Depois}");
             }
+        }
+    }
+
+    private static async Task ComandoServir(string[] args)
+    {
+        var nome = args.Length > 1 ? args[1] : "hwopt-agente";
+        using var cts = new CancellationTokenSource();
+        Console.CancelKeyPress += (_, e) =>
+        {
+            e.Cancel = true;
+            cts.Cancel();
+        };
+
+        Apresentacao.Linha($"Servidor IPC no pipe '{nome}'. Ctrl+C para encerrar.");
+        var servidor = new ServidorNamedPipe(nome, new RoteadorIpc(logger: Log<RoteadorIpc>()), Log<ServidorNamedPipe>());
+
+        try
+        {
+            await servidor.ServirAsync(cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            // encerramento solicitado
+        }
+    }
+
+    private static async Task ComandoIpcDemo()
+    {
+        var nome = "hwopt-demo-" + Guid.NewGuid().ToString("N");
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var servidor = new ServidorNamedPipe(nome, new RoteadorIpc(logger: Log<RoteadorIpc>()), Log<ServidorNamedPipe>());
+        var tarefa = servidor.ServirAsync(cts.Token);
+
+        var cliente = new ClienteNamedPipe(nome);
+        Apresentacao.Titulo("IPC demo (servidor + cliente em processo)");
+
+        foreach (var metodo in new[] { "ping", "catalogo", "coletar", "sensores", "proposta", "relatorio" })
+        {
+            var resposta = await cliente.ChamarAsync(metodo, cts.Token);
+            Apresentacao.Item(metodo, resposta.Sucesso ? "OK" : "ERRO: " + resposta.Erro);
+        }
+
+        // Fluxo de aprovação explícita por ação (a UI envia os IDs aprovados).
+        var aprovacao = await cliente.ChamarAsync(
+            new RequisicaoIpc
+            {
+                Metodo = "aprovar",
+                Parametros = JsonSerializer.SerializeToElement(
+                    new { acoes = new[] { "PWR_PLANO_ALTO_DESEMPENHO", "SO_EFEITOS_VISUAIS_DESEMPENHO" } }),
+            },
+            cts.Token);
+        Apresentacao.Item("aprovar (2 ações)", aprovacao.Sucesso ? "executado e validado" : "ERRO: " + aprovacao.Erro);
+
+        await cts.CancelAsync();
+        try
+        {
+            await tarefa;
+        }
+        catch (OperationCanceledException)
+        {
+            // encerramento esperado
         }
     }
 
