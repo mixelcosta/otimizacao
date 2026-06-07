@@ -38,14 +38,15 @@ Três planos, como no documento:
 ```
 ┌──────────────┐     IPC      ┌─────────────────┐    JSON     ┌──────────────┐
 │      UI      │ ───────────▶ │  Agente Local   │ ──────────▶ │   Cérebro    │
-│ (Avalonia*)  │ ◀─────────── │  (.NET 8, este  │ ◀────────── │ (LLM multi-  │
-│              │              │   repositório)  │             │  modal*)     │
+│ (Avalonia*)  │ ◀─────────── │  (.NET 8, este  │ ◀────────── │ (local ou    │
+│              │              │   repositório)  │             │  LLM/Anthropic)│
 └──────────────┘              └─────────────────┘             └──────────────┘
-        * UI e LLM real entram em fases posteriores do roadmap.
+        * A UI (Avalonia) entra em fase posterior do roadmap.
 ```
 
-Este repositório entrega o **Agente Local** e o **núcleo de domínio**
-compartilhado, que é onde vivem as garantias de segurança do sistema.
+Este repositório entrega o **Agente Local**, o **núcleo de domínio**
+compartilhado (onde vivem as garantias de segurança) e o **Cérebro** (local ou
+via LLM).
 
 ### Estrutura da solução
 
@@ -67,10 +68,17 @@ HardwareOptimizer.sln
 │   │   ├── Execution/               Executor controlado, comandos, estado, rollback
 │   │   ├── Bios/                    Orquestrador do fluxo de BIOS + cache do fabricante
 │   │   └── Persistence/             Repositório SQLite (inventário, auditoria, cache BIOS)
-│   └── HardwareOptimizer.Cli/       Demonstração ponta a ponta + cérebro simulado
+│   ├── HardwareOptimizer.Cerebro/   Plano Cérebro: matriz de decisão, guard, local + LLM
+│   │   ├── ICerebro / MatrizDecisao   Contrato e proposta priorizada (só IDs do catálogo)
+│   │   ├── ConstrutorPrompt           System/user prompt a partir do inventário sanitizado
+│   │   ├── LeitorRespostaCerebro      Guard: valida a saída do LLM contra o catálogo
+│   │   ├── CerebroLocal / CerebroLlm  Offline (padrão) e via LLM
+│   │   └── ClienteLlmAnthropic        Adapter do SDK oficial da Anthropic
+│   └── HardwareOptimizer.Cli/       Demonstração ponta a ponta (orquestra todos os planos)
 ├── tests/
 │   ├── HardwareOptimizer.Core.Tests/    Regras invariantes do domínio
-│   └── HardwareOptimizer.Agent.Tests/   Executor, coletor, persistência, backup
+│   ├── HardwareOptimizer.Agent.Tests/   Executor, coletor, persistência, backup
+│   └── HardwareOptimizer.Cerebro.Tests/ Guard, matriz, cérebro local/LLM, privacidade
 ├── schemas/                         JSON Schemas dos contratos (draft 2020-12)
 └── docs/arquitetura_otimizador.json Documento de arquitetura de referência
 ```
@@ -123,6 +131,9 @@ dotnet run --project src/HardwareOptimizer.Cli -- relatorio
 # Identificar a BIOS, verificar com o fabricante e gerar o guia (sem aplicar)
 dotnet run --project src/HardwareOptimizer.Cli -- bios
 
+# Cérebro: matriz de decisão a partir do inventário sanitizado
+dotnet run --project src/HardwareOptimizer.Cli -- proposta
+
 # Fluxo completo ponta a ponta (modo simulação seguro)
 dotnet run --project src/HardwareOptimizer.Cli -- demo
 ```
@@ -131,6 +142,32 @@ O comando `demo` exercita, em sequência: coleta → sanitização → proposta 
 cérebro → perfil seguro → backup bloqueante → execução por categoria →
 **bloqueio rígido** de um valor acima do limite absoluto → **risco assumido**
 com fluxo de consentimento e auditoria → persistência em SQLite.
+
+---
+
+## Cérebro / LLM (matriz de decisão)
+
+O cérebro **seleciona e prioriza IDs do catálogo** a partir do inventário
+**sanitizado** — nunca gera comandos. Há duas implementações por trás de
+`ICerebro`:
+
+- **`CerebroLocal`** — offline e determinístico, **padrão do MVP** (opção
+  "modelo local" do documento). Não envia nada à nuvem.
+- **`CerebroLlm`** — usa um LLM via o **SDK oficial da Anthropic**
+  (`ClienteLlmAnthropic`).
+
+A saída do LLM é tratada como **não confiável**: o guard `LeitorRespostaCerebro`
+descarta qualquer ação que não exista no catálogo e força cada parâmetro à faixa
+segura (usando o padrão seguro quando o valor proposto é inválido). Assim, a
+regra invariante "o LLM só escolhe do catálogo" vale mesmo se o modelo alucinar.
+
+**Privacidade:** o cérebro só recebe o inventário sanitizado; `CerebroLlm`
+recusa o envio se ainda houver dados pessoais (nomes, chave de produto).
+
+**Configuração (opcional, para usar o LLM):** defina as variáveis de ambiente
+`ANTHROPIC_API_KEY` e `HWOPT_LLM_MODELO` (o ID do modelo Claude desejado — um
+modelo Opus atual é recomendado). Sem elas, a CLI usa o cérebro local. O ID do
+modelo **não é fixado no código** — vem da configuração.
 
 ---
 
@@ -171,7 +208,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 1 | Coletor read-only | ✅ Linux (real) + Windows/CIM (estruturado); orquestrador multiplataforma |
 | 2 | Sensores | ⏳ Interface prevista; integração LibreHardwareMonitor pendente |
 | 3 | UI e IPC | ⏳ CLI no lugar da UI Avalonia; IPC pendente |
-| 4 | Cérebro / LLM | ◐ `CerebroSimulado` determinístico + **pipeline de sanitização pronto** |
+| 4 | Cérebro / LLM | ✅ Matriz de decisão + guard contra alucinação + cérebro local e LLM (SDK Anthropic); sanitização aplicada antes do envio |
 | 5 | Módulo BIOS | ✅ Identificação, normalização, banco curado + cache SQLite, decisão conservadora e guia por fabricante |
 | 6 | Visão | ⏳ Fluxo documentado |
 | 7 | Backup obrigatório | ✅ Serviço bloqueante com verificação de integridade |

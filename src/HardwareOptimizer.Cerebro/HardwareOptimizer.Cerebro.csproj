@@ -2,16 +2,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HardwareOptimizer.Core\HardwareOptimizer.Core.csproj" />
-    <ProjectReference Include="..\HardwareOptimizer.Agent\HardwareOptimizer.Agent.csproj" />
-    <ProjectReference Include="..\HardwareOptimizer.Cerebro\HardwareOptimizer.Cerebro.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+    <PackageReference Include="Anthropic" Version="12.27.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
   </ItemGroup>
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

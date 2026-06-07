@@ -3,6 +3,7 @@ using HardwareOptimizer.Agent.Bios;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Persistence;
+using HardwareOptimizer.Cerebro;
 using HardwareOptimizer.Cli;
 using HardwareOptimizer.Core.Bios;
 using HardwareOptimizer.Core.Catalog;
@@ -57,6 +58,9 @@ internal static class Program
                 case "bios":
                     await ComandoBios();
                     return 0;
+                case "proposta":
+                    await ComandoProposta();
+                    return 0;
                 case "demo":
                     await ComandoDemo();
                     return 0;
@@ -91,6 +95,7 @@ internal static class Program
         Apresentacao.Linha("  catalogo    Lista o catálogo de ações whitelisted e seus limites.");
         Apresentacao.Linha("  relatorio   Gera o relatório executivo e a nota 0-100 do equipamento.");
         Apresentacao.Linha("  bios        Identifica a BIOS, verifica com o fabricante e gera o guia (não aplica).");
+        Apresentacao.Linha("  proposta    Cérebro propõe a matriz de decisão a partir do inventário sanitizado.");
         Apresentacao.Linha("  demo        Executa o fluxo completo ponta a ponta (modo simulação seguro).");
     }
 
@@ -266,6 +271,53 @@ internal static class Program
         }
     }
 
+    private static async Task ComandoProposta()
+    {
+        var inventario = await new ColetorInventario(loggerFactory: _loggerFactory).ColetarAsync();
+        var sanitizacao = new Sanitizador(logger: Log<Sanitizador>()).Sanitizar(inventario);
+
+        var matriz = await CriarCerebro().ProporAsync(sanitizacao.InventarioSeguro, CatalogoPadrao.Criar());
+        ImprimirMatriz(matriz);
+    }
+
+    /// <summary>
+    /// Usa o cérebro LLM quando HWOPT_LLM_MODELO e ANTHROPIC_API_KEY estão
+    /// definidos no ambiente; caso contrário, usa o cérebro local (offline).
+    /// O modelo nunca é fixado no código — vem da configuração.
+    /// </summary>
+    private static ICerebro CriarCerebro()
+    {
+        var modelo = Environment.GetEnvironmentVariable("HWOPT_LLM_MODELO");
+        var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
+
+        if (!string.IsNullOrWhiteSpace(modelo) && !string.IsNullOrWhiteSpace(apiKey))
+        {
+            return new CerebroLlm(new ClienteLlmAnthropic(modelo, apiKey), Log<CerebroLlm>());
+        }
+
+        return new CerebroLocal();
+    }
+
+    private static void ImprimirMatriz(MatrizDecisao matriz)
+    {
+        var origem = matriz.Modelo is null ? matriz.Origem.ToString() : $"{matriz.Origem}/{matriz.Modelo}";
+        Apresentacao.Item("Origem", origem);
+        foreach (var item in matriz.Itens)
+        {
+            var parametros = item.Parametros.Count == 0
+                ? string.Empty
+                : " [" + string.Join(", ", item.Parametros.Select(p => $"{p.Key}={p.Value}")) + "]";
+            Apresentacao.Item(
+                $"{item.Prioridade}. {item.AcaoId}",
+                $"risco {item.Risco}, ganho {item.GanhoEsperado}{parametros}");
+        }
+
+        foreach (var aviso in matriz.Avisos)
+        {
+            Apresentacao.Linha("   ! " + aviso);
+        }
+    }
+
     private static async Task ComandoDemo()
     {
         var catalogo = CatalogoPadrao.Criar();
@@ -290,18 +342,16 @@ internal static class Program
             Apresentacao.Item(campo.Campo, campo.Acao.ToString());
         }
 
-        // Passo 3 — Cérebro propõe (somente IDs do catálogo).
-        Apresentacao.Titulo("Passo 3 — Cérebro propõe ações do catálogo (perfil seguro)");
-        var recomendacoes = new CerebroSimulado(catalogo).Recomendar(sanitizacao.InventarioSeguro);
-        foreach (var rec in recomendacoes)
-        {
-            Apresentacao.Item(rec.AcaoId!, $"{rec.Acao} (risco {rec.Risco}, ganho {rec.GanhoEsperado})");
-        }
+        // Passo 3 — Cérebro propõe (matriz de decisão; somente IDs do catálogo).
+        Apresentacao.Titulo("Passo 3 — Cérebro propõe a matriz de decisão (inventário sanitizado)");
+        var cerebro = CriarCerebro();
+        var matriz = await cerebro.ProporAsync(sanitizacao.InventarioSeguro, catalogo);
+        ImprimirMatriz(matriz);
 
-        // Passo 4 — Perfil seguro.
+        // Passo 4 — Perfil seguro a partir da matriz.
         var construtor = new ConstrutorPerfil(catalogo, Log<ConstrutorPerfil>());
         var perfilSeguro = construtor
-            .CriarPerfilSeguro("perfil-seguro-demo", recomendacoes.Select(r => r.AcaoId!))
+            .CriarPerfilSeguro("perfil-seguro-demo", matriz.AcaoIds)
             .Perfil!;
 
         // Passo 5 — Backup obrigatório (bloqueante).

@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Core.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Agent.Tests", "tests\HardwareOptimizer.Agent.Tests\HardwareOptimizer.Agent.Tests.csproj", "{EF7F6C1B-6784-464F-83C2-70C539F12B1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Cerebro", "src\HardwareOptimizer.Cerebro\HardwareOptimizer.Cerebro.csproj", "{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Cerebro.Tests", "tests\HardwareOptimizer.Cerebro.Tests\HardwareOptimizer.Cerebro.Tests.csproj", "{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +50,14 @@ Global
 		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8D74C898-7973-48B0-813B-9B13B1C15350} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
@@ -53,5 +65,7 @@ Global
 		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
 		{E62EFD74-581B-4B0E-ACF3-C20158989D12} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
 		{EF7F6C1B-6784-464F-83C2-70C539F12B1E} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
 	EndGlobalSection
 EndGlobal
