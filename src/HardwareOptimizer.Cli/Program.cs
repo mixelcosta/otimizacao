@@ -3,6 +3,7 @@ using HardwareOptimizer.Agent.Bios;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Persistence;
+using HardwareOptimizer.Agent.Sensors;
 using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Cerebro;
 using HardwareOptimizer.Cerebro.Visao;
@@ -57,6 +58,9 @@ internal static class Program
                 case "relatorio":
                     await ComandoRelatorio();
                     return 0;
+                case "sensores":
+                    await ComandoSensores();
+                    return 0;
                 case "bios":
                     await ComandoBios();
                     return 0;
@@ -99,6 +103,7 @@ internal static class Program
         Apresentacao.Linha("  sanitizar   Coleta e mostra a versão segura para nuvem + relatório de privacidade.");
         Apresentacao.Linha("  catalogo    Lista o catálogo de ações whitelisted e seus limites.");
         Apresentacao.Linha("  relatorio   Gera o relatório executivo e a nota 0-100 do equipamento.");
+        Apresentacao.Linha("  sensores    Lê os sensores (temperatura, clock, voltagem, fan, consumo) em tempo real.");
         Apresentacao.Linha("  bios        Identifica a BIOS, verifica com o fabricante e gera o guia (não aplica).");
         Apresentacao.Linha("  proposta    Cérebro propõe a matriz de decisão a partir do inventário sanitizado.");
         Apresentacao.Linha("  visao <img> Interpreta uma foto (BIOS/etiqueta/erro/benchmark) e cruza com o inventário.");
@@ -222,6 +227,23 @@ internal static class Program
                 Apresentacao.Linha(
                     $"      {alteracao.Alvo}: {alteracao.Antes ?? "(não definido)"} -> {alteracao.Depois}");
             }
+        }
+    }
+
+    private static async Task ComandoSensores()
+    {
+        var leitura = await new ServicoSensores(loggerFactory: _loggerFactory).LerAsync();
+
+        Apresentacao.Titulo("Sensores (tempo real)");
+        if (leitura.Sensores.Count == 0)
+        {
+            Apresentacao.Linha("  (nenhum sensor legível nesta máquina — driver/permissão ausente)");
+            return;
+        }
+
+        foreach (var sensor in leitura.Sensores.OrderBy(s => s.Tipo).ThenBy(s => s.Nome, StringComparer.Ordinal))
+        {
+            Apresentacao.Item($"{sensor.Tipo} — {sensor.Nome}", $"{sensor.Valor} {sensor.Unidade}");
         }
     }
 
@@ -400,6 +422,12 @@ internal static class Program
         Apresentacao.Item("CPU", inventario.Cpu.Nome);
         Apresentacao.Item("SO", $"{inventario.SistemaOperacional.Nome} ({inventario.SistemaOperacional.Tipo})");
         await repositorio.SalvarInventarioAsync(inventario);
+
+        var sensores = await new ServicoSensores(loggerFactory: _loggerFactory).LerAsync();
+        Apresentacao.Item(
+            "Sensores",
+            $"{sensores.Sensores.Count} leitura(s)"
+            + (sensores.TemperaturaMaxC is { } tmax ? $", temperatura máx {tmax} °C" : string.Empty));
 
         // Passo 2 — Sanitização (privacidade).
         Apresentacao.Titulo("Passo 2 — Sanitização (privacidade)");

@@ -64,6 +64,7 @@ HardwareOptimizer.sln
 │   │   └── Reporting/               Notas 0-100 por domínio + relatório executivo
 │   ├── HardwareOptimizer.Agent/     Agente local (efeitos colaterais isolados)
 │   │   ├── Collector/               Coletor read-only (Linux real + Windows/CIM)
+│   │   ├── Sensors/                 Sensores em tempo real (Linux /sys/hwmon + Windows WMI)
 │   │   ├── Backup/                  Backup obrigatório e bloqueante
 │   │   ├── Execution/               Executor controlado, comandos, estado, rollback
 │   │   ├── Validation/              Runner de estresse: parser + análise de regressão
@@ -129,6 +130,9 @@ dotnet run --project src/HardwareOptimizer.Cli -- catalogo
 
 # Relatório executivo e nota 0-100 do equipamento
 dotnet run --project src/HardwareOptimizer.Cli -- relatorio
+
+# Sensores em tempo real (temperatura, clock, voltagem, fan, consumo)
+dotnet run --project src/HardwareOptimizer.Cli -- sensores
 
 # Identificar a BIOS, verificar com o fabricante e gerar o guia (sem aplicar)
 dotnet run --project src/HardwareOptimizer.Cli -- bios
@@ -221,7 +225,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | --- | --- | --- |
 | 0 | Fundação e setup | ✅ Solução .NET, CI, contratos + schemas, limites de segurança |
 | 1 | Coletor read-only | ✅ Linux (real) + Windows/CIM (estruturado); orquestrador multiplataforma |
-| 2 | Sensores | ⏳ Interface prevista; integração LibreHardwareMonitor pendente |
+| 2 | Sensores | ✅ Leitura em tempo real (Linux `/sys/class/hwmon` real + clock; Windows WMI; LibreHardwareMonitor previsto p/ produção) |
 | 3 | UI e IPC | ⏳ CLI no lugar da UI Avalonia; IPC pendente |
 | 4 | Cérebro / LLM | ✅ Matriz de decisão + guard contra alucinação + cérebro local e LLM (SDK Anthropic); sanitização aplicada antes do envio |
 | 5 | Módulo BIOS | ✅ Identificação, normalização, banco curado + cache SQLite, decisão conservadora e guia por fabricante |
