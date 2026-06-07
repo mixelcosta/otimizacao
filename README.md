@@ -73,7 +73,8 @@ HardwareOptimizer.sln
 │   │   ├── ConstrutorPrompt           System/user prompt a partir do inventário sanitizado
 │   │   ├── LeitorRespostaCerebro      Guard: valida a saída do LLM contra o catálogo
 │   │   ├── CerebroLocal / CerebroLlm  Offline (padrão) e via LLM
-│   │   └── ClienteLlmAnthropic        Adapter do SDK oficial da Anthropic
+│   │   ├── ClienteLlmAnthropic        Adapter do SDK oficial da Anthropic
+│   │   └── Visao/                     Leitura de fotos + confiança + conferência com inventário
 │   └── HardwareOptimizer.Cli/       Demonstração ponta a ponta (orquestra todos os planos)
 ├── tests/
 │   ├── HardwareOptimizer.Core.Tests/    Regras invariantes do domínio
@@ -134,6 +135,9 @@ dotnet run --project src/HardwareOptimizer.Cli -- bios
 # Cérebro: matriz de decisão a partir do inventário sanitizado
 dotnet run --project src/HardwareOptimizer.Cli -- proposta
 
+# Visão: interpretar uma foto e cruzar com o inventário (exige LLM configurado)
+dotnet run --project src/HardwareOptimizer.Cli -- visao foto.png bios
+
 # Fluxo completo ponta a ponta (modo simulação seguro)
 dotnet run --project src/HardwareOptimizer.Cli -- demo
 ```
@@ -168,6 +172,16 @@ recusa o envio se ainda houver dados pessoais (nomes, chave de produto).
 `ANTHROPIC_API_KEY` e `HWOPT_LLM_MODELO` (o ID do modelo Claude desejado — um
 modelo Opus atual é recomendado). Sem elas, a CLI usa o cérebro local. O ID do
 modelo **não é fixado no código** — vem da configuração.
+
+### Visão (fluxo_visao)
+
+O módulo de visão (`Cerebro/Visao`) interpreta fotos — tela de BIOS/UEFI,
+etiqueta da placa, mensagem de erro/tela azul, benchmark — com um modelo
+multimodal, devolvendo **leitura estruturada + nível de confiança + próximo
+passo**. A regra do documento é aplicada: nunca confiar cegamente na leitura;
+`ConferenciaVisual` **cruza com o inventário coletado** (ex.: versão de BIOS lida
+× coletada) e, se a confiança for baixa, **pede uma nova foto**. Exige LLM
+configurado (mesmas variáveis acima).
 
 ---
 
@@ -210,7 +224,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 3 | UI e IPC | ⏳ CLI no lugar da UI Avalonia; IPC pendente |
 | 4 | Cérebro / LLM | ✅ Matriz de decisão + guard contra alucinação + cérebro local e LLM (SDK Anthropic); sanitização aplicada antes do envio |
 | 5 | Módulo BIOS | ✅ Identificação, normalização, banco curado + cache SQLite, decisão conservadora e guia por fabricante |
-| 6 | Visão | ⏳ Fluxo documentado |
+| 6 | Visão | ✅ Pipeline (leitura estruturada + confiança), conferência com o inventário e cliente multimodal (SDK Anthropic) |
 | 7 | Backup obrigatório | ✅ Serviço bloqueante com verificação de integridade |
 | 8 | Executor controlado | ✅ Catálogo, validador, perfis, consentimento, rollback por categoria |
 | 9 | Validação e testes | ◐ Hook `IValidadorCategoria` + rollback em regressão; runners reais pendentes |

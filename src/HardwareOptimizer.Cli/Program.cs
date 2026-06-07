@@ -4,6 +4,7 @@ using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Persistence;
 using HardwareOptimizer.Cerebro;
+using HardwareOptimizer.Cerebro.Visao;
 using HardwareOptimizer.Cli;
 using HardwareOptimizer.Core.Bios;
 using HardwareOptimizer.Core.Catalog;
@@ -61,6 +62,9 @@ internal static class Program
                 case "proposta":
                     await ComandoProposta();
                     return 0;
+                case "visao":
+                    await ComandoVisao(args);
+                    return 0;
                 case "demo":
                     await ComandoDemo();
                     return 0;
@@ -96,6 +100,7 @@ internal static class Program
         Apresentacao.Linha("  relatorio   Gera o relatório executivo e a nota 0-100 do equipamento.");
         Apresentacao.Linha("  bios        Identifica a BIOS, verifica com o fabricante e gera o guia (não aplica).");
         Apresentacao.Linha("  proposta    Cérebro propõe a matriz de decisão a partir do inventário sanitizado.");
+        Apresentacao.Linha("  visao <img> Interpreta uma foto (BIOS/etiqueta/erro/benchmark) e cruza com o inventário.");
         Apresentacao.Linha("  demo        Executa o fluxo completo ponta a ponta (modo simulação seguro).");
     }
 
@@ -297,6 +302,68 @@ internal static class Program
 
         return new CerebroLocal();
     }
+
+    private static async Task ComandoVisao(string[] args)
+    {
+        var modelo = Environment.GetEnvironmentVariable("HWOPT_LLM_MODELO");
+        var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
+        if (string.IsNullOrWhiteSpace(modelo) || string.IsNullOrWhiteSpace(apiKey))
+        {
+            Apresentacao.Linha(
+                "O módulo de visão exige um modelo multimodal: defina ANTHROPIC_API_KEY e HWOPT_LLM_MODELO.");
+            return;
+        }
+
+        if (args.Length < 2)
+        {
+            Apresentacao.Linha("Uso: hwopt visao <arquivo-de-imagem> [bios|etiqueta|erro|benchmark]");
+            return;
+        }
+
+        var caminho = args[1];
+        if (!File.Exists(caminho))
+        {
+            Apresentacao.Linha($"Arquivo não encontrado: {caminho}");
+            return;
+        }
+
+        var caso = MapearCaso(args.Length > 2 ? args[2] : null);
+        var imagem = ImagemEntrada.DeArquivo(caminho);
+
+        var modulo = new ModuloVisao(new ClienteVisaoAnthropic(modelo, apiKey), Log<ModuloVisao>());
+        var leitura = await modulo.InterpretarAsync(imagem, caso);
+
+        Apresentacao.Titulo("Leitura visual");
+        Apresentacao.Item("Tela", leitura.TipoTela.ToString());
+        Apresentacao.Item("Confiança", leitura.Confianca.ToString());
+        foreach (var campo in leitura.Campos)
+        {
+            Apresentacao.Item("  " + campo.Key, campo.Value);
+        }
+
+        Apresentacao.Item("Próximo passo", leitura.ProximoPasso);
+
+        // Regra do documento: validar a leitura visual contra os dados coletados.
+        var inventario = await new ColetorInventario(loggerFactory: _loggerFactory).ColetarAsync();
+        var conferencia = new ConferenciaVisual().Conferir(leitura, inventario);
+
+        Apresentacao.Titulo("Conferência com o inventário");
+        Apresentacao.Item("Situação", conferencia.Situacao.ToString());
+        Apresentacao.Item("Detalhe", conferencia.Mensagem);
+        if (conferencia.PedirNovaFoto)
+        {
+            Apresentacao.Linha("   ! Recomenda-se enviar uma nova foto, mais nítida.");
+        }
+    }
+
+    private static CasoUsoVisao MapearCaso(string? arg) => (arg ?? string.Empty).ToLowerInvariant() switch
+    {
+        "bios" => CasoUsoVisao.LerVersaoBios,
+        "etiqueta" => CasoUsoVisao.LerEtiquetaPlaca,
+        "erro" => CasoUsoVisao.LerMensagemErro,
+        "benchmark" => CasoUsoVisao.LerBenchmark,
+        _ => CasoUsoVisao.Identificar,
+    };
 
     private static void ImprimirMatriz(MatrizDecisao matriz)
     {
