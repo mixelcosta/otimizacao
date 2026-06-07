@@ -1,0 +1,393 @@
+{
+  "meta": {
+    "nome_projeto": "Agente de Otimizacao e Confiabilidade de Hardware",
+    "versao_documento": "1.0",
+    "descricao": "Sistema que diagnostica, recomenda e aplica otimizacoes de desempenho em computadores e notebooks com base em evidencias coletadas do proprio equipamento. O cerebro (LLM) propoe, o agente local executa apenas com aprovacao explicita, e a BIOS e sempre ajustada manualmente pelo usuario com orientacao do sistema.",
+    "sistemas_suportados": ["Windows 11", "Windows 10", "Linux"],
+    "prioridade_mvp": "Windows 11"
+  },
+
+  "filosofia_operacional": {
+    "principio_ordenado": ["ESTABILIDADE", "SEGURANCA", "EFICIENCIA", "DESEMPENHO"],
+    "regras_invariantes": [
+      "Nunca propor otimizacao sem diagnostico previo baseado em evidencias do equipamento.",
+      "Sem backup, nao prosseguir com nenhuma alteracao.",
+      "Aplicar uma categoria de mudanca por vez, com validacao apos cada categoria.",
+      "O cerebro propoe; o agente local so executa com aprovacao explicita do usuario.",
+      "BIOS e sempre execucao manual do usuario: o sistema identifica, verifica e orienta, mas nao aplica.",
+      "Buscar o maior desempenho sustentavel e validado, nunca o maior desempenho possivel.",
+      "O LLM nunca gera comandos arbitrarios que modificam o sistema: ele apenas seleciona e prioriza acoes de um catalogo fechado, auditado e parametrizado. O agente deterministico executa somente o que esta no catalogo.",
+      "Inventario detalhado e uma impressao digital da maquina: sanitizar antes de enviar a um LLM na nuvem ou oferecer opcao de modelo local.",
+      "O sistema sempre oferece parametrizacao segura por padrao (perfil seguro com faixa_segura).",
+      "O usuario pode criar um perfil customizado e definir os valores de cada parametro dentro da faixa_permitida, mas nenhum valor pode ultrapassar o limite_absoluto da acao.",
+      "Salvar e aplicar um perfil customizado exige consentimento explicito: aviso de responsabilidade + dois checkboxes marcados + confirmacao final."
+    ]
+  },
+
+  "arquitetura": {
+    "planos": [
+      {
+        "nome": "UI",
+        "papel": "Interface do usuario: upload de fotos, exibicao de relatorios, escolha entre perfil seguro e customizado, editor de parametros com limites visiveis, dialogo de consentimento e aprovacao de cada acao.",
+        "tecnologia": "Avalonia (multiplataforma) ou WinUI 3 (somente Windows)"
+      },
+      {
+        "nome": "Agente Local",
+        "papel": "Processo elevado que coleta inventario, le sensores, faz backup, executa mudancas aprovadas e roda benchmarks. Hospeda PowerShell.",
+        "tecnologia": "C# / .NET 8 (Windows Service + CLI)",
+        "privilegios": "Elevado (UAC / root), com principio de menor privilegio"
+      },
+      {
+        "nome": "Cerebro",
+        "papel": "LLM multimodal que segue o workflow, interpreta imagens, verifica fabricante, prioriza acoes do catalogo whitelisted e gera guias passo a passo. NAO gera comandos que modificam o sistema; apenas seleciona acoes pre-construidas e explica/ordena.",
+        "tecnologia": "LLM multimodal via API (visao + busca web), com opcao de modelo local para dados sensiveis"
+      }
+    ],
+    "comunicacao": {
+      "ui_para_agente": "IPC local (named pipe ou gRPC)",
+      "agente_para_cerebro": "JSON estruturado (proposta / resultado) via API",
+      "persistencia": "SQLite local (inventario, historico, cache de BIOS, relatorios)"
+    }
+  },
+
+  "modulos": [
+    {
+      "id": "coletor",
+      "nome": "Coletor de Inventario",
+      "tipo": "read-only",
+      "responsabilidade": "Coletar hardware, SO, drivers, processos, servicos, inicializacao, energia e rede sem modificar o sistema.",
+      "fontes": {
+        "windows": ["WMI/CIM (Win32_BIOS, Win32_BaseBoard, Win32_Processor, Win32_PhysicalMemory, Win32_VideoController, Win32_DiskDrive)", "PowerShell (Get-Service, Get-ScheduledTask, powercfg)"],
+        "linux": ["dmidecode", "lscpu", "lsblk", "sensors", "systemctl"]
+      },
+      "saida": "JSON normalizado conforme contrato 'inventario'"
+    },
+    {
+      "id": "sensores",
+      "nome": "Leitura de Sensores",
+      "responsabilidade": "Temperatura, clock, voltagem, rotacao de fan e consumo em tempo real.",
+      "tecnologia": "LibreHardwareMonitorLib (.NET)",
+      "observacao": "Usa driver kernel assinado; atentar a Secure Boot."
+    },
+    {
+      "id": "backup",
+      "nome": "Backup Obrigatorio",
+      "responsabilidade": "Criar ponto de restauracao e exportar servicos, plano de energia e chaves de registro relevantes antes de qualquer mudanca.",
+      "bloqueante": true
+    },
+    {
+      "id": "executor",
+      "nome": "Executor Controlado",
+      "responsabilidade": "Aplicar uma categoria por vez com rollback por categoria. Executa SOMENTE acoes presentes no catalogo whitelisted, com os parametros aprovados pelo usuario.",
+      "categorias_ordem": ["CPU", "Memoria", "GPU", "Sistema Operacional", "Drivers", "Servicos", "Rede"],
+      "observacao": "BIOS NAO entra no executor: e manual pelo usuario. O LLM nunca injeta comandos aqui; ele apenas escolhe IDs de acoes do catalogo."
+    },
+    {
+      "id": "testes",
+      "nome": "Runner de Validacao",
+      "responsabilidade": "Disparar testes de estresse e capturar resultados.",
+      "ferramentas": {
+        "cpu": ["OCCT", "Cinebench", "Prime95"],
+        "memoria": ["OCCT Memory", "MemTest86"],
+        "gpu": ["OCCT GPU", "OCCT VRAM", "benchmark do fabricante"]
+      },
+      "valida": ["temperatura", "clock", "consumo", "estabilidade", "WHEA", "artefatos", "driver timeout"]
+    },
+    {
+      "id": "bios",
+      "nome": "Modulo BIOS (identificacao e orientacao)",
+      "responsabilidade": "Identificar versao atual, verificar com o fabricante e gerar guia passo a passo. NAO aplica mudancas.",
+      "fluxo_ref": "fluxo_bios"
+    },
+    {
+      "id": "visao",
+      "nome": "Modulo de Visao",
+      "responsabilidade": "Interpretar fotos e imagens enviadas pelo usuario para orientacao.",
+      "fluxo_ref": "fluxo_visao"
+    },
+    {
+      "id": "relatorio",
+      "nome": "Relatorio Executivo e Score",
+      "responsabilidade": "Comparar antes/depois, detectar regressoes e gerar nota final 0-100.",
+      "scores": ["Hardware", "BIOS", "CPU", "GPU", "RAM", "Windows", "Estabilidade"]
+    }
+  ],
+
+  "catalogo_acoes_whitelisted": {
+    "descricao": "Conjunto fechado de acoes de otimizacao pre-construidas, auditadas e parametrizadas. O LLM escolhe IDs e parametros dentro de limites; o agente deterministico executa. Nenhuma acao fora do catalogo pode ser executada.",
+    "estrutura_acao": {
+      "id": "string unico (ex.: PWR_PLANO_ALTO_DESEMPENHO)",
+      "categoria": "CPU | Memoria | GPU | Sistema Operacional | Drivers | Servicos | Rede",
+      "titulo": "nome legivel",
+      "descricao": "o que a acao faz",
+      "parametros": "lista de parametros permitidos, cada um com: tipo, faixa_segura (padrao recomendado), faixa_permitida (mais ampla, usada por perfil customizado) e limite_absoluto (teto tecnico que NENHUM perfil pode ultrapassar)",
+      "comando_interno": "implementacao deterministica versionada (nunca vinda do LLM)",
+      "reversao": "acao inversa correspondente para rollback",
+      "risco": "Nenhum | Muito Baixo | Baixo | Medio | Alto",
+      "requer_aprovacao": "boolean",
+      "requer_reinicio": "boolean",
+      "pre_condicoes": "checagens obrigatorias antes de aplicar (ex.: backup confirmado)"
+    },
+    "exemplos_acao": [
+      {
+        "id": "PWR_PLANO_ALTO_DESEMPENHO",
+        "categoria": "Sistema Operacional",
+        "titulo": "Ativar plano de energia de alto desempenho",
+        "parametros": {},
+        "reversao": "Restaurar plano de energia anterior exportado no backup",
+        "risco": "Muito Baixo",
+        "requer_aprovacao": true,
+        "requer_reinicio": false,
+        "pre_condicoes": ["backup_confirmado"]
+      },
+      {
+        "id": "SRV_DESATIVAR_SERVICO",
+        "categoria": "Servicos",
+        "titulo": "Desativar servico nao essencial",
+        "parametros": {"nome_servico": "valor de uma lista branca de servicos seguros"},
+        "reversao": "Reativar servico com tipo de inicializacao anterior",
+        "risco": "Medio",
+        "requer_aprovacao": true,
+        "requer_reinicio": false,
+        "pre_condicoes": ["backup_confirmado", "servico_consta_na_lista_segura"]
+      }
+    ],
+    "papel_do_llm": "Selecionar acoes do catalogo, definir parametros dentro das faixas validas, ordenar e justificar. O LLM NUNCA escreve o comando_interno.",
+    "papel_do_agente": "Validar a acao contra o catalogo e as pre-condicoes, executar o comando_interno versionado e registrar para rollback."
+  },
+
+  "camada_privacidade": {
+    "descricao": "Controla quais dados saem da maquina e para onde, dado que o inventario e uma impressao digital do equipamento.",
+    "principios": [
+      "Minimizar dados enviados: enviar ao LLM apenas o necessario para a decisao.",
+      "Sanitizar identificadores antes do envio: numeros de serie, MAC, nomes de usuario/maquina, chaves de produto.",
+      "Oferecer modo local: opcao de rodar o raciocinio em modelo local para nao enviar nada a nuvem.",
+      "Consentimento explicito por tipo de dado, com log do que foi enviado.",
+      "Dados de baixo risco (modelo de placa, versao de BIOS) podem ir a nuvem; dados sensiveis ficam locais por padrao."
+    ],
+    "campos_sensiveis": ["numero_serie", "endereco_mac", "nome_maquina", "nome_usuario", "chave_produto_windows", "uuid_placa"],
+    "estrategia": "Pipeline de sanitizacao entre o coletor e o cerebro: remove/hasheia campos sensiveis e gera uma versao 'segura para nuvem' do inventario."
+  },
+
+  "perfis_parametrizacao": {
+    "descricao": "O sistema sempre oferece um perfil seguro por padrao. O usuario pode, opcionalmente, criar um perfil customizado assumindo a responsabilidade pelos valores.",
+    "perfil_seguro": {
+      "padrao": true,
+      "regra": "Usa sempre a faixa_segura de cada acao. Nao exige consentimento adicional alem da aprovacao normal por categoria."
+    },
+    "perfil_customizado": {
+      "padrao": false,
+      "regra": "O usuario define o valor de cada parametro dentro da faixa_permitida. Valores fora da faixa_segura sao marcados como nao validados. Nenhum valor pode ultrapassar o limite_absoluto.",
+      "validacao_ao_salvar": [
+        "Recusar qualquer parametro que ultrapasse o limite_absoluto (bloqueio rigido, sem opcao de prosseguir).",
+        "Marcar parametros fora da faixa_segura como 'risco assumido pelo usuario'.",
+        "Disparar o fluxo de consentimento antes de persistir e antes de aplicar."
+      ],
+      "metadados": ["nome_perfil", "data_criacao", "autor", "flag_customizado=true", "consentimento_registrado"]
+    }
+  },
+
+  "fluxo_consentimento_customizado": {
+    "gatilho": "Ao salvar um perfil customizado criado pelo usuario.",
+    "mensagem_aviso": {
+      "titulo": "Aviso de responsabilidade - parametrizacao manual",
+      "corpo": [
+        "Voce esta definindo valores manualmente, fora do perfil seguro recomendado pelo sistema.",
+        "Esses valores NAO foram validados pelo sistema e podem causar instabilidade, travamentos, tela azul, perda de dados, superaquecimento ou, em casos extremos, dano ao hardware.",
+        "Parametros fora da faixa_segura podem afetar garantia e estabilidade.",
+        "A responsabilidade pela escolha dos valores e configuracoes e inteiramente sua.",
+        "Recomendamos manter o backup gerado pelo sistema antes de prosseguir e validar com testes de estresse apos aplicar."
+      ]
+    },
+    "checkboxes": [
+      {
+        "id": "aceite_riscos",
+        "texto": "Li e aceito os riscos de parametrizar as configuracoes manualmente.",
+        "obrigatorio": true
+      },
+      {
+        "id": "desejo_prosseguir",
+        "texto": "Desejo prosseguir com as modificacoes.",
+        "obrigatorio": true
+      }
+    ],
+    "regra_habilitacao": "O botao 'Confirmar alteracao (Go)' so fica habilitado quando os dois checkboxes estao marcados.",
+    "botoes": [
+      {"id": "exit", "texto": "Nao prosseguir", "acao": "Cancela: nao salva nem aplica o perfil customizado. Retorna ao perfil seguro."},
+      {"id": "go", "texto": "Confirmar alteracao", "acao": "Salva o perfil customizado e segue para a execucao controlada (backup -> aplicar por categoria -> validar)."}
+    ],
+    "auditoria": "Registrar consentimento com data/hora, nome do perfil, valores escolhidos e versao do catalogo, para rastreabilidade."
+  },
+
+  "fluxo_bios": {
+    "passos": [
+      {"ordem": 1, "nome": "Identificacao", "detalhe": "Ler fabricante e modelo da placa (Win32_BaseBoard.Manufacturer/Product), versao atual (SMBIOSBIOSVersion) e data, modo UEFI/Legacy e estado do Secure Boot. No Linux: dmidecode -t bios -t baseboard."},
+      {"ordem": 2, "nome": "Normalizacao", "detalhe": "Limpar e padronizar strings sujas do SMBIOS (ex.: 'ASUSTeK' -> 'ASUS') para gerar chave de busca confiavel."},
+      {"ordem": 3, "nome": "Verificacao com fabricante", "detalhe": "Buscar a pagina oficial de suporte do modelo e extrair versao mais recente, data, changelog e link do manual. Priorizar dominio do fabricante. Cachear em SQLite."},
+      {"ordem": 4, "nome": "Decisao conservadora", "detalhe": "Comparar versao atual x mais recente. Recomendar atualizacao apenas com ganho real de estabilidade/compatibilidade. Classificar ganho e risco."},
+      {"ordem": 5, "nome": "Guia passo a passo", "detalhe": "Gerar procedimento especifico do fabricante: tecla para entrar no setup, utilitario (EZ Flash/ASUS, Q-Flash/Gigabyte, M-Flash/MSI, Instant Flash/ASRock), avisos (nao desligar, nobreak, risco de brick) e ajustes recomendados (XMP/EXPO, Resizable BAR) com risco."},
+      {"ordem": 6, "nome": "Confirmacao visual", "detalhe": "Usuario fotografa a tela; modulo de visao confirma a tela e le a versao exibida."},
+      {"ordem": 7, "nome": "Pos-flash", "detalhe": "Reler a versao via inventario para confirmar a aplicacao."}
+    ]
+  },
+
+  "fluxo_visao": {
+    "entradas": ["foto da tela de BIOS/UEFI", "etiqueta da placa-mae", "mensagem de erro / tela azul", "screenshot de benchmark"],
+    "pipeline": [
+      "Pre-processar imagem (redimensionar, recortar quando util).",
+      "Enviar ao modelo multimodal com prompt direcionado ('que tela e esta?', 'leia a versao da BIOS', 'leia a temperatura no OCCT').",
+      "Receber JSON com leitura + nivel de confianca + proximo passo.",
+      "Cruzar com o inventario quando possivel; se confianca baixa, pedir nova foto."
+    ],
+    "regra": "Nunca confiar cegamente na leitura visual; sempre validar contra dados coletados."
+  },
+
+  "contratos_dados": {
+    "inventario": {
+      "board": {"manufacturer": "ASUS", "model": "ROG STRIX B550-F", "bios_version": "2806", "bios_date": "2022-08-12", "mode": "UEFI", "secure_boot": true},
+      "cpu": {"name": "Ryzen 5 5600X", "temp_idle_c": 38},
+      "memory": [{"size_gb": 16, "speed_mhz": 3200}],
+      "gpu": [{"name": "RTX 3060", "temp_idle_c": 41}]
+    },
+    "recomendacao": {
+      "category": "BIOS",
+      "current": "2806",
+      "recommended": "3405",
+      "action": "update_optional",
+      "justification": "Correcao de estabilidade de memoria e compatibilidade de CPU.",
+      "expected_gain": "Medio",
+      "risk": "Medio",
+      "source": "https://exemplo-fabricante/suporte/modelo",
+      "user_steps": ["...", "..."]
+    },
+    "resultado_validacao": {
+      "category": "CPU",
+      "test_tool": "Cinebench R23",
+      "before": {"score": 11200, "temp_max_c": 78},
+      "after": {"score": 11850, "temp_max_c": 80},
+      "regression": false,
+      "errors": ["WHEA: 0"],
+      "stability": "Totalmente validado"
+    }
+  },
+
+  "stack_resumida": {
+    "agente_engine": "C# / .NET 8 (Windows Service + CLI)",
+    "sensores": "LibreHardwareMonitorLib",
+    "ui": "Avalonia ou WinUI 3",
+    "cerebro": "LLM multimodal com visao + busca web",
+    "lookup_fabricante": "Modulo de busca web + cache em SQLite",
+    "ipc": "named pipe ou gRPC local",
+    "persistencia": "SQLite"
+  },
+
+  "roadmap_desenvolvimento": {
+    "abordagem": "Entrega incremental por fases. Cada fase tem objetivo, passos, entregavel e criterio de aceite. So avancar quando o criterio for atendido.",
+    "fases": [
+      {
+        "fase": 0,
+        "nome": "Fundacao e setup",
+        "objetivo": "Preparar base do projeto e confirmar decisoes de stack.",
+        "passos": ["Definir escopo do MVP (Windows 11).", "Criar repositorio, estrutura da solucao .NET e pipeline de CI.", "Configurar SQLite e formato dos contratos JSON.", "Definir limites de seguranca: o que e read-only x o que exige aprovacao."],
+        "entregavel": "Esqueleto da solucao compilando + contratos JSON versionados.",
+        "criterio_aceite": "Projeto builda no CI e contratos validados por schema."
+      },
+      {
+        "fase": 1,
+        "nome": "Coletor read-only",
+        "objetivo": "Inventario completo sem modificar o sistema.",
+        "passos": ["Implementar coleta via WMI/CIM e PowerShell.", "Normalizar saida para o contrato 'inventario'.", "Testar em multiplas maquinas reais.", "Garantir zero modificacao no sistema."],
+        "entregavel": "Modulo coletor gerando JSON valido.",
+        "criterio_aceite": "Inventario correto em pelo menos 3 configuracoes distintas, sem efeitos colaterais."
+      },
+      {
+        "fase": 2,
+        "nome": "Sensores",
+        "objetivo": "Leitura confiavel de temperatura, clock, voltagem, fan e consumo.",
+        "passos": ["Integrar LibreHardwareMonitorLib.", "Tratar elevacao e driver assinado.", "Validar leituras contra ferramentas de referencia."],
+        "entregavel": "Servico de sensores com leitura em tempo real.",
+        "criterio_aceite": "Leituras dentro de margem aceitavel vs. ferramenta de referencia."
+      },
+      {
+        "fase": 3,
+        "nome": "UI e IPC",
+        "objetivo": "Comunicacao UI <-> agente e tela basica.",
+        "passos": ["Implementar IPC (named pipe/gRPC).", "UI Avalonia com upload de imagem e exibicao de relatorio.", "Fluxo de aprovacao explicita por acao."],
+        "entregavel": "UI exibindo inventario e sensores ao vivo.",
+        "criterio_aceite": "Usuario ve dados reais e aprova/recusa acoes pela UI."
+      },
+      {
+        "fase": 4,
+        "nome": "Cerebro / integracao LLM",
+        "objetivo": "Conectar o workflow como logica de decisao, com privacidade desde o inicio.",
+        "passos": ["Integrar API do LLM (e avaliar opcao de modelo local).", "Construir o pipeline de sanitizacao entre coletor e cerebro (remover/hashear campos sensiveis).", "Carregar o workflow como system prompt.", "Parsear saida JSON estruturada.", "Gerar matriz de decisao a partir do inventario sanitizado."],
+        "entregavel": "Recomendacoes geradas a partir de dados reais, sem vazar dados sensiveis.",
+        "criterio_aceite": "Para um inventario dado, o sistema produz matriz coerente em JSON valido e nenhum campo sensivel sai da maquina sem consentimento."
+      },
+      {
+        "fase": 5,
+        "nome": "Modulo BIOS",
+        "objetivo": "Identificar, verificar com fabricante e orientar (sem aplicar).",
+        "passos": ["Identificar versao atual e modelo.", "Normalizar modelo para chave de busca.", "Lookup do fabricante + cache SQLite + banco curado das placas mais comuns.", "Gerar guia passo a passo especifico do fabricante.", "Reler versao apos atualizacao manual."],
+        "entregavel": "Fluxo de BIOS ponta a ponta, orientado e seguro.",
+        "criterio_aceite": "Versao identificada corretamente e guia coerente com o fabricante real, com fonte exibida."
+      },
+      {
+        "fase": 6,
+        "nome": "Visao",
+        "objetivo": "Interpretar fotos para orientar o usuario.",
+        "passos": ["Pipeline de pre-processamento de imagem.", "Prompts direcionados por caso de uso.", "Saida estruturada com nivel de confianca.", "Cross-check com inventario e pedido de nova foto se confianca baixa."],
+        "entregavel": "Leitura de tela de BIOS, etiquetas e telas de benchmark.",
+        "criterio_aceite": "Leitura correta em casos de teste, com fallback quando confianca baixa."
+      },
+      {
+        "fase": 7,
+        "nome": "Backup obrigatorio",
+        "objetivo": "Garantir reversibilidade antes de qualquer mudanca.",
+        "passos": ["Ponto de restauracao no Windows.", "Export de servicos, energia e registro.", "Backup de configuracoes no Linux.", "Bloquear execucao se o backup falhar."],
+        "entregavel": "Modulo de backup bloqueante.",
+        "criterio_aceite": "Nenhuma mudanca ocorre sem backup confirmado."
+      },
+      {
+        "fase": 8,
+        "nome": "Executor controlado",
+        "objetivo": "Aplicar mudancas com seguranca e rollback, somente via catalogo whitelisted.",
+        "passos": ["Construir o catalogo de acoes (id, parametros com faixa_segura/faixa_permitida/limite_absoluto, comando_interno versionado, reversao, risco, pre_condicoes).", "Implementar o validador que recusa qualquer acao fora do catalogo e qualquer valor acima do limite_absoluto.", "Implementar perfil seguro (padrao) e editor de perfil customizado.", "Implementar o dialogo de consentimento (aviso de responsabilidade + 2 checkboxes obrigatorios + botoes Nao prosseguir/Confirmar) com auditoria.", "Aplicar uma categoria por vez.", "Rollback por categoria usando a acao de reversao.", "Registrar valor anterior e novo de cada alteracao."],
+        "entregavel": "Execucao categorizada, reversivel, restrita ao catalogo, com perfil seguro e perfil customizado consentido.",
+        "criterio_aceite": "Cada categoria aplica e reverte; comandos fora do catalogo e valores acima do limite_absoluto sao bloqueados; o perfil customizado so persiste/aplica com os dois checkboxes marcados e confirmacao."
+      },
+      {
+        "fase": 9,
+        "nome": "Validacao e testes",
+        "objetivo": "Validar estabilidade apos cada categoria.",
+        "passos": ["Integrar OCCT, Cinebench, Prime95, MemTest86.", "Capturar resultados.", "Comparar antes/depois.", "Detectar regressao, WHEA, artefatos, tela azul e reverter quando necessario."],
+        "entregavel": "Ciclo validar-comparar-reverter funcional.",
+        "criterio_aceite": "Sistema detecta regressao simulada e reverte automaticamente."
+      },
+      {
+        "fase": 10,
+        "nome": "Relatorio e score",
+        "objetivo": "Relatorio executivo final e nota 0-100.",
+        "passos": ["Gerar resumo executivo, inventario, antes/depois e ganhos.", "Calcular scores por dominio.", "Classificar estabilidade."],
+        "entregavel": "Relatorio executivo completo.",
+        "criterio_aceite": "Relatorio coerente com os dados coletados e testes executados."
+      },
+      {
+        "fase": 11,
+        "nome": "Hardening e distribuicao",
+        "objetivo": "Preparar para uso real.",
+        "passos": ["Assinatura de codigo (idealmente certificado EV).", "Tratar deteccao por antivirus e SmartScreen.", "Logs e telemetria opt-in.", "Estender suporte a Linux.", "Empacotamento e instalador."],
+        "entregavel": "Build assinada e distribuivel.",
+        "criterio_aceite": "Instalacao limpa sem alertas criticos e funcionamento em maquina de teste independente."
+      }
+    ]
+  },
+
+  "pontos_de_atencao": [
+    "Verificacao com fabricante e a parte menos confiavel: sem API padrao, sites variam e nomes de modelo vem sujos. Mitigar com banco curado + fetch oficial + fonte sempre visivel.",
+    "Leitura visual deve ser sempre validada contra dados coletados.",
+    "Atualizacao de BIOS e arriscada por natureza: manter postura conservadora e alertar sobre perda de energia e garantia.",
+    "Ferramenta mexe em sistema e usa driver de sensor: assinatura de codigo e essencial para evitar bloqueios de antivirus.",
+    "Exigir elevacao (UAC/root) com principio de menor privilegio."
+  ]
+}

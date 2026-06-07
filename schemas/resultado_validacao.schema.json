@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hardwareoptimizer/contracts/resultado_validacao.schema.json",
+  "title": "ResultadoValidacao",
+  "description": "Resultado de um teste de estresse comparando antes/depois (contrato 'resultado_validacao').",
+  "type": "object",
+  "required": ["categoria", "ferramenta", "estabilidade"],
+  "additionalProperties": false,
+  "properties": {
+    "categoria": { "type": "string" },
+    "ferramenta": { "type": "string" },
+    "antes": { "$ref": "#/$defs/medicao" },
+    "depois": { "$ref": "#/$defs/medicao" },
+    "regressao": { "type": "boolean" },
+    "erros": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "estabilidade": { "type": "string" }
+  },
+  "$defs": {
+    "medicao": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "score": { "type": ["number", "null"] },
+        "tempMaxC": { "type": ["number", "null"] },
+        "clockMhz": { "type": ["number", "null"] },
+        "consumoW": { "type": ["number", "null"] }
+      }
+    }
+  }
+}

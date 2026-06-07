@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hardwareoptimizer/contracts/inventario.schema.json",
+  "title": "Inventario",
+  "description": "Inventário normalizado do equipamento (contrato 'inventario'). O bloco 'identificadores' é sensível e é removido pela camada de privacidade antes de qualquer envio à nuvem.",
+  "type": "object",
+  "required": ["placa", "cpu", "sistemaOperacional"],
+  "additionalProperties": false,
+  "properties": {
+    "placa": {
+      "type": "object",
+      "required": ["fabricante", "modelo"],
+      "additionalProperties": false,
+      "properties": {
+        "fabricante": { "type": "string" },
+        "modelo": { "type": "string" },
+        "versaoBios": { "type": ["string", "null"] },
+        "dataBios": { "type": ["string", "null"] },
+        "modo": { "type": ["string", "null"], "enum": ["UEFI", "Legacy", null] },
+        "secureBoot": { "type": ["boolean", "null"] }
+      }
+    },
+    "cpu": {
+      "type": "object",
+      "required": ["nome"],
+      "additionalProperties": false,
+      "properties": {
+        "nome": { "type": "string" },
+        "nucleos": { "type": ["integer", "null"], "minimum": 1 },
+        "threads": { "type": ["integer", "null"], "minimum": 1 },
+        "tempIdleC": { "type": ["number", "null"] }
+      }
+    },
+    "memoria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tamanhoGb": { "type": ["integer", "null"], "minimum": 0 },
+          "velocidadeMhz": { "type": ["integer", "null"], "minimum": 0 },
+          "fabricante": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "gpu": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nome"],
+        "additionalProperties": false,
+        "properties": {
+          "nome": { "type": "string" },
+          "tempIdleC": { "type": ["number", "null"] },
+          "versaoDriver": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "sistemaOperacional": {
+      "type": "object",
+      "required": ["tipo"],
+      "additionalProperties": false,
+      "properties": {
+        "tipo": { "type": "string", "enum": ["desconhecido", "windows", "linux"] },
+        "nome": { "type": ["string", "null"] },
+        "versao": { "type": ["string", "null"] },
+        "arquitetura": { "type": ["string", "null"] }
+      }
+    },
+    "rede": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nome"],
+        "additionalProperties": false,
+        "properties": {
+          "nome": { "type": "string" },
+          "tipo": { "type": ["string", "null"] },
+          "enderecoMac": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "identificadores": {
+      "type": ["object", "null"],
+      "description": "Campos sensíveis (campos_sensiveis). Nulo após a sanitização.",
+      "additionalProperties": false,
+      "properties": {
+        "numeroSerie": { "type": ["string", "null"] },
+        "uuidPlaca": { "type": ["string", "null"] },
+        "nomeMaquina": { "type": ["string", "null"] },
+        "nomeUsuario": { "type": ["string", "null"] },
+        "chaveProdutoWindows": { "type": ["string", "null"] }
+      }
+    },
+    "coletadoEm": { "type": "string", "format": "date-time" }
+  }
+}

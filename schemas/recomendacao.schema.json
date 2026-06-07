@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hardwareoptimizer/contracts/recomendacao.schema.json",
+  "title": "Recomendacao",
+  "description": "Recomendação proposta pelo cérebro (contrato 'recomendacao'). 'acaoId' referencia uma ação do catálogo whitelisted; o LLM nunca gera o comando interno.",
+  "type": "object",
+  "required": ["categoria", "acao", "justificativa"],
+  "additionalProperties": false,
+  "properties": {
+    "categoria": { "type": "string" },
+    "acaoId": {
+      "type": ["string", "null"],
+      "description": "ID de uma ação existente no catálogo. Obrigatório quando a recomendação é executável."
+    },
+    "valorAtual": { "type": ["string", "null"] },
+    "valorRecomendado": { "type": ["string", "null"] },
+    "acao": { "type": "string" },
+    "justificativa": { "type": "string" },
+    "risco": {
+      "type": "string",
+      "enum": ["nenhum", "muitoBaixo", "baixo", "medio", "alto"]
+    },
+    "ganhoEsperado": { "type": ["string", "null"] },
+    "fonte": {
+      "type": ["string", "null"],
+      "description": "Fonte sempre visível; obrigatória para recomendações de BIOS."
+    },
+    "passosUsuario": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

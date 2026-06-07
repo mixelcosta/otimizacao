@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{64ECA693-93D1-4726-B357-0FABBD0F5776}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Core", "src\HardwareOptimizer.Core\HardwareOptimizer.Core.csproj", "{8D74C898-7973-48B0-813B-9B13B1C15350}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Agent", "src\HardwareOptimizer.Agent\HardwareOptimizer.Agent.csproj", "{8A363550-F36E-49CB-BACC-32C9A7BFEF16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Cli", "src\HardwareOptimizer.Cli\HardwareOptimizer.Cli.csproj", "{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Core.Tests", "tests\HardwareOptimizer.Core.Tests\HardwareOptimizer.Core.Tests.csproj", "{E62EFD74-581B-4B0E-ACF3-C20158989D12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Agent.Tests", "tests\HardwareOptimizer.Agent.Tests\HardwareOptimizer.Agent.Tests.csproj", "{EF7F6C1B-6784-464F-83C2-70C539F12B1E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8D74C898-7973-48B0-813B-9B13B1C15350} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
+	EndGlobalSection
+EndGlobal
