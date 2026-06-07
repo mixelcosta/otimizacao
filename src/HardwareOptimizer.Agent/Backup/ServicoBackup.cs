@@ -3,6 +3,8 @@ using System.Text;
 using System.Text.Json;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Agent.Backup;
 
@@ -38,17 +40,21 @@ public sealed class ServicoBackup : IServicoBackup
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
 
     private readonly string _diretorioBase;
+    private readonly ILogger _log;
 
-    public ServicoBackup(string? diretorioBase = null)
+    public ServicoBackup(string? diretorioBase = null, ILogger? logger = null)
     {
         _diretorioBase = diretorioBase
             ?? Path.Combine(AppContext.BaseDirectory, "data", "backups");
+        _log = logger ?? NullLogger.Instance;
     }
 
     public async Task<Resultado<Backup>> CriarBackupAsync(
         Inventario inventario, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(inventario);
+
+        _log.LogInformation("Iniciando backup obrigatório em '{Diretorio}'.", _diretorioBase);
 
         try
         {
@@ -76,16 +82,23 @@ public sealed class ServicoBackup : IServicoBackup
                 Confirmado = integro,
             };
 
-            return integro
-                ? Resultado<Backup>.Ok(backup)
-                : Resultado<Backup>.Falhar("Falha de integridade ao confirmar o backup.");
+            if (integro)
+            {
+                _log.LogInformation("Backup '{Id}' confirmado em '{Caminho}'.", id, caminho);
+                return Resultado<Backup>.Ok(backup);
+            }
+
+            _log.LogError("Backup '{Id}': falha de integridade (checksum não confere).", id);
+            return Resultado<Backup>.Falhar("Falha de integridade ao confirmar o backup.");
         }
         catch (IOException ex)
         {
+            _log.LogError(ex, "Falha de E/S ao criar backup em '{Diretorio}'.", _diretorioBase);
             return Resultado<Backup>.Falhar($"Falha de E/S ao criar backup: {ex.Message}");
         }
         catch (UnauthorizedAccessException ex)
         {
+            _log.LogError(ex, "Sem permissão para criar backup em '{Diretorio}'.", _diretorioBase);
             return Resultado<Backup>.Falhar($"Sem permissão para criar backup: {ex.Message}");
         }
     }

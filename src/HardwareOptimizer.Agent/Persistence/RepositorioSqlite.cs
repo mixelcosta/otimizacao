@@ -3,6 +3,8 @@ using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Core.Consent;
 using HardwareOptimizer.Core.Contracts;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Agent.Persistence;
 
@@ -12,15 +14,17 @@ public sealed class RepositorioSqlite : IRepositorioOtimizacao
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = false };
 
     private readonly string _connectionString;
+    private readonly ILogger _log;
 
-    public RepositorioSqlite(string connectionString)
+    public RepositorioSqlite(string connectionString, ILogger? logger = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
         _connectionString = connectionString;
+        _log = logger ?? NullLogger.Instance;
     }
 
     /// <summary>Cria um repositório apontando para um arquivo de banco local.</summary>
-    public static RepositorioSqlite DeArquivo(string caminhoArquivo)
+    public static RepositorioSqlite DeArquivo(string caminhoArquivo, ILogger? logger = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(caminhoArquivo);
         var diretorio = Path.GetDirectoryName(Path.GetFullPath(caminhoArquivo));
@@ -29,11 +33,12 @@ public sealed class RepositorioSqlite : IRepositorioOtimizacao
             Directory.CreateDirectory(diretorio);
         }
 
-        return new RepositorioSqlite($"Data Source={caminhoArquivo}");
+        return new RepositorioSqlite($"Data Source={caminhoArquivo}", logger);
     }
 
     public async Task InicializarAsync(CancellationToken cancellationToken = default)
     {
+        _log.LogDebug("Inicializando esquema do banco SQLite ('{ConnectionString}').", _connectionString);
         await using var conexao = await AbrirAsync(cancellationToken).ConfigureAwait(false);
         await using var comando = conexao.CreateCommand();
         comando.CommandText = """
@@ -73,6 +78,7 @@ public sealed class RepositorioSqlite : IRepositorioOtimizacao
         Inventario inventario, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(inventario);
+        _log.LogDebug("Persistindo inventário coletado em {Quando}.", inventario.ColetadoEm);
 
         await using var conexao = await AbrirAsync(cancellationToken).ConfigureAwait(false);
         await using var comando = conexao.CreateCommand();
@@ -90,6 +96,9 @@ public sealed class RepositorioSqlite : IRepositorioOtimizacao
         RegistroConsentimento registro, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(registro);
+        _log.LogInformation(
+            "Registrando consentimento (auditoria): perfil '{Perfil}', catálogo {Versao}.",
+            registro.NomePerfil, registro.VersaoCatalogo);
 
         await using var conexao = await AbrirAsync(cancellationToken).ConfigureAwait(false);
         await using var comando = conexao.CreateCommand();
@@ -111,6 +120,8 @@ public sealed class RepositorioSqlite : IRepositorioOtimizacao
         RelatorioExecucao relatorio, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(relatorio);
+        _log.LogInformation(
+            "Registrando execução: perfil '{Perfil}', sucesso={Sucesso}.", relatorio.PerfilNome, relatorio.Sucesso);
 
         await using var conexao = await AbrirAsync(cancellationToken).ConfigureAwait(false);
         await using var comando = conexao.CreateCommand();

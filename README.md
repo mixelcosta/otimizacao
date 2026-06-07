@@ -134,6 +134,33 @@ com fluxo de consentimento e auditoria → persistência em SQLite.
 
 ---
 
+## Logs e diagnóstico
+
+Todo processo é instrumentado com `Microsoft.Extensions.Logging` (`ILogger`),
+para localizar o **ponto exato** de uma falha. Cada componente recebe um logger
+opcional (padrão `NullLogger`, então testes e bibliotecas não escrevem nada por
+conta própria); a CLI conecta um provider de arquivo e grava em:
+
+```
+<saída>/data/logs/otimizador-AAAAMMDD.log
+```
+
+O caminho do arquivo é impresso em **stderr** a cada execução (não polui a saída
+JSON em stdout). Cada linha traz `timestamp [nível] Classe - mensagem`, de modo
+que a categoria identifica a classe onde o evento ocorreu. Exemplo real:
+
+```
+2026-06-07 17:01:31 [WARN ] LeitorLinux - Coleta Linux parcial: campos ficaram como 'Desconhecido' ...
+2026-06-07 17:01:31 [INFO ] ExecutorControlado - Categoria SistemaOperacional: APLICADA com 4 alteração(ões).
+2026-06-07 17:01:31 [WARN ] ConstrutorPerfil - Perfil 'custom-arriscado' NÃO salvo: 1 bloqueio(s) -> ... 25 > limite absoluto 20.
+```
+
+Níveis: `INFO` para marcos do processo, `DEBUG` para detalhe (cada alteração
+antes/depois), `WARN` para bloqueios/regressões/coleta parcial e `ERROR` para
+exceções (backup, E/S, persistência), sempre com o tipo e a mensagem da exceção.
+
+---
+
 ## Mapa do roadmap
 
 Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.

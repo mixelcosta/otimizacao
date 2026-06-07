@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
 using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Core.Privacy;
 
@@ -13,14 +15,17 @@ namespace HardwareOptimizer.Core.Privacy;
 public sealed class Sanitizador
 {
     private readonly string _sal;
+    private readonly ILogger _log;
 
     /// <param name="sal">
     /// Sal aplicado ao hash. Por padrão, um sal por execução, de modo que os
     /// hashes não sejam correlacionáveis entre máquinas/sessões distintas.
     /// </param>
-    public Sanitizador(string? sal = null)
+    /// <param name="logger">Logger opcional para registrar o resumo da sanitização.</param>
+    public Sanitizador(string? sal = null, ILogger? logger = null)
     {
         _sal = sal ?? Guid.NewGuid().ToString("N");
+        _log = logger ?? NullLogger.Instance;
     }
 
     public ResultadoSanitizacao Sanitizar(Inventario inventario)
@@ -74,6 +79,10 @@ public sealed class Sanitizador
             Identificadores = identificadoresSeguros,
             Rede = redeSegura,
         };
+
+        _log.LogInformation(
+            "Sanitização concluída: {Qtd} campo(s) sensível(is) tratado(s) antes do envio à nuvem.",
+            alteracoes.Count);
 
         return new ResultadoSanitizacao(inventarioSeguro, alteracoes);
     }

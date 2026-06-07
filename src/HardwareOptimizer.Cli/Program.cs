@@ -12,12 +12,31 @@ using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Core.Profiles;
 using HardwareOptimizer.Core.Privacy;
 using HardwareOptimizer.Core.Reporting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 internal static class Program
 {
+    private static ILoggerFactory _loggerFactory = NullLoggerFactory.Instance;
+
     private static async Task<int> Main(string[] args)
     {
         var comando = args.Length > 0 ? args[0].ToLowerInvariant() : "ajuda";
+
+        // Log persistente em arquivo, para análise posterior do ponto exato de falha.
+        var caminhoLog = Path.Combine(
+            AppContext.BaseDirectory, "data", "logs", $"otimizador-{DateTime.Now:yyyyMMdd}.log");
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.SetMinimumLevel(LogLevel.Debug);
+            builder.AddProvider(new ArquivoLoggerProvider(caminhoLog, LogLevel.Debug));
+        });
+        _loggerFactory = loggerFactory;
+
+        var log = loggerFactory.CreateLogger("Program");
+        log.LogInformation("=== Início: comando '{Comando}' ===", comando);
+        // Caminho do log vai para stderr para não poluir a saída JSON em stdout.
+        Console.Error.WriteLine($"[log] Registro do processo em: {caminhoLog}");
 
         try
         {
@@ -48,10 +67,17 @@ internal static class Program
         }
         catch (Exception ex) when (ex is IOException or InvalidOperationException)
         {
+            log.LogError(ex, "Falha ao executar o comando '{Comando}'.", comando);
             Console.Error.WriteLine("Erro: " + ex.Message);
             return 1;
         }
+        finally
+        {
+            log.LogInformation("=== Fim: comando '{Comando}' ===", comando);
+        }
     }
+
+    private static ILogger Log<T>() => _loggerFactory.CreateLogger<T>();
 
     private static void ImprimirAjuda()
     {
@@ -70,14 +96,14 @@ internal static class Program
 
     private static async Task ComandoColetar()
     {
-        var inventario = await new ColetorInventario().ColetarAsync();
+        var inventario = await new ColetorInventario(loggerFactory: _loggerFactory).ColetarAsync();
         Apresentacao.ImprimirJson(inventario);
     }
 
     private static async Task ComandoSanitizar()
     {
-        var inventario = await new ColetorInventario().ColetarAsync();
-        var resultado = new Sanitizador().Sanitizar(inventario);
+        var inventario = await new ColetorInventario(loggerFactory: _loggerFactory).ColetarAsync();
+        var resultado = new Sanitizador(logger: Log<Sanitizador>()).Sanitizar(inventario);
 
         Apresentacao.Titulo("Inventário seguro para nuvem");
         Apresentacao.ImprimirJson(resultado.InventarioSeguro);
@@ -124,7 +150,7 @@ internal static class Program
 
     private static async Task ComandoRelatorio()
     {
-        var inventario = await new ColetorInventario().ColetarAsync();
+        var inventario = await new ColetorInventario(loggerFactory: _loggerFactory).ColetarAsync();
         var relatorio = GerarRelatorioExecutivo(inventario, execucao: null);
 
         Apresentacao.Titulo("Relatório executivo (diagnóstico do equipamento)");
@@ -190,14 +216,16 @@ internal static class Program
 
     private static async Task ComandoBios()
     {
-        var inventario = await new ColetorInventario().ColetarAsync();
+        var inventario = await new ColetorInventario(loggerFactory: _loggerFactory).ColetarAsync();
         var repositorio = RepositorioSqlite.DeArquivo(
-            Path.Combine(AppContext.BaseDirectory, "data", "otimizador.db"));
+            Path.Combine(AppContext.BaseDirectory, "data", "otimizador.db"),
+            Log<RepositorioSqlite>());
         await repositorio.InicializarAsync();
 
         // Banco curado com cache em SQLite (a busca web entraria como provedor interno futuro).
-        var provedor = new ProvedorBiosComCache(new BancoCuradoBios(), repositorio);
-        var relatorio = await new ModuloBios(provedor).AnalisarAsync(inventario);
+        var provedor = new ProvedorBiosComCache(
+            new BancoCuradoBios(), repositorio, Log<ProvedorBiosComCache>());
+        var relatorio = await new ModuloBios(provedor, Log<ModuloBios>()).AnalisarAsync(inventario);
 
         ImprimirRelatorioBios(relatorio);
     }
@@ -242,12 +270,12 @@ internal static class Program
     {
         var catalogo = CatalogoPadrao.Criar();
         var caminhoBanco = Path.Combine(AppContext.BaseDirectory, "data", "otimizador.db");
-        var repositorio = RepositorioSqlite.DeArquivo(caminhoBanco);
+        var repositorio = RepositorioSqlite.DeArquivo(caminhoBanco, Log<RepositorioSqlite>());
         await repositorio.InicializarAsync();
 
         // Passo 1 — Coleta read-only.
         Apresentacao.Titulo("Passo 1 — Coleta de inventário (read-only)");
-        var inventario = await new ColetorInventario().ColetarAsync();
+        var inventario = await new ColetorInventario(loggerFactory: _loggerFactory).ColetarAsync();
         Apresentacao.Item("Placa", $"{inventario.Placa.Fabricante} {inventario.Placa.Modelo}");
         Apresentacao.Item("CPU", inventario.Cpu.Nome);
         Apresentacao.Item("SO", $"{inventario.SistemaOperacional.Nome} ({inventario.SistemaOperacional.Tipo})");
@@ -255,7 +283,7 @@ internal static class Program
 
         // Passo 2 — Sanitização (privacidade).
         Apresentacao.Titulo("Passo 2 — Sanitização (privacidade)");
-        var sanitizacao = new Sanitizador().Sanitizar(inventario);
+        var sanitizacao = new Sanitizador(logger: Log<Sanitizador>()).Sanitizar(inventario);
         Apresentacao.Item("Campos tratados", sanitizacao.CamposAlterados.Count.ToString());
         foreach (var campo in sanitizacao.CamposAlterados)
         {
@@ -271,14 +299,14 @@ internal static class Program
         }
 
         // Passo 4 — Perfil seguro.
-        var construtor = new ConstrutorPerfil(catalogo);
+        var construtor = new ConstrutorPerfil(catalogo, Log<ConstrutorPerfil>());
         var perfilSeguro = construtor
             .CriarPerfilSeguro("perfil-seguro-demo", recomendacoes.Select(r => r.AcaoId!))
             .Perfil!;
 
         // Passo 5 — Backup obrigatório (bloqueante).
         Apresentacao.Titulo("Passo 4 — Backup obrigatório (bloqueante)");
-        var backup = await new ServicoBackup().CriarBackupAsync(inventario);
+        var backup = await new ServicoBackup(logger: Log<ServicoBackup>()).CriarBackupAsync(inventario);
         Apresentacao.Item("Backup confirmado", backup.Sucesso ? "sim" : "não");
 
         // Passo 6 — Execução controlada por categoria (modo simulação).
@@ -292,7 +320,8 @@ internal static class Program
             catalogo,
             RegistroComandos.Padrao(estado),
             new VerificadorPreCondicoes(),
-            new ValidadorCategoriaSempreEstavel());
+            new ValidadorCategoriaSempreEstavel(),
+            Log<ExecutorControlado>());
 
         var contexto = new ContextoExecucao { BackupConfirmado = backup.Sucesso };
         var relatorio = await executor.AplicarPerfilAsync(perfilSeguro, contexto);
@@ -350,7 +379,7 @@ internal static class Program
     private static async Task ProcessarConsentimento(
         Perfil perfil, EstadoSistemaSimulado estado, CatalogoAcoes catalogo, IRepositorioOtimizacao repositorio)
     {
-        var avaliador = new AvaliadorConsentimento();
+        var avaliador = new AvaliadorConsentimento(logger: Log<AvaliadorConsentimento>());
         var termo = avaliador.Termo;
 
         Apresentacao.Linha();
@@ -380,7 +409,8 @@ internal static class Program
             catalogo,
             RegistroComandos.Padrao(estado),
             new VerificadorPreCondicoes(),
-            new ValidadorCategoriaSempreEstavel());
+            new ValidadorCategoriaSempreEstavel(),
+            Log<ExecutorControlado>());
 
         var relatorio = await executor.AplicarPerfilAsync(
             perfilConsentido, new ContextoExecucao { BackupConfirmado = true });

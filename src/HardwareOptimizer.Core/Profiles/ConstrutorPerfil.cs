@@ -1,5 +1,7 @@
 using HardwareOptimizer.Core.Catalog;
 using HardwareOptimizer.Core.Common;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Core.Profiles;
 
@@ -12,12 +14,14 @@ public sealed class ConstrutorPerfil
 {
     private readonly CatalogoAcoes _catalogo;
     private readonly ValidadorAcao _validador;
+    private readonly ILogger _log;
 
-    public ConstrutorPerfil(CatalogoAcoes catalogo)
+    public ConstrutorPerfil(CatalogoAcoes catalogo, ILogger? logger = null)
     {
         ArgumentNullException.ThrowIfNull(catalogo);
         _catalogo = catalogo;
         _validador = new ValidadorAcao(catalogo);
+        _log = logger ?? NullLogger.Instance;
     }
 
     /// <summary>
@@ -94,6 +98,20 @@ public sealed class ConstrutorPerfil
         }
 
         var sucesso = bloqueios.Count == 0;
+
+        if (!sucesso)
+        {
+            _log.LogWarning(
+                "Perfil '{Nome}' ({Tipo}) NÃO salvo: {Qtd} bloqueio(s) -> {Bloqueios}",
+                nome, tipo, bloqueios.Count, string.Join(" | ", bloqueios));
+        }
+        else
+        {
+            _log.LogInformation(
+                "Perfil '{Nome}' ({Tipo}) válido. Risco assumido em {Riscos} parâmetro(s); exige consentimento={Consent}.",
+                nome, tipo, riscos.Count, exigeConsentimento);
+        }
+
         Perfil? perfil = sucesso
             ? new Perfil
             {

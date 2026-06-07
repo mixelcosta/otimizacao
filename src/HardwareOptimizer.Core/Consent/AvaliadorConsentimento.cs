@@ -1,5 +1,7 @@
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Profiles;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Core.Consent;
 
@@ -11,10 +13,12 @@ namespace HardwareOptimizer.Core.Consent;
 public sealed class AvaliadorConsentimento
 {
     private readonly TermoConsentimento _termo;
+    private readonly ILogger _log;
 
-    public AvaliadorConsentimento(TermoConsentimento? termo = null)
+    public AvaliadorConsentimento(TermoConsentimento? termo = null, ILogger? logger = null)
     {
         _termo = termo ?? TermoConsentimento.Padrao();
+        _log = logger ?? NullLogger.Instance;
     }
 
     public TermoConsentimento Termo => _termo;
@@ -50,12 +54,17 @@ public sealed class AvaliadorConsentimento
 
         if (!PodeHabilitarConfirmacao(resposta.CheckboxesMarcados))
         {
+            _log.LogWarning(
+                "Consentimento RECUSADO para o perfil '{Perfil}': checkboxes obrigatórios não marcados.",
+                perfil.Nome);
             return Resultado<RegistroConsentimento>.Falhar(
                 "Consentimento incompleto: é necessário marcar todos os checkboxes obrigatórios.");
         }
 
         if (!resposta.ConfirmacaoFinal)
         {
+            _log.LogWarning(
+                "Consentimento RECUSADO para o perfil '{Perfil}': confirmação final não acionada.", perfil.Nome);
             return Resultado<RegistroConsentimento>.Falhar(
                 "Confirmação final não acionada: o usuário não confirmou a alteração.");
         }
@@ -68,6 +77,9 @@ public sealed class AvaliadorConsentimento
             ValoresEscolhidos = AchatarValores(perfil),
         };
 
+        _log.LogInformation(
+            "Consentimento CONCEDIDO para o perfil '{Perfil}' (catálogo {Versao}).",
+            perfil.Nome, versaoCatalogo);
         return Resultado<RegistroConsentimento>.Ok(registro);
     }
 

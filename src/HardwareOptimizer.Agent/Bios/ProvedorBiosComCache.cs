@@ -1,6 +1,8 @@
 using System.Text.Json;
 using HardwareOptimizer.Agent.Persistence;
 using HardwareOptimizer.Core.Bios;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Agent.Bios;
 
@@ -15,13 +17,16 @@ public sealed class ProvedorBiosComCache : IProvedorInfoBios
 
     private readonly IProvedorInfoBios _interno;
     private readonly IRepositorioOtimizacao _repositorio;
+    private readonly ILogger _log;
 
-    public ProvedorBiosComCache(IProvedorInfoBios interno, IRepositorioOtimizacao repositorio)
+    public ProvedorBiosComCache(
+        IProvedorInfoBios interno, IRepositorioOtimizacao repositorio, ILogger? logger = null)
     {
         ArgumentNullException.ThrowIfNull(interno);
         ArgumentNullException.ThrowIfNull(repositorio);
         _interno = interno;
         _repositorio = repositorio;
+        _log = logger ?? NullLogger.Instance;
     }
 
     public async Task<InfoBiosFabricante?> ObterAsync(
@@ -32,33 +37,38 @@ public sealed class ProvedorBiosComCache : IProvedorInfoBios
         var cacheJson = await _repositorio.ObterCacheBiosAsync(chaveBusca, cancellationToken).ConfigureAwait(false);
         if (cacheJson is not null)
         {
-            var emCache = Desserializar(cacheJson);
+            var emCache = Desserializar(chaveBusca, cacheJson);
             if (emCache is not null)
             {
+                _log.LogDebug("BIOS cache HIT para '{Chave}'.", chaveBusca);
                 return emCache;
             }
         }
 
+        _log.LogDebug("BIOS cache MISS para '{Chave}'; consultando provedor interno.", chaveBusca);
         var info = await _interno.ObterAsync(chaveBusca, cancellationToken).ConfigureAwait(false);
         if (info is not null)
         {
             await _repositorio
                 .SalvarCacheBiosAsync(chaveBusca, JsonSerializer.Serialize(info, Json), cancellationToken)
                 .ConfigureAwait(false);
+            _log.LogDebug("BIOS cache atualizado para '{Chave}'.", chaveBusca);
         }
 
         return info;
     }
 
-    private static InfoBiosFabricante? Desserializar(string json)
+    private InfoBiosFabricante? Desserializar(string chaveBusca, string json)
     {
         try
         {
             return JsonSerializer.Deserialize<InfoBiosFabricante>(json, Json);
         }
-        catch (JsonException)
+        catch (JsonException ex)
         {
-            return null; // Cache corrompido: ignora e recorre ao provedor interno.
+            // Cache corrompido: ignora e recorre ao provedor interno.
+            _log.LogWarning(ex, "BIOS cache corrompido para '{Chave}'; recorrendo ao provedor interno.", chaveBusca);
+            return null;
         }
     }
 }

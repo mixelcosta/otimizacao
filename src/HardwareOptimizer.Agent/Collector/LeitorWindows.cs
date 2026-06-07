@@ -6,6 +6,8 @@ using System.Runtime.Versioning;
 using System.Text.Json;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Agent.Collector;
 
@@ -18,11 +20,16 @@ namespace HardwareOptimizer.Agent.Collector;
 [SupportedOSPlatform("windows")]
 public sealed class LeitorWindows : ILeitorPlataforma
 {
+    private readonly ILogger _log;
+
+    public LeitorWindows(ILogger? logger = null) => _log = logger ?? NullLogger.Instance;
+
     public SistemaOperacionalTipo Tipo => SistemaOperacionalTipo.Windows;
 
     public Task<Inventario> LerAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        _log.LogDebug("Lendo inventário do Windows via PowerShell/CIM (Get-CimInstance).");
 
         var inventario = new Inventario
         {
@@ -35,6 +42,13 @@ public sealed class LeitorWindows : ILeitorPlataforma
             Identificadores = LerIdentificadores(),
             ColetadoEm = DateTimeOffset.UtcNow,
         };
+
+        if (inventario.Placa.Fabricante == "Desconhecido")
+        {
+            _log.LogWarning(
+                "Coleta Windows parcial: consultas CIM/PowerShell não retornaram dados "
+                + "(PowerShell ausente, sem permissão ou execução bloqueada).");
+        }
 
         return Task.FromResult(inventario);
     }

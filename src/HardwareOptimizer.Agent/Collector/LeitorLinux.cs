@@ -2,6 +2,8 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Agent.Collector;
 
@@ -14,11 +16,16 @@ public sealed class LeitorLinux : ILeitorPlataforma
 {
     private const string DmiBase = "/sys/class/dmi/id";
 
+    private readonly ILogger _log;
+
+    public LeitorLinux(ILogger? logger = null) => _log = logger ?? NullLogger.Instance;
+
     public SistemaOperacionalTipo Tipo => SistemaOperacionalTipo.Linux;
 
     public Task<Inventario> LerAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        _log.LogDebug("Lendo inventário do Linux a partir de /sys e /proc.");
 
         var inventario = new Inventario
         {
@@ -31,6 +38,13 @@ public sealed class LeitorLinux : ILeitorPlataforma
             Identificadores = LerIdentificadores(),
             ColetadoEm = DateTimeOffset.UtcNow,
         };
+
+        if (inventario.Placa.Fabricante == "Desconhecido" || inventario.Cpu.Nome == "Desconhecido")
+        {
+            _log.LogWarning(
+                "Coleta Linux parcial: campos ficaram como 'Desconhecido' "
+                + "(arquivos de /sys/class/dmi ausentes ou sem permissão de leitura).");
+        }
 
         return Task.FromResult(inventario);
     }

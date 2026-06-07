@@ -1,6 +1,8 @@
 using HardwareOptimizer.Core.Catalog;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Profiles;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Agent.Execution;
 
@@ -9,6 +11,7 @@ namespace HardwareOptimizer.Agent.Execution;
 /// Após cada categoria, valida a estabilidade; se reprovar (ou se uma
 /// pré-condição falhar), reverte a categoria inteira pelo registro de
 /// alterações. Executa somente comandos do registro — nada fora do catálogo.
+/// Cada passo é registrado em log para diagnóstico do ponto exato de falha.
 /// </summary>
 public sealed class ExecutorControlado
 {
@@ -16,12 +19,14 @@ public sealed class ExecutorControlado
     private readonly RegistroComandos _comandos;
     private readonly IVerificadorPreCondicoes _preCondicoes;
     private readonly IValidadorCategoria _validadorCategoria;
+    private readonly ILogger _log;
 
     public ExecutorControlado(
         CatalogoAcoes catalogo,
         RegistroComandos comandos,
         IVerificadorPreCondicoes preCondicoes,
-        IValidadorCategoria validadorCategoria)
+        IValidadorCategoria validadorCategoria,
+        ILogger? logger = null)
     {
         ArgumentNullException.ThrowIfNull(catalogo);
         ArgumentNullException.ThrowIfNull(comandos);
@@ -32,6 +37,7 @@ public sealed class ExecutorControlado
         _comandos = comandos;
         _preCondicoes = preCondicoes;
         _validadorCategoria = validadorCategoria;
+        _log = logger ?? NullLogger.Instance;
     }
 
     public async Task<RelatorioExecucao> AplicarPerfilAsync(
@@ -43,6 +49,8 @@ public sealed class ExecutorControlado
         // Perfil customizado só pode ser aplicado após consentimento registrado.
         if (!perfil.PodeAplicar)
         {
+            _log.LogWarning(
+                "Execução bloqueada: perfil customizado '{Perfil}' sem consentimento registrado.", perfil.Nome);
             return new RelatorioExecucao
             {
                 Sucesso = false,
@@ -50,6 +58,10 @@ public sealed class ExecutorControlado
                 Mensagens = new[] { "Perfil customizado sem consentimento registrado: execução bloqueada." },
             };
         }
+
+        _log.LogInformation(
+            "Iniciando execução do perfil '{Perfil}' ({Qtd} ações, backup={Backup}).",
+            perfil.Nome, perfil.Selecoes.Count, contexto.BackupConfirmado);
 
         var categorias = new List<ResultadoCategoria>();
         var sucessoGeral = true;
@@ -73,6 +85,9 @@ public sealed class ExecutorControlado
             }
         }
 
+        _log.LogInformation(
+            "Execução do perfil '{Perfil}' finalizada. Sucesso geral={Sucesso}.", perfil.Nome, sucessoGeral);
+
         return new RelatorioExecucao
         {
             Sucesso = sucessoGeral,
@@ -89,12 +104,16 @@ public sealed class ExecutorControlado
     {
         var aplicadas = new List<RegistroAlteracao>();
         var mensagens = new List<string>();
+        _log.LogInformation("Categoria {Categoria}: aplicando.", categoria);
 
         foreach (var (selecao, acao) in itens)
         {
             var pre = _preCondicoes.Verificar(acao!, selecao.Parametros, contexto);
             if (pre.Falha)
             {
+                _log.LogWarning(
+                    "Categoria {Categoria} BLOQUEADA na ação '{Acao}': {Motivo}",
+                    categoria, acao!.Id, pre.MensagemErro);
                 mensagens.AddRange(pre.Erros);
                 return await ReverterCategoriaAsync(
                     categoria, aplicadas, SituacaoCategoria.Bloqueada, mensagens, cancellationToken)
@@ -104,6 +123,9 @@ public sealed class ExecutorControlado
             var comando = _comandos.Obter(acao!.ComandoInternoId);
             if (comando is null)
             {
+                _log.LogError(
+                    "Categoria {Categoria}: comando interno '{Comando}' da ação '{Acao}' não está registrado.",
+                    categoria, acao.ComandoInternoId, acao.Id);
                 mensagens.Add($"Ação '{acao.Id}': comando interno '{acao.ComandoInternoId}' não registrado.");
                 return await ReverterCategoriaAsync(
                     categoria, aplicadas, SituacaoCategoria.Bloqueada, mensagens, cancellationToken)
@@ -114,6 +136,9 @@ public sealed class ExecutorControlado
                 .AplicarAsync(acao.Id, categoria, selecao.Parametros, cancellationToken)
                 .ConfigureAwait(false);
             aplicadas.Add(registro);
+            _log.LogDebug(
+                "Ação '{Acao}' aplicada: {Alvo} '{Antes}' -> '{Depois}'.",
+                acao.Id, registro.Alvo, registro.ValorAnterior ?? "(não definido)", registro.ValorNovo);
         }
 
         // Validação por categoria (runner de testes). Reprovou -> reverte tudo.
@@ -123,6 +148,9 @@ public sealed class ExecutorControlado
 
         if (validacao.Regressao)
         {
+            _log.LogWarning(
+                "Categoria {Categoria}: REGRESSÃO detectada ({Ferramenta}); revertendo {Qtd} alteração(ões).",
+                categoria, validacao.Ferramenta, aplicadas.Count);
             mensagens.Add($"Regressão detectada na categoria {categoria}: revertendo.");
             var revertida = await ReverterCategoriaAsync(
                 categoria, aplicadas, SituacaoCategoria.Revertida, mensagens, cancellationToken)
@@ -130,6 +158,8 @@ public sealed class ExecutorControlado
             return revertida with { Validacao = validacao };
         }
 
+        _log.LogInformation(
+            "Categoria {Categoria}: APLICADA com {Qtd} alteração(ões).", categoria, aplicadas.Count);
         return new ResultadoCategoria
         {
             Categoria = categoria,
@@ -146,6 +176,13 @@ public sealed class ExecutorControlado
         List<string> mensagens,
         CancellationToken cancellationToken)
     {
+        if (aplicadas.Count > 0)
+        {
+            _log.LogWarning(
+                "Categoria {Categoria}: revertendo {Qtd} alteração(ões) (situação {Situacao}).",
+                categoria, aplicadas.Count, situacao);
+        }
+
         var revertidas = new List<RegistroAlteracao>(aplicadas.Count);
 
         // Reverte na ordem inversa da aplicação.
@@ -155,11 +192,15 @@ public sealed class ExecutorControlado
             var comando = _comandos.Obter(registro.ComandoId);
             if (comando is null)
             {
+                _log.LogError(
+                    "Sem comando para reverter '{Acao}' ({Comando}); estado pode ficar inconsistente.",
+                    registro.AcaoId, registro.ComandoId);
                 mensagens.Add($"Sem comando para reverter '{registro.AcaoId}' ({registro.ComandoId}).");
                 continue;
             }
 
             await comando.ReverterAsync(registro, cancellationToken).ConfigureAwait(false);
+            _log.LogDebug("Revertido: {Alvo} -> '{Anterior}'.", registro.Alvo, registro.ValorAnterior ?? "(removido)");
             revertidas.Add(registro with { Revertido = true });
         }
 
