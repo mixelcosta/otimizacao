@@ -29,15 +29,27 @@ public sealed class Sanitizador
 
         var alteracoes = new List<CampoSanitizado>();
 
-        // Identificadores sensíveis são removidos do payload de nuvem por completo.
-        // Os que têm valor de correlação são preservados apenas como hash, à parte.
+        // Identificadores correlacionáveis (serial, uuid) são preservados apenas
+        // como hash; dados de identificação pessoal (nomes, chave) são removidos.
+        IdentificadoresSensiveis? identificadoresSeguros = null;
         if (inventario.Identificadores is { } ident)
         {
-            RegistrarHash("identificadores.numero_serie", ident.NumeroSerie, alteracoes);
-            RegistrarHash("identificadores.uuid_placa", ident.UuidPlaca, alteracoes);
-            RegistrarRemocao("identificadores.nome_maquina", ident.NomeMaquina, alteracoes);
-            RegistrarRemocao("identificadores.nome_usuario", ident.NomeUsuario, alteracoes);
-            RegistrarRemocao("identificadores.chave_produto_windows", ident.ChaveProdutoWindows, alteracoes);
+            identificadoresSeguros = new IdentificadoresSensiveis
+            {
+                NumeroSerie = HashearCampo("identificadores.numero_serie", ident.NumeroSerie, alteracoes),
+                UuidPlaca = HashearCampo("identificadores.uuid_placa", ident.UuidPlaca, alteracoes),
+                NomeMaquina = RemoverCampo("identificadores.nome_maquina", ident.NomeMaquina, alteracoes),
+                NomeUsuario = RemoverCampo("identificadores.nome_usuario", ident.NomeUsuario, alteracoes),
+                ChaveProdutoWindows = RemoverCampo(
+                    "identificadores.chave_produto_windows", ident.ChaveProdutoWindows, alteracoes),
+            };
+
+            // Nada a preservar? Não emite o bloco.
+            if (identificadoresSeguros is
+                { NumeroSerie: null, UuidPlaca: null, NomeMaquina: null, NomeUsuario: null, ChaveProdutoWindows: null })
+            {
+                identificadoresSeguros = null;
+            }
         }
 
         // MAC de cada interface é hasheado.
@@ -58,28 +70,33 @@ public sealed class Sanitizador
 
         var inventarioSeguro = inventario with
         {
-            // Bloco de identificadores não acompanha o payload de nuvem.
-            Identificadores = null,
+            // Identificadores correlacionáveis ficam como hash; PII é removida.
+            Identificadores = identificadoresSeguros,
             Rede = redeSegura,
         };
 
         return new ResultadoSanitizacao(inventarioSeguro, alteracoes);
     }
 
-    private void RegistrarHash(string campo, string? valor, List<CampoSanitizado> alteracoes)
+    private string? HashearCampo(string campo, string? valor, List<CampoSanitizado> alteracoes)
     {
-        if (!string.IsNullOrWhiteSpace(valor))
+        if (string.IsNullOrWhiteSpace(valor))
         {
-            alteracoes.Add(new CampoSanitizado(campo, AcaoSanitizacao.Hasheado));
+            return null;
         }
+
+        alteracoes.Add(new CampoSanitizado(campo, AcaoSanitizacao.Hasheado));
+        return Hashear(valor);
     }
 
-    private static void RegistrarRemocao(string campo, string? valor, List<CampoSanitizado> alteracoes)
+    private static string? RemoverCampo(string campo, string? valor, List<CampoSanitizado> alteracoes)
     {
         if (!string.IsNullOrWhiteSpace(valor))
         {
             alteracoes.Add(new CampoSanitizado(campo, AcaoSanitizacao.Removido));
         }
+
+        return null;
     }
 
     /// <summary>Hash SHA-256 salgado e truncado, suficiente para correlação sem revelar o valor.</summary>

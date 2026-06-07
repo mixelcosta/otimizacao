@@ -25,8 +25,16 @@ public sealed class AvaliadorConsentimento
     public bool PodeHabilitarConfirmacao(IEnumerable<string> checkboxesMarcados)
     {
         ArgumentNullException.ThrowIfNull(checkboxesMarcados);
+
+        var obrigatorios = _termo.CheckboxesObrigatorios;
+        if (obrigatorios.Count == 0)
+        {
+            // Termo sem aceites obrigatórios não habilita a confirmação (postura conservadora).
+            return false;
+        }
+
         var marcados = new HashSet<string>(checkboxesMarcados, StringComparer.OrdinalIgnoreCase);
-        return _termo.CheckboxesObrigatorios.All(marcados.Contains);
+        return obrigatorios.All(marcados.Contains);
     }
 
     /// <summary>

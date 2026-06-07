@@ -43,6 +43,15 @@ public sealed class ConsentimentoTests
     }
 
     [Fact]
+    public void Termo_sem_obrigatorios_nao_habilita_confirmacao()
+    {
+        var termo = new TermoConsentimento("Aviso", new[] { "corpo" }, Array.Empty<Checkbox>());
+        var avaliador = new AvaliadorConsentimento(termo);
+
+        Assert.False(avaliador.PodeHabilitarConfirmacao(Array.Empty<string>()));
+    }
+
+    [Fact]
     public void Avaliar_gera_registro_de_auditoria_quando_completo()
     {
         var avaliador = new AvaliadorConsentimento();

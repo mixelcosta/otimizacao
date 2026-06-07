@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\HardwareOptimizer.Core\HardwareOptimizer.Core.csproj" />
     <ProjectReference Include="..\..\src\HardwareOptimizer.Agent\HardwareOptimizer.Agent.csproj" />
+    <ProjectReference Include="..\..\src\HardwareOptimizer.Cli\HardwareOptimizer.Cli.csproj" />
   </ItemGroup>
 
 </Project>

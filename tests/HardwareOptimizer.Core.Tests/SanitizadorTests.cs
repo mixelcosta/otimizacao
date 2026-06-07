@@ -27,11 +27,22 @@ public sealed class SanitizadorTests
     };
 
     [Fact]
-    public void Sanitizar_remove_bloco_de_identificadores_do_payload()
+    public void Sanitizar_hasheia_correlacionaveis_e_remove_pii()
     {
         var resultado = new Sanitizador("sal-fixo").Sanitizar(InventarioComSegredos());
+        var ident = resultado.InventarioSeguro.Identificadores;
 
-        Assert.Null(resultado.InventarioSeguro.Identificadores);
+        Assert.NotNull(ident);
+
+        // Correlacionáveis: preservados apenas como hash (o valor bruto não vaza).
+        Assert.StartsWith("sha256:", ident!.NumeroSerie);
+        Assert.StartsWith("sha256:", ident.UuidPlaca);
+        Assert.DoesNotContain("SN-12345", ident.NumeroSerie!, StringComparison.Ordinal);
+
+        // PII: removida.
+        Assert.Null(ident.NomeMaquina);
+        Assert.Null(ident.NomeUsuario);
+        Assert.Null(ident.ChaveProdutoWindows);
     }
 
     [Fact]
