@@ -36,6 +36,30 @@ public sealed class SensoresLhmTests
     }
 
     [Fact]
+    public async Task Lhm_descarta_temperatura_e_clock_zerados_mas_mantem_volt_fan_potencia()
+    {
+        // Cenário real visto no Windows sem elevação: CPU reporta 0 °C / 0 MHz
+        // (MSR não lido), enquanto tensão/fan/potência em 0 são válidos.
+        var fonte = new FonteFake(new[]
+        {
+            new Sensor { Nome = "GPU", Tipo = TipoSensor.Temperatura, Valor = 37, Unidade = "°C" },
+            new Sensor { Nome = "CPU Tctl", Tipo = TipoSensor.Temperatura, Valor = 0, Unidade = "°C" },
+            new Sensor { Nome = "Core #1", Tipo = TipoSensor.Clock, Valor = 0, Unidade = "MHz" },
+            new Sensor { Nome = "VID", Tipo = TipoSensor.Voltagem, Valor = 0, Unidade = "V" },
+            new Sensor { Nome = "Fan", Tipo = TipoSensor.Fan, Valor = 0, Unidade = "RPM" },
+            new Sensor { Nome = "Pkg", Tipo = TipoSensor.Potencia, Valor = 0, Unidade = "W" },
+        });
+
+        var leitura = await new LeitorSensoresLhm(fonte).LerAsync();
+
+        Assert.Equal(37, leitura.TemperaturaMaxC); // GPU mantida; CPU 0 °C descartada
+        Assert.DoesNotContain(leitura.Sensores, s => s.Tipo == TipoSensor.Clock); // 0 MHz descartado
+        Assert.Contains(leitura.Sensores, s => s.Tipo == TipoSensor.Voltagem && s.Valor == 0);
+        Assert.Contains(leitura.Sensores, s => s.Tipo == TipoSensor.Fan && s.Valor == 0);
+        Assert.Contains(leitura.Sensores, s => s.Tipo == TipoSensor.Potencia && s.Valor == 0);
+    }
+
+    [Fact]
     public async Task Lhm_sem_sensores_retorna_leitura_vazia()
     {
         var leitor = new LeitorSensoresLhm(new FonteFake(Array.Empty<Sensor>()));

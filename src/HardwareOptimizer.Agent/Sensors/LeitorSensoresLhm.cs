@@ -30,8 +30,13 @@ public sealed class LeitorSensoresLhm : ILeitorSensores
         cancellationToken.ThrowIfCancellationRequested();
         _log.LogDebug("Lendo sensores via LibreHardwareMonitor.");
 
-        // Descarta valores não finitos (NaN/Infinito) que sensores podem reportar.
-        var validos = _fonte.Ler().Where(s => double.IsFinite(s.Valor)).ToList();
+        // Descarta valores não finitos (NaN/Infinito) e leituras indisponíveis:
+        // temperatura/clock em 0 indicam sensor não lido (típico da CPU sem o
+        // driver/elevação — leituras de MSR exigem Ring0). Tensão, fan e potência
+        // em 0 são válidos e permanecem.
+        var validos = _fonte.Ler()
+            .Where(s => double.IsFinite(s.Valor) && !LeituraIndisponivel(s))
+            .ToList();
 
         if (validos.Count == 0)
         {
@@ -45,4 +50,9 @@ public sealed class LeitorSensoresLhm : ILeitorSensores
 
         return Task.FromResult(new LeituraSensores { Sensores = validos });
     }
+
+    // Temperatura/clock ≤ 0 = sensor indisponível (não lido). Outros tipos podem
+    // legitimamente valer 0 (ex.: fan parado, consumo ocioso).
+    private static bool LeituraIndisponivel(Sensor sensor) =>
+        sensor.Tipo is TipoSensor.Temperatura or TipoSensor.Clock && sensor.Valor <= 0;
 }

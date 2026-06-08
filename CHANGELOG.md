@@ -9,6 +9,16 @@ roadmap no [README](README.md#mapa-do-roadmap)).
 
 ## [Não lançado]
 
+### Corrigido
+- **Data da BIOS** vinha como `/Date(1754611200000)/` (formato legado do
+  `ConvertTo-Json` do Windows PowerShell). Novo `NormalizadorData` converte para
+  ISO `yyyy-MM-dd`; cobre também CIM DATETIME e o DMI do Linux (validado em
+  hardware real: ASUS X570, BIOS 2025-08-08).
+- **Sensores zerados** poluíam a leitura no Windows sem elevação: a CPU
+  reportava `0 °C` / `0 MHz` (MSR exige Ring0). `LeitorSensoresLhm` agora
+  descarta temperatura/clock ≤ 0 (mantendo tensão/fan/potência em 0, que são
+  válidos).
+
 ### Adicionado
 - **Execução real no Windows** (`EstadoSistemaWindows`): traduz os alvos do
   catálogo em operações de registro, plano de energia (`powercfg`) e serviços

@@ -63,7 +63,7 @@ public sealed class LeitorWindows : ILeitorPlataforma
             Fabricante = Texto(board, "Manufacturer") ?? "Desconhecido",
             Modelo = Texto(board, "Product") ?? "Desconhecido",
             VersaoBios = Texto(bios, "SMBIOSBIOSVersion"),
-            DataBios = Texto(bios, "ReleaseDate"),
+            DataBios = NormalizadorData.Normalizar(Texto(bios, "ReleaseDate")),
             Modo = LerTexto("$env:firmware_type") is { Length: > 0 } modo ? modo : null,
             SecureBoot = LerSecureBoot(),
         };

@@ -54,7 +54,7 @@ public sealed class LeitorLinux : ILeitorPlataforma
         Fabricante = LerTexto($"{DmiBase}/board_vendor") ?? "Desconhecido",
         Modelo = LerTexto($"{DmiBase}/board_name") ?? "Desconhecido",
         VersaoBios = LerTexto($"{DmiBase}/bios_version"),
-        DataBios = LerTexto($"{DmiBase}/bios_date"),
+        DataBios = NormalizadorData.Normalizar(LerTexto($"{DmiBase}/bios_date")),
         Modo = Directory.Exists("/sys/firmware/efi") ? "UEFI" : "Legacy",
         SecureBoot = LerSecureBoot(),
     };
