@@ -20,6 +20,11 @@ roadmap no [README](README.md#mapa-do-roadmap)).
   válidos).
 
 ### Adicionado
+- **Comando `aplicar` na CLI**: executa o fluxo completo ponta a ponta — coleta →
+  seleção (IDs informados ou proposta do cérebro) → **perfil seguro** → backup
+  bloqueante → execução por categoria com rollback → auditoria em SQLite.
+  Simulação por padrão; aplica de verdade só com `HWOPT_EXECUCAO_REAL=1` em
+  terminal Administrador no Windows.
 - **Execução real no Windows** (`EstadoSistemaWindows`): traduz os alvos do
   catálogo em operações de registro, plano de energia (`powercfg`) e serviços
   (`sc.exe`), preservando `Ler`/`Escrever`/`Restaurar` e o rollback. Isolada por

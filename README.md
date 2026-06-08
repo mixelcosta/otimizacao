@@ -172,12 +172,22 @@ dotnet run --project src/HardwareOptimizer.Cli -- visao foto.png bios
 
 # Fluxo completo ponta a ponta (modo simulação seguro)
 dotnet run --project src/HardwareOptimizer.Cli -- demo
+
+# Aplicar um perfil seguro (simulação por padrão; sem ids usa a proposta do cérebro)
+dotnet run --project src/HardwareOptimizer.Cli -- aplicar SO_EFEITOS_VISUAIS_DESEMPENHO PWR_PLANO_ALTO_DESEMPENHO
+# Aplicar DE VERDADE no Windows (terminal Administrador):
+#   $env:HWOPT_EXECUCAO_REAL = "1"; HardwareOptimizer.Cli.exe aplicar
 ```
 
 O comando `demo` exercita, em sequência: coleta → sanitização → proposta do
 cérebro → perfil seguro → backup bloqueante → execução por categoria →
 **bloqueio rígido** de um valor acima do limite absoluto → **risco assumido**
 com fluxo de consentimento e auditoria → persistência em SQLite.
+
+O comando `aplicar` executa esse mesmo fluxo de forma objetiva (coleta →
+seleção → perfil seguro → backup → execução com rollback → auditoria), em
+**simulação por padrão**; só altera o sistema com `HWOPT_EXECUCAO_REAL=1` em
+terminal Administrador no Windows.
 
 ---
 

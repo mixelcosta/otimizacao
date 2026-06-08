@@ -3,6 +3,7 @@ using HardwareOptimizer.Agent.Backup;
 using HardwareOptimizer.Agent.Bios;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Execution;
+using HardwareOptimizer.Agent.Execution.Windows;
 using HardwareOptimizer.Agent.Persistence;
 using HardwareOptimizer.Agent.Sensors;
 using HardwareOptimizer.Agent.Validation;
@@ -81,6 +82,8 @@ internal static class Program
                 case "demo":
                     await ComandoDemo();
                     return 0;
+                case "aplicar":
+                    return await ComandoAplicar(args);
                 default:
                     ImprimirAjuda();
                     return 0;
@@ -118,6 +121,9 @@ internal static class Program
         Apresentacao.Linha("  proposta    Cérebro propõe a matriz de decisão a partir do inventário sanitizado.");
         Apresentacao.Linha("  visao <img> Interpreta uma foto (BIOS/etiqueta/erro/benchmark) e cruza com o inventário.");
         Apresentacao.Linha("  demo        Executa o fluxo completo ponta a ponta (modo simulação seguro).");
+        Apresentacao.Linha("  aplicar [ids...]  Aplica um perfil seguro (coleta→backup→executa→valida→rollback).");
+        Apresentacao.Linha("              Sem ids, usa a proposta do cérebro. Simulação por padrão;");
+        Apresentacao.Linha("              HWOPT_EXECUCAO_REAL=1 em terminal Administrador aplica de verdade.");
     }
 
     private static async Task ComandoColetar()
@@ -611,6 +617,100 @@ internal static class Program
         Apresentacao.Titulo("Passo 9 — Relatório executivo e nota final");
         var relatorioExecutivo = GerarRelatorioExecutivo(inventario, relatorio);
         ImprimirRelatorioExecutivo(relatorioExecutivo);
+    }
+
+    private static async Task<int> ComandoAplicar(string[] args)
+    {
+        var catalogo = CatalogoPadrao.Criar();
+        var caminhoBanco = Path.Combine(AppContext.BaseDirectory, "data", "otimizador.db");
+        var repositorio = RepositorioSqlite.DeArquivo(caminhoBanco, Log<RepositorioSqlite>());
+        await repositorio.InicializarAsync();
+
+        // Estado real (Windows + HWOPT_EXECUCAO_REAL) ou simulado (padrão seguro do projeto).
+        var estado = EstadoSistemaWindows.Selecionar(_loggerFactory.CreateLogger("Aplicar"));
+        var real = estado is EstadoSistemaWindows;
+
+        Apresentacao.Titulo("Aplicar otimizações — " + (real ? "EXECUÇÃO REAL no Windows" : "SIMULAÇÃO (dry-run)"));
+        if (real)
+        {
+            Apresentacao.Linha("  ATENÇÃO: as ações alterarão o sistema (registro, plano de energia, serviços).");
+            Apresentacao.Linha("  Obs.: neste MVP a validação de estresse usa runner simulado (sem teste de carga real).");
+        }
+        else
+        {
+            Apresentacao.Linha("  Modo seguro: nada será alterado no sistema.");
+            Apresentacao.Linha("  Para aplicar de verdade: terminal Administrador + HWOPT_EXECUCAO_REAL=1 (Windows).");
+        }
+
+        // 1) Inventário (read-only) + auditoria.
+        var inventario = await new ColetorInventario(loggerFactory: _loggerFactory).ColetarAsync();
+        await repositorio.SalvarInventarioAsync(inventario);
+        Apresentacao.Item("Equipamento", $"{inventario.Placa.Fabricante} {inventario.Placa.Modelo} · {inventario.Cpu.Nome}");
+
+        // 2) Seleção: IDs informados no comando ou a proposta do cérebro.
+        var idsInformados = args.Skip(1).Where(a => !a.StartsWith('-')).ToList();
+        List<string> ids;
+        if (idsInformados.Count > 0)
+        {
+            ids = idsInformados;
+            Apresentacao.Item("Ações (informadas)", string.Join(", ", ids));
+        }
+        else
+        {
+            var sanitizado = new Sanitizador(logger: Log<Sanitizador>()).Sanitizar(inventario).InventarioSeguro;
+            var matriz = await CriarCerebro().ProporAsync(sanitizado, catalogo);
+            ids = matriz.AcaoIds.ToList();
+            Apresentacao.Item("Ações (propostas pelo cérebro)", ids.Count > 0 ? string.Join(", ", ids) : "(nenhuma)");
+        }
+
+        if (ids.Count == 0)
+        {
+            Apresentacao.Linha("Nada a aplicar.");
+            return 0;
+        }
+
+        // 3) Perfil seguro (valores na faixa segura; sem risco assumido).
+        var construcao = new ConstrutorPerfil(catalogo, Log<ConstrutorPerfil>())
+            .CriarPerfilSeguro("perfil-aplicar", ids);
+        if (!construcao.Sucesso)
+        {
+            Apresentacao.Titulo("Perfil inválido — nada aplicado");
+            foreach (var bloqueio in construcao.Bloqueios)
+            {
+                Apresentacao.Item("Bloqueio", bloqueio);
+            }
+
+            return 1;
+        }
+
+        // 4) Backup obrigatório (bloqueante).
+        var backup = await new ServicoBackup(logger: Log<ServicoBackup>()).CriarBackupAsync(inventario);
+        Apresentacao.Item("Backup", backup.Sucesso ? "confirmado" : "FALHOU");
+        if (!backup.Sucesso)
+        {
+            Apresentacao.Linha("Sem backup confirmado, nada é aplicado (regra de segurança).");
+            return 1;
+        }
+
+        // 5) Execução controlada por categoria, com rollback automático em regressão.
+        var executor = new ExecutorControlado(
+            catalogo,
+            RegistroComandos.Padrao(estado),
+            new VerificadorPreCondicoes(),
+            new RunnerValidacao(FerramentaEstresseSimulada.Saudavel(), logger: Log<RunnerValidacao>()),
+            Log<ExecutorControlado>());
+
+        var relatorio = await executor.AplicarPerfilAsync(
+            construcao.Perfil!, new ContextoExecucao { BackupConfirmado = backup.Sucesso });
+
+        Apresentacao.Titulo("Resultado da execução");
+        ImprimirRelatorio(relatorio);
+        await repositorio.RegistrarExecucaoAsync(relatorio);
+
+        Apresentacao.Linha();
+        Apresentacao.Item("Modo", real ? "execução real" : "simulação");
+        Apresentacao.Item("Banco (auditoria)", caminhoBanco);
+        return relatorio.Sucesso ? 0 : 1;
     }
 
     private static async Task ProcessarConsentimento(

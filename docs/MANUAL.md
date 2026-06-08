@@ -58,6 +58,14 @@ obrigatório** → execução por categoria → **bloqueio rígido** de valores 
 limite → **risco assumido** com consentimento → **validação que reverte
 regressão** → relatório.
 
+Para **aplicar de fato** (não apenas demonstrar), use o comando `aplicar` — ele
+roda o mesmo fluxo seguro (coleta → backup → execução por categoria com rollback
+→ auditoria). Continua em **simulação** por padrão:
+```bash
+hwopt aplicar                                   # usa a proposta do cérebro
+hwopt aplicar SO_EFEITOS_VISUAIS_DESEMPENHO     # ou ações específicas
+```
+
 > Na execução real (fora do `demo`), cada categoria só é aplicada após o backup
 > confirmado, e é **revertida automaticamente** se a validação detectar
 > regressão (WHEA, artefatos, tela azul, superaquecimento, etc.).
@@ -94,6 +102,7 @@ hwopt relatorio    # compare a nota antes/depois
 | `bios`       | Identifica a BIOS, verifica com o fabricante e gera o guia (**não aplica**). |
 | `visao <img>`| Interpreta uma foto e cruza com o inventário (exige LLM configurado).     |
 | `demo`       | Fluxo completo ponta a ponta (modo simulação seguro).                    |
+| `aplicar [ids…]` | Aplica um perfil seguro (coleta→backup→executa→valida→rollback→auditoria). Sem ids, usa a proposta do cérebro. Simulação por padrão; `HWOPT_EXECUCAO_REAL=1` (admin) aplica de verdade. |
 | `servir`     | Hospeda o servidor IPC (named pipe) para a UI.                           |
 | `ipc-demo`   | Demonstra o IPC (servidor + cliente no mesmo processo).                   |
 
