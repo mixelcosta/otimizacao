@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+        x:Class="HardwareOptimizer.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="860" Height="620"
+        Title="Agente de Otimização de Hardware">
+
+  <DockPanel Margin="12">
+
+    <TextBlock DockPanel.Dock="Top"
+               Text="Agente de Otimização e Confiabilidade de Hardware"
+               FontSize="18" FontWeight="Bold" Margin="0,0,0,8" />
+
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+      <Button Content="Coletar inventário" Command="{Binding ColetarCommand}" IsEnabled="{Binding !Ocupado}" />
+      <Button Content="Ler sensores" Command="{Binding LerSensoresCommand}" IsEnabled="{Binding !Ocupado}" />
+      <Button Content="Propor ações" Command="{Binding ProporCommand}" IsEnabled="{Binding !Ocupado}" />
+      <Button Content="Aprovar selecionadas" Command="{Binding AprovarCommand}" IsEnabled="{Binding !Ocupado}" />
+    </StackPanel>
+
+    <TextBlock DockPanel.Dock="Bottom" Text="{Binding Status}" Margin="0,8,0,0" Foreground="Gray" />
+
+    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,*">
+      <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,8">
+        <TextBlock Text="Inventário" FontWeight="Bold" />
+        <TextBlock Text="{Binding InventarioResumo}" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <DockPanel Grid.Row="1" Grid.Column="0" Margin="0,0,8,0">
+        <TextBlock DockPanel.Dock="Top" Text="Sensores" FontWeight="Bold" />
+        <ListBox ItemsSource="{Binding Sensores}" />
+      </DockPanel>
+
+      <DockPanel Grid.Row="1" Grid.Column="1">
+        <TextBlock DockPanel.Dock="Top" Text="Matriz de decisão (marque para aprovar)" FontWeight="Bold" />
+        <TextBlock DockPanel.Dock="Bottom" Text="{Binding ResultadoAprovacao}" TextWrapping="Wrap" Foreground="#2E7D32" />
+        <ListBox ItemsSource="{Binding Matriz}">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ItemMatrizViewModel">
+              <CheckBox IsChecked="{Binding Selecionado}">
+                <StackPanel>
+                  <TextBlock Text="{Binding Descricao}" TextWrapping="Wrap" />
+                  <TextBlock Text="{Binding Risco}" Foreground="Gray" FontSize="11" />
+                </StackPanel>
+              </CheckBox>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Grid>
+
+  </DockPanel>
+</Window>

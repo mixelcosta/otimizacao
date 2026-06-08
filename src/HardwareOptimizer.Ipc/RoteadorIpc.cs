@@ -20,7 +20,7 @@ namespace HardwareOptimizer.Ipc;
 /// aos módulos do agente e devolve uma <see cref="RespostaIpc"/>. Lógica pura de
 /// roteamento (sem transporte), portanto totalmente testável.
 /// </summary>
-public sealed class RoteadorIpc
+public sealed class RoteadorIpc : IRoteadorIpc
 {
     private readonly CatalogoAcoes _catalogo;
     private readonly IColetorInventario _coletor;
