@@ -97,20 +97,29 @@ docker run --rm hwopt demo
 
 ## Opção D — Publicar você mesmo
 
-Gera os binários self-contained para todas as plataformas:
+Gera os binários self-contained (não exigem .NET instalado na máquina alvo).
 
-```bash
-# Tudo (linux-x64, win-x64, osx-x64)
-scripts/publish.sh
+**Windows (PowerShell):**
+```powershell
+# CLI para win-x64 (padrão)
+scripts\publish.ps1
 
-# Apenas uma plataforma
-scripts/publish.sh linux-x64
+# Vários RIDs
+scripts\publish.ps1 -Rids win-x64,linux-x64
 
 # Incluindo a UI desktop
+scripts\publish.ps1 -ComUI
+```
+
+**Linux / macOS (bash):**
+```bash
+scripts/publish.sh                 # linux-x64, win-x64, osx-x64
+scripts/publish.sh linux-x64       # apenas uma plataforma
 COM_UI=1 scripts/publish.sh linux-x64
 ```
 
-Os artefatos ficam em `artifacts/`.
+Os artefatos ficam em `artifacts/` (ex.: `artifacts/hwopt-cli-win-x64/HardwareOptimizer.Cli.exe`,
+~76 MB, com o runtime .NET embutido).
 
 ---
 
