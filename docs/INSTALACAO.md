@@ -11,6 +11,7 @@ Este guia mostra, passo a passo, como instalar e executar o software em
 
 ## Sumário
 
+- [Instalador Windows (.exe)](#instalador-windows-exe--mais-fácil-no-windows)
 - [Opção A — Binário pronto (sem instalar nada)](#opção-a--binário-pronto-recomendado)
 - [Opção B — Compilar do código-fonte](#opção-b--compilar-do-código-fonte)
 - [Opção C — Docker (Linux)](#opção-c--docker-linux)
@@ -20,6 +21,35 @@ Este guia mostra, passo a passo, como instalar e executar o software em
 - [Onde ficam dados, logs e backups](#onde-ficam-dados-logs-e-backups)
 - [Notas de distribuição e segurança](#notas-de-distribuição-e-segurança)
 - [Solução de problemas](#solução-de-problemas)
+
+---
+
+## Instalador Windows (.exe) — mais fácil no Windows
+
+A forma mais simples no Windows: um instalador único que coloca a **interface** e
+a **CLI** (ambas *self-contained*, sem precisar de .NET), cria **atalhos** no Menu
+Iniciar e na Área de Trabalho e um **desinstalador**.
+
+1. Baixe `OtimizacaoHardware-Setup-<versão>.exe` na página de **Releases** (ou
+   gere localmente — veja abaixo).
+2. Dê duplo clique e siga o assistente (requer **administrador**, pois instala em
+   *Arquivos de Programas*). Opcionalmente, marque "adicionar a CLI ao PATH".
+3. Abra **Agente de Otimização de Hardware** pelo Menu Iniciar ou pela Área de
+   Trabalho.
+
+> Diagnóstico e leitura não exigem privilégios; para **aplicar de verdade** as
+> otimizações, veja [Execução real no Windows](#execução-real-no-windows-opt-in).
+
+**Gerar o instalador localmente** (precisa do Inno Setup):
+```powershell
+winget install JRSoftware.InnoSetup     # uma vez
+scripts\gerar-instalador.ps1            # publica os binários e compila o .exe
+# -> artifacts\installer\OtimizacaoHardware-Setup-0.1.0.exe (~58 MB)
+```
+
+> O instalador ainda **não é assinado** (Authenticode); o SmartScreen pode exibir
+> um aviso ("Mais informações" → "Executar assim mesmo"). A assinatura de código
+> (EV) é um passo operacional de distribuição.
 
 ---
 

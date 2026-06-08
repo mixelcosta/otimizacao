@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   Publica binários distribuíveis do Agente de Otimização de Hardware.
   Gera executáveis self-contained (não exigem .NET instalado na máquina alvo).
