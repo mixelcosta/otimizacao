@@ -31,6 +31,20 @@ estão **codificadas e cobertas por testes**. Em particular:
 
 ---
 
+## 📦 Instalação e 📖 manual de uso
+
+- **[Guia de Instalação](docs/INSTALACAO.md)** — binário pronto, código-fonte, Docker e publicação.
+- **[Manual de Orientações](docs/MANUAL.md)** — passo a passo de cada comando e o fluxo seguro de otimização.
+
+Início rápido (do código-fonte):
+```bash
+dotnet build HardwareOptimizer.sln -c Release && dotnet test HardwareOptimizer.sln -c Release
+dotnet run --project src/HardwareOptimizer.Cli -- demo      # fluxo completo (simulação segura)
+dotnet run --project src/HardwareOptimizer.App              # interface gráfica
+```
+
+---
+
 ## Arquitetura
 
 Três planos, como no documento:
@@ -78,12 +92,17 @@ HardwareOptimizer.sln
 │   │   ├── ClienteLlmAnthropic        Adapter do SDK oficial da Anthropic
 │   │   └── Visao/                     Leitura de fotos + confiança + conferência com inventário
 │   ├── HardwareOptimizer.Ipc/       Camada IPC: protocolo, roteador, servidor/cliente named pipe
+│   ├── HardwareOptimizer.App/       UI desktop Avalonia (MVVM) consumindo o IPC
 │   └── HardwareOptimizer.Cli/       Demonstração ponta a ponta (orquestra todos os planos)
 ├── tests/
 │   ├── HardwareOptimizer.Core.Tests/    Regras invariantes do domínio
 │   ├── HardwareOptimizer.Agent.Tests/   Executor, coletor, persistência, backup, sensores, validação
 │   ├── HardwareOptimizer.Cerebro.Tests/ Guard, matriz, cérebro local/LLM, visão, privacidade
-│   └── HardwareOptimizer.Ipc.Tests/     Roteador + loopback real de named pipe
+│   ├── HardwareOptimizer.Ipc.Tests/     Roteador + loopback real de named pipe
+│   └── HardwareOptimizer.App.Tests/     ViewModels da UI (com roteador falso)
+├── scripts/publish.sh               Publicação self-contained multiplataforma
+├── Dockerfile                       Imagem de distribuição (Linux)
+├── docs/INSTALACAO.md · docs/MANUAL.md  Instalação e manual de uso
 ├── schemas/                         JSON Schemas dos contratos (draft 2020-12)
 └── docs/arquitetura_otimizador.json Documento de arquitetura de referência
 ```
@@ -233,7 +252,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 0 | Fundação e setup | ✅ Solução .NET, CI, contratos + schemas, limites de segurança |
 | 1 | Coletor read-only | ✅ Linux (real) + Windows/CIM (estruturado); orquestrador multiplataforma |
 | 2 | Sensores | ✅ Leitura em tempo real (Linux `/sys/class/hwmon` real + clock; Windows WMI; LibreHardwareMonitor previsto p/ produção) |
-| 3 | UI e IPC | ◐ IPC (named pipe) completo: protocolo, roteador, servidor/cliente + aprovação por ação; UI Avalonia pendente |
+| 3 | UI e IPC | ✅ IPC (named pipe) + **UI Avalonia (MVVM)** com inventário, sensores, matriz e aprovação por ação |
 | 4 | Cérebro / LLM | ✅ Matriz de decisão + guard contra alucinação + cérebro local e LLM (SDK Anthropic); sanitização aplicada antes do envio |
 | 5 | Módulo BIOS | ✅ Identificação, normalização, banco curado + cache SQLite, decisão conservadora e guia por fabricante |
 | 6 | Visão | ✅ Pipeline (leitura estruturada + confiança), conferência com o inventário e cliente multimodal (SDK Anthropic) |
@@ -241,7 +260,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 8 | Executor controlado | ✅ Catálogo, validador, perfis, consentimento, rollback por categoria |
 | 9 | Validação e testes | ✅ Runner de estresse (parser + análise: WHEA/memória/artefatos/TDR/BSOD/temperatura/queda de score) ligado ao rollback automático |
 | 10 | Relatório e score | ✅ Notas 0-100 por domínio + nota final ponderada + relatório executivo |
-| 11 | Hardening e distribuição | ⏳ Assinatura de código e instalador pendentes |
+| 11 | Hardening e distribuição | ◐ Publish self-contained multiplataforma + Docker + workflow de release + documentação; assinatura de código (EV) é passo operacional |
 
 Legenda: ✅ entregue · ◐ parcial/estrutural · ⏳ planejado.
 

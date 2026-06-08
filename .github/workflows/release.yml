@@ -1,0 +1,44 @@
+name: Release
+
+# Publica binários self-contained quando uma tag "v*" é criada.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    name: Publicar ${{ matrix.rid }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rid: [linux-x64, win-x64, osx-x64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Publicar CLI (${{ matrix.rid }})
+        run: |
+          dotnet publish src/HardwareOptimizer.Cli/HardwareOptimizer.Cli.csproj \
+            -c Release -r ${{ matrix.rid }} --self-contained true \
+            -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
+            -o artifacts/hwopt-cli-${{ matrix.rid }}
+
+      - name: Compactar artefato
+        run: |
+          cd artifacts
+          zip -r "hwopt-cli-${{ matrix.rid }}.zip" "hwopt-cli-${{ matrix.rid }}"
+
+      - name: Anexar ao release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/hwopt-cli-${{ matrix.rid }}.zip
