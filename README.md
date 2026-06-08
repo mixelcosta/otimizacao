@@ -252,7 +252,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | --- | --- | --- |
 | 0 | Fundação e setup | ✅ Solução .NET, CI, contratos + schemas, limites de segurança |
 | 1 | Coletor read-only | ✅ Linux (real) + Windows/CIM (estruturado); orquestrador multiplataforma |
-| 2 | Sensores | ✅ Leitura em tempo real (Linux `/sys/class/hwmon` real + clock; Windows WMI; LibreHardwareMonitor previsto p/ produção) |
+| 2 | Sensores | ✅ Leitura em tempo real (Linux `/sys/class/hwmon` real + clock; Windows **LibreHardwareMonitor** — clock/voltagem/fan/consumo/temperatura — com fallback automático para WMI) |
 | 3 | UI e IPC | ✅ IPC (named pipe) + **UI Avalonia (MVVM)** com inventário, sensores, matriz e aprovação por ação |
 | 4 | Cérebro / LLM | ✅ Matriz de decisão + guard contra alucinação + cérebro local e LLM (SDK Anthropic); sanitização aplicada antes do envio |
 | 5 | Módulo BIOS | ✅ Identificação, normalização, banco curado + cache SQLite, decisão conservadora e guia por fabricante |

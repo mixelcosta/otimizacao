@@ -205,7 +205,14 @@ do `LeitorSensoresLinux`.
 
 **WMI / CIM** (*Windows Management Instrumentation*)
 API do Windows para consultar hardware/SO. Fonte do `LeitorWindows` e do
-`LeitorSensoresWindows`.
+`LeitorSensoresWindows` (fallback de temperatura).
+
+**LibreHardwareMonitor**
+Biblioteca (.NET) que lê sensores detalhados no Windows — clock, voltagem, fan,
+consumo e temperatura por componente — via driver de kernel. Fonte de produção do
+`LeitorSensoresLhm` (adaptada por `FonteSensoresLhm`), com fallback para
+[WMI](#wmi--cim-windows-management-instrumentation) quando não há driver/elevação.
+Requer atenção a Secure Boot e assinatura de driver.
 
 **Score / nota** (`CalculadoraScore`)
 Nota **0-100 por domínio** (Hardware, Bios, Cpu, Gpu, Ram, Windows,

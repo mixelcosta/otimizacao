@@ -35,8 +35,22 @@ public sealed class ServicoSensores
         return leitura;
     }
 
-    private static ILeitorSensores CriarLeitorPadrao(ILoggerFactory fabrica) =>
-        OperatingSystem.IsWindows()
-            ? new LeitorSensoresWindows(fabrica.CreateLogger<LeitorSensoresWindows>())
-            : (ILeitorSensores)new LeitorSensoresLinux(logger: fabrica.CreateLogger<LeitorSensoresLinux>());
+    private static ILeitorSensores CriarLeitorPadrao(ILoggerFactory fabrica)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return new LeitorSensoresLinux(logger: fabrica.CreateLogger<LeitorSensoresLinux>());
+        }
+
+        // Produção no Windows: LibreHardwareMonitor (rico) com fallback para WMI
+        // (temperatura, sem elevação) quando o driver não está disponível.
+        var lhm = new LeitorSensoresLhm(
+            new FonteSensoresLhm(fabrica.CreateLogger<FonteSensoresLhm>()),
+            fabrica.CreateLogger<LeitorSensoresLhm>());
+        var wmi = new LeitorSensoresWindows(fabrica.CreateLogger<LeitorSensoresWindows>());
+
+        return new LeitorSensoresComposto(
+            new ILeitorSensores[] { lhm, wmi },
+            fabrica.CreateLogger<LeitorSensoresComposto>());
+    }
 }

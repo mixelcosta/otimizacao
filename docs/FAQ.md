@@ -25,8 +25,11 @@ Só para **aplicar** otimizações. Diagnóstico (coletar, sensores, relatório,
 proposta, BIOS) funciona sem elevação.
 
 **`sensores` diz que não há sensores.**
-A máquina (ou contêiner) não expõe `/sys/class/hwmon`, ou falta permissão. Em
-VMs isso é comum.
+No Linux, a máquina (ou contêiner) não expõe `/sys/class/hwmon`, ou falta
+permissão — comum em VMs. No Windows, os dados ricos vêm do
+**LibreHardwareMonitor** (driver de kernel): sem elevação/driver, o sistema cai
+automaticamente para a temperatura via WMI; rode como Administrador para a
+leitura completa (clock, voltagem, fan, consumo).
 
 **Como reverto uma mudança?**
 A validação reverte a categoria automaticamente em caso de regressão. Os backups

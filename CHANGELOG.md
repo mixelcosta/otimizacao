@@ -16,9 +16,13 @@ roadmap no [README](README.md#mapa-do-roadmap)).
   portas (`IAcessoRegistro`, `IExecutorProcesso`) e testável fora do Windows.
   Ativada por opt-in explícito (`HWOPT_EXECUCAO_REAL=1`, Windows elevado); o
   padrão segue sendo o modo simulado.
+- **Sensores via LibreHardwareMonitor** no Windows (`LeitorSensoresLhm` +
+  `FonteSensoresLhm`): clock, voltagem, fan, consumo e temperatura por
+  componente. Encadeado por `LeitorSensoresComposto` com **fallback automático
+  para WMI** quando não há driver/elevação. A fonte é abstraída
+  (`IFonteSensoresLhm`), mantendo a lógica testável fora do Windows.
 
 ### A fazer
-- Integração com LibreHardwareMonitor para sensores em produção.
 - Assinatura de código (EV) do binário — passo operacional de distribuição.
 
 ---
