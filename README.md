@@ -35,6 +35,7 @@ estão **codificadas e cobertas por testes**. Em particular:
 
 - **[Guia de Instalação](docs/INSTALACAO.md)** — binário pronto, código-fonte, Docker e publicação.
 - **[Manual de Orientações](docs/MANUAL.md)** — passo a passo de cada comando e o fluxo seguro de otimização.
+- **[Documentação completa](docs/README.md)** — índice técnico: arquitetura, segurança, catálogo, contratos, IPC, glossário, testes e FAQ.
 
 Início rápido (do código-fonte):
 ```bash
@@ -294,3 +295,15 @@ Legenda: ✅ entregue · ◐ parcial/estrutural · ⏳ planejado.
   energia e garantia.
 - Ferramenta usa driver de sensor: assinatura de código é essencial.
 - Exigir elevação (UAC/root) com princípio de menor privilégio.
+
+---
+
+## Contribuição e políticas
+
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** — fluxo de branch, commits, checklist e como estender.
+- **[CHANGELOG.md](CHANGELOG.md)** — histórico de versões por fase do roadmap.
+- **[SECURITY.md](SECURITY.md)** — política de segurança e reporte de vulnerabilidades.
+- **[Glossário](docs/GLOSSARIO.md)** — termos do domínio para pessoas e agentes de IA.
+
+Templates de [issue](.github/ISSUE_TEMPLATE/) e
+[pull request](.github/PULL_REQUEST_TEMPLATE.md) padronizam as contribuições.
