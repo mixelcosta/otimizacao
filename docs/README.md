@@ -20,6 +20,7 @@ IA**.
 | Documento | Conteúdo |
 | --- | --- |
 | [ARQUITETURA.md](ARQUITETURA.md) | Planos, projetos, dependências e decisões de design. |
+| [CODIGO_FONTE_COMPLETO.md](CODIGO_FONTE_COMPLETO.md) | **Livro do código**: arquitetura + **todo o código-fonte** embutido, para manutenção/atualização futura. |
 | [DESENVOLVIMENTO.md](DESENVOLVIMENTO.md) | Setup, convenções e como estender o sistema. |
 | [TESTES.md](TESTES.md) | Estratégia de testes e rastreabilidade das regras. |
 | [../CONTRIBUTING.md](../CONTRIBUTING.md) | Como contribuir (branch, commit, PR, checklist). |
