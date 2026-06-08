@@ -162,6 +162,28 @@ export HWOPT_LLM_MODELO="id-do-modelo"
 
 ---
 
+## Execução real no Windows (opt-in)
+
+A aplicação de otimizações roda em **modo simulação por padrão**, inclusive no
+Windows. Para que as ações aprovadas alterem de fato o sistema:
+
+| Variável              | Para que serve                                                    |
+| --------------------- | ----------------------------------------------------------------- |
+| `HWOPT_EXECUCAO_REAL` | `1`/`true` ativa a execução real (registro, powercfg, serviços).  |
+
+**Requisitos:** Windows + **terminal como Administrador** (UAC). As mudanças em
+`HKLM`, planos de energia e serviços exigem elevação.
+
+```powershell
+$env:HWOPT_EXECUCAO_REAL = "1"   # PowerShell elevado
+.\HardwareOptimizer.Cli.exe servir
+```
+
+Sem a variável — ou em Linux/macOS — o agente usa o estado simulado (dry-run).
+O **backup obrigatório** e o **rollback automático** valem nos dois modos.
+
+---
+
 ## Onde ficam dados, logs e backups
 
 Relativos à pasta do executável (ou ao diretório de saída do `dotnet run`):

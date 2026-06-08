@@ -60,8 +60,9 @@ HardwareOptimizer.Agent   HardwareOptimizer.Cerebro   (efeitos colaterais / LLM)
 ### Mapa de módulos (resumo)
 - **Core:** `Common` (Resultado, enums), `Contracts`, `Catalog`, `Profiles`,
   `Consent`, `Privacy`, `Bios`, `Reporting`.
-- **Agent:** `Collector`, `Sensors`, `Backup`, `Execution`, `Validation`,
-  `Bios`, `Persistence`.
+- **Agent:** `Collector`, `Sensors`, `Backup`, `Execution`
+  (+ `Execution/Windows` para a execução real), `Validation`, `Bios`,
+  `Persistence`, `Platform` (portas de registro e processo).
 - **Cerebro:** raiz (matriz, guard, local/LLM, cliente Anthropic) + `Visao`.
 - **Ipc:** protocolo, `RoteadorIpc`, `ServidorNamedPipe`, `ClienteNamedPipe`.
 
@@ -110,7 +111,8 @@ permitindo localizar o ponto exato de qualquer falha.
 | --- | --- |
 | **Catálogo fechado + guard do LLM** | O LLM só escolhe IDs; qualquer alucinação é descartada pelo guard. É o coração da segurança. |
 | **`Resultado<T>` em vez de exceções** | Fluxo de validação legível para UI e auditoria, sem exceções de controle. |
-| **Modo simulação (dry-run) padrão** | O executor opera sobre `IEstadoSistema` abstrato; o simulado torna executor e rollback totalmente testáveis sem tocar o sistema real. |
+| **Modo simulação (dry-run) padrão** | O executor opera sobre `IEstadoSistema` abstrato; o simulado torna executor e rollback totalmente testáveis sem tocar o sistema real. A execução real do Windows (`EstadoSistemaWindows`) implementa a mesma interface e só é ativada por opt-in explícito (`HWOPT_EXECUCAO_REAL`). |
+| **Execução real isolada por portas** | `EstadoSistemaWindows` traduz os alvos do catálogo em registro/powercfg/serviços através de `IAcessoRegistro` e `IExecutorProcesso`, mantendo a lógica testável fora do Windows e o executor inalterado. |
 | **Domínio em português** | Alinhado ao público; schemas refletem a serialização (camelCase). |
 | **Warnings tratados como erros** | Qualidade reforçada pelo compilador (exceto o XAML gerado da UI). |
 | **`ILogger` opcional (default `NullLogger`)** | Logging sem acoplar bibliotecas a um provider; a CLI conecta o destino em arquivo. |

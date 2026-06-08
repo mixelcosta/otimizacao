@@ -79,6 +79,31 @@ execução (defesa em profundidade).
 
 ---
 
+## Execução real no Windows
+
+Cada `comando_interno` opera sobre um alvo simbólico (`registro:*`, `powercfg:*`,
+`servico:*`) de um `IEstadoSistema`. O **estado simulado** (padrão) guarda os
+valores em memória; o **estado real do Windows** (`EstadoSistemaWindows`, ativado
+por `HWOPT_EXECUCAO_REAL=1` sob Windows elevado) traduz cada alvo na operação
+concreta abaixo, com `Ler`/`Escrever`/`Restaurar` preservando o rollback:
+
+| Alvo simbólico | Operação real no Windows |
+| --- | --- |
+| `registro:VisualFXSetting` | `HKCU\…\Explorer\VisualEffects\VisualFXSetting` (DWORD; `DESEMPENHO`→2) |
+| `registro:SystemResponsiveness` | `HKLM\…\Multimedia\SystemProfile\SystemResponsiveness` (DWORD) |
+| `registro:NetworkThrottlingIndex` | `HKLM\…\Multimedia\SystemProfile\NetworkThrottlingIndex` (DWORD; `ffffffff`) |
+| `registro:TdrDelay` | `HKLM\…\GraphicsDrivers\TdrDelay` (DWORD) |
+| `registro:HwSchMode` | `HKLM\…\GraphicsDrivers\HwSchMode` (DWORD; 2 = HAGS on) |
+| `powercfg:plano_ativo` | `powercfg /getactivescheme` · `/setactive <GUID alto desempenho>` |
+| `powercfg:usb_suspensao_seletiva` | `powercfg /set{ac,dc}valueindex … 0` + `/setactive` |
+| `servico:<nome>` | `sc qc` (lê) · `sc config <nome> start= disabled` + `sc stop` |
+
+O acesso ao registro e a processos é isolado por portas (`IAcessoRegistro`,
+`IExecutorProcesso`), o que mantém a lógica testável fora do Windows. Detalhes em
+[ARQUITETURA.md](ARQUITETURA.md) e [INSTALACAO.md](INSTALACAO.md#execução-real-no-windows-opt-in).
+
+---
+
 ## Como o validador decide
 
 Para um valor proposto de parâmetro numérico, `ParametroNumerico.Validar`

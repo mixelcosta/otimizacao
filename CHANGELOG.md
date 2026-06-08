@@ -9,9 +9,15 @@ roadmap no [README](README.md#mapa-do-roadmap)).
 
 ## [Não lançado]
 
+### Adicionado
+- **Execução real no Windows** (`EstadoSistemaWindows`): traduz os alvos do
+  catálogo em operações de registro, plano de energia (`powercfg`) e serviços
+  (`sc.exe`), preservando `Ler`/`Escrever`/`Restaurar` e o rollback. Isolada por
+  portas (`IAcessoRegistro`, `IExecutorProcesso`) e testável fora do Windows.
+  Ativada por opt-in explícito (`HWOPT_EXECUCAO_REAL=1`, Windows elevado); o
+  padrão segue sendo o modo simulado.
+
 ### A fazer
-- Implementações reais dos comandos sob Windows elevado (powercfg, registro,
-  `sc.exe`) substituindo o `EstadoSistemaSimulado`.
 - Integração com LibreHardwareMonitor para sensores em produção.
 - Assinatura de código (EV) do binário — passo operacional de distribuição.
 

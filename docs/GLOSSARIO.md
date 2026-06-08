@@ -160,6 +160,12 @@ Modo **padrão**: os comandos operam sobre um `IEstadoSistema` abstrato que
 reproduz ler/escrever/restaurar **sem tocar** o sistema real — torna executor e
 rollback totalmente testáveis.
 
+**Execução real (Windows)** (`EstadoSistemaWindows`)
+Implementação de `IEstadoSistema` que aplica de fato as ações no Windows,
+traduzindo os alvos do catálogo em **registro**, **powercfg** e **sc.exe**. Só é
+ativada por opt-in (`HWOPT_EXECUCAO_REAL=1`, Windows elevado); o acesso ao
+registro/processos é isolado por portas (`IAcessoRegistro`, `IExecutorProcesso`).
+
 **Sanitização**
 O pipeline (`Sanitizador`) que produz uma versão do
 [inventário](#inventário) **segura para a nuvem**: serial/uuid/MAC **hasheados**;

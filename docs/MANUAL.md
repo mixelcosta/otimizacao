@@ -62,6 +62,17 @@ regressão** → relatório.
 > confirmado, e é **revertida automaticamente** se a validação detectar
 > regressão (WHEA, artefatos, tela azul, superaquecimento, etc.).
 
+> **Execução real no Windows (opt-in).** Por segurança, o padrão é **simulação**
+> mesmo no Windows. Para que as aprovações alterem de fato o sistema (registro,
+> plano de energia, serviços), rode **como Administrador** com a variável
+> `HWOPT_EXECUCAO_REAL=1`:
+> ```powershell
+> $env:HWOPT_EXECUCAO_REAL = "1"   # PowerShell elevado
+> .\HardwareOptimizer.Cli.exe servir
+> ```
+> Sem essa variável (ou fora do Windows), tudo roda em dry-run. O rollback
+> automático e o backup obrigatório continuam valendo na execução real.
+
 ### Passo 4 — Conferir
 ```bash
 hwopt relatorio    # compare a nota antes/depois

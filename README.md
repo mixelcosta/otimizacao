@@ -258,7 +258,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 5 | Módulo BIOS | ✅ Identificação, normalização, banco curado + cache SQLite, decisão conservadora e guia por fabricante |
 | 6 | Visão | ✅ Pipeline (leitura estruturada + confiança), conferência com o inventário e cliente multimodal (SDK Anthropic) |
 | 7 | Backup obrigatório | ✅ Serviço bloqueante com verificação de integridade |
-| 8 | Executor controlado | ✅ Catálogo, validador, perfis, consentimento, rollback por categoria |
+| 8 | Executor controlado | ✅ Catálogo, validador, perfis, consentimento, rollback por categoria + **execução real no Windows** (registro/powercfg/sc.exe, opt-in `HWOPT_EXECUCAO_REAL`) |
 | 9 | Validação e testes | ✅ Runner de estresse (parser + análise: WHEA/memória/artefatos/TDR/BSOD/temperatura/queda de score) ligado ao rollback automático |
 | 10 | Relatório e score | ✅ Notas 0-100 por domínio + nota final ponderada + relatório executivo |
 | 11 | Hardening e distribuição | ◐ Publish self-contained multiplataforma + Docker + workflow de release + documentação; assinatura de código (EV) é passo operacional |
@@ -272,8 +272,12 @@ Legenda: ✅ entregue · ◐ parcial/estrutural · ⏳ planejado.
 - **Modo simulação (dry-run) é o padrão.** Os comandos internos operam sobre um
   `IEstadoSistema` abstrato; a implementação `EstadoSistemaSimulado` reproduz a
   semântica ler/escrever/restaurar sem tocar o sistema real, tornando executor e
-  rollback totalmente testáveis. Implementações reais (powercfg, registro,
-  `sc.exe`) sob Windows elevado substituem essa peça sem alterar o executor.
+  rollback totalmente testáveis. A **execução real no Windows**
+  (`EstadoSistemaWindows`) implementa a mesma interface — traduzindo os alvos do
+  catálogo em registro, `powercfg` e `sc.exe` — e é ativada por opt-in explícito
+  (`HWOPT_EXECUCAO_REAL=1`, Windows elevado), sem alterar o executor. O acesso ao
+  registro e a processos é isolado por portas (`IAcessoRegistro`,
+  `IExecutorProcesso`), mantendo a lógica testável fora do Windows.
 - **Domínio modelado em português**, alinhado ao público do projeto. Os schemas
   refletem a serialização real (camelCase); os nomes do documento original
   (inglês) permanecem como referência semântica.

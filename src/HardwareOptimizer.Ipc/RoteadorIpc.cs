@@ -2,6 +2,7 @@ using System.Text.Json;
 using HardwareOptimizer.Agent.Backup;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Execution;
+using HardwareOptimizer.Agent.Execution.Windows;
 using HardwareOptimizer.Agent.Sensors;
 using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Cerebro;
@@ -114,7 +115,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
         var inventario = await _coletor.ColetarAsync(cancellationToken).ConfigureAwait(false);
         var backup = await new ServicoBackup().CriarBackupAsync(inventario, cancellationToken).ConfigureAwait(false);
 
-        var estado = new EstadoSistemaSimulado();
+        var estado = EstadoSistemaWindows.Selecionar(_log);
         var executor = new ExecutorControlado(
             _catalogo,
             RegistroComandos.Padrao(estado),
