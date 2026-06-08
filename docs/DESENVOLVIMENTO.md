@@ -9,6 +9,7 @@ Como configurar, entender e estender o sistema.
 - [Logging](#logging)
 - [Como estender](#como-estender)
 - [Estratégia de testes](#estratégia-de-testes)
+- [Documentação gerada](#documentação-gerada)
 
 ---
 
@@ -125,3 +126,22 @@ que aponta o ponto exato). Arquivo: `data/logs/otimizador-AAAAMMDD.log`.
 dotnet test HardwareOptimizer.sln -c Release           # tudo
 dotnet test tests/HardwareOptimizer.Core.Tests         # só o Core
 ```
+
+---
+
+## Documentação gerada
+
+O documento [CODIGO_FONTE_COMPLETO.md](CODIGO_FONTE_COMPLETO.md) (o "livro do
+código") embute **todo o código-fonte** e é **gerado a partir do repositório**,
+para nunca divergir da fonte. A narrativa (Parte I) é mantida à mão; o código
+(Parte II), abaixo do marcador `<!-- CODIGO-GERADO-ABAIXO -->`, é regenerado pelo
+script. Após qualquer mudança de código, atualize o documento:
+
+```powershell
+scripts\gerar-doc-codigo.ps1             # regenera a Parte II (Core → … → testes + schemas)
+scripts\gerar-doc-codigo.ps1 -Verificar  # não escreve; falha se estiver desatualizado (uso em CI)
+```
+
+O script lê cada arquivo em UTF-8 e o embute em blocos de quatro crases, na ordem
+de dependência. Ele próprio é salvo com BOM UTF-8 (o Windows PowerShell 5.1 lê
+`.ps1` sem BOM como ANSI, o que corromperia os acentos).
