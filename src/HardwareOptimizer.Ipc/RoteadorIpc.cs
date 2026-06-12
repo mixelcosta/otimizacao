@@ -2,9 +2,11 @@ using System.Runtime.Versioning;
 using System.Text.Json;
 using HardwareOptimizer.Agent.Backup;
 using HardwareOptimizer.Agent.Collector;
+using HardwareOptimizer.Agent.Drivers;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Execution.Windows;
 using HardwareOptimizer.Agent.Sensors;
+using HardwareOptimizer.Agent.Smart;
 using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Cerebro;
@@ -13,6 +15,7 @@ using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Core.Privacy;
 using HardwareOptimizer.Core.Profiles;
 using HardwareOptimizer.Core.Reporting;
+using HardwareOptimizer.Features.LifeCounter;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -66,6 +69,12 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "desativarstartup" => OperatingSystem.IsWindows()
                     ? DesativarStartupWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "obtersaudediscos" => OperatingSystem.IsWindows()
+                    ? ObterSaudeDiscosWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "obterdrivers" => OperatingSystem.IsWindows()
+                    ? ObterDriversWindows(requisicao)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
@@ -160,6 +169,23 @@ public sealed class RoteadorIpc : IRoteadorIpc
         && p.TryGetProperty("nomePerfil", out var n) && n.ValueKind == JsonValueKind.String
             ? n.GetString()!
             : "perfil-ipc";
+
+    [SupportedOSPlatform("windows")]
+    private RespostaIpc ObterSaudeDiscosWindows(RequisicaoIpc req)
+    {
+        var leitor = new LeitorSmart(NullLogger<LeitorSmart>.Instance);
+        var calc = new CalculadoraVidaUtil(leitor, NullLogger<CalculadoraVidaUtil>.Instance);
+        var resultado = calc.Calcular();
+        return RespostaIpc.Ok(req.Id, resultado);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private RespostaIpc ObterDriversWindows(RequisicaoIpc req)
+    {
+        var coletor = new ColetorHwid(NullLogger<ColetorHwid>.Instance);
+        var drivers = coletor.Coletar();
+        return RespostaIpc.Ok(req.Id, drivers);
+    }
 
     [SupportedOSPlatform("windows")]
     private RespostaIpc ObterEntradasStartupWindows(RequisicaoIpc req)

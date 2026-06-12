@@ -23,8 +23,8 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         OtimizadorWindows = new OtimizadorWindowsViewModel(agente);
         IaCopiloto = new IaCopilotoViewModel(agente);
         Upgrade = new UpgradeViewModel(agente);
-        VidaUtil = new VidaUtilViewModel();
-        Drivers = new DriversViewModel();
+        VidaUtil = new VidaUtilViewModel(agente);
+        Drivers = new DriversViewModel(agente);
         BiosGuide = new BiosGuideViewModel(agente);
         Configuracoes = new ConfiguracoesViewModel(licenca, OnLicencaAlterada);
         Home = new HomeViewModel(agente, () => PaginaAtual = Dashboard);
