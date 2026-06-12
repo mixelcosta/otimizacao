@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.IaCopilotoView"
+             x:DataType="vm:IaCopilotoViewModel">
+
+  <DockPanel Margin="20">
+
+    <TextBlock DockPanel.Dock="Top"
+               Text="IA COPILOTO" FontSize="13" FontWeight="Bold"
+               Foreground="#444444" LetterSpacing="3" Margin="0,0,0,16" />
+
+    <!-- Input area -->
+    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,8,Auto" Margin="0,8,0,0">
+      <TextBox Grid.Column="0"
+               Text="{Binding InputUsuario}"
+               PlaceholderText="Pergunte algo sobre o seu PC…"
+               Background="#111111" Foreground="#CCCCCC"
+               BorderBrush="#2A2A2A" CornerRadius="8"
+               Padding="12,10" AcceptsReturn="False" />
+      <Button Grid.Column="2"
+              Content="Enviar"
+              Command="{Binding EnviarCommand}"
+              IsEnabled="{Binding !Ocupado}"
+              Background="#1A3A2A" Foreground="#00FF88"
+              CornerRadius="8" Padding="16,10" />
+    </Grid>
+
+    <!-- Chat history -->
+    <ScrollViewer>
+      <ItemsControl ItemsSource="{Binding Mensagens}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:MensagemChatViewModel">
+            <Border Margin="0,4"
+                    Background="#111111"
+                    CornerRadius="8" Padding="12,10">
+              <StackPanel Spacing="4">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Text="{Binding Autor}"
+                             FontWeight="Bold" Foreground="#00FF88" FontSize="12" />
+                  <TextBlock Grid.Column="1"
+                             Text="{Binding Hora, StringFormat={}{0:HH:mm}}"
+                             Foreground="#444444" FontSize="11" />
+                </Grid>
+                <TextBlock Text="{Binding Texto}"
+                           Foreground="#CCCCCC" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+
+  </DockPanel>
+</UserControl>

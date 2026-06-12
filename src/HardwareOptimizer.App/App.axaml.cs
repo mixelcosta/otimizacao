@@ -1,9 +1,12 @@
+using System.Runtime.Versioning;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using HardwareOptimizer.App.ViewModels;
 using HardwareOptimizer.App.Views;
+using HardwareOptimizer.Features.Licensing;
 using HardwareOptimizer.Ipc;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.App;
 
@@ -11,16 +14,18 @@ public partial class App : Application
 {
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
+    [SupportedOSPlatform("windows")]
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // App em processo: a UI fala com o agente pelo roteador local
-            // (a mesma API exposta por named pipe quando UI e agente são separados).
             var roteador = new RoteadorIpc();
-            desktop.MainWindow = new MainWindow
+            var licenca = new ServicoLicencaLocal(
+                NullLogger<ServicoLicencaLocal>.Instance);
+
+            desktop.MainWindow = new ShellWindow
             {
-                DataContext = new MainWindowViewModel(roteador),
+                DataContext = new ShellViewModel(roteador, licenca),
             };
         }
 

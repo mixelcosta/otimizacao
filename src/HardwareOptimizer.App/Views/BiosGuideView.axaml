@@ -1,0 +1,105 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.BiosGuideView"
+             x:DataType="vm:BiosGuideViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="24" Spacing="20">
+
+      <TextBlock Text="GUIA BIOS IA" FontSize="13" FontWeight="Bold"
+                 Foreground="#444444" LetterSpacing="3" />
+
+      <!-- Cabeçalho: info da placa + botão carregar -->
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel Spacing="4">
+          <StackPanel Orientation="Horizontal" Spacing="24">
+            <StackPanel Spacing="2">
+              <TextBlock Text="FABRICANTE" FontSize="10" Foreground="#444444" LetterSpacing="1" />
+              <TextBlock Text="{Binding FabricantePlaca}" Foreground="#FFFFFF"
+                         FontSize="14" FontWeight="SemiBold" />
+            </StackPanel>
+            <StackPanel Spacing="2">
+              <TextBlock Text="MODELO" FontSize="10" Foreground="#444444" LetterSpacing="1" />
+              <TextBlock Text="{Binding ModeloPlaca}" Foreground="#FFFFFF"
+                         FontSize="14" FontWeight="SemiBold" />
+            </StackPanel>
+            <StackPanel Spacing="2">
+              <TextBlock Text="TECLA SETUP" FontSize="10" Foreground="#444444" LetterSpacing="1" />
+              <TextBlock Text="{Binding TeclaSetup}" Foreground="#00FF88"
+                         FontSize="14" FontWeight="Bold" />
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+
+        <Button Grid.Column="1" Content="  Detectar placa  "
+                Command="{Binding CarregarCommand}"
+                IsEnabled="{Binding !Ocupado}"
+                Background="#1A1A1A" Foreground="#00FF88"
+                BorderBrush="#00FF8840" BorderThickness="1"
+                Padding="16,8" CornerRadius="6" FontSize="12"
+                VerticalAlignment="Center" />
+      </Grid>
+
+      <!-- Aviso XMP -->
+      <Border Background="#FF8C0015" CornerRadius="8" Padding="14,10"
+              IsVisible="{Binding AvisoXmp, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <TextBlock Text="{Binding AvisoXmp}" Foreground="#FF8C00"
+                   FontSize="12" TextWrapping="Wrap" />
+      </Border>
+
+      <!-- Stepper de passos (visível quando há passos) -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="24"
+              IsVisible="{Binding TemPassos}">
+        <StackPanel Spacing="20">
+
+          <TextBlock Text="PASSOS XMP / EXPO" FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+
+          <!-- Passo atual -->
+          <Border Background="#111111" CornerRadius="8" Padding="20">
+            <StackPanel Spacing="12">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Border Background="#00FF8830" CornerRadius="4" Padding="8,4">
+                  <TextBlock Text="{Binding PassoAtual, StringFormat='Passo {0}'}"
+                             Foreground="#00FF88" FontSize="11" FontWeight="Bold" />
+                </Border>
+                <TextBlock Text="{Binding PassosXmp.Count, StringFormat='de {0}'}"
+                           Foreground="#444444" FontSize="11"
+                           VerticalAlignment="Center" />
+              </StackPanel>
+
+              <TextBlock Text="{Binding PassoAtualInstrucao}"
+                         Foreground="#CCCCCC" FontSize="13"
+                         TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+
+          <!-- Navegação dos passos -->
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="← Anterior"
+                    Command="{Binding PassoAnteriorCommand}"
+                    Background="#1A1A1A" Foreground="#888888"
+                    BorderBrush="#2A2A2A" BorderThickness="1"
+                    Padding="14,8" CornerRadius="6" FontSize="12" />
+            <Button Content="Próximo →"
+                    Command="{Binding ProximoPassoCommand}"
+                    Background="#1A1A1A" Foreground="#888888"
+                    BorderBrush="#2A2A2A" BorderThickness="1"
+                    Padding="14,8" CornerRadius="6" FontSize="12" />
+          </StackPanel>
+
+        </StackPanel>
+      </Border>
+
+      <!-- Estado inicial -->
+      <StackPanel HorizontalAlignment="Center" Spacing="10" Margin="0,40"
+                  IsVisible="{Binding !TemPassos}">
+        <TextBlock Text="⚙" FontSize="36" HorizontalAlignment="Center" />
+        <TextBlock Text="Clique em &quot;Detectar placa&quot; para gerar o guia XMP / EXPO"
+                   Foreground="#444444" FontSize="12" HorizontalAlignment="Center" />
+      </StackPanel>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

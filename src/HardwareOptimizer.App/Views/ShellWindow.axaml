@@ -1,0 +1,256 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+        xmlns:views="using:HardwareOptimizer.App.Views"
+        x:Class="HardwareOptimizer.App.Views.ShellWindow"
+        x:DataType="vm:ShellViewModel"
+        Width="1100" Height="700"
+        MinWidth="900" MinHeight="580"
+        Background="#050505"
+        Title="Otimize Builder">
+
+  <Window.Styles>
+    <!-- Botão de navegação lateral -->
+    <Style Selector="Button.nav">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#888888" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding" Value="16,10" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="CornerRadius" Value="6" />
+    </Style>
+    <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#1A1A1A" />
+    </Style>
+    <Style Selector="Button.nav.ativo /template/ ContentPresenter">
+      <Setter Property="Background" Value="#1E1E1E" />
+    </Style>
+    <Style Selector="Button.nav.ativo">
+      <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    <!-- Label de seção -->
+    <Style Selector="TextBlock.section-label">
+      <Setter Property="Foreground" Value="#333333" />
+      <Setter Property="FontSize" Value="10" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="Margin" Value="16,12,16,4" />
+    </Style>
+    <!-- Botão premium desbloqueado -->
+    <Style Selector="Button.nav-premium">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#888888" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding" Value="16,10" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="CornerRadius" Value="6" />
+    </Style>
+    <Style Selector="Button.nav-premium:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#1A1A1A" />
+    </Style>
+    <!-- Botão premium bloqueado -->
+    <Style Selector="Button.nav-locked">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#404040" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding" Value="16,10" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+  </Window.Styles>
+
+  <Grid ColumnDefinitions="200,*">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <Border Grid.Column="0" Background="#0A0A0A"
+            BorderBrush="#1A1A1A" BorderThickness="0,0,1,0">
+      <DockPanel>
+
+        <!-- Logo (clica para Home / tela de scan) -->
+        <Button DockPanel.Dock="Top"
+                Command="{Binding IrParaHomeCommand}"
+                Background="Transparent" BorderThickness="0"
+                Padding="16,20,16,12"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left">
+          <StackPanel Spacing="2">
+            <TextBlock Text="OTIMIZE" FontSize="18" FontWeight="Black"
+                       Foreground="#FFFFFF" />
+            <TextBlock Text="BUILDER" FontSize="18" FontWeight="Black"
+                       Foreground="#00FF88" />
+          </StackPanel>
+        </Button>
+
+        <!-- Separador -->
+        <Rectangle DockPanel.Dock="Top" Height="1" Fill="#1A1A1A" Margin="16,0" />
+
+        <!-- Configurações no rodapé -->
+        <StackPanel DockPanel.Dock="Bottom" Margin="8,0,8,8">
+          <Rectangle Height="1" Fill="#1A1A1A" Margin="8,4" />
+          <Button Classes="nav" Command="{Binding IrParaConfiguracoesCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="⚙" FontSize="14" />
+              <TextBlock Text="Configurações" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <TextBlock Text="v1.0.0-beta" Foreground="#333333" FontSize="10"
+                     Margin="16,4,16,0" />
+        </StackPanel>
+
+        <!-- Navegação gratuita -->
+        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="8,8">
+
+          <Button Classes="nav" Command="{Binding IrParaDashboardCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="⬛" FontSize="14" />
+              <TextBlock Text="Dashboard" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav" Command="{Binding IrParaOtimizadorCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="⚡" FontSize="14" />
+              <TextBlock Text="Otimizador Windows" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- IA Copiloto com badge -->
+          <Button Classes="nav" Command="{Binding IrParaIaCopilotoCommand}">
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="🤖" FontSize="14" />
+                <TextBlock Text="IA Copiloto" VerticalAlignment="Center" />
+              </StackPanel>
+              <Ellipse Grid.Column="1" Width="8" Height="8"
+                       Fill="#FF3333" Margin="0,0,4,0"
+                       IsVisible="{Binding TemAlertaIa}" />
+            </Grid>
+          </Button>
+
+        </StackPanel>
+
+        <!-- Separador Premium -->
+        <Rectangle DockPanel.Dock="Top" Height="1" Fill="#1A1A1A" Margin="16,4" />
+        <TextBlock DockPanel.Dock="Top" Classes="section-label" Text="PREMIUM" />
+
+        <!-- Navegação premium -->
+        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="8,0">
+
+          <!-- UPGRADE -->
+          <Button Classes="nav-premium" Command="{Binding IrParaUpgradeCommand}"
+                  IsVisible="{Binding EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="🔧" FontSize="12" />
+              <TextBlock Text="UPGRADE" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="🔒" FontSize="12" />
+              <TextBlock Text="UPGRADE" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- Vida Útil -->
+          <Button Classes="nav-premium" Command="{Binding IrParaVidaUtilCommand}"
+                  IsVisible="{Binding EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="❤" FontSize="12" />
+              <TextBlock Text="Vida Útil" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="🔒" FontSize="12" />
+              <TextBlock Text="Vida Útil" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- Drivers -->
+          <Button Classes="nav-premium" Command="{Binding IrParaDriversCommand}"
+                  IsVisible="{Binding EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="💾" FontSize="12" />
+              <TextBlock Text="Drivers" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="🔒" FontSize="12" />
+              <TextBlock Text="Drivers" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- Guia BIOS IA -->
+          <Button Classes="nav-premium" Command="{Binding IrParaBiosGuideCommand}"
+                  IsVisible="{Binding EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="⚙" FontSize="12" />
+              <TextBlock Text="Guia BIOS IA" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="🔒" FontSize="12" />
+              <TextBlock Text="Guia BIOS IA" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+        </StackPanel>
+
+      </DockPanel>
+    </Border>
+
+    <!-- ═══ ÁREA DE CONTEÚDO ═══ -->
+    <ContentControl Grid.Column="1"
+                    Content="{Binding PaginaAtual}"
+                    Background="#050505">
+      <ContentControl.DataTemplates>
+
+        <DataTemplate DataType="vm:HomeViewModel">
+          <views:HomeView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:DashboardViewModel">
+          <views:DashboardView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:OtimizadorWindowsViewModel">
+          <views:OtimizadorWindowsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:IaCopilotoViewModel">
+          <views:IaCopilotoView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:UpgradeViewModel">
+          <views:UpgradeView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:VidaUtilViewModel">
+          <views:VidaUtilView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:DriversViewModel">
+          <views:DriversView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:BiosGuideViewModel">
+          <views:BiosGuideView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:ConfiguracoesViewModel">
+          <views:ConfiguracoesView />
+        </DataTemplate>
+
+      </ContentControl.DataTemplates>
+    </ContentControl>
+
+  </Grid>
+</Window>

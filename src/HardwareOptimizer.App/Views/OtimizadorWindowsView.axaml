@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.OtimizadorWindowsView"
+             x:DataType="vm:OtimizadorWindowsViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="16">
+
+      <TextBlock Text="OTIMIZADOR WINDOWS" FontSize="13" FontWeight="Bold"
+                 Foreground="#444444" LetterSpacing="3" />
+
+      <!-- Efeitos Visuais -->
+      <Border Background="#111111" CornerRadius="8" Padding="16">
+        <StackPanel Spacing="8">
+          <TextBlock Text="Efeitos Visuais" Foreground="#CCCCCC" FontWeight="SemiBold" />
+          <TextBlock TextWrapping="Wrap" Foreground="#888888" FontSize="12"
+                     Text="Desativa sombras, animações de janelas e transparências do DWM para liberar CPU e memória." />
+          <Button Content="Desativar efeitos visuais"
+                  Command="{Binding DesativarEfeitosVisuaisCommand}"
+                  IsEnabled="{Binding !Ocupado}"
+                  Background="#1A3A2A" Foreground="#00FF88"
+                  CornerRadius="6" Padding="12,8" />
+        </StackPanel>
+      </Border>
+
+      <!-- Startup Scanner -->
+      <Border Background="#111111" CornerRadius="8" Padding="16">
+        <StackPanel Spacing="8">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="Inicialização Automática" Foreground="#CCCCCC"
+                       FontWeight="SemiBold" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Content="Varrer"
+                    Command="{Binding VarrerStartupCommand}"
+                    IsEnabled="{Binding !Ocupado}"
+                    Background="#1A2A3A" Foreground="#00BFFF"
+                    CornerRadius="6" Padding="12,6" />
+          </Grid>
+
+          <ItemsControl ItemsSource="{Binding EntradasStartup}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:InicializacaoEntradaViewModel">
+                <Border Background="#0A0A0A" CornerRadius="6" Padding="12,8" Margin="0,2">
+                  <Grid ColumnDefinitions="*,Auto,Auto">
+                    <StackPanel>
+                      <TextBlock Text="{Binding Nome}" Foreground="#CCCCCC" FontWeight="SemiBold" />
+                      <TextBlock Text="{Binding Caminho}" Foreground="#555555" FontSize="11"
+                                 TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{Binding Impacto}"
+                               Foreground="{Binding CorImpacto}"
+                               FontSize="11" VerticalAlignment="Center" Margin="8,0" />
+                    <ToggleButton Grid.Column="2" IsChecked="{Binding Ativo}"
+                                  Foreground="#888888" FontSize="11"
+                                  Content="{Binding Ativo, StringFormat={}{0:Ativo;0;Inativo}}" />
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+
+      <!-- Status -->
+      <TextBlock Text="{Binding StatusOtimizador}" Foreground="#555555" FontSize="12" />
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,203 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             xmlns:controls="using:HardwareOptimizer.App.Controls"
+             x:Class="HardwareOptimizer.App.Views.UpgradeView"
+             x:DataType="vm:UpgradeViewModel">
+
+  <!-- Two-panel layout: isometric diagram (left) + parts list (right) -->
+  <Grid ColumnDefinitions="3*,2*">
+
+    <!-- ═══════════════ LEFT — Isometric PC Diagram ═══════════════ -->
+    <Grid Grid.Column="0" RowDefinitions="Auto,*,Auto">
+
+      <!-- Header -->
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="20,16,16,12">
+        <StackPanel Spacing="3">
+          <TextBlock Text="UPGRADE" FontSize="13" FontWeight="Bold"
+                     Foreground="#444444" LetterSpacing="3" />
+          <TextBlock Text="{Binding NomePlacaMae}"
+                     Foreground="#555555" FontSize="11" />
+        </StackPanel>
+
+        <Button Grid.Column="1"
+                Content="{Binding TextoBotao}"
+                Command="{Binding CarregarCommand}"
+                IsEnabled="{Binding !Carregando}"
+                Background="#1A1A1A" Foreground="#00FF88"
+                BorderBrush="#00FF8840" BorderThickness="1"
+                Padding="14,8" CornerRadius="6" FontSize="11"
+                VerticalAlignment="Center" />
+      </Grid>
+
+      <!-- Isometric diagram fills available space -->
+      <controls:DiagramaGabinete
+          Grid.Row="1"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          TemCpu="{Binding TemCpu}"
+          TemGpu="{Binding TemGpu}"
+          TemRam="{Binding TemRam}"
+          TemPlaca="{Binding TemPlaca}"
+          ComponenteLimitante="{Binding ComponenteLimitante}" />
+
+      <!-- Bottleneck badge — overlaid at bottom of diagram -->
+      <Border Grid.Row="1"
+              VerticalAlignment="Bottom" HorizontalAlignment="Center"
+              Margin="0,0,0,20"
+              Background="#0D0D0D" CornerRadius="20" Padding="16,7"
+              IsVisible="{Binding Carregado}">
+        <!-- Balanced: green -->
+        <TextBlock Text="{Binding GargaloLabel}"
+                   FontSize="12" FontWeight="SemiBold"
+                   Foreground="#00FF88"
+                   IsVisible="{Binding !IsGargalo}" />
+      </Border>
+
+      <Border Grid.Row="1"
+              VerticalAlignment="Bottom" HorizontalAlignment="Center"
+              Margin="0,0,0,20"
+              Background="#1A0800" CornerRadius="20" Padding="16,7"
+              IsVisible="{Binding IsGargalo}">
+        <!-- Bottleneck: orange -->
+        <TextBlock Text="{Binding GargaloLabel}"
+                   FontSize="12" FontWeight="SemiBold"
+                   Foreground="#FF8C00" />
+      </Border>
+
+      <!-- Hint shown before detection -->
+      <StackPanel Grid.Row="2" HorizontalAlignment="Center" Spacing="6"
+                  Margin="0,0,0,20"
+                  IsVisible="{Binding !Carregado}">
+        <TextBlock Text="Clique em  Detectar Hardware  para escanear os componentes"
+                   Foreground="#333333" FontSize="11"
+                   HorizontalAlignment="Center" />
+      </StackPanel>
+
+    </Grid>
+
+    <!-- ═══════════════ RIGHT — Parts List ═══════════════ -->
+    <Border Grid.Column="1"
+            Background="#060606"
+            BorderBrush="#181818" BorderThickness="1,0,0,0">
+      <ScrollViewer>
+        <StackPanel Margin="20,18,20,24" Spacing="0">
+
+          <TextBlock Text="PEÇAS DETECTADAS" FontSize="10" FontWeight="Bold"
+                     Foreground="#444444" LetterSpacing="2"
+                     Margin="0,0,0,18" />
+
+          <!-- CPU -->
+          <StackPanel Spacing="3" Margin="0,0,0,14">
+            <TextBlock Text="CPU" FontSize="9" Foreground="#3A3A3A"
+                       LetterSpacing="1" />
+            <TextBlock Text="{Binding NomeCpu}"
+                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="{Binding InfosCpu}"
+                       Foreground="#4A4A4A" FontSize="10"
+                       IsVisible="{Binding InfosCpu,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+
+          <Rectangle Height="1" Fill="#181818" Margin="0,0,0,14" />
+
+          <!-- GPU -->
+          <StackPanel Spacing="3" Margin="0,0,0,14">
+            <TextBlock Text="GPU" FontSize="9" Foreground="#3A3A3A"
+                       LetterSpacing="1" />
+            <TextBlock Text="{Binding NomeGpu}"
+                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="{Binding InfosGpu}"
+                       Foreground="#4A4A4A" FontSize="10"
+                       IsVisible="{Binding InfosGpu,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+
+          <Rectangle Height="1" Fill="#181818" Margin="0,0,0,14" />
+
+          <!-- RAM -->
+          <StackPanel Spacing="3" Margin="0,0,0,14">
+            <TextBlock Text="MEMÓRIA RAM" FontSize="9" Foreground="#3A3A3A"
+                       LetterSpacing="1" />
+            <TextBlock Text="{Binding NomeRam}"
+                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+          </StackPanel>
+
+          <Rectangle Height="1" Fill="#181818" Margin="0,0,0,14" />
+
+          <!-- Motherboard -->
+          <StackPanel Spacing="3" Margin="0,0,0,14">
+            <TextBlock Text="PLACA-MÃE" FontSize="9" Foreground="#3A3A3A"
+                       LetterSpacing="1" />
+            <TextBlock Text="{Binding NomePlacaMae}"
+                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="{Binding InfosPlaca}"
+                       Foreground="#4A4A4A" FontSize="10"
+                       IsVisible="{Binding InfosPlaca,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+
+          <Rectangle Height="1" Fill="#181818" Margin="0,0,0,14" />
+
+          <!-- OS -->
+          <StackPanel Spacing="3" Margin="0,0,0,24">
+            <TextBlock Text="SISTEMA OPERACIONAL" FontSize="9" Foreground="#3A3A3A"
+                       LetterSpacing="1" />
+            <TextBlock Text="{Binding NomeOs}"
+                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+          </StackPanel>
+
+          <!-- ─── Bottleneck Analysis Section ─── -->
+          <Border Background="#0A0A0A" CornerRadius="8" Padding="14,12"
+                  IsVisible="{Binding Carregado}">
+            <StackPanel Spacing="10">
+
+              <TextBlock Text="ANÁLISE DE GARGALO" FontSize="9" FontWeight="Bold"
+                         Foreground="#3A3A3A" LetterSpacing="2" />
+
+              <!-- Balanced result -->
+              <Border Background="#061206" CornerRadius="6" Padding="10,8"
+                      IsVisible="{Binding !IsGargalo}">
+                <StackPanel Spacing="4">
+                  <TextBlock Text="{Binding GargaloLabel}"
+                             Foreground="#00FF88" FontSize="12" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding GargaloDescricao}"
+                             Foreground="#4A4A4A" FontSize="10" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+
+              <!-- Bottleneck result -->
+              <Border Background="#160A00" CornerRadius="6" Padding="10,8"
+                      IsVisible="{Binding IsGargalo}">
+                <StackPanel Spacing="4">
+                  <TextBlock Text="{Binding GargaloLabel}"
+                             Foreground="#FF8C00" FontSize="12" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding GargaloDescricao}"
+                             Foreground="#5A4A30" FontSize="10" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+
+            </StackPanel>
+          </Border>
+
+          <!-- Empty state placeholder (before detection) -->
+          <StackPanel HorizontalAlignment="Center" Spacing="8" Margin="0,40,0,0"
+                      IsVisible="{Binding !Carregado}">
+            <TextBlock Text="–" FontSize="24" HorizontalAlignment="Center"
+                       Foreground="#2A2A2A" />
+            <TextBlock Text="Aguardando detecção"
+                       Foreground="#2A2A2A" FontSize="11"
+                       HorizontalAlignment="Center" />
+          </StackPanel>
+
+        </StackPanel>
+      </ScrollViewer>
+    </Border>
+
+  </Grid>
+</UserControl>

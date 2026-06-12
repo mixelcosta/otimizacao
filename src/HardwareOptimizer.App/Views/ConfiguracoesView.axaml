@@ -1,0 +1,106 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.ConfiguracoesView"
+             x:DataType="vm:ConfiguracoesViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="32" Spacing="24" MaxWidth="520">
+
+      <TextBlock Text="CONFIGURAÇÕES" FontSize="13" FontWeight="Bold"
+                 Foreground="#444444" LetterSpacing="3" />
+
+      <!-- Card: Status da licença -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="24">
+        <StackPanel Spacing="14">
+
+          <TextBlock Text="LICENÇA" FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+
+          <!-- Status Premium -->
+          <StackPanel IsVisible="{Binding EPremium}" Orientation="Horizontal" Spacing="10">
+            <Border Background="#00FF8820" CornerRadius="6" Padding="10,6">
+              <TextBlock Text="✓  Premium — todos os módulos desbloqueados"
+                         Foreground="#00FF88" FontSize="13" FontWeight="SemiBold" />
+            </Border>
+          </StackPanel>
+
+          <!-- Status Gratuito -->
+          <StackPanel IsVisible="{Binding !EPremium}" Orientation="Horizontal" Spacing="10">
+            <Border Background="#FFFFFF10" CornerRadius="6" Padding="10,6">
+              <TextBlock Text="🔒  Gratuita — módulos Premium bloqueados"
+                         Foreground="#888888" FontSize="13" />
+            </Border>
+          </StackPanel>
+
+          <Button Content="Revogar licença Premium"
+                  Command="{Binding DesativarCommand}"
+                  IsVisible="{Binding EPremium}"
+                  Background="Transparent"
+                  BorderBrush="#333333" BorderThickness="1"
+                  Foreground="#888888" Padding="12,6"
+                  CornerRadius="6" FontSize="12"
+                  HorizontalAlignment="Left" />
+
+        </StackPanel>
+      </Border>
+
+      <!-- Card: Ativação -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="24">
+        <StackPanel Spacing="16">
+
+          <TextBlock Text="ATIVAR LICENÇA" FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+
+          <TextBlock Text="Insira sua chave de ativação para desbloquear todos os módulos Premium."
+                     Foreground="#666666" FontSize="12" TextWrapping="Wrap" />
+
+          <TextBox Text="{Binding ChaveAtivacao}"
+                   Watermark="XXXX-XXXX-XXXX-XXXX"
+                   FontFamily="Consolas,monospace"
+                   FontSize="14"
+                   Background="#111111"
+                   BorderBrush="#2A2A2A"
+                   BorderThickness="1"
+                   Foreground="#FFFFFF"
+                   CaretBrush="#00FF88"
+                   Padding="12,10"
+                   CornerRadius="6" />
+
+          <Button Content="  Ativar  "
+                  Command="{Binding AtivarCommand}"
+                  Background="#00FF88"
+                  Foreground="#000000"
+                  FontWeight="Bold"
+                  FontSize="13"
+                  Padding="20,10"
+                  CornerRadius="6"
+                  HorizontalAlignment="Left" />
+
+          <!-- Feedback -->
+          <TextBlock Text="{Binding MensagemAtivacao}"
+                     IsVisible="{Binding MensagemAtivacao, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                     Foreground="#00FF88"
+                     FontSize="12"
+                     TextWrapping="Wrap" />
+
+        </StackPanel>
+      </Border>
+
+      <!-- Card: Sobre -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="24">
+        <StackPanel Spacing="8">
+          <TextBlock Text="SOBRE" FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="Otimize Builder" Foreground="#888888" FontSize="12" />
+            <TextBlock Text="{Binding VersaoApp}" Foreground="#555555" FontSize="12" />
+          </StackPanel>
+          <TextBlock Text=".NET 8 · Avalonia 12 · LibreHardwareMonitor 0.9.6"
+                     Foreground="#333333" FontSize="11" />
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

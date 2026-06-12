@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="HardwareOptimizer.App.Controls.SensorCard">
+  <Border Background="#111111" CornerRadius="8" Padding="16" MinWidth="160">
+    <StackPanel Spacing="4">
+      <TextBlock x:Name="TituloText"
+                 FontSize="11" Foreground="#888888"
+                 FontWeight="SemiBold" />
+      <TextBlock x:Name="ValorText"
+                 FontSize="28" FontWeight="Bold" Foreground="#00FF88" />
+      <TextBlock x:Name="SubtituloText"
+                 FontSize="11" Foreground="#666666" />
+    </StackPanel>
+  </Border>
+</UserControl>

@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HardwareOptimizer.Ipc\HardwareOptimizer.Ipc.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Licensing\HardwareOptimizer.Features.Licensing.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Upgrade\HardwareOptimizer.Features.Upgrade.csproj" />
   </ItemGroup>
 
 </Project>

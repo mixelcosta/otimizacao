@@ -1,0 +1,150 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             xmlns:ctrl="using:HardwareOptimizer.App.Controls"
+             x:Class="HardwareOptimizer.App.Views.HomeView"
+             x:DataType="vm:HomeViewModel">
+
+  <UserControl.Styles>
+    <Style Selector="Button.scan /template/ ContentPresenter">
+      <Setter Property="Background" Value="#0A0A0A" />
+      <Setter Property="CornerRadius" Value="85" />
+    </Style>
+    <Style Selector="Button.scan:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#151515" />
+      <Setter Property="CornerRadius" Value="85" />
+    </Style>
+    <Style Selector="Button.scan:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="#1E1E1E" />
+      <Setter Property="CornerRadius" Value="85" />
+    </Style>
+    <Style Selector="Button.scan:disabled /template/ ContentPresenter">
+      <Setter Property="Background" Value="#060606" />
+      <Setter Property="CornerRadius" Value="85" />
+    </Style>
+    <Style Selector="Button.acao">
+      <Setter Property="Background" Value="#141414" />
+      <Setter Property="Foreground" Value="#888888" />
+      <Setter Property="BorderBrush" Value="#282828" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="28,11" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+    <Style Selector="Button.acao:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#1E1E1E" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="Auto,*,Auto,Auto">
+
+    <!-- Cabeçalho -->
+    <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,44,0,0" Spacing="7">
+      <TextBlock Text="OTIMIZE BUILDER" FontSize="10" FontWeight="Bold"
+                 Foreground="#303030" LetterSpacing="5"
+                 HorizontalAlignment="Center" />
+      <TextBlock Text="{Binding StatusText}" FontSize="15"
+                 Foreground="#666666"
+                 HorizontalAlignment="Center" />
+    </StackPanel>
+
+    <!-- Área central: 2 cards flanqueando o anel de scan -->
+    <Grid Grid.Row="1"
+          HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="150" />
+        <ColumnDefinition Width="36" />
+        <ColumnDefinition Width="240" />
+        <ColumnDefinition Width="36" />
+        <ColumnDefinition Width="150" />
+      </Grid.ColumnDefinitions>
+
+      <!-- Card esquerdo: componentes detectados -->
+      <Border Grid.Column="0"
+              Background="#0D0D0D" CornerRadius="14"
+              BorderBrush="#1E1E1E" BorderThickness="1"
+              Padding="12,22"
+              VerticalAlignment="Center">
+        <StackPanel HorizontalAlignment="Center" Spacing="5">
+          <TextBlock Text="{Binding ContadorDispositivos}"
+                     FontSize="52" FontWeight="Black"
+                     Foreground="{Binding CorContador}"
+                     HorizontalAlignment="Center" />
+          <TextBlock Text="Componentes" Foreground="#666666" FontSize="12"
+                     HorizontalAlignment="Center" />
+          <TextBlock Text="Hardware" Foreground="#333333" FontSize="11"
+                     HorizontalAlignment="Center" />
+        </StackPanel>
+      </Border>
+
+      <!-- Anel de scan + botão central -->
+      <Grid Grid.Column="2" Width="240" Height="240">
+        <ctrl:AnelScanControl
+            Progresso="{Binding ProgressoScan}"
+            Escaneando="{Binding Escaneando}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch" />
+
+        <Button Classes="scan"
+                Command="{Binding ScanCommand}"
+                Width="170" Height="170"
+                CornerRadius="85"
+                BorderThickness="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                IsEnabled="{Binding !Escaneando}">
+          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5">
+            <TextBlock Text="{Binding TextoBotaoScan}"
+                       FontSize="32" FontWeight="Black"
+                       Foreground="#FFFFFF"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding SubtextoBotaoScan}"
+                       FontSize="11"
+                       Foreground="#00FF88"
+                       HorizontalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </Grid>
+
+      <!-- Card direito: BIOS -->
+      <Border Grid.Column="4"
+              Background="#0D0D0D" CornerRadius="14"
+              BorderBrush="#1E1E1E" BorderThickness="1"
+              Padding="12,22"
+              VerticalAlignment="Center">
+        <StackPanel HorizontalAlignment="Center" Spacing="5">
+          <TextBlock Text="{Binding IconeBios}"
+                     FontSize="52" FontWeight="Black"
+                     Foreground="{Binding CorBios}"
+                     HorizontalAlignment="Center" />
+          <TextBlock Text="BIOS" Foreground="#666666" FontSize="12"
+                     HorizontalAlignment="Center" />
+          <TextBlock Text="{Binding StatusBios}" Foreground="#333333" FontSize="11"
+                     HorizontalAlignment="Center" />
+        </StackPanel>
+      </Border>
+
+    </Grid>
+
+    <!-- Rodapé: último scan -->
+    <TextBlock Grid.Row="2"
+               Text="{Binding UltimoScanLabel}"
+               Foreground="#282828" FontSize="11"
+               HorizontalAlignment="Center"
+               Margin="0,18,0,0" />
+
+    <!-- Botões de ação (aparecem após o scan) -->
+    <StackPanel Grid.Row="3"
+                IsVisible="{Binding ScanConcluido}"
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                Spacing="12"
+                Margin="0,18,0,44">
+      <Button Classes="acao"
+              Command="{Binding IrParaDashboardCommand}"
+              Content="Ver Dashboard" />
+    </StackPanel>
+
+  </Grid>
+
+</UserControl>

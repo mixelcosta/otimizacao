@@ -1,0 +1,94 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             xmlns:ctrl="using:HardwareOptimizer.App.Controls"
+             x:Class="HardwareOptimizer.App.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="20" Spacing="20">
+
+      <!-- Título -->
+      <TextBlock Text="DASHBOARD" FontSize="13" FontWeight="Bold"
+                 Foreground="#444444" LetterSpacing="3" />
+
+      <!-- Cards de sensores -->
+      <WrapPanel Orientation="Horizontal" ItemWidth="200">
+
+        <!-- CPU -->
+        <ctrl:SensorCard Margin="0,0,12,12"
+                         Titulo="CPU"
+                         Valor="{Binding CpuTemp}"
+                         Subtitulo="{Binding CpuClock}"
+                         NivelAlerta="{Binding CpuNivelAlerta}" />
+
+        <!-- GPU -->
+        <ctrl:SensorCard Margin="0,0,12,12"
+                         Titulo="GPU"
+                         Valor="{Binding GpuTemp}"
+                         Subtitulo="{Binding GpuClock}"
+                         NivelAlerta="{Binding GpuNivelAlerta}" />
+
+        <!-- RAM -->
+        <ctrl:SensorCard Margin="0,0,12,12"
+                         Titulo="RAM"
+                         Valor="{Binding RamUso}"
+                         Subtitulo="{Binding RamPorcentagem}"
+                         NivelAlerta="{Binding RamNivelAlerta}" />
+
+        <!-- Storage -->
+        <ctrl:SensorCard Margin="0,0,12,12"
+                         Titulo="STORAGE"
+                         Valor="{Binding StorageRead}"
+                         Subtitulo="{Binding StorageWrite}"
+                         NivelAlerta="{Binding StorageNivelAlerta}" />
+
+      </WrapPanel>
+
+      <!-- Gráficos -->
+      <TextBlock Text="TEMPERATURA" FontSize="11" FontWeight="Bold"
+                 Foreground="#444444" LetterSpacing="2" />
+
+      <Grid ColumnDefinitions="*,8,*">
+        <!-- Temp CPU (ou Load % quando temp não disponível sem admin) -->
+        <Border Grid.Column="0" Background="#0A0A0A" CornerRadius="8" Height="160">
+          <ctrl:RealtimeChartControl x:Name="ChartCpuTemp"
+                                     Label="{Binding CpuChartLabel}"
+                                     LinhaCor="#00BFFF"
+                                     Maximo="100" Minimo="0"
+                                     Margin="8" />
+        </Border>
+
+        <!-- Temp GPU (ou Load % quando temp não disponível sem admin) -->
+        <Border Grid.Column="2" Background="#0A0A0A" CornerRadius="8" Height="160">
+          <ctrl:RealtimeChartControl x:Name="ChartGpuTemp"
+                                     Label="{Binding GpuChartLabel}"
+                                     LinhaCor="#FF6B35"
+                                     Maximo="100" Minimo="0"
+                                     Margin="8" />
+        </Border>
+      </Grid>
+
+      <TextBlock Text="CLOCK" FontSize="11" FontWeight="Bold"
+                 Foreground="#444444" LetterSpacing="2" />
+
+      <Grid ColumnDefinitions="*,8,*">
+        <Border Grid.Column="0" Background="#0A0A0A" CornerRadius="8" Height="160">
+          <ctrl:RealtimeChartControl x:Name="ChartCpuClock"
+                                     Label="CPU MHz"
+                                     LinhaCor="#A0FF50"
+                                     Maximo="6000" Minimo="800"
+                                     Margin="8" />
+        </Border>
+        <Border Grid.Column="2" Background="#0A0A0A" CornerRadius="8" Height="160">
+          <ctrl:RealtimeChartControl x:Name="ChartGpuClock"
+                                     Label="GPU MHz"
+                                     LinhaCor="#FF50A0"
+                                     Maximo="3000" Minimo="100"
+                                     Margin="8" />
+        </Border>
+      </Grid>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
