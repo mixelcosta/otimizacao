@@ -32,18 +32,27 @@ public sealed class LeitorSensoresComposto : ILeitorSensores
 
     public async Task<LeituraSensores> LerAsync(CancellationToken cancellationToken = default)
     {
+        // Mescla todos os leitores: LHM fornece GPU/Storage (quando com admin),
+        // WMI fornece CPU thermal zones + clock + disco (sem admin).
+        // Deduplicação por nome — o primeiro leitor que emite um sensor ganha.
+        var todos = new List<Sensor>();
+        var nomesVistos = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
         foreach (var leitor in _leitores)
         {
             var leitura = await leitor.LerAsync(cancellationToken).ConfigureAwait(false);
-            if (leitura.Sensores.Count > 0)
-            {
-                return leitura;
-            }
+            _log.LogDebug("Leitor {Leitor}: {Qtd} sensor(es).", leitor.GetType().Name, leitura.Sensores.Count);
 
-            _log.LogDebug("Leitor {Leitor} sem dados; tentando o próximo.", leitor.GetType().Name);
+            foreach (var s in leitura.Sensores)
+            {
+                if (nomesVistos.Add(s.Nome))
+                    todos.Add(s);
+            }
         }
 
-        _log.LogWarning("Nenhum leitor de sensores retornou dados.");
-        return new LeituraSensores();
+        if (todos.Count == 0)
+            _log.LogWarning("Nenhum leitor de sensores retornou dados.");
+
+        return new LeituraSensores { Sensores = todos };
     }
 }

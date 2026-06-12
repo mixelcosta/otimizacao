@@ -1,9 +1,11 @@
+using System.Runtime.Versioning;
 using System.Text.Json;
 using HardwareOptimizer.Agent.Backup;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Execution.Windows;
 using HardwareOptimizer.Agent.Sensors;
+using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Cerebro;
 using HardwareOptimizer.Core.Catalog;
@@ -58,7 +60,13 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "catalogo" => RespostaIpc.Ok(requisicao.Id, ListarCatalogo()),
                 "proposta" => RespostaIpc.Ok(requisicao.Id, await ProporAsync(cancellationToken).ConfigureAwait(false)),
                 "relatorio" => RespostaIpc.Ok(requisicao.Id, await RelatorioAsync(cancellationToken).ConfigureAwait(false)),
-                "aprovar" => await AprovarAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "aprovar" or "aplicar" => await AprovarAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "obterentradasstartup" => OperatingSystem.IsWindows()
+                    ? ObterEntradasStartupWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "desativarstartup" => OperatingSystem.IsWindows()
+                    ? DesativarStartupWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
         }
@@ -152,4 +160,38 @@ public sealed class RoteadorIpc : IRoteadorIpc
         && p.TryGetProperty("nomePerfil", out var n) && n.ValueKind == JsonValueKind.String
             ? n.GetString()!
             : "perfil-ipc";
+
+    [SupportedOSPlatform("windows")]
+    private RespostaIpc ObterEntradasStartupWindows(RequisicaoIpc req)
+    {
+        var verificador = new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance);
+        var entradas = verificador.Varrer();
+        return RespostaIpc.Ok(req.Id, entradas);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private RespostaIpc DesativarStartupWindows(RequisicaoIpc req)
+    {
+        var nome = req.Parametros is { } p
+            && p.TryGetProperty("nome", out var n)
+            && n.ValueKind == JsonValueKind.String
+                ? n.GetString()
+                : null;
+
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+
+        var verificador = new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance);
+        var entrada = verificador.Varrer()
+            .FirstOrDefault(e => string.Equals(e.Nome, nome, StringComparison.OrdinalIgnoreCase));
+
+        if (entrada is null)
+            return RespostaIpc.Falha(req.Id, $"Entrada '{nome}' não encontrada.");
+
+        var gerenciador = new GerenciadorInicializacao(NullLogger<GerenciadorInicializacao>.Instance);
+        var resultado = gerenciador.Desativar(entrada);
+        return resultado.Sucesso
+            ? RespostaIpc.Ok(req.Id, true)
+            : RespostaIpc.Falha(req.Id, resultado.MensagemErro);
+    }
 }

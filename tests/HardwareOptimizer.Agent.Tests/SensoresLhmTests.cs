@@ -95,17 +95,33 @@ public sealed class SensoresLhmTests
     }
 
     [Fact]
-    public async Task Composto_para_no_primeiro_com_dados_sem_chamar_o_resto()
+    public async Task Composto_mescla_todos_os_leitores_e_chama_todos()
     {
+        // Novo comportamento: mescla — LHM dá GPU, WMI dá CPU; ambos chamados.
         var comDados = new LeitorFake(new LeituraSensores { Sensores = new[] { Temp("CPU", 50) } });
         var segundo = new LeitorFake(new LeituraSensores { Sensores = new[] { Temp("GPU", 70) } });
         var composto = new LeitorSensoresComposto(new ILeitorSensores[] { comDados, segundo });
 
         var leitura = await composto.LerAsync();
 
-        Assert.Equal(50, leitura.TemperaturaMaxC); // o primeiro venceu
+        Assert.Equal(2, leitura.Sensores.Count);    // CPU + GPU mesclados
+        Assert.Equal(70, leitura.TemperaturaMaxC);  // máximo entre ambos
         Assert.Equal(1, comDados.Chamadas);
-        Assert.Equal(0, segundo.Chamadas); // curto-circuito
+        Assert.Equal(1, segundo.Chamadas);           // ambos chamados
+    }
+
+    [Fact]
+    public async Task Composto_deduplica_sensor_com_mesmo_nome()
+    {
+        // Sensor "CPU" emitido por dois leitores → deve aparecer só uma vez (primeiro ganha).
+        var primeiro = new LeitorFake(new LeituraSensores { Sensores = new[] { Temp("CPU", 50) } });
+        var segundo = new LeitorFake(new LeituraSensores { Sensores = new[] { Temp("CPU", 70) } });
+        var composto = new LeitorSensoresComposto(new ILeitorSensores[] { primeiro, segundo });
+
+        var leitura = await composto.LerAsync();
+
+        Assert.Single(leitura.Sensores);
+        Assert.Equal(50, leitura.TemperaturaMaxC); // primeiro prevalece
     }
 
     [Fact]

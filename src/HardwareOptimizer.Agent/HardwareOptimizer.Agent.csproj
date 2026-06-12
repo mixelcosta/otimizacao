@@ -16,6 +16,7 @@
     <!-- Acesso ao registro do Windows (usado só sob Windows; em outras plataformas
          os tipos existem mas lançam em tempo de execução). -->
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <!-- System.Management vem transitivamente via LibreHardwareMonitorLib -->
   </ItemGroup>
 
   <PropertyGroup>

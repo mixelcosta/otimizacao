@@ -21,6 +21,8 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
     private readonly Computer _computer;
     private readonly ILogger _log;
     private bool _aberto;
+    private int _tentativasGpuSemDados;
+    private const int MaxTentativasGpu = 2;
 
     public FonteSensoresLhm(ILogger? logger = null)
     {
@@ -32,7 +34,7 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
             IsMemoryEnabled = true,
             IsMotherboardEnabled = true,
             IsControllerEnabled = true,
-            IsStorageEnabled = false,
+            IsStorageEnabled = true,
             IsNetworkEnabled = false,
         };
     }
@@ -46,6 +48,19 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
             {
                 _computer.Open();
                 _aberto = true;
+            }
+
+            // Tenta redescobrir GPU no máximo MaxTentativasGpu vezes (não a cada tick).
+            // Re-init a cada 500ms corromperia o estado interno do LHM.
+            var temGpu = _computer.Hardware.Any(h =>
+                h.HardwareType is HardwareType.GpuAmd or HardwareType.GpuNvidia or HardwareType.GpuIntel);
+
+            if (!temGpu && _tentativasGpuSemDados < MaxTentativasGpu)
+            {
+                _tentativasGpuSemDados++;
+                _log.LogDebug("GPU não detectada pelo LHM (tentativa {N}/{Max}) — reinicializando.", _tentativasGpuSemDados, MaxTentativasGpu);
+                try { _computer.Close(); } catch { /* ignora */ }
+                _computer.Open();
             }
 
             foreach (var hardware in _computer.Hardware)
@@ -72,6 +87,16 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
             ColetarHardware(sub, destino);
         }
 
+        var prefixo = hardware.HardwareType switch
+        {
+            HardwareType.Cpu => "[CPU]",
+            HardwareType.GpuAmd or HardwareType.GpuNvidia or HardwareType.GpuIntel => "[GPU]",
+            HardwareType.Memory => "[RAM]",
+            HardwareType.Storage => "[STORAGE]",
+            HardwareType.Motherboard or HardwareType.SuperIO => "[MB]",
+            _ => "[HW]",
+        };
+
         foreach (var sensor in hardware.Sensors)
         {
             if (sensor.Value is not { } valor || MapearTipo(sensor.SensorType) is not { } tipo)
@@ -81,7 +106,7 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
 
             destino.Add(new Sensor
             {
-                Nome = $"{hardware.Name} / {sensor.Name}",
+                Nome = $"{prefixo} {hardware.Name} / {sensor.Name}",
                 Tipo = tipo,
                 Valor = Math.Round((double)valor, 2),
                 Unidade = UnidadeDe(tipo),
@@ -96,6 +121,9 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
         SensorType.Voltage => TipoSensor.Voltagem,
         SensorType.Fan => TipoSensor.Fan,
         SensorType.Power => TipoSensor.Potencia,
+        SensorType.Load => TipoSensor.Carga,
+        SensorType.Data => TipoSensor.Outro,
+        SensorType.Throughput => TipoSensor.Outro,
         _ => null,
     };
 

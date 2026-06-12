@@ -9,6 +9,7 @@ public enum TipoSensor
     Fan = 3,
     Potencia = 4,
     Outro = 5,
+    Carga = 6,
 }
 
 /// <summary>Leitura de um único sensor.</summary>

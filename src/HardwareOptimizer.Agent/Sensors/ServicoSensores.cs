@@ -42,15 +42,16 @@ public sealed class ServicoSensores
             return new LeitorSensoresLinux(logger: fabrica.CreateLogger<LeitorSensoresLinux>());
         }
 
-        // Produção no Windows: LibreHardwareMonitor (rico) com fallback para WMI
-        // (temperatura, sem elevação) quando o driver não está disponível.
+        // Produção no Windows: LHM (rico, requer elevação para CPU MSRs e ADL GPU) +
+        // ADL direto (temperatura AMD GPU sem admin) + WMI (CPU clock/load e disco).
         var lhm = new LeitorSensoresLhm(
             new FonteSensoresLhm(fabrica.CreateLogger<FonteSensoresLhm>()),
             fabrica.CreateLogger<LeitorSensoresLhm>());
+        var adl = new LeitorSensoresAdl(fabrica.CreateLogger<LeitorSensoresAdl>());
         var wmi = new LeitorSensoresWindows(fabrica.CreateLogger<LeitorSensoresWindows>());
 
         return new LeitorSensoresComposto(
-            new ILeitorSensores[] { lhm, wmi },
+            new ILeitorSensores[] { lhm, adl, wmi },
             fabrica.CreateLogger<LeitorSensoresComposto>());
     }
 }
