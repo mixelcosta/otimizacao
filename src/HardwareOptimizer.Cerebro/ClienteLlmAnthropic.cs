@@ -45,13 +45,43 @@ public sealed class ClienteLlmAnthropic : IClienteLlm
         };
 
         var resposta = await _client.Messages.Create(parametros).ConfigureAwait(false);
+        return ExtrairTexto(resposta);
+    }
 
+    public async Task<string> ResponderConversaAsync(
+        string promptSistema,
+        IReadOnlyList<(string Role, string Conteudo)> historico,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(promptSistema);
+        ArgumentNullException.ThrowIfNull(historico);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var mensagens = historico
+            .Select(m => new MessageParam
+            {
+                Role = m.Role == "assistant" ? Role.Assistant : Role.User,
+                Content = m.Conteudo,
+            })
+            .ToList();
+
+        var parametros = new MessageCreateParams
+        {
+            Model = Modelo,
+            MaxTokens = _maxTokens,
+            System = promptSistema,
+            Messages = mensagens,
+        };
+
+        var resposta = await _client.Messages.Create(parametros).ConfigureAwait(false);
+        return ExtrairTexto(resposta);
+    }
+
+    private static string ExtrairTexto(Message resposta)
+    {
         var sb = new StringBuilder();
         foreach (var bloco in resposta.Content.Select(b => b.Value).OfType<TextBlock>())
-        {
             sb.Append(bloco.Text);
-        }
-
         return sb.ToString();
     }
 }

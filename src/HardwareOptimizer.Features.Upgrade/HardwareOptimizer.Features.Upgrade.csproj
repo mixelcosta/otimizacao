@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HardwareOptimizer.Core\HardwareOptimizer.Core.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Cerebro\HardwareOptimizer.Cerebro.csproj" />
   </ItemGroup>
 
   <ItemGroup>

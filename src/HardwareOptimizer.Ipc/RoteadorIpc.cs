@@ -16,6 +16,7 @@ using HardwareOptimizer.Core.Privacy;
 using HardwareOptimizer.Core.Profiles;
 using HardwareOptimizer.Core.Reporting;
 using HardwareOptimizer.Features.LifeCounter;
+using HardwareOptimizer.Features.Upgrade.Agente;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -76,6 +77,8 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "obterdrivers" => OperatingSystem.IsWindows()
                     ? ObterDriversWindows(requisicao)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "chat_upgrade" => await ChatUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "analise_upgrade" => await AnaliseInicialUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
         }
@@ -193,6 +196,56 @@ public sealed class RoteadorIpc : IRoteadorIpc
         var verificador = new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance);
         var entradas = verificador.Varrer();
         return RespostaIpc.Ok(req.Id, entradas);
+    }
+
+    private async Task<RespostaIpc> ChatUpgradeAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var mensagem = req.Parametros is { } p
+            && p.TryGetProperty("mensagem", out var m) && m.ValueKind == JsonValueKind.String
+            ? m.GetString() : null;
+
+        if (string.IsNullOrWhiteSpace(mensagem))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'mensagem' obrigatório.");
+
+        var historico = LerHistoricoChat(req.Parametros);
+        var inventario = await _coletor.ColetarAsync(ct).ConfigureAwait(false);
+        var agente = new AgenteUpgrade(ObterClienteLlm(), _log);
+        var resposta = await agente.ResponderAsync(inventario, mensagem, historico, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, resposta);
+    }
+
+    private async Task<RespostaIpc> AnaliseInicialUpgradeAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var inventario = await _coletor.ColetarAsync(ct).ConfigureAwait(false);
+        var agente = new AgenteUpgrade(ObterClienteLlm(), _log);
+        var resposta = await agente.AnalisarInicialAsync(inventario, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, resposta);
+    }
+
+    private IClienteLlm ObterClienteLlm()
+    {
+        var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
+        var modelo = Environment.GetEnvironmentVariable("CLAUDE_MODEL") ?? "claude-sonnet-4-6";
+        return new ClienteLlmAnthropic(modelo, apiKey);
+    }
+
+    private static IReadOnlyList<MensagemChat> LerHistoricoChat(JsonElement? parametros)
+    {
+        var lista = new List<MensagemChat>();
+        if (parametros is not { } p || p.ValueKind != JsonValueKind.Object
+            || !p.TryGetProperty("historico", out var arr) || arr.ValueKind != JsonValueKind.Array)
+            return lista;
+
+        foreach (var item in arr.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object) continue;
+            var role = item.TryGetProperty("role", out var r) ? r.GetString() : null;
+            var conteudo = item.TryGetProperty("conteudo", out var c) ? c.GetString() : null;
+            if (role is not null && conteudo is not null)
+                lista.Add(new MensagemChat { Role = role, Conteudo = conteudo });
+        }
+
+        return lista;
     }
 
     [SupportedOSPlatform("windows")]

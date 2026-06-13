@@ -28,4 +28,13 @@ public interface IClienteLlm
 
     Task<string> ResponderAsync(
         string promptSistema, string promptUsuario, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Responde mantendo histórico de conversa. Cada entrada é (role, conteúdo)
+    /// onde role é "user" ou "assistant". A última mensagem deve ser do usuário.
+    /// </summary>
+    Task<string> ResponderConversaAsync(
+        string promptSistema,
+        IReadOnlyList<(string Role, string Conteudo)> historico,
+        CancellationToken cancellationToken = default);
 }

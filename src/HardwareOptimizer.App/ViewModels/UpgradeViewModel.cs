@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HardwareOptimizer.Core.Contracts;
@@ -56,7 +58,23 @@ public partial class UpgradeViewModel : ObservableObject
     [ObservableProperty] private bool _temRam;
     [ObservableProperty] private bool _temPlaca;
 
-    // ── Command ────────────────────────────────────────────────────────────
+    // ── Chat ────────────────────────────────────────────────────────────────
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PodeEnviar))]
+    private string _mensagemInput = "";
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PodeEnviar))]
+    private bool _chatCarregando;
+
+    [ObservableProperty] private bool _chatVisivel;
+
+    public bool PodeEnviar => !ChatCarregando && !string.IsNullOrWhiteSpace(MensagemInput);
+
+    public ObservableCollection<ChatMensagemVm> Mensagens { get; } = [];
+
+    // ── Commands ────────────────────────────────────────────────────────────
 
     public async Task AtivarAsync()
     {
@@ -83,6 +101,14 @@ public partial class UpgradeViewModel : ObservableObject
             AnalisarGargalo(inv);
 
             Carregado = true;
+            ChatVisivel = true;
+
+            // Dispara análise automática da IA após detectar hardware
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(600);
+                await AnalisarInicialAsync();
+            });
         }
         finally
         {
@@ -90,7 +116,76 @@ public partial class UpgradeViewModel : ObservableObject
         }
     }
 
+    [RelayCommand(CanExecute = nameof(PodeEnviar))]
+    private async Task EnviarMensagemAsync()
+    {
+        var texto = MensagemInput.Trim();
+        if (string.IsNullOrWhiteSpace(texto)) return;
+
+        MensagemInput = "";
+        AdicionarMensagem("user", texto);
+
+        ChatCarregando = true;
+        try
+        {
+            var historico = Mensagens
+                .Select(m => new { role = m.IsUser ? "user" : "assistant", conteudo = m.Texto })
+                .ToList();
+
+            // Remove a última mensagem do usuário do histórico (ela é a atual)
+            var historicoSemAtual = historico.Take(historico.Count - 1).ToList();
+
+            var parametros = JsonDocument.Parse(JsonSerializer.Serialize(new
+            {
+                mensagem = texto,
+                historico = historicoSemAtual,
+            })).RootElement;
+
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo = "chat_upgrade",
+                Parametros = parametros,
+            });
+
+            var resposta = resp.Sucesso && resp.Resultado is string s ? s
+                : resp.Sucesso ? resp.Resultado?.ToString() ?? "–"
+                : $"Erro: {resp.Erro}";
+
+            AdicionarMensagem("assistant", resposta);
+        }
+        finally
+        {
+            ChatCarregando = false;
+        }
+    }
+
     // ── Helpers ────────────────────────────────────────────────────────────
+
+    private async Task AnalisarInicialAsync()
+    {
+        ChatCarregando = true;
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "analise_upgrade" });
+            var texto = resp.Sucesso && resp.Resultado is string s ? s
+                : resp.Sucesso ? resp.Resultado?.ToString() ?? "–"
+                : null;
+
+            if (!string.IsNullOrWhiteSpace(texto))
+                AdicionarMensagem("assistant", texto);
+        }
+        catch
+        {
+            // análise automática falha silenciosamente
+        }
+        finally
+        {
+            ChatCarregando = false;
+        }
+    }
+
+    private void AdicionarMensagem(string role, string texto) =>
+        Mensagens.Add(new ChatMensagemVm(role, texto));
 
     private void PopularCpu(Inventario inv)
     {
@@ -121,7 +216,6 @@ public partial class UpgradeViewModel : ObservableObject
         var qtd      = inv.Memoria.Count;
         var perStick = qtd > 0 ? totalGb / qtd : 0;
 
-        // Tipo: usa SMBIOSMemoryType se disponível; caso contrário infere pela frequência
         var tipo = inv.Memoria.FirstOrDefault(m => m.Tipo != null)?.Tipo
                    ?? (freqMhz >= 4800 ? "DDR5" : "DDR4");
 
@@ -129,7 +223,6 @@ public partial class UpgradeViewModel : ObservableObject
             ? $"{totalGb} GB {tipo}-{freqMhz}  ({qtd}×{perStick} GB)"
             : $"{totalGb} GB {tipo}  ({qtd}×{perStick} GB)";
 
-        // Fabricante(s) + modelos únicos
         var fabricantes = inv.Memoria
             .Select(m => m.Fabricante)
             .Where(f => !string.IsNullOrWhiteSpace(f))
@@ -145,7 +238,6 @@ public partial class UpgradeViewModel : ObservableObject
 
         FabricanteRam = fabricantes.Count > 0 ? string.Join(" / ", fabricantes!) : "";
 
-        // Slots: ex. "DIMM A1, DIMM A2"
         var slots = inv.Memoria
             .Select(m => m.Slot)
             .Where(s => !string.IsNullOrWhiteSpace(s))
@@ -178,4 +270,20 @@ public partial class UpgradeViewModel : ObservableObject
             _     => "✓  Setup Balanceado",
         };
     }
+}
+
+/// <summary>Item de mensagem no chat de upgrade.</summary>
+public sealed class ChatMensagemVm
+{
+    public ChatMensagemVm(string role, string texto)
+    {
+        Role = role;
+        Texto = texto;
+        IsUser = role == "user";
+    }
+
+    public string Role { get; }
+    public string Texto { get; }
+    public bool IsUser { get; }
+    public bool IsAssistant => !IsUser;
 }
