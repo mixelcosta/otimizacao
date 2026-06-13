@@ -124,6 +124,15 @@
             <TextBlock Text="{Binding NomeRam}"
                        Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
                        TextWrapping="Wrap" />
+            <TextBlock Text="{Binding FabricanteRam}"
+                       Foreground="#4A4A4A" FontSize="10"
+                       IsVisible="{Binding FabricanteRam,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <TextBlock Text="{Binding InfosRam}"
+                       Foreground="#3A3A3A" FontSize="10"
+                       TextWrapping="Wrap"
+                       IsVisible="{Binding InfosRam,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           </StackPanel>
 
           <Rectangle Height="1" Fill="#181818" Margin="0,0,0,14" />

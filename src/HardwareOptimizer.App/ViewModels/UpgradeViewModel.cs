@@ -30,6 +30,8 @@ public partial class UpgradeViewModel : ObservableObject
     [ObservableProperty] private string _nomeGpu        = "–";
     [ObservableProperty] private string _infosGpu       = "";
     [ObservableProperty] private string _nomeRam        = "–";
+    [ObservableProperty] private string _fabricanteRam  = "";
+    [ObservableProperty] private string _infosRam       = "";
     [ObservableProperty] private string _nomePlacaMae   = "–";
     [ObservableProperty] private string _infosPlaca     = "";
     [ObservableProperty] private string _nomeOs         = "–";
@@ -113,16 +115,48 @@ public partial class UpgradeViewModel : ObservableObject
         if (inv.Memoria.Count == 0) return;
 
         var totalGb  = inv.Memoria.Sum(m => m.TamanhoGb ?? 0);
+        if (totalGb == 0) return;
+
         var freqMhz  = inv.Memoria.FirstOrDefault()?.VelocidadeMhz;
         var qtd      = inv.Memoria.Count;
         var perStick = qtd > 0 ? totalGb / qtd : 0;
-        var isDdr5   = freqMhz.HasValue && freqMhz.Value >= 4800;
 
-        NomeRam = totalGb > 0
-            ? $"{totalGb} GB DDR{(isDdr5 ? "5" : "4")}{(freqMhz > 0 ? $"-{freqMhz}" : "")} ({qtd}×{perStick} GB)"
-            : "–";
+        // Tipo: usa SMBIOSMemoryType se disponível; caso contrário infere pela frequência
+        var tipo = inv.Memoria.FirstOrDefault(m => m.Tipo != null)?.Tipo
+                   ?? (freqMhz >= 4800 ? "DDR5" : "DDR4");
 
-        TemRam = totalGb > 0;
+        NomeRam = freqMhz > 0
+            ? $"{totalGb} GB {tipo}-{freqMhz}  ({qtd}×{perStick} GB)"
+            : $"{totalGb} GB {tipo}  ({qtd}×{perStick} GB)";
+
+        // Fabricante(s) + modelos únicos
+        var fabricantes = inv.Memoria
+            .Select(m => m.Fabricante)
+            .Where(f => !string.IsNullOrWhiteSpace(f))
+            .Distinct()
+            .ToList();
+
+        var modelos = inv.Memoria
+            .Select(m => m.Modelo?.Trim())
+            .Where(m => !string.IsNullOrWhiteSpace(m))
+            .Distinct()
+            .Take(2)
+            .ToList();
+
+        FabricanteRam = fabricantes.Count > 0 ? string.Join(" / ", fabricantes!) : "";
+
+        // Slots: ex. "DIMM A1, DIMM A2"
+        var slots = inv.Memoria
+            .Select(m => m.Slot)
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .ToList();
+
+        var partes = new List<string>();
+        if (modelos.Count > 0) partes.Add(string.Join(", ", modelos!));
+        if (slots.Count > 0)   partes.Add(string.Join(", ", slots!));
+        InfosRam = partes.Count > 0 ? string.Join("  ·  ", partes) : "";
+
+        TemRam = true;
     }
 
     private void PopularPlaca(Inventario inv)

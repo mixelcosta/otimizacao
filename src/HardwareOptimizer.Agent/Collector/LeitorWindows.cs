@@ -83,24 +83,65 @@ public sealed class LeitorWindows : ILeitorPlataforma
     private static IReadOnlyList<ModuloMemoria> LerMemoria()
     {
         var modulos = new List<ModuloMemoria>();
-        foreach (var item in Itens("Win32_PhysicalMemory", "Capacity,Speed,Manufacturer"))
+        foreach (var item in Itens("Win32_PhysicalMemory",
+            "Capacity,Speed,Manufacturer,PartNumber,DeviceLocator,SMBIOSMemoryType"))
         {
             int? gb = null;
-            if (long.TryParse(Texto(item, "Capacity"), NumberStyles.Integer, CultureInfo.InvariantCulture, out var bytes))
-            {
-                gb = (int)Math.Round(bytes / 1024.0 / 1024.0 / 1024.0);
-            }
+            var capacidade = NumeroLong(item, "Capacity");
+            if (capacidade.HasValue && capacidade.Value > 0)
+                gb = (int)Math.Round(capacidade.Value / 1024.0 / 1024.0 / 1024.0);
 
             modulos.Add(new ModuloMemoria
             {
                 TamanhoGb = gb,
                 VelocidadeMhz = Inteiro(item, "Speed"),
-                Fabricante = Texto(item, "Manufacturer"),
+                Fabricante = DecodificarFabricanteRam(Texto(item, "Manufacturer")),
+                Modelo = Texto(item, "PartNumber"),
+                Slot = Texto(item, "DeviceLocator"),
+                Tipo = DecodificarTipoMemoria(Inteiro(item, "SMBIOSMemoryType")),
             });
         }
 
         return modulos;
     }
+
+    private static string? DecodificarFabricanteRam(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return null;
+        var trim = raw.Trim();
+        // Se já é nome legível (contém letra não-hex), devolve direto
+        if (trim.Any(c => c is > 'F' and <= 'Z' or > 'f' and <= 'z' or ' '))
+            return trim;
+        return trim.ToUpperInvariant().Replace(" ", "") switch
+        {
+            "CE"     or "04CE" or "80CE"     => "Samsung",
+            "AD"     or "80AD" or "04AD"     => "SK Hynix",
+            "2C"     or "802C" or "04F1"     => "Micron",
+            "9E"     or "029E"               => "Corsair",
+            "61"     or "04CB" or "04CD"
+                    or "0198"                => "Kingston",
+            "5105"                           => "Qimonda",
+            "C1"     or "04C1"               => "Infineon",
+            "51"     or "0151"               => "Qimonda",
+            "98"     or "0198"               => "Crucial",
+            _ => trim,
+        };
+    }
+
+    private static string? DecodificarTipoMemoria(int? tipo) => tipo switch
+    {
+        20 => "DDR",
+        21 => "DDR2",
+        24 => "DDR3",
+        26 => "DDR4",
+        27 => "LPDDR",
+        28 => "LPDDR2",
+        29 => "LPDDR3",
+        30 => "LPDDR4",
+        34 => "DDR5",
+        35 => "LPDDR5",
+        _  => null,
+    };
 
     private static IReadOnlyList<PlacaVideo> LerGpu()
     {
@@ -226,6 +267,17 @@ public sealed class LeitorWindows : ILeitorPlataforma
             return valor;
         }
 
+        return null;
+    }
+
+    private static long? NumeroLong(JsonElement? elemento, string propriedade)
+    {
+        if (elemento is not { } e || e.ValueKind != JsonValueKind.Object) return null;
+        if (!e.TryGetProperty(propriedade, out var prop)) return null;
+        if (prop.ValueKind == JsonValueKind.Number && prop.TryGetInt64(out var v)) return v;
+        if (prop.ValueKind == JsonValueKind.String &&
+            long.TryParse(prop.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var s))
+            return s;
         return null;
     }
 

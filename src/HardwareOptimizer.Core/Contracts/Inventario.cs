@@ -62,6 +62,15 @@ public sealed record ModuloMemoria
     public int? VelocidadeMhz { get; init; }
 
     public string? Fabricante { get; init; }
+
+    /// <summary>Número de parte (PartNumber) — ex: "CMK16GX4M2B3200C16".</summary>
+    public string? Modelo { get; init; }
+
+    /// <summary>Slot físico — ex: "DIMM A1".</summary>
+    public string? Slot { get; init; }
+
+    /// <summary>Tipo de memória decodificado — ex: "DDR4", "DDR5".</summary>
+    public string? Tipo { get; init; }
 }
 
 public sealed record PlacaVideo
