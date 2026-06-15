@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text.Json;
+using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
 using Microsoft.Extensions.Logging;
@@ -39,6 +40,9 @@ public sealed class LeitorWindows : ILeitorPlataforma
             Gpu = LerGpu(),
             SistemaOperacional = LerSistemaOperacional(),
             Rede = LerRede(),
+            EntradasStartup = ColetarEntradasStartup(),
+            Servicos = ColetarServicos(),
+            Processos = ColetarProcessos(),
             Identificadores = LerIdentificadores(),
             ColetadoEm = DateTimeOffset.UtcNow,
         };
@@ -400,6 +404,76 @@ public sealed class LeitorWindows : ILeitorPlataforma
     {
         var saida = LerTexto("try { Confirm-SecureBootUEFI } catch { '' }");
         return bool.TryParse(saida, out var valor) ? valor : null;
+    }
+
+    // ---- Startup / Serviços / Processos --------------------------------------------------
+
+    private IReadOnlyList<InicializacaoEntrada> ColetarEntradasStartup()
+    {
+        try
+        {
+            var verificador = new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance);
+            return verificador.Varrer();
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao coletar entradas de inicialização.");
+            return Array.Empty<InicializacaoEntrada>();
+        }
+    }
+
+    private static IReadOnlyList<ServicoSistema> ColetarServicos()
+    {
+        var servicos = new List<ServicoSistema>();
+        foreach (var item in Itens("Win32_Service", "Name,DisplayName,State,StartMode"))
+        {
+            var nome = Texto(item, "Name");
+            if (string.IsNullOrWhiteSpace(nome)) continue;
+
+            var state     = Texto(item, "State")     ?? "";
+            var startMode = Texto(item, "StartMode") ?? "";
+
+            servicos.Add(new ServicoSistema
+            {
+                Nome         = nome,
+                NomeExibicao = Texto(item, "DisplayName"),
+                Status = state switch
+                {
+                    "Running" => StatusServico.Rodando,
+                    "Stopped" => StatusServico.Parado,
+                    _         => StatusServico.Outro,
+                },
+                TipoInicio = startMode switch
+                {
+                    "Auto"     => TipoInicioServico.Automatico,
+                    "Manual"   => TipoInicioServico.Manual,
+                    "Disabled" => TipoInicioServico.Desabilitado,
+                    _          => TipoInicioServico.Outro,
+                },
+            });
+        }
+        return servicos;
+    }
+
+    private static IReadOnlyList<ProcessoSistema> ColetarProcessos()
+    {
+        try
+        {
+            return Process.GetProcesses()
+                .OrderByDescending(p => { try { return p.WorkingSet64; } catch { return 0L; } })
+                .Take(150)
+                .Select(p => new ProcessoSistema
+                {
+                    Nome      = p.ProcessName,
+                    Pid       = p.Id,
+                    MemoriaKb = p.WorkingSet64 / 1024,
+                })
+                .ToList();
+        }
+        catch
+        {
+            return Array.Empty<ProcessoSistema>();
+        }
     }
 
     // ---- Infraestrutura CIM/PowerShell ----------------------------------------------------

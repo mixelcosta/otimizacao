@@ -65,11 +65,13 @@
     </Style>
   </Window.Styles>
 
-  <Grid ColumnDefinitions="200,*">
+  <Grid ColumnDefinitions="Auto,*">
 
-    <!-- ═══ SIDEBAR ═══ -->
-    <Border Grid.Column="0" Background="#0A0A0A"
-            BorderBrush="#1A1A1A" BorderThickness="0,0,1,0">
+    <!-- ═══ SIDEBAR ═══ — oculta até o SCAN ser concluído -->
+    <Border Grid.Column="0" Width="200"
+            Background="#0A0A0A"
+            BorderBrush="#1A1A1A" BorderThickness="0,0,1,0"
+            IsVisible="{Binding ScanConcluido}">
       <DockPanel>
 
         <!-- Logo (clica para Home / tela de scan) -->

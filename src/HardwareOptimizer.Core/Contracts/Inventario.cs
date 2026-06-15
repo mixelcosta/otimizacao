@@ -22,6 +22,15 @@ public sealed record Inventario
 
     public IReadOnlyList<InterfaceRede> Rede { get; init; } = Array.Empty<InterfaceRede>();
 
+    /// <summary>Programas configurados para iniciar com o Windows.</summary>
+    public IReadOnlyList<InicializacaoEntrada> EntradasStartup { get; init; } = Array.Empty<InicializacaoEntrada>();
+
+    /// <summary>Serviços do Windows no momento da coleta.</summary>
+    public IReadOnlyList<ServicoSistema> Servicos { get; init; } = Array.Empty<ServicoSistema>();
+
+    /// <summary>Processos em execução no momento da coleta (top 150 por memória).</summary>
+    public IReadOnlyList<ProcessoSistema> Processos { get; init; } = Array.Empty<ProcessoSistema>();
+
     /// <summary>Identificadores sensíveis. Nulo após a sanitização.</summary>
     public IdentificadoresSensiveis? Identificadores { get; init; }
 

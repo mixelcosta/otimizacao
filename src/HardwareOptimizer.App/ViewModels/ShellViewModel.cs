@@ -28,7 +28,11 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         Drivers = new DriversViewModel(agente);
         BiosGuide = new BiosGuideViewModel(agente);
         Configuracoes = new ConfiguracoesViewModel(licenca, OnLicencaAlterada);
-        Home = new HomeViewModel(agente, () => PaginaAtual = Dashboard, inv => InfoSistema.Popular(inv));
+        Home = new HomeViewModel(agente, () => PaginaAtual = Dashboard, inv =>
+        {
+            InfoSistema.Popular(inv);
+            ScanConcluido = true;
+        });
 
         _ehPremium = licenca.TipoAtual == TipoLicenca.Premium;
 
@@ -56,6 +60,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     [ObservableProperty] private ObservableObject _paginaAtual = null!;
     [ObservableProperty] private bool _temAlertaIa;
     [ObservableProperty] private bool _ehPremium;
+    [ObservableProperty] private bool _scanConcluido;
 
     [RelayCommand] private void IrParaHome() => PaginaAtual = Home;
 
