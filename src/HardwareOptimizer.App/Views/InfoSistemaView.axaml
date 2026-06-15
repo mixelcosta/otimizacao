@@ -168,27 +168,109 @@
         </StackPanel>
       </Border>
 
-      <!-- ═══ INTERFACE GRÁFICA ═══ -->
+      <!-- ═══ MEMÓRIA RAM ═══ -->
       <Border Background="#0D0D0D" CornerRadius="10" Padding="20">
         <StackPanel Spacing="10">
 
-          <TextBlock Text="INTERFACE GRÁFICA" FontSize="10" FontWeight="Bold"
+          <TextBlock Text="MEMÓRIA RAM" FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <!-- Resumo total -->
+          <Grid ColumnDefinitions="160,*">
+            <TextBlock Text="Total" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding ResumoRam}"
+                       Foreground="#00FF88" FontSize="12" FontWeight="SemiBold" />
+          </Grid>
+
+          <!-- Cabeçalho da tabela por slot -->
+          <Grid ColumnDefinitions="80,60,90,100,140,60,50"
+                Margin="0,6,0,2">
+            <TextBlock Text="Slot"       Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="1" Text="Tam."       Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="2" Text="Tipo/Vel."  Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="3" Text="Fabricante" Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="4" Text="Modelo"     Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="5" Text="Form"       Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="6" Text="Tensão"     Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+          </Grid>
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <!-- Linhas por slot -->
+          <ItemsControl ItemsSource="{Binding SlotsRam}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:SlotRamVm">
+                <Grid ColumnDefinitions="80,60,90,100,140,60,50" Margin="0,4,0,0">
+                  <TextBlock Text="{Binding Slot}"       Foreground="#AAAAAA" FontSize="11" />
+                  <TextBlock Grid.Column="1" Text="{Binding Tamanho}"    Foreground="#FFFFFF" FontSize="11" FontWeight="SemiBold" />
+                  <TextBlock Grid.Column="2" Text="{Binding TipoVel}"    Foreground="#00FF88" FontSize="11" />
+                  <TextBlock Grid.Column="3" Text="{Binding Fabricante}" Foreground="#AAAAAA" FontSize="11" />
+                  <TextBlock Grid.Column="4" Text="{Binding Modelo}"     Foreground="#666666" FontSize="11"
+                             TextTrimming="CharacterEllipsis" />
+                  <TextBlock Grid.Column="5" Text="{Binding FormFactor}" Foreground="#555555" FontSize="11" />
+                  <TextBlock Grid.Column="6" Text="{Binding Tensao}"     Foreground="#555555" FontSize="11" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+        </StackPanel>
+      </Border>
+
+      <!-- ═══ PLACA DE VÍDEO ═══ -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="20">
+        <StackPanel Spacing="10">
+
+          <TextBlock Text="PLACA DE VÍDEO" FontSize="10" FontWeight="Bold"
                      Foreground="#555555" LetterSpacing="2" />
           <Rectangle Height="1" Fill="#1A1A1A" />
 
           <Grid ColumnDefinitions="160,*">
-            <TextBlock Text="GPU" Foreground="#555555" FontSize="12"
+            <TextBlock Text="Nome" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
             <TextBlock Grid.Column="1" Text="{Binding NomeGpu}"
-                       Foreground="#FFFFFF" FontSize="12" FontWeight="SemiBold" />
+                       Foreground="#FFFFFF" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+          </Grid>
+
+          <Grid ColumnDefinitions="160,80,140,*">
+            <TextBlock Text="VRAM" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding VramGpu}"
+                       Foreground="#00FF88" FontSize="12" FontWeight="SemiBold" />
+            <TextBlock Grid.Column="2" Text="Bus" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3" Text="PCI-Express"
+                       Foreground="#AAAAAA" FontSize="12" />
+          </Grid>
+
+          <Grid ColumnDefinitions="160,80,140,*">
+            <TextBlock Text="Resolução" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding ResolucaoGpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
+            <TextBlock Grid.Column="2" Text="Taxa" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3" Text="{Binding TaxaGpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
           <Grid ColumnDefinitions="160,*">
-            <TextBlock Text="Bus" Foreground="#555555" FontSize="12"
+            <TextBlock Text="Driver" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="PCI-Express"
+            <TextBlock Grid.Column="1" Text="{Binding DriverGpu}"
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
+
+          <Grid ColumnDefinitions="160,*">
+            <TextBlock Text="Data do Driver" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding DataDriverGpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
+          </Grid>
+
+          <Rectangle Height="1" Fill="#1A1A1A" Margin="0,4,0,0" />
 
           <!-- Link Width -->
           <Grid ColumnDefinitions="160,80,140,*">

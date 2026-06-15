@@ -95,6 +95,15 @@ public sealed record ModuloMemoria
 
     /// <summary>Tipo de memória decodificado — ex: "DDR4", "DDR5".</summary>
     public string? Tipo { get; init; }
+
+    /// <summary>"DIMM" | "SO-DIMM" | null.</summary>
+    public string? FormFactor { get; init; }
+
+    /// <summary>Velocidade configurada (XMP/EXPO) em MHz.</summary>
+    public int? VelocidadeConfiguradaMhz { get; init; }
+
+    /// <summary>Tensão configurada — ex: "1.35V".</summary>
+    public string? Tensao { get; init; }
 }
 
 public sealed record PlacaVideo
@@ -116,6 +125,18 @@ public sealed record PlacaVideo
 
     /// <summary>Ex: "16.0 GT/s".</summary>
     public string? LinkSpeedMax { get; init; }
+
+    /// <summary>VRAM em MB (AdapterRAM / 1024 / 1024).</summary>
+    public int? VramMb { get; init; }
+
+    /// <summary>Ex: "1920×1080".</summary>
+    public string? Resolucao { get; init; }
+
+    /// <summary>Taxa de atualização em Hz.</summary>
+    public int? TaxaAtualizacaoHz { get; init; }
+
+    /// <summary>Data do driver — ex: "20240115".</summary>
+    public string? DataDriver { get; init; }
 }
 
 public sealed record SistemaOperacionalInfo

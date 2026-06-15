@@ -181,26 +181,41 @@ public sealed class LeitorWindows : ILeitorPlataforma
     {
         var modulos = new List<ModuloMemoria>();
         foreach (var item in Itens("Win32_PhysicalMemory",
-            "Capacity,Speed,Manufacturer,PartNumber,DeviceLocator,SMBIOSMemoryType"))
+            "Capacity,Speed,ConfiguredClockSpeed,Manufacturer,PartNumber," +
+            "DeviceLocator,SMBIOSMemoryType,FormFactor,ConfiguredVoltage"))
         {
             int? gb = null;
             var capacidade = NumeroLong(item, "Capacity");
             if (capacidade.HasValue && capacidade.Value > 0)
                 gb = (int)Math.Round(capacidade.Value / 1024.0 / 1024.0 / 1024.0);
 
+            var tensaoMv = Inteiro(item, "ConfiguredVoltage");
+            var tensao = tensaoMv is > 0 ? $"{tensaoMv.Value / 1000.0:F2}V" : null;
+
             modulos.Add(new ModuloMemoria
             {
                 TamanhoGb = gb,
                 VelocidadeMhz = Inteiro(item, "Speed"),
+                VelocidadeConfiguradaMhz = Inteiro(item, "ConfiguredClockSpeed"),
                 Fabricante = DecodificarFabricanteRam(Texto(item, "Manufacturer")),
                 Modelo = Texto(item, "PartNumber"),
                 Slot = Texto(item, "DeviceLocator"),
                 Tipo = DecodificarTipoMemoria(Inteiro(item, "SMBIOSMemoryType")),
+                FormFactor = DecodificarFormFactor(Inteiro(item, "FormFactor")),
+                Tensao = tensao,
             });
         }
 
         return modulos;
     }
+
+    private static string? DecodificarFormFactor(int? ff) => ff switch
+    {
+        8  => "DIMM",
+        12 => "SO-DIMM",
+        13 => "SO-DIMM",
+        _  => null,
+    };
 
     private static string? DecodificarFabricanteRam(string? raw)
     {
@@ -246,15 +261,28 @@ public sealed class LeitorWindows : ILeitorPlataforma
         var pcie = LerPcieGpu();
         bool primeiraGpu = true;
 
-        foreach (var item in Itens("Win32_VideoController", "Name,DriverVersion"))
+        foreach (var item in Itens("Win32_VideoController",
+            "Name,DriverVersion,DriverDate,AdapterRAM," +
+            "CurrentHorizontalResolution,CurrentVerticalResolution,CurrentRefreshRate"))
         {
             var nome = Texto(item, "Name");
             if (!string.IsNullOrWhiteSpace(nome))
             {
+                var vramBytes = NumeroLong(item, "AdapterRAM");
+                var vramMb = vramBytes is > 0 ? (int)(vramBytes.Value / 1024 / 1024) : (int?)null;
+
+                var resH = Inteiro(item, "CurrentHorizontalResolution");
+                var resV = Inteiro(item, "CurrentVerticalResolution");
+                var resolucao = resH is > 0 && resV is > 0 ? $"{resH}×{resV}" : null;
+
                 var gpu = new PlacaVideo
                 {
-                    Nome = nome,
-                    VersaoDriver = Texto(item, "DriverVersion"),
+                    Nome             = nome,
+                    VersaoDriver     = Texto(item, "DriverVersion"),
+                    DataDriver       = NormalizadorData.Normalizar(Texto(item, "DriverDate")),
+                    VramMb           = vramMb,
+                    Resolucao        = resolucao,
+                    TaxaAtualizacaoHz = Inteiro(item, "CurrentRefreshRate"),
                 };
 
                 if (primeiraGpu && pcie.HasValue)
