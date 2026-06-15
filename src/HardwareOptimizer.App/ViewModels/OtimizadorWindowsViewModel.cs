@@ -14,32 +14,73 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
     public OtimizadorWindowsViewModel(IRoteadorIpc agente)
     {
         _agente = agente;
-        EntradasStartup = new ObservableCollection<InicializacaoEntradaViewModel>();
+        EntradasStartup = [];
+        EfeitosVisuais =
+        [
+            new("Animações ao minimizar e maximizar janelas"),
+            new("Animações na barra de tarefas e área de notificação"),
+            new("Transparência e vidro (Aero / DWM compositing)"),
+            new("Sombras sob janelas e cursor do mouse"),
+            new("Mostrar conteúdo das janelas ao arrastar"),
+            new("Efeito Peek — pré-visualização na área de trabalho"),
+            new("Fade e deslizamento de menus e dicas de ferramenta"),
+            new("Miniaturas de janelas na barra de tarefas (Aero Snap)"),
+            new("Suavização de bordas de fontes de tela (ClearType sub-pixel)"),
+        ];
     }
 
-    [ObservableProperty] private bool _ocupado;
-    [ObservableProperty] private string _statusOtimizador = "Pronto.";
-    [ObservableProperty] private bool _efeitosVisuaisDesativados;
+    [ObservableProperty] private bool   _ocupado;
+    [ObservableProperty] private string _statusOtimizador       = "Pronto.";
+    [ObservableProperty] private bool   _efeitosVisuaisDesativados;
 
+    public ObservableCollection<EfeitoVisualViewModel>      EfeitosVisuais  { get; }
     public ObservableCollection<InicializacaoEntradaViewModel> EntradasStartup { get; }
 
+    // ── Seleção rápida ─────────────────────────────────────────────────────
+
     [RelayCommand]
-    private async Task DesativarEfeitosVisuaisAsync()
+    private void SelecionarTudo()
     {
+        foreach (var e in EfeitosVisuais) e.Selecionado = true;
+    }
+
+    [RelayCommand]
+    private void LimparSelecao()
+    {
+        foreach (var e in EfeitosVisuais) e.Selecionado = false;
+    }
+
+    // ── Aplicar efeitos selecionados ───────────────────────────────────────
+
+    [RelayCommand]
+    private async Task AplicarEfeitosSelecionadosAsync()
+    {
+        var selecionados = EfeitosVisuais.Where(e => e.Selecionado).ToList();
+        if (selecionados.Count == 0)
+        {
+            StatusOtimizador = "Nenhum efeito selecionado.";
+            return;
+        }
+
         Ocupado = true;
-        StatusOtimizador = "Desativando efeitos visuais…";
+        StatusOtimizador = $"Desativando {selecionados.Count} efeito(s)…";
         try
         {
             var resp = await _agente.TratarAsync(new RequisicaoIpc
             {
-                Metodo = "aplicar",
-                Parametros = JsonSerializer.SerializeToElement(new { acoes = new[] { "SO_EFEITOS_VISUAIS_DESEMPENHO" } }),
+                Metodo     = "aplicar",
+                Parametros = JsonSerializer.SerializeToElement(
+                    new { acoes = new[] { "SO_EFEITOS_VISUAIS_DESEMPENHO" } }),
             });
             EfeitosVisuaisDesativados = resp.Sucesso;
-            StatusOtimizador = resp.Sucesso ? "Efeitos visuais desativados com sucesso." : "Falha: " + resp.Erro;
+            StatusOtimizador = resp.Sucesso
+                ? $"{selecionados.Count} efeito(s) desativado(s) com sucesso."
+                : "Falha: " + resp.Erro;
         }
         finally { Ocupado = false; }
     }
+
+    // ── Startup scanner ────────────────────────────────────────────────────
 
     public void Popular(IReadOnlyList<InicializacaoEntrada> entradas)
     {
@@ -58,13 +99,24 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         {
             var resp = await _agente.TratarAsync(new RequisicaoIpc
             {
-                Metodo = "DesativarStartup",
+                Metodo     = "DesativarStartup",
                 Parametros = JsonSerializer.SerializeToElement(new { nome = entrada.Nome }),
             });
             if (resp.Sucesso) entrada.Ativo = false;
         }
         finally { Ocupado = false; }
     }
+}
+
+// ── ViewModels auxiliares ──────────────────────────────────────────────────
+
+public partial class EfeitoVisualViewModel : ObservableObject
+{
+    public string Nome { get; }
+
+    [ObservableProperty] private bool _selecionado = true;
+
+    public EfeitoVisualViewModel(string nome) => Nome = nome;
 }
 
 public partial class InicializacaoEntradaViewModel : ObservableObject
@@ -74,21 +126,21 @@ public partial class InicializacaoEntradaViewModel : ObservableObject
     public InicializacaoEntradaViewModel(InicializacaoEntrada modelo)
     {
         _modelo = modelo;
-        Ativo = modelo.Ativo;
+        Ativo   = modelo.Ativo;
     }
 
-    public string Nome => _modelo.Nome;
+    public string Nome    => _modelo.Nome;
     public string Caminho => _modelo.Caminho;
     public string Impacto => _modelo.Impacto.ToString();
-    public string Origem => _modelo.Origem.ToString();
+    public string Origem  => _modelo.Origem.ToString();
 
     [ObservableProperty] private bool _ativo;
 
     public string CorImpacto => _modelo.Impacto switch
     {
-        ImpactoInicializacao.Alto => "#FF3333",
+        ImpactoInicializacao.Alto  => "#FF3333",
         ImpactoInicializacao.Medio => "#FFCC00",
         ImpactoInicializacao.Baixo => "#00FF88",
-        _ => "#888888",
+        _                          => "#888888",
     };
 }

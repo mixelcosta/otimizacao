@@ -5,12 +5,36 @@
              x:DataType="vm:OtimizadorWindowsViewModel">
 
   <UserControl.Styles>
-    <Style Selector="Border.efeito-item">
-      <Setter Property="Background" Value="#0D0D0D" />
-      <Setter Property="CornerRadius" Value="5" />
-      <Setter Property="Padding" Value="10,7" />
-      <Setter Property="Margin" Value="0,2" />
+
+    <!-- Botões de seleção rápida (Tudo / Nenhum) -->
+    <Style Selector="Button.sel-rapida">
+      <Setter Property="Background"   Value="#1A1A1A" />
+      <Setter Property="Foreground"   Value="#666666" />
+      <Setter Property="FontSize"     Value="11" />
+      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="Padding"      Value="10,4" />
+      <Setter Property="BorderThickness" Value="0" />
     </Style>
+    <Style Selector="Button.sel-rapida:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#252525" />
+    </Style>
+
+    <!-- Checkbox dos efeitos visuais -->
+    <Style Selector="CheckBox.efeito">
+      <Setter Property="Foreground" Value="#AAAAAA" />
+      <Setter Property="FontSize"   Value="12" />
+    </Style>
+    <Style Selector="CheckBox.efeito:checked /template/ Border#NormalRectangle">
+      <Setter Property="Background"   Value="#00C870" />
+      <Setter Property="BorderBrush"  Value="#00C870" />
+    </Style>
+    <Style Selector="CheckBox.efeito:checked">
+      <Setter Property="Foreground" Value="#CCCCCC" />
+    </Style>
+    <Style Selector="CheckBox.efeito:unchecked">
+      <Setter Property="Foreground" Value="#555555" />
+    </Style>
+
   </UserControl.Styles>
 
   <ScrollViewer>
@@ -19,110 +43,65 @@
       <TextBlock Text="OTIMIZADOR WINDOWS" FontSize="13" FontWeight="Bold"
                  Foreground="#444444" LetterSpacing="3" />
 
-      <!-- Efeitos Visuais -->
+      <!-- ── Efeitos Visuais ──────────────────────────────────────────────── -->
       <Border Background="#111111" CornerRadius="8" Padding="16">
         <StackPanel Spacing="10">
 
+          <!-- Cabeçalho + badge "aplicado" -->
           <Grid ColumnDefinitions="*,Auto">
             <StackPanel>
               <TextBlock Text="Efeitos Visuais" Foreground="#CCCCCC" FontWeight="SemiBold" />
               <TextBlock Foreground="#555555" FontSize="11" Margin="0,2,0,0"
                          Text="VisualFXSetting → Melhor Desempenho (registro HKCU)" />
             </StackPanel>
-            <Border Grid.Column="1" Background="#1A1A1A" CornerRadius="4"
+            <Border Grid.Column="1" Background="#0D2A1A" CornerRadius="4"
                     Padding="8,4" VerticalAlignment="Center"
                     IsVisible="{Binding EfeitosVisuaisDesativados}">
               <TextBlock Text="✓ aplicado" Foreground="#00FF88" FontSize="11" />
             </Border>
           </Grid>
 
-          <!-- Lista do que será desativado -->
-          <TextBlock Text="SERÁ DESATIVADO:" Foreground="#444444"
-                     FontSize="10" FontWeight="Bold" LetterSpacing="2"
-                     Margin="0,4,0,2" />
+          <!-- Seleção rápida -->
+          <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2,0,0">
+            <TextBlock Text="SELECIONAR:" Foreground="#383838" FontSize="10"
+                       FontWeight="Bold" LetterSpacing="2" VerticalAlignment="Center" />
+            <Button Classes="sel-rapida"
+                    Content="Tudo"
+                    Command="{Binding SelecionarTudoCommand}" />
+            <Button Classes="sel-rapida"
+                    Content="Nenhum"
+                    Command="{Binding LimparSelecaoCommand}" />
+          </StackPanel>
 
-          <Border Classes="efeito-item">
-            <Grid ColumnDefinitions="18,*">
-              <TextBlock Text="✕" Foreground="#FF4444" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="Animações ao minimizar e maximizar janelas"
-                         Foreground="#AAAAAA" FontSize="12" />
-            </Grid>
-          </Border>
+          <!-- Lista de efeitos com checkboxes -->
+          <ItemsControl ItemsSource="{Binding EfeitosVisuais}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:EfeitoVisualViewModel">
+                <Border Background="#0D0D0D" CornerRadius="5"
+                        Padding="12,9" Margin="0,2">
+                  <CheckBox Classes="efeito"
+                             IsChecked="{Binding Selecionado}"
+                             Content="{Binding Nome}" />
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
 
-          <Border Classes="efeito-item">
-            <Grid ColumnDefinitions="18,*">
-              <TextBlock Text="✕" Foreground="#FF4444" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="Animações na barra de tarefas e área de notificação"
-                         Foreground="#AAAAAA" FontSize="12" />
-            </Grid>
-          </Border>
-
-          <Border Classes="efeito-item">
-            <Grid ColumnDefinitions="18,*">
-              <TextBlock Text="✕" Foreground="#FF4444" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="Transparência e vidro (Aero / DWM compositing)"
-                         Foreground="#AAAAAA" FontSize="12" />
-            </Grid>
-          </Border>
-
-          <Border Classes="efeito-item">
-            <Grid ColumnDefinitions="18,*">
-              <TextBlock Text="✕" Foreground="#FF4444" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="Sombras sob janelas e cursor do mouse"
-                         Foreground="#AAAAAA" FontSize="12" />
-            </Grid>
-          </Border>
-
-          <Border Classes="efeito-item">
-            <Grid ColumnDefinitions="18,*">
-              <TextBlock Text="✕" Foreground="#FF4444" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="Mostrar conteúdo das janelas ao arrastar"
-                         Foreground="#AAAAAA" FontSize="12" />
-            </Grid>
-          </Border>
-
-          <Border Classes="efeito-item">
-            <Grid ColumnDefinitions="18,*">
-              <TextBlock Text="✕" Foreground="#FF4444" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="Efeito Peek — pré-visualização na área de trabalho"
-                         Foreground="#AAAAAA" FontSize="12" />
-            </Grid>
-          </Border>
-
-          <Border Classes="efeito-item">
-            <Grid ColumnDefinitions="18,*">
-              <TextBlock Text="✕" Foreground="#FF4444" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="Fade e deslizamento de menus e dicas de ferramenta"
-                         Foreground="#AAAAAA" FontSize="12" />
-            </Grid>
-          </Border>
-
-          <Border Classes="efeito-item">
-            <Grid ColumnDefinitions="18,*">
-              <TextBlock Text="✕" Foreground="#FF4444" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="Miniaturas de janelas na barra de tarefas (Aero Snap)"
-                         Foreground="#AAAAAA" FontSize="12" />
-            </Grid>
-          </Border>
-
-          <Border Classes="efeito-item">
-            <Grid ColumnDefinitions="18,*">
-              <TextBlock Text="✕" Foreground="#FF4444" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="Suavização de bordas de fontes de tela (ClearType sub-pixel)"
-                         Foreground="#AAAAAA" FontSize="12" />
-            </Grid>
-          </Border>
-
-          <Button Content="Desativar efeitos visuais"
-                  Command="{Binding DesativarEfeitosVisuaisCommand}"
+          <!-- Botão de confirmação -->
+          <Button Content="Confirmar e desativar selecionados"
+                  Command="{Binding AplicarEfeitosSelecionadosCommand}"
                   IsEnabled="{Binding !Ocupado}"
                   Background="#1A3A2A" Foreground="#00FF88"
-                  CornerRadius="6" Padding="12,8"
+                  CornerRadius="6" Padding="14,10"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  FontWeight="SemiBold"
                   Margin="0,6,0,0" />
+
         </StackPanel>
       </Border>
 
-      <!-- Startup Scanner -->
+      <!-- ── Inicialização Automática ─────────────────────────────────────── -->
       <Border Background="#111111" CornerRadius="8" Padding="16">
         <StackPanel Spacing="8">
           <TextBlock Text="Inicialização Automática" Foreground="#CCCCCC"
