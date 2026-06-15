@@ -4,11 +4,14 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text.Json;
+using HardwareOptimizer.Agent.Drivers;
+using HardwareOptimizer.Agent.Smart;
 using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Win32;
 
 namespace HardwareOptimizer.Agent.Collector;
 
@@ -27,24 +30,51 @@ public sealed class LeitorWindows : ILeitorPlataforma
 
     public SistemaOperacionalTipo Tipo => SistemaOperacionalTipo.Windows;
 
-    public Task<Inventario> LerAsync(CancellationToken cancellationToken = default)
+    public async Task<Inventario> LerAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        _log.LogDebug("Lendo inventário do Windows via PowerShell/CIM (Get-CimInstance).");
+        _log.LogDebug("Lendo inventário do Windows via PowerShell/CIM + WMI (paralelo).");
+
+        // Tarefas lentas (WMI/System.Management + filesystem) rodam em paralelo
+        // enquanto as consultas CIM/PowerShell executam sequencialmente no thread atual.
+        var saudeTask    = Task.Run(() => ColetarSaudeDiscos(),          cancellationToken);
+        var driversTask  = Task.Run(() => ColetarDrivers(),              cancellationToken);
+        var tempTask     = Task.Run(() => ColetarArquivosTemporarios(),  cancellationToken);
+        var programasTask = Task.Run(() => ColetarProgramasInstalados(), cancellationToken);
+
+        // Coleta de hardware via PowerShell/CIM (sequencial)
+        var placa    = LerPlaca();
+        var cpu      = LerCpu();
+        var memoria  = LerMemoria();
+        var gpu      = LerGpu();
+        var so       = LerSistemaOperacional();
+        var rede     = LerRede();
+        var idents   = LerIdentificadores();
+        var startup  = ColetarEntradasStartup();
+        var servicos = ColetarServicos();
+        var processos = ColetarProcessos();
+        var metricas = ColetarMetricas();
+
+        await Task.WhenAll(saudeTask, driversTask, tempTask, programasTask).ConfigureAwait(false);
 
         var inventario = new Inventario
         {
-            Placa = LerPlaca(),
-            Cpu = LerCpu(),
-            Memoria = LerMemoria(),
-            Gpu = LerGpu(),
-            SistemaOperacional = LerSistemaOperacional(),
-            Rede = LerRede(),
-            EntradasStartup = ColetarEntradasStartup(),
-            Servicos = ColetarServicos(),
-            Processos = ColetarProcessos(),
-            Identificadores = LerIdentificadores(),
-            ColetadoEm = DateTimeOffset.UtcNow,
+            Placa                = placa,
+            Cpu                  = cpu,
+            Memoria              = memoria,
+            Gpu                  = gpu,
+            SistemaOperacional   = so,
+            Rede                 = rede,
+            EntradasStartup      = startup,
+            Servicos             = servicos,
+            Processos            = processos,
+            SaudeDiscos          = saudeTask.Result,
+            Drivers              = driversTask.Result,
+            Metricas             = metricas,
+            ProgramasInstalados  = programasTask.Result,
+            ArquivosTemporarios  = tempTask.Result,
+            Identificadores      = idents,
+            ColetadoEm           = DateTimeOffset.UtcNow,
         };
 
         if (inventario.Placa.Fabricante == "Desconhecido")
@@ -54,7 +84,21 @@ public sealed class LeitorWindows : ILeitorPlataforma
                 + "(PowerShell ausente, sem permissão ou execução bloqueada).");
         }
 
-        return Task.FromResult(inventario);
+        _log.LogInformation(
+            "Coleta concluída: CPU '{Cpu}', {Mem} módulo(s) RAM, {Gpu} GPU(s), "
+            + "{Discos} disco(s), {Drivers} driver(s), {Programas} programa(s), "
+            + "{Startup} entrada(s) startup, {Servicos} serviço(s), {Processos} processo(s).",
+            inventario.Cpu.Nome,
+            inventario.Memoria.Count,
+            inventario.Gpu.Count,
+            inventario.SaudeDiscos.Count,
+            inventario.Drivers.Count,
+            inventario.ProgramasInstalados.Count,
+            inventario.EntradasStartup.Count,
+            inventario.Servicos.Count,
+            inventario.Processos.Count);
+
+        return inventario;
     }
 
     private static PlacaMae LerPlaca()
@@ -404,6 +448,217 @@ public sealed class LeitorWindows : ILeitorPlataforma
     {
         var saida = LerTexto("try { Confirm-SecureBootUEFI } catch { '' }");
         return bool.TryParse(saida, out var valor) ? valor : null;
+    }
+
+    // ---- SMART / Drivers / Métricas / Programas / Temp ----------------------------------
+
+    private IReadOnlyList<SaudeDisco> ColetarSaudeDiscos()
+    {
+        try
+        {
+            var leitor = new LeitorSmart(NullLogger<LeitorSmart>.Instance);
+            return leitor.LerDados()
+                .Select(b => new SaudeDisco
+                {
+                    Modelo                  = b.Modelo,
+                    Letra                   = "–",
+                    TbwEscritoGb            = b.TbwEscritoGb,
+                    TbwFabricanteGb         = 0,
+                    HorasUso                = b.HorasUso,
+                    PorcentagemVidaRestante = 100,
+                    TemErrosNaoCorrigiveis  = b.TemErrosNaoCorrigiveis,
+                    SetoresComProblema      = b.SetoresPendentes,
+                    Nivel                   = ClassificarNivelSaude(b),
+                })
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao coletar dados S.M.A.R.T.");
+            return Array.Empty<SaudeDisco>();
+        }
+    }
+
+    private static NivelSaudeDisco ClassificarNivelSaude(DadosSmartBrutos b)
+    {
+        if (b.TemErrosNaoCorrigiveis || b.SetoresPendentes > 0) return NivelSaudeDisco.Critico;
+        if (b.HorasUso > 30_000) return NivelSaudeDisco.Atencao;
+        return NivelSaudeDisco.Bom;
+    }
+
+    private IReadOnlyList<InfoDriver> ColetarDrivers()
+    {
+        try
+        {
+            var coletor = new ColetorHwid(NullLogger<ColetorHwid>.Instance);
+            return coletor.Coletar();
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao coletar informações de drivers.");
+            return Array.Empty<InfoDriver>();
+        }
+    }
+
+    private static MetricasSistema ColetarMetricas()
+    {
+        var cpuItem  = PrimeiroItem("Win32_Processor", "LoadPercentage");
+        var cpuUso   = Inteiro(cpuItem, "LoadPercentage") ?? 0;
+
+        var osItem   = PrimeiroItem("Win32_OperatingSystem", "TotalVisibleMemorySize,FreePhysicalMemory");
+        var totalKb  = NumeroLong(osItem, "TotalVisibleMemorySize") ?? 0;
+        var livreKb  = NumeroLong(osItem, "FreePhysicalMemory")     ?? 0;
+
+        var discos = DriveInfo.GetDrives()
+            .Where(d => d.IsReady && d.DriveType == DriveType.Fixed)
+            .Select(d => new MetricaDisco
+            {
+                Letra   = d.Name.TrimEnd('\\'),
+                TotalGb = d.TotalSize            / 1024 / 1024 / 1024,
+                LivreGb = d.AvailableFreeSpace   / 1024 / 1024 / 1024,
+                UsadoGb = (d.TotalSize - d.AvailableFreeSpace) / 1024 / 1024 / 1024,
+            })
+            .ToList<MetricaDisco>();
+
+        return new MetricasSistema
+        {
+            CpuUsoPercent = cpuUso,
+            RamTotalMb    = totalKb / 1024,
+            RamLivreMb    = livreKb / 1024,
+            Discos        = discos,
+        };
+    }
+
+    private static IReadOnlyList<ProgramaInstalado> ColetarProgramasInstalados()
+    {
+        var programas = new Dictionary<string, ProgramaInstalado>(StringComparer.OrdinalIgnoreCase);
+
+        RegistryKey[] raizes =
+        [
+            Registry.LocalMachine,
+            Registry.CurrentUser,
+        ];
+
+        string[] subcaminhos =
+        [
+            @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+            @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+        ];
+
+        foreach (var raiz in raizes)
+        {
+            foreach (var subcaminho in subcaminhos)
+            {
+                try
+                {
+                    using var chave = raiz.OpenSubKey(subcaminho, writable: false);
+                    if (chave is null) continue;
+
+                    foreach (var subNome in chave.GetSubKeyNames())
+                    {
+                        try
+                        {
+                            using var sub = chave.OpenSubKey(subNome, writable: false);
+                            if (sub is null) continue;
+
+                            var nome = sub.GetValue("DisplayName") as string;
+                            if (string.IsNullOrWhiteSpace(nome)) continue;
+                            nome = nome.Trim();
+
+                            // Ignora atualizações do sistema
+                            if (nome.StartsWith("KB", StringComparison.OrdinalIgnoreCase) && nome.Length < 15) continue;
+                            if (nome.Contains("Hotfix",          StringComparison.OrdinalIgnoreCase)) continue;
+                            if (nome.Contains("Security Update", StringComparison.OrdinalIgnoreCase)) continue;
+                            if (nome.Contains("Update for Windows", StringComparison.OrdinalIgnoreCase)) continue;
+
+                            if (programas.ContainsKey(nome)) continue;
+
+                            int? tamanhoMb = null;
+                            if (sub.GetValue("EstimatedSize") is int kb && kb > 0)
+                                tamanhoMb = kb / 1024;
+
+                            programas[nome] = new ProgramaInstalado
+                            {
+                                Nome            = nome,
+                                Versao          = sub.GetValue("DisplayVersion") as string,
+                                Fabricante      = sub.GetValue("Publisher") as string,
+                                DataInstalacao  = sub.GetValue("InstallDate") as string,
+                                TamanhoMb       = tamanhoMb,
+                                Bloatware       = ClassificarBloatware(nome),
+                            };
+                        }
+                        catch { }
+                    }
+                }
+                catch { }
+            }
+        }
+
+        return programas.Values.OrderBy(p => p.Nome).ToList();
+    }
+
+    private static bool ClassificarBloatware(string nome)
+    {
+        string[] padroes =
+        [
+            "toolbar", "search assistant", "browser guard", "browser protector",
+            "pc cleaner", "registry cleaner", "registry optimizer", "system optimizer",
+            "pc optimizer", "speed booster", "driver booster", "driver easy",
+            "driver genius", "coupon", "savings", "deals", "discount",
+            "ask toolbar", "babylon", "conduit", "sweetpacks",
+            "mcafee security scan", "norton security scan", "norton online backup",
+            "wildtangent", "cyberlink", "roxio", "trial",
+        ];
+        var lower = nome.ToLowerInvariant();
+        return padroes.Any(p => lower.Contains(p));
+    }
+
+    private static AnaliseTemp ColetarArquivosTemporarios()
+    {
+        var vistos  = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var pastas  = new List<PastaTemp>();
+
+        var caminhos = new[]
+        {
+            Environment.GetEnvironmentVariable("TEMP"),
+            Environment.GetEnvironmentVariable("TMP"),
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp"),
+            @"C:\Windows\Temp",
+        };
+
+        foreach (var caminho in caminhos)
+        {
+            if (string.IsNullOrEmpty(caminho) || !vistos.Add(caminho)) continue;
+            try
+            {
+                var di = new DirectoryInfo(caminho);
+                if (!di.Exists) continue;
+
+                long bytes    = 0;
+                int  contagem = 0;
+
+                foreach (var fi in di.EnumerateFiles("*", SearchOption.AllDirectories).Take(10_000))
+                {
+                    try { bytes += fi.Length; contagem++; } catch { }
+                }
+
+                pastas.Add(new PastaTemp
+                {
+                    Caminho           = caminho,
+                    TamanhoMb         = bytes / 1024 / 1024,
+                    QuantidadeArquivos = contagem,
+                });
+            }
+            catch { }
+        }
+
+        return new AnaliseTemp
+        {
+            TamanhoTotalMb    = pastas.Sum(p => p.TamanhoMb),
+            QuantidadeArquivos = pastas.Sum(p => p.QuantidadeArquivos),
+            Pastas            = pastas,
+        };
     }
 
     // ---- Startup / Serviços / Processos --------------------------------------------------

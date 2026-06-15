@@ -31,6 +31,21 @@ public sealed record Inventario
     /// <summary>Processos em execução no momento da coleta (top 150 por memória).</summary>
     public IReadOnlyList<ProcessoSistema> Processos { get; init; } = Array.Empty<ProcessoSistema>();
 
+    /// <summary>Saúde dos discos via S.M.A.R.T.</summary>
+    public IReadOnlyList<SaudeDisco> SaudeDiscos { get; init; } = Array.Empty<SaudeDisco>();
+
+    /// <summary>Dispositivos e seus drivers (Display, Rede, Áudio, USB, Armazenamento).</summary>
+    public IReadOnlyList<InfoDriver> Drivers { get; init; } = Array.Empty<InfoDriver>();
+
+    /// <summary>Snapshot de métricas de uso no momento do SCAN (CPU%, RAM, espaço em disco).</summary>
+    public MetricasSistema? Metricas { get; init; }
+
+    /// <summary>Programas instalados via registro do Windows.</summary>
+    public IReadOnlyList<ProgramaInstalado> ProgramasInstalados { get; init; } = Array.Empty<ProgramaInstalado>();
+
+    /// <summary>Análise das pastas de arquivos temporários.</summary>
+    public AnaliseTemp? ArquivosTemporarios { get; init; }
+
     /// <summary>Identificadores sensíveis. Nulo após a sanitização.</summary>
     public IdentificadoresSensiveis? Identificadores { get; init; }
 
