@@ -16,4 +16,10 @@ public sealed record ProgramaInstalado
 
     /// <summary>Heurística: nome coincide com padrões conhecidos de bloatware/adware.</summary>
     public bool Bloatware { get; init; }
+
+    /// <summary>Comando registrado para desinstalar o programa (valor UninstallString do registro).</summary>
+    public string? UninstallString { get; init; }
+
+    /// <summary>Comando de desinstalação silenciosa, quando disponível (QuietUninstallString).</summary>
+    public string? QuietUninstallString { get; init; }
 }

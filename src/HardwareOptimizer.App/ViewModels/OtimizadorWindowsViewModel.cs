@@ -99,8 +99,9 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
 
     // ── Programas Instalados ───────────────────────────────────────────────
 
-    [ObservableProperty] private string _filtroProgramas    = "";
+    [ObservableProperty] private string _filtroProgramas     = "";
     [ObservableProperty] private string _totalProgramasLabel = "—";
+    [ObservableProperty] private string _desinstalarLabel    = "Desinstalar selecionados";
 
     public ObservableCollection<ProgramaInstaladoViewModel> ProgramasFiltrados { get; }
 
@@ -108,10 +109,17 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
 
     public void PopularProgramas(IReadOnlyList<ProgramaInstalado> lista)
     {
+        foreach (var p in _todosProgramas)
+            p.PropertyChanged -= OnProgramaPropertyChanged;
+
         _todosProgramas = lista
             .OrderBy(p => p.Nome, StringComparer.OrdinalIgnoreCase)
             .Select(p => new ProgramaInstaladoViewModel(p))
             .ToList();
+
+        foreach (var p in _todosProgramas)
+            p.PropertyChanged += OnProgramaPropertyChanged;
+
         AplicarFiltro();
     }
 
@@ -131,6 +139,56 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         TotalProgramasLabel = n == 0
             ? "Nenhum programa encontrado"
             : $"{n} programa{(n != 1 ? "s" : "")} encontrado{(n != 1 ? "s" : "")}";
+
+        AtualizarDesinstalarLabel();
+    }
+
+    private void OnProgramaPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ProgramaInstaladoViewModel.Selecionado))
+            AtualizarDesinstalarLabel();
+    }
+
+    private void AtualizarDesinstalarLabel()
+    {
+        int n = _todosProgramas.Count(p => p.Selecionado);
+        DesinstalarLabel = n == 0
+            ? "Desinstalar selecionados"
+            : $"Desinstalar {n} selecionado{(n != 1 ? "s" : "")}";
+    }
+
+    [RelayCommand]
+    private async Task DesinstalarSelecionadosAsync()
+    {
+        var selecionados = _todosProgramas.Where(p => p.Selecionado).ToList();
+        if (selecionados.Count == 0)
+        {
+            StatusOtimizador = "Nenhum programa selecionado.";
+            return;
+        }
+
+        Ocupado = true;
+        StatusOtimizador = $"Iniciando desinstalação de {selecionados.Count} programa(s)…";
+        try
+        {
+            var payload = selecionados.Select(p => new
+            {
+                nome                 = p.Nome,
+                uninstallString      = p.UninstallString,
+                quietUninstallString = p.QuietUninstallString,
+            });
+
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "DesinstalarProgramas",
+                Parametros = JsonSerializer.SerializeToElement(new { programas = payload }),
+            });
+
+            StatusOtimizador = resp.Sucesso
+                ? $"{selecionados.Count} desinstalador(es) iniciado(s). Conclua cada janela aberta."
+                : "Falha: " + resp.Erro;
+        }
+        finally { Ocupado = false; }
     }
 
     // ── Startup scanner ────────────────────────────────────────────────────
@@ -171,21 +229,27 @@ public partial class EfeitoVisualViewModel : ObservableObject
     public EfeitoVisualViewModel(string nome) => Nome = nome;
 }
 
-public class ProgramaInstaladoViewModel
+public partial class ProgramaInstaladoViewModel : ObservableObject
 {
-    public string Nome       { get; }
-    public string Fabricante { get; }
-    public string Versao     { get; }
-    public string Tamanho    { get; }
-    public string Data       { get; }
-    public bool   Bloatware  { get; }
+    public string Nome                 { get; }
+    public string Fabricante           { get; }
+    public string Versao               { get; }
+    public string Tamanho              { get; }
+    public string Data                 { get; }
+    public bool   Bloatware            { get; }
+    public string? UninstallString     { get; }
+    public string? QuietUninstallString { get; }
+
+    [ObservableProperty] private bool _selecionado;
 
     public ProgramaInstaladoViewModel(ProgramaInstalado p)
     {
-        Nome      = p.Nome;
-        Fabricante = p.Fabricante ?? "—";
-        Versao    = p.Versao ?? "—";
-        Bloatware = p.Bloatware;
+        Nome                 = p.Nome;
+        Fabricante           = p.Fabricante ?? "—";
+        Versao               = p.Versao ?? "—";
+        Bloatware            = p.Bloatware;
+        UninstallString      = p.UninstallString;
+        QuietUninstallString = p.QuietUninstallString;
 
         Tamanho = p.TamanhoMb is > 0
             ? p.TamanhoMb >= 1024

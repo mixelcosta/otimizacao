@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.Versioning;
 using System.Text.Json;
 using HardwareOptimizer.Agent.Backup;
@@ -76,6 +77,9 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "obterdrivers" => OperatingSystem.IsWindows()
                     ? ObterDriversWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "desinstalarprogramas" => OperatingSystem.IsWindows()
+                    ? await DesinstalarProgramasAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "chat_upgrade" => await ChatUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "analise_upgrade" => await AnaliseInicialUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
@@ -246,6 +250,80 @@ public sealed class RoteadorIpc : IRoteadorIpc
         }
 
         return lista;
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> DesinstalarProgramasAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p
+            || !p.TryGetProperty("programas", out var arr)
+            || arr.ValueKind != JsonValueKind.Array)
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'programas' obrigatório.");
+
+        int iniciados = 0;
+        var erros = new List<string>();
+
+        foreach (var item in arr.EnumerateArray())
+        {
+            ct.ThrowIfCancellationRequested();
+
+            string? cmdStr = null;
+            if (item.TryGetProperty("quietUninstallString", out var q)
+                && q.ValueKind == JsonValueKind.String
+                && q.GetString() is { Length: > 0 } qs)
+                cmdStr = qs;
+            else if (item.TryGetProperty("uninstallString", out var u)
+                && u.ValueKind == JsonValueKind.String)
+                cmdStr = u.GetString();
+
+            if (string.IsNullOrWhiteSpace(cmdStr)) continue;
+
+            var nome = item.TryGetProperty("nome", out var n) && n.ValueKind == JsonValueKind.String
+                ? n.GetString() ?? "?" : "?";
+            try
+            {
+                Process.Start(ParseUninstallCommand(cmdStr));
+                iniciados++;
+                await Task.Delay(600, ct).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                erros.Add($"{nome}: {ex.Message}");
+            }
+        }
+
+        return erros.Count == 0
+            ? RespostaIpc.Ok(req.Id, iniciados)
+            : RespostaIpc.Falha(req.Id, $"Iniciados: {iniciados}. Falhas: {string.Join("; ", erros)}");
+    }
+
+    private static ProcessStartInfo ParseUninstallCommand(string cmd)
+    {
+        cmd = cmd.Trim();
+
+        if (cmd.StartsWith("MsiExec", StringComparison.OrdinalIgnoreCase))
+        {
+            var spIdx = cmd.IndexOf(' ');
+            var args = spIdx > 0 ? cmd[(spIdx + 1)..].Trim() : "";
+            args = args.Replace("/I{", "/X{", StringComparison.OrdinalIgnoreCase);
+            return new ProcessStartInfo { FileName = "msiexec.exe", Arguments = args, UseShellExecute = true };
+        }
+
+        if (cmd.StartsWith('"'))
+        {
+            var end = cmd.IndexOf('"', 1);
+            if (end > 0)
+            {
+                var exe = cmd[1..end];
+                var args = cmd.Length > end + 1 ? cmd[(end + 1)..].Trim() : "";
+                return new ProcessStartInfo { FileName = exe, Arguments = args, UseShellExecute = true };
+            }
+        }
+
+        var sp = cmd.IndexOf(' ');
+        return sp > 0
+            ? new ProcessStartInfo { FileName = cmd[..sp], Arguments = cmd[(sp + 1)..], UseShellExecute = true }
+            : new ProcessStartInfo { FileName = cmd, UseShellExecute = true };
     }
 
     [SupportedOSPlatform("windows")]

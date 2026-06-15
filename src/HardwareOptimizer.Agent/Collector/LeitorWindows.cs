@@ -579,12 +579,14 @@ public sealed class LeitorWindows : ILeitorPlataforma
 
                             programas[nome] = new ProgramaInstalado
                             {
-                                Nome            = nome,
-                                Versao          = sub.GetValue("DisplayVersion") as string,
-                                Fabricante      = sub.GetValue("Publisher") as string,
-                                DataInstalacao  = sub.GetValue("InstallDate") as string,
-                                TamanhoMb       = tamanhoMb,
-                                Bloatware       = ClassificarBloatware(nome),
+                                Nome                 = nome,
+                                Versao               = sub.GetValue("DisplayVersion") as string,
+                                Fabricante           = sub.GetValue("Publisher") as string,
+                                DataInstalacao       = sub.GetValue("InstallDate") as string,
+                                TamanhoMb            = tamanhoMb,
+                                Bloatware            = ClassificarBloatware(nome),
+                                UninstallString      = sub.GetValue("UninstallString") as string,
+                                QuietUninstallString = sub.GetValue("QuietUninstallString") as string,
                             };
                         }
                         catch { }

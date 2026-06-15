@@ -55,6 +55,21 @@
       <Setter Property="Foreground" Value="#555555" />
     </Style>
 
+    <!-- Checkboxes dos programas -->
+    <Style Selector="CheckBox.programa">
+      <Setter Property="Foreground" Value="Transparent" />
+      <Setter Property="Width"      Value="20" />
+      <Setter Property="Height"     Value="20" />
+    </Style>
+    <Style Selector="CheckBox.programa /template/ Border#NormalRectangle">
+      <Setter Property="BorderBrush" Value="#333333" />
+      <Setter Property="Background"  Value="Transparent" />
+    </Style>
+    <Style Selector="CheckBox.programa:checked /template/ Border#NormalRectangle">
+      <Setter Property="Background"  Value="#CC3333" />
+      <Setter Property="BorderBrush" Value="#CC3333" />
+    </Style>
+
   </UserControl.Styles>
 
   <Grid RowDefinitions="Auto,*">
@@ -208,11 +223,18 @@
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:ProgramaInstaladoViewModel">
                 <Border Background="#0F0F0F" CornerRadius="6"
-                        Padding="14,10" Margin="0,2">
-                  <Grid ColumnDefinitions="*,Auto">
+                        Padding="10,8" Margin="0,2">
+                  <Grid ColumnDefinitions="Auto,*,Auto">
+
+                    <!-- Checkbox de seleção -->
+                    <CheckBox Grid.Column="0"
+                              Classes="programa"
+                              IsChecked="{Binding Selecionado}"
+                              VerticalAlignment="Center"
+                              Margin="0,0,10,0" />
 
                     <!-- Informações do programa -->
-                    <StackPanel Spacing="2">
+                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
                       <!-- Nome + badge bloatware -->
                       <StackPanel Orientation="Horizontal" Spacing="8">
                         <TextBlock Text="{Binding Nome}"
@@ -234,7 +256,7 @@
                     </StackPanel>
 
                     <!-- Tamanho + data -->
-                    <StackPanel Grid.Column="1" HorizontalAlignment="Right"
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Right"
                                 VerticalAlignment="Center" Spacing="2">
                       <TextBlock Text="{Binding Tamanho}"
                                  Foreground="#444444" FontSize="11"
@@ -249,6 +271,22 @@
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
+
+          <!-- Botão de desinstalar -->
+          <Button Content="{Binding DesinstalarLabel}"
+                  Command="{Binding DesinstalarSelecionadosCommand}"
+                  IsEnabled="{Binding !Ocupado}"
+                  Background="#2A0A0A" Foreground="#CC3333"
+                  CornerRadius="6" Padding="14,10"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  FontWeight="SemiBold"
+                  Margin="0,4,0,0" />
+
+          <!-- Status -->
+          <TextBlock Text="{Binding StatusOtimizador}"
+                     Foreground="#555555" FontSize="12"
+                     Margin="4,0" />
 
         </StackPanel>
 
