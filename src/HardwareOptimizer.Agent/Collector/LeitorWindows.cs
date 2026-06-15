@@ -150,12 +150,30 @@ public sealed class LeitorWindows : ILeitorPlataforma
 
     private static Processador LerCpu()
     {
-        var cpu = PrimeiroItem("Win32_Processor", "Name,NumberOfCores,NumberOfLogicalProcessors");
+        var cpu = PrimeiroItem("Win32_Processor",
+            "Name,NumberOfCores,NumberOfLogicalProcessors,Manufacturer," +
+            "MaxClockSpeed,CurrentClockSpeed,SocketDesignation,L2CacheSize,L3CacheSize");
+
+        var fabricanteRaw = Texto(cpu, "Manufacturer");
+        var fabricante = fabricanteRaw switch
+        {
+            { } f when f.Contains("AMD",   StringComparison.OrdinalIgnoreCase) => "AMD",
+            { } f when f.Contains("Intel", StringComparison.OrdinalIgnoreCase) => "Intel",
+            { } f when f.Contains("Qualcomm", StringComparison.OrdinalIgnoreCase) => "Qualcomm",
+            _ => fabricanteRaw,
+        };
+
         return new Processador
         {
-            Nome = Texto(cpu, "Name") ?? "Desconhecido",
-            Nucleos = Inteiro(cpu, "NumberOfCores"),
-            Threads = Inteiro(cpu, "NumberOfLogicalProcessors"),
+            Nome       = Texto(cpu, "Name") ?? "Desconhecido",
+            Nucleos    = Inteiro(cpu, "NumberOfCores"),
+            Threads    = Inteiro(cpu, "NumberOfLogicalProcessors"),
+            Fabricante = fabricante,
+            Soquete    = Texto(cpu, "SocketDesignation"),
+            ClockBaseMhz   = Inteiro(cpu, "MaxClockSpeed"),
+            ClockAtualMhz  = Inteiro(cpu, "CurrentClockSpeed"),
+            L2CacheKb  = Inteiro(cpu, "L2CacheSize"),
+            L3CacheKb  = Inteiro(cpu, "L3CacheSize"),
         };
     }
 

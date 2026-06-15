@@ -17,6 +17,16 @@ public partial class InfoSistemaViewModel : ObservableObject
     [ObservableProperty] private string _busSpecs = "–";
     [ObservableProperty] private string _chipset = "–";
 
+    // CPU
+    [ObservableProperty] private string _nomeCpu = "–";
+    [ObservableProperty] private string _fabricanteCpu = "–";
+    [ObservableProperty] private string _soqueteCpu = "–";
+    [ObservableProperty] private string _nucleosCpu = "–";
+    [ObservableProperty] private string _clockBaseCpu = "–";
+    [ObservableProperty] private string _clockAtualCpu = "–";
+    [ObservableProperty] private string _cacheL2Cpu = "–";
+    [ObservableProperty] private string _cacheL3Cpu = "–";
+
     // BIOS
     [ObservableProperty] private string _fabricanteBios = "–";
     [ObservableProperty] private string _versaoBios = "–";
@@ -47,6 +57,24 @@ public partial class InfoSistemaViewModel : ObservableObject
                 return;
             }
 
+            // CPU
+            var cpu = inv.Cpu;
+            NomeCpu       = cpu.Nome;
+            FabricanteCpu = cpu.Fabricante ?? "–";
+            SoqueteCpu    = cpu.Soquete ?? "–";
+            NucleosCpu    = (cpu.Nucleos.HasValue && cpu.Threads.HasValue)
+                ? $"{cpu.Nucleos} núcleos  /  {cpu.Threads} threads"
+                : cpu.Nucleos.HasValue ? $"{cpu.Nucleos} núcleos" : "–";
+            ClockBaseCpu  = cpu.ClockBaseMhz.HasValue
+                ? FormatarClock(cpu.ClockBaseMhz.Value) : "–";
+            ClockAtualCpu = cpu.ClockAtualMhz.HasValue
+                ? FormatarClock(cpu.ClockAtualMhz.Value) : "–";
+            CacheL2Cpu    = cpu.L2CacheKb.HasValue
+                ? FormatarCache(cpu.L2CacheKb.Value) : "–";
+            CacheL3Cpu    = cpu.L3CacheKb.HasValue
+                ? FormatarCache(cpu.L3CacheKb.Value) : "–";
+
+            // Placa-mãe
             Fabricante = inv.Placa.Fabricante;
             Modelo = inv.Placa.Modelo;
             BusSpecs = inv.Placa.BusSpecs ?? "–";
@@ -68,6 +96,12 @@ public partial class InfoSistemaViewModel : ObservableObject
         }
         finally { Carregando = false; }
     }
+
+    private static string FormatarClock(int mhz) =>
+        mhz >= 1000 ? $"{mhz / 1000.0:F2} GHz" : $"{mhz} MHz";
+
+    private static string FormatarCache(int kb) =>
+        kb >= 1024 ? $"{kb / 1024} MB" : $"{kb} KB";
 
     private static string InferirFabricanteBios(string fabricante)
     {

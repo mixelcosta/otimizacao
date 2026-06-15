@@ -59,6 +59,24 @@ public sealed record Processador
     public int? Threads { get; init; }
 
     public double? TempIdleC { get; init; }
+
+    /// <summary>Ex: "AMD" | "Intel".</summary>
+    public string? Fabricante { get; init; }
+
+    /// <summary>Ex: "AM4", "AM5", "LGA1700".</summary>
+    public string? Soquete { get; init; }
+
+    /// <summary>Clock base em MHz (MaxClockSpeed do WMI).</summary>
+    public int? ClockBaseMhz { get; init; }
+
+    /// <summary>Clock atual em MHz (CurrentClockSpeed do WMI).</summary>
+    public int? ClockAtualMhz { get; init; }
+
+    /// <summary>Cache L2 em KB.</summary>
+    public int? L2CacheKb { get; init; }
+
+    /// <summary>Cache L3 em KB.</summary>
+    public int? L3CacheKb { get; init; }
 }
 
 public sealed record ModuloMemoria

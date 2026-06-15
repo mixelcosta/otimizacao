@@ -26,6 +26,70 @@
         <TextBlock Text="{Binding Erro}" Foreground="#FF6666" FontSize="12" />
       </Border>
 
+      <!-- ═══ PROCESSADOR ═══ -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="20">
+        <StackPanel Spacing="10">
+
+          <TextBlock Text="PROCESSADOR" FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <Grid ColumnDefinitions="160,*">
+            <TextBlock Text="Nome" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding NomeCpu}"
+                       Foreground="#FFFFFF" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+          </Grid>
+
+          <Grid ColumnDefinitions="160,*">
+            <TextBlock Text="Fabricante" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding FabricanteCpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
+          </Grid>
+
+          <Grid ColumnDefinitions="160,*">
+            <TextBlock Text="Soquete" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding SoqueteCpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
+          </Grid>
+
+          <Grid ColumnDefinitions="160,*">
+            <TextBlock Text="Núcleos / Threads" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding NucleosCpu}"
+                       Foreground="#00FF88" FontSize="12" FontWeight="SemiBold" />
+          </Grid>
+
+          <!-- Clock Base / Atual -->
+          <Grid ColumnDefinitions="160,80,140,*">
+            <TextBlock Text="Clock Base" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding ClockBaseCpu}"
+                       Foreground="#00FF88" FontSize="12" FontWeight="SemiBold" />
+            <TextBlock Grid.Column="2" Text="Clock Atual" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3" Text="{Binding ClockAtualCpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
+          </Grid>
+
+          <!-- Cache L2 / L3 -->
+          <Grid ColumnDefinitions="160,80,140,*">
+            <TextBlock Text="Cache L2" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding CacheL2Cpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
+            <TextBlock Grid.Column="2" Text="Cache L3" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3" Text="{Binding CacheL3Cpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
+          </Grid>
+
+        </StackPanel>
+      </Border>
+
       <!-- ═══ PLACA-MÃE ═══ -->
       <Border Background="#0D0D0D" CornerRadius="10" Padding="20">
         <StackPanel Spacing="10">
