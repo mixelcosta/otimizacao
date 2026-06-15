@@ -32,6 +32,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         {
             InfoSistema.Popular(inv);
             OtimizadorWindows.Popular(inv.EntradasStartup);
+            OtimizadorWindows.PopularProgramas(inv.ProgramasInstalados);
             VidaUtil.Popular(inv.SaudeDiscos);
             Drivers.Popular(inv.Drivers);
             BiosGuide.Popular(inv);

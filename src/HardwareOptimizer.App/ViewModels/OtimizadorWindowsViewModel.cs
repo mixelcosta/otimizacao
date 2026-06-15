@@ -7,14 +7,18 @@ using HardwareOptimizer.Ipc;
 
 namespace HardwareOptimizer.App.ViewModels;
 
+public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados }
+
 public partial class OtimizadorWindowsViewModel : ObservableObject
 {
     private readonly IRoteadorIpc _agente;
+    private List<ProgramaInstaladoViewModel> _todosProgramas = [];
 
     public OtimizadorWindowsViewModel(IRoteadorIpc agente)
     {
         _agente = agente;
         EntradasStartup = [];
+        ProgramasFiltrados = [];
         EfeitosVisuais =
         [
             new("Animações ao minimizar e maximizar janelas"),
@@ -29,28 +33,41 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         ];
     }
 
+    // ── Submenu ────────────────────────────────────────────────────────────
+
+    [ObservableProperty] private SubPaginaOtimizador _subPagina = SubPaginaOtimizador.EfeitosVisuais;
+
+    partial void OnSubPaginaChanged(SubPaginaOtimizador _)
+    {
+        OnPropertyChanged(nameof(MostrarEfeitosVisuais));
+        OnPropertyChanged(nameof(MostrarProgramas));
+        OnPropertyChanged(nameof(AbaEfeitosAtiva));
+        OnPropertyChanged(nameof(AbaProgramasAtiva));
+    }
+
+    public bool MostrarEfeitosVisuais => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
+    public bool MostrarProgramas      => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
+    public bool AbaEfeitosAtiva       => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
+    public bool AbaProgramasAtiva     => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
+
+    [RelayCommand] private void IrParaEfeitosVisuais() => SubPagina = SubPaginaOtimizador.EfeitosVisuais;
+    [RelayCommand] private void IrParaProgramas()      => SubPagina = SubPaginaOtimizador.ProgramasInstalados;
+
+    // ── Estado geral ───────────────────────────────────────────────────────
+
     [ObservableProperty] private bool   _ocupado;
     [ObservableProperty] private string _statusOtimizador       = "Pronto.";
     [ObservableProperty] private bool   _efeitosVisuaisDesativados;
 
-    public ObservableCollection<EfeitoVisualViewModel>      EfeitosVisuais  { get; }
-    public ObservableCollection<InicializacaoEntradaViewModel> EntradasStartup { get; }
+    // ── Efeitos Visuais ────────────────────────────────────────────────────
 
-    // ── Seleção rápida ─────────────────────────────────────────────────────
-
-    [RelayCommand]
-    private void SelecionarTudo()
-    {
-        foreach (var e in EfeitosVisuais) e.Selecionado = true;
-    }
+    public ObservableCollection<EfeitoVisualViewModel> EfeitosVisuais { get; }
 
     [RelayCommand]
-    private void LimparSelecao()
-    {
-        foreach (var e in EfeitosVisuais) e.Selecionado = false;
-    }
+    private void SelecionarTudo() { foreach (var e in EfeitosVisuais) e.Selecionado = true; }
 
-    // ── Aplicar efeitos selecionados ───────────────────────────────────────
+    [RelayCommand]
+    private void LimparSelecao() { foreach (var e in EfeitosVisuais) e.Selecionado = false; }
 
     [RelayCommand]
     private async Task AplicarEfeitosSelecionadosAsync()
@@ -80,14 +97,51 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         finally { Ocupado = false; }
     }
 
+    // ── Programas Instalados ───────────────────────────────────────────────
+
+    [ObservableProperty] private string _filtroProgramas    = "";
+    [ObservableProperty] private string _totalProgramasLabel = "—";
+
+    public ObservableCollection<ProgramaInstaladoViewModel> ProgramasFiltrados { get; }
+
+    partial void OnFiltroProgramasChanged(string value) => AplicarFiltro();
+
+    public void PopularProgramas(IReadOnlyList<ProgramaInstalado> lista)
+    {
+        _todosProgramas = lista
+            .OrderBy(p => p.Nome, StringComparer.OrdinalIgnoreCase)
+            .Select(p => new ProgramaInstaladoViewModel(p))
+            .ToList();
+        AplicarFiltro();
+    }
+
+    private void AplicarFiltro()
+    {
+        var filtro = FiltroProgramas.Trim();
+        var resultado = string.IsNullOrEmpty(filtro)
+            ? _todosProgramas
+            : _todosProgramas.Where(p =>
+                p.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
+                p.Fabricante.Contains(filtro, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        ProgramasFiltrados.Clear();
+        foreach (var p in resultado) ProgramasFiltrados.Add(p);
+
+        int n = resultado.Count;
+        TotalProgramasLabel = n == 0
+            ? "Nenhum programa encontrado"
+            : $"{n} programa{(n != 1 ? "s" : "")} encontrado{(n != 1 ? "s" : "")}";
+    }
+
     // ── Startup scanner ────────────────────────────────────────────────────
+
+    public ObservableCollection<InicializacaoEntradaViewModel> EntradasStartup { get; }
 
     public void Popular(IReadOnlyList<InicializacaoEntrada> entradas)
     {
         EntradasStartup.Clear();
         foreach (var e in entradas)
             EntradasStartup.Add(new InicializacaoEntradaViewModel(e));
-        StatusOtimizador = $"Encontradas {EntradasStartup.Count} entrada(s) de startup.";
     }
 
     [RelayCommand]
@@ -113,10 +167,36 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
 public partial class EfeitoVisualViewModel : ObservableObject
 {
     public string Nome { get; }
-
     [ObservableProperty] private bool _selecionado = true;
-
     public EfeitoVisualViewModel(string nome) => Nome = nome;
+}
+
+public class ProgramaInstaladoViewModel
+{
+    public string Nome       { get; }
+    public string Fabricante { get; }
+    public string Versao     { get; }
+    public string Tamanho    { get; }
+    public string Data       { get; }
+    public bool   Bloatware  { get; }
+
+    public ProgramaInstaladoViewModel(ProgramaInstalado p)
+    {
+        Nome      = p.Nome;
+        Fabricante = p.Fabricante ?? "—";
+        Versao    = p.Versao ?? "—";
+        Bloatware = p.Bloatware;
+
+        Tamanho = p.TamanhoMb is > 0
+            ? p.TamanhoMb >= 1024
+                ? $"{p.TamanhoMb / 1024.0:F1} GB"
+                : $"{p.TamanhoMb} MB"
+            : "";
+
+        Data = p.DataInstalacao is { Length: 8 } d
+            ? $"{d[6..8]}/{d[4..6]}/{d[0..4]}"
+            : "";
+    }
 }
 
 public partial class InicializacaoEntradaViewModel : ObservableObject

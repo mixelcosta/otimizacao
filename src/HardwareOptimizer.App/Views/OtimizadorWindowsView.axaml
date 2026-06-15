@@ -6,27 +6,47 @@
 
   <UserControl.Styles>
 
-    <!-- Botões de seleção rápida (Tudo / Nenhum) -->
+    <!-- Abas do submenu -->
+    <Style Selector="Button.aba">
+      <Setter Property="Background"      Value="Transparent" />
+      <Setter Property="Foreground"      Value="#555555" />
+      <Setter Property="FontSize"        Value="13" />
+      <Setter Property="FontWeight"      Value="SemiBold" />
+      <Setter Property="Padding"         Value="0,10,0,8" />
+      <Setter Property="BorderThickness" Value="0,0,0,2" />
+      <Setter Property="BorderBrush"     Value="Transparent" />
+      <Setter Property="CornerRadius"    Value="0" />
+    </Style>
+    <Style Selector="Button.aba:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#888888" />
+    </Style>
+    <Style Selector="Button.aba-ativa">
+      <Setter Property="Foreground"  Value="#CCCCCC" />
+      <Setter Property="BorderBrush" Value="#00FF88" />
+    </Style>
+
+    <!-- Botões de seleção rápida -->
     <Style Selector="Button.sel-rapida">
-      <Setter Property="Background"   Value="#1A1A1A" />
-      <Setter Property="Foreground"   Value="#666666" />
-      <Setter Property="FontSize"     Value="11" />
-      <Setter Property="CornerRadius" Value="4" />
-      <Setter Property="Padding"      Value="10,4" />
+      <Setter Property="Background"      Value="#1A1A1A" />
+      <Setter Property="Foreground"      Value="#666666" />
+      <Setter Property="FontSize"        Value="11" />
+      <Setter Property="CornerRadius"    Value="4" />
+      <Setter Property="Padding"         Value="10,4" />
       <Setter Property="BorderThickness" Value="0" />
     </Style>
     <Style Selector="Button.sel-rapida:pointerover /template/ ContentPresenter">
       <Setter Property="Background" Value="#252525" />
     </Style>
 
-    <!-- Checkbox dos efeitos visuais -->
+    <!-- Checkboxes dos efeitos visuais -->
     <Style Selector="CheckBox.efeito">
       <Setter Property="Foreground" Value="#AAAAAA" />
       <Setter Property="FontSize"   Value="12" />
     </Style>
     <Style Selector="CheckBox.efeito:checked /template/ Border#NormalRectangle">
-      <Setter Property="Background"   Value="#00C870" />
-      <Setter Property="BorderBrush"  Value="#00C870" />
+      <Setter Property="Background"  Value="#00C870" />
+      <Setter Property="BorderBrush" Value="#00C870" />
     </Style>
     <Style Selector="CheckBox.efeito:checked">
       <Setter Property="Foreground" Value="#CCCCCC" />
@@ -37,103 +57,203 @@
 
   </UserControl.Styles>
 
-  <ScrollViewer>
-    <StackPanel Margin="20" Spacing="16">
+  <Grid RowDefinitions="Auto,*">
+
+    <!-- ── Cabeçalho fixo + abas ────────────────────────────────────────── -->
+    <StackPanel Grid.Row="0" Margin="20,20,20,0" Spacing="0">
 
       <TextBlock Text="OTIMIZADOR WINDOWS" FontSize="13" FontWeight="Bold"
-                 Foreground="#444444" LetterSpacing="3" />
+                 Foreground="#444444" LetterSpacing="3" Margin="0,0,0,16" />
 
-      <!-- ── Efeitos Visuais ──────────────────────────────────────────────── -->
-      <Border Background="#111111" CornerRadius="8" Padding="16">
-        <StackPanel Spacing="10">
+      <!-- Abas do submenu -->
+      <Grid ColumnDefinitions="Auto,Auto,*">
+        <Button Grid.Column="0"
+                Classes="aba"
+                Classes.aba-ativa="{Binding AbaEfeitosAtiva}"
+                Command="{Binding IrParaEfeitosVisuaisCommand}"
+                Content="Exibições Gráficas"
+                Margin="0,0,24,0" />
+        <Button Grid.Column="1"
+                Classes="aba"
+                Classes.aba-ativa="{Binding AbaProgramasAtiva}"
+                Command="{Binding IrParaProgramasCommand}"
+                Content="Programas Instalados" />
+      </Grid>
 
-          <!-- Cabeçalho + badge "aplicado" -->
-          <Grid ColumnDefinitions="*,Auto">
-            <StackPanel>
-              <TextBlock Text="Efeitos Visuais" Foreground="#CCCCCC" FontWeight="SemiBold" />
-              <TextBlock Foreground="#555555" FontSize="11" Margin="0,2,0,0"
-                         Text="VisualFXSetting → Melhor Desempenho (registro HKCU)" />
-            </StackPanel>
-            <Border Grid.Column="1" Background="#0D2A1A" CornerRadius="4"
-                    Padding="8,4" VerticalAlignment="Center"
-                    IsVisible="{Binding EfeitosVisuaisDesativados}">
-              <TextBlock Text="✓ aplicado" Foreground="#00FF88" FontSize="11" />
-            </Border>
-          </Grid>
+      <!-- Linha separadora -->
+      <Border Height="1" Background="#1E1E1E" Margin="0,0,0,0" />
 
-          <!-- Seleção rápida -->
-          <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2,0,0">
-            <TextBlock Text="SELECIONAR:" Foreground="#383838" FontSize="10"
-                       FontWeight="Bold" LetterSpacing="2" VerticalAlignment="Center" />
-            <Button Classes="sel-rapida"
-                    Content="Tudo"
-                    Command="{Binding SelecionarTudoCommand}" />
-            <Button Classes="sel-rapida"
-                    Content="Nenhum"
-                    Command="{Binding LimparSelecaoCommand}" />
-          </StackPanel>
+    </StackPanel>
 
-          <!-- Lista de efeitos com checkboxes -->
-          <ItemsControl ItemsSource="{Binding EfeitosVisuais}">
-            <ItemsControl.ItemTemplate>
-              <DataTemplate x:DataType="vm:EfeitoVisualViewModel">
-                <Border Background="#0D0D0D" CornerRadius="5"
-                        Padding="12,9" Margin="0,2">
-                  <CheckBox Classes="efeito"
-                             IsChecked="{Binding Selecionado}"
-                             Content="{Binding Nome}" />
+    <!-- ── Conteúdo rolável ──────────────────────────────────────────────── -->
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Margin="20,16,20,24" Spacing="16">
+
+        <!-- ════ ABA: EXIBIÇÕES GRÁFICAS ════════════════════════════════════ -->
+        <StackPanel IsVisible="{Binding MostrarEfeitosVisuais}" Spacing="16">
+
+          <Border Background="#111111" CornerRadius="8" Padding="16">
+            <StackPanel Spacing="10">
+
+              <!-- Cabeçalho do card + badge -->
+              <Grid ColumnDefinitions="*,Auto">
+                <StackPanel>
+                  <TextBlock Text="Efeitos Visuais" Foreground="#CCCCCC" FontWeight="SemiBold" />
+                  <TextBlock Foreground="#555555" FontSize="11" Margin="0,2,0,0"
+                             Text="VisualFXSetting → Melhor Desempenho (registro HKCU)" />
+                </StackPanel>
+                <Border Grid.Column="1" Background="#0D2A1A" CornerRadius="4"
+                        Padding="8,4" VerticalAlignment="Center"
+                        IsVisible="{Binding EfeitosVisuaisDesativados}">
+                  <TextBlock Text="✓ aplicado" Foreground="#00FF88" FontSize="11" />
                 </Border>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
+              </Grid>
 
-          <!-- Botão de confirmação -->
-          <Button Content="Confirmar e desativar selecionados"
-                  Command="{Binding AplicarEfeitosSelecionadosCommand}"
-                  IsEnabled="{Binding !Ocupado}"
-                  Background="#1A3A2A" Foreground="#00FF88"
-                  CornerRadius="6" Padding="14,10"
-                  HorizontalAlignment="Stretch"
-                  HorizontalContentAlignment="Center"
-                  FontWeight="SemiBold"
-                  Margin="0,6,0,0" />
+              <!-- Seleção rápida -->
+              <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2,0,0">
+                <TextBlock Text="SELECIONAR:" Foreground="#383838" FontSize="10"
+                           FontWeight="Bold" LetterSpacing="2" VerticalAlignment="Center" />
+                <Button Classes="sel-rapida" Content="Tudo"   Command="{Binding SelecionarTudoCommand}" />
+                <Button Classes="sel-rapida" Content="Nenhum" Command="{Binding LimparSelecaoCommand}" />
+              </StackPanel>
+
+              <!-- Lista de efeitos com checkboxes -->
+              <ItemsControl ItemsSource="{Binding EfeitosVisuais}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:EfeitoVisualViewModel">
+                    <Border Background="#0D0D0D" CornerRadius="5" Padding="12,9" Margin="0,2">
+                      <CheckBox Classes="efeito"
+                                IsChecked="{Binding Selecionado}"
+                                Content="{Binding Nome}" />
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <!-- Botão de confirmação -->
+              <Button Content="Confirmar e desativar selecionados"
+                      Command="{Binding AplicarEfeitosSelecionadosCommand}"
+                      IsEnabled="{Binding !Ocupado}"
+                      Background="#1A3A2A" Foreground="#00FF88"
+                      CornerRadius="6" Padding="14,10"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Center"
+                      FontWeight="SemiBold"
+                      Margin="0,6,0,0" />
+
+            </StackPanel>
+          </Border>
+
+          <!-- Inicialização Automática -->
+          <Border Background="#111111" CornerRadius="8" Padding="16">
+            <StackPanel Spacing="8">
+              <TextBlock Text="Inicialização Automática" Foreground="#CCCCCC" FontWeight="SemiBold" />
+              <ItemsControl ItemsSource="{Binding EntradasStartup}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:InicializacaoEntradaViewModel">
+                    <Border Background="#0A0A0A" CornerRadius="6" Padding="12,8" Margin="0,2">
+                      <Grid ColumnDefinitions="*,Auto,Auto">
+                        <StackPanel>
+                          <TextBlock Text="{Binding Nome}" Foreground="#CCCCCC" FontWeight="SemiBold" />
+                          <TextBlock Text="{Binding Caminho}" Foreground="#555555" FontSize="11"
+                                     TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" Text="{Binding Impacto}"
+                                   Foreground="{Binding CorImpacto}"
+                                   FontSize="11" VerticalAlignment="Center" Margin="8,0" />
+                        <ToggleButton Grid.Column="2" IsChecked="{Binding Ativo}"
+                                      Foreground="#888888" FontSize="11"
+                                      Content="{Binding Ativo, StringFormat={}{0:Ativo;0;Inativo}}" />
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </Border>
+
+          <!-- Status -->
+          <TextBlock Text="{Binding StatusOtimizador}" Foreground="#555555" FontSize="12" />
 
         </StackPanel>
-      </Border>
 
-      <!-- ── Inicialização Automática ─────────────────────────────────────── -->
-      <Border Background="#111111" CornerRadius="8" Padding="16">
-        <StackPanel Spacing="8">
-          <TextBlock Text="Inicialização Automática" Foreground="#CCCCCC"
-                     FontWeight="SemiBold" />
+        <!-- ════ ABA: PROGRAMAS INSTALADOS ═══════════════════════════════════ -->
+        <StackPanel IsVisible="{Binding MostrarProgramas}" Spacing="12">
 
-          <ItemsControl ItemsSource="{Binding EntradasStartup}">
+          <!-- Caixa de busca -->
+          <Border Background="#111111" CornerRadius="8" Padding="12,10">
+            <Grid ColumnDefinitions="Auto,*">
+              <TextBlock Grid.Column="0" Text="⌕" FontSize="16"
+                         Foreground="#555555" VerticalAlignment="Center"
+                         Margin="0,0,8,0" />
+              <TextBox Grid.Column="1"
+                       Text="{Binding FiltroProgramas}"
+                       PlaceholderText="Buscar programa ou fabricante…"
+                       Background="Transparent"
+                       BorderThickness="0"
+                       Foreground="#CCCCCC"
+                       FontSize="13"
+                       VerticalAlignment="Center"
+                       CaretBrush="#00FF88" />
+            </Grid>
+          </Border>
+
+          <!-- Contador de resultados -->
+          <TextBlock Text="{Binding TotalProgramasLabel}"
+                     Foreground="#444444" FontSize="11"
+                     Margin="4,0" />
+
+          <!-- Lista de programas -->
+          <ItemsControl ItemsSource="{Binding ProgramasFiltrados}">
             <ItemsControl.ItemTemplate>
-              <DataTemplate x:DataType="vm:InicializacaoEntradaViewModel">
-                <Border Background="#0A0A0A" CornerRadius="6" Padding="12,8" Margin="0,2">
-                  <Grid ColumnDefinitions="*,Auto,Auto">
-                    <StackPanel>
-                      <TextBlock Text="{Binding Nome}" Foreground="#CCCCCC" FontWeight="SemiBold" />
-                      <TextBlock Text="{Binding Caminho}" Foreground="#555555" FontSize="11"
-                                 TextTrimming="CharacterEllipsis" />
+              <DataTemplate x:DataType="vm:ProgramaInstaladoViewModel">
+                <Border Background="#0F0F0F" CornerRadius="6"
+                        Padding="14,10" Margin="0,2">
+                  <Grid ColumnDefinitions="*,Auto">
+
+                    <!-- Informações do programa -->
+                    <StackPanel Spacing="2">
+                      <!-- Nome + badge bloatware -->
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding Nome}"
+                                   Foreground="#CCCCCC" FontWeight="SemiBold"
+                                   FontSize="13" />
+                        <Border Background="#3A1800" CornerRadius="3"
+                                Padding="5,1"
+                                IsVisible="{Binding Bloatware}">
+                          <TextBlock Text="bloatware" Foreground="#FF8C00"
+                                     FontSize="10" FontWeight="Bold" />
+                        </Border>
+                      </StackPanel>
+                      <!-- Fabricante + versão -->
+                      <TextBlock Foreground="#555555" FontSize="11">
+                        <Run Text="{Binding Fabricante}" />
+                        <Run Text=" · v" />
+                        <Run Text="{Binding Versao}" />
+                      </TextBlock>
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Text="{Binding Impacto}"
-                               Foreground="{Binding CorImpacto}"
-                               FontSize="11" VerticalAlignment="Center" Margin="8,0" />
-                    <ToggleButton Grid.Column="2" IsChecked="{Binding Ativo}"
-                                  Foreground="#888888" FontSize="11"
-                                  Content="{Binding Ativo, StringFormat={}{0:Ativo;0;Inativo}}" />
+
+                    <!-- Tamanho + data -->
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Right"
+                                VerticalAlignment="Center" Spacing="2">
+                      <TextBlock Text="{Binding Tamanho}"
+                                 Foreground="#444444" FontSize="11"
+                                 HorizontalAlignment="Right" />
+                      <TextBlock Text="{Binding Data}"
+                                 Foreground="#333333" FontSize="10"
+                                 HorizontalAlignment="Right" />
+                    </StackPanel>
+
                   </Grid>
                 </Border>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
+
         </StackPanel>
-      </Border>
 
-      <!-- Status -->
-      <TextBlock Text="{Binding StatusOtimizador}" Foreground="#555555" FontSize="12" />
+      </StackPanel>
+    </ScrollViewer>
 
-    </StackPanel>
-  </ScrollViewer>
+  </Grid>
 </UserControl>
