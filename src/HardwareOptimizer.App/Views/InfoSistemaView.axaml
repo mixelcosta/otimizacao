@@ -4,27 +4,26 @@
              x:Class="HardwareOptimizer.App.Views.InfoSistemaView"
              x:DataType="vm:InfoSistemaViewModel">
 
-  <ScrollViewer>
+  <Grid>
+    <!-- Estado vazio: aguardando SCAN NOW -->
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                Spacing="10" IsVisible="{Binding !ComDados}">
+      <TextBlock Text="–" FontSize="32" Foreground="#2A2A2A"
+                 HorizontalAlignment="Center" />
+      <TextBlock Text="Execute o SCAN NOW na tela inicial"
+                 Foreground="#2A2A2A" FontSize="12"
+                 HorizontalAlignment="Center" />
+      <TextBlock Text="para carregar as informações do sistema"
+                 Foreground="#222222" FontSize="11"
+                 HorizontalAlignment="Center" />
+    </StackPanel>
+
+  <ScrollViewer IsVisible="{Binding ComDados}">
     <StackPanel Margin="24" Spacing="16">
 
       <!-- Cabeçalho -->
-      <Grid ColumnDefinitions="*,Auto">
-        <TextBlock Text="INFORMAÇÕES DO SISTEMA" FontSize="13" FontWeight="Bold"
-                   Foreground="#444444" LetterSpacing="3"
-                   VerticalAlignment="Center" />
-        <Button Grid.Column="1" Content="  Detectar  "
-                Command="{Binding CarregarCommand}"
-                IsEnabled="{Binding !Carregando}"
-                Background="#1A1A1A" Foreground="#00FF88"
-                BorderBrush="#00FF8840" BorderThickness="1"
-                Padding="14,6" CornerRadius="6" FontSize="12" />
-      </Grid>
-
-      <!-- Erro -->
-      <Border Background="#3D0000" CornerRadius="8" Padding="12,8"
-              IsVisible="{Binding Erro, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-        <TextBlock Text="{Binding Erro}" Foreground="#FF6666" FontSize="12" />
-      </Border>
+      <TextBlock Text="INFORMAÇÕES DO SISTEMA" FontSize="13" FontWeight="Bold"
+                 Foreground="#444444" LetterSpacing="3" />
 
       <!-- ═══ PROCESSADOR ═══ -->
       <Border Background="#0D0D0D" CornerRadius="10" Padding="20">
@@ -302,4 +301,5 @@
     </StackPanel>
   </ScrollViewer>
 
+  </Grid>
 </UserControl>

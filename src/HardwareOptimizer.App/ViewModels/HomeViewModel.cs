@@ -11,10 +11,13 @@ public partial class HomeViewModel : ObservableObject
     private readonly IRoteadorIpc _agente;
     private readonly Action _navegarParaDashboard;
 
-    public HomeViewModel(IRoteadorIpc agente, Action navegarParaDashboard)
+    private readonly Action<Inventario>? _onScanCompleto;
+
+    public HomeViewModel(IRoteadorIpc agente, Action navegarParaDashboard, Action<Inventario>? onScanCompleto = null)
     {
         _agente = agente;
         _navegarParaDashboard = navegarParaDashboard;
+        _onScanCompleto = onScanCompleto;
     }
 
     // ── Scan state ─────────────────────────────────────────────────────────
@@ -66,7 +69,10 @@ public partial class HomeViewModel : ObservableObject
             cts.Cancel();
 
             if (resp.Sucesso && resp.Resultado is Inventario inv)
+            {
                 AplicarResultados(inv);
+                _onScanCompleto?.Invoke(inv);
+            }
             else
             {
                 StatusText        = "Falha ao detectar hardware";

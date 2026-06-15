@@ -1,17 +1,11 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using HardwareOptimizer.Core.Contracts;
-using HardwareOptimizer.Ipc;
 
 namespace HardwareOptimizer.App.ViewModels;
 
 public partial class InfoSistemaViewModel : ObservableObject
 {
-    private readonly IRoteadorIpc _agente;
-
-    public InfoSistemaViewModel(IRoteadorIpc agente) => _agente = agente;
-
     // CPU
     [ObservableProperty] private string _nomeCpu = "–";
     [ObservableProperty] private string _fabricanteCpu = "–";
@@ -50,80 +44,65 @@ public partial class InfoSistemaViewModel : ObservableObject
     [ObservableProperty] private string _dataBios = "–";
     [ObservableProperty] private string _modoBios = "–";
 
-    [ObservableProperty] private bool _carregando;
-    [ObservableProperty] private string _erro = string.Empty;
+    [ObservableProperty] private bool _comDados;
 
-    [RelayCommand]
-    public async Task CarregarAsync()
+    public void Popular(Inventario inv)
     {
-        Carregando = true;
-        Erro = string.Empty;
-        try
+        // CPU
+        var cpu = inv.Cpu;
+        NomeCpu       = cpu.Nome;
+        FabricanteCpu = cpu.Fabricante ?? "–";
+        SoqueteCpu    = cpu.Soquete ?? "–";
+        NucleosCpu    = (cpu.Nucleos.HasValue && cpu.Threads.HasValue)
+            ? $"{cpu.Nucleos} núcleos  /  {cpu.Threads} threads"
+            : cpu.Nucleos.HasValue ? $"{cpu.Nucleos} núcleos" : "–";
+        ClockBaseCpu  = cpu.ClockBaseMhz.HasValue  ? FormatarClock(cpu.ClockBaseMhz.Value)  : "–";
+        ClockAtualCpu = cpu.ClockAtualMhz.HasValue ? FormatarClock(cpu.ClockAtualMhz.Value) : "–";
+        CacheL2Cpu    = cpu.L2CacheKb.HasValue     ? FormatarCache(cpu.L2CacheKb.Value)     : "–";
+        CacheL3Cpu    = cpu.L3CacheKb.HasValue     ? FormatarCache(cpu.L3CacheKb.Value)     : "–";
+
+        // RAM
+        SlotsRam.Clear();
+        if (inv.Memoria.Count > 0)
         {
-            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "coletar" });
-            if (!resp.Sucesso || resp.Resultado is not Inventario inv)
-            {
-                Erro = "Falha ao coletar dados do sistema.";
-                return;
-            }
+            var totalGb = inv.Memoria.Sum(m => m.TamanhoGb ?? 0);
+            var tipo    = inv.Memoria.FirstOrDefault(m => m.Tipo != null)?.Tipo ?? "DDR";
+            var vel     = inv.Memoria.FirstOrDefault(m => m.VelocidadeConfiguradaMhz > 0)?.VelocidadeConfiguradaMhz
+                       ?? inv.Memoria.FirstOrDefault(m => m.VelocidadeMhz > 0)?.VelocidadeMhz;
+            var canais  = inv.Memoria.Count >= 2 ? "Dual-Channel" : "Single-Channel";
+            ResumoRam   = vel.HasValue ? $"{totalGb} GB {tipo}-{vel}  ·  {canais}" : $"{totalGb} GB {tipo}  ·  {canais}";
 
-            // CPU
-            var cpu = inv.Cpu;
-            NomeCpu       = cpu.Nome;
-            FabricanteCpu = cpu.Fabricante ?? "–";
-            SoqueteCpu    = cpu.Soquete ?? "–";
-            NucleosCpu    = (cpu.Nucleos.HasValue && cpu.Threads.HasValue)
-                ? $"{cpu.Nucleos} núcleos  /  {cpu.Threads} threads"
-                : cpu.Nucleos.HasValue ? $"{cpu.Nucleos} núcleos" : "–";
-            ClockBaseCpu  = cpu.ClockBaseMhz.HasValue  ? FormatarClock(cpu.ClockBaseMhz.Value)  : "–";
-            ClockAtualCpu = cpu.ClockAtualMhz.HasValue ? FormatarClock(cpu.ClockAtualMhz.Value) : "–";
-            CacheL2Cpu    = cpu.L2CacheKb.HasValue     ? FormatarCache(cpu.L2CacheKb.Value)     : "–";
-            CacheL3Cpu    = cpu.L3CacheKb.HasValue     ? FormatarCache(cpu.L3CacheKb.Value)     : "–";
-
-            // RAM
-            SlotsRam.Clear();
-            if (inv.Memoria.Count > 0)
-            {
-                var totalGb  = inv.Memoria.Sum(m => m.TamanhoGb ?? 0);
-                var tipo     = inv.Memoria.FirstOrDefault(m => m.Tipo != null)?.Tipo ?? "DDR";
-                var velConf  = inv.Memoria.FirstOrDefault(m => m.VelocidadeConfiguradaMhz > 0)?.VelocidadeConfiguradaMhz
-                            ?? inv.Memoria.FirstOrDefault(m => m.VelocidadeMhz > 0)?.VelocidadeMhz;
-                var canais   = inv.Memoria.Count >= 2 ? "Dual-Channel" : "Single-Channel";
-                ResumoRam = velConf.HasValue
-                    ? $"{totalGb} GB {tipo}-{velConf}  ·  {canais}"
-                    : $"{totalGb} GB {tipo}  ·  {canais}";
-
-                foreach (var m in inv.Memoria)
-                    SlotsRam.Add(new SlotRamVm(m));
-            }
-
-            // GPU
-            if (inv.Gpu.Count > 0)
-            {
-                var gpu = inv.Gpu[0];
-                NomeGpu        = gpu.Nome;
-                VramGpu        = gpu.VramMb.HasValue ? FormatarVram(gpu.VramMb.Value) : "–";
-                ResolucaoGpu   = gpu.Resolucao ?? "–";
-                TaxaGpu        = gpu.TaxaAtualizacaoHz.HasValue ? $"{gpu.TaxaAtualizacaoHz} Hz" : "–";
-                DriverGpu      = gpu.VersaoDriver ?? "–";
-                DataDriverGpu  = gpu.DataDriver ?? "–";
-                LinkWidthAtual = gpu.LinkWidthAtual ?? "–";
-                LinkWidthMax   = gpu.LinkWidthMax ?? "x16";
-                LinkSpeedAtual = gpu.LinkSpeedAtual ?? "–";
-                LinkSpeedMax   = gpu.LinkSpeedMax ?? DerivarSpeedMaxDoChipset(inv.Placa.BusSpecs);
-            }
-
-            // Placa-mãe
-            Fabricante     = inv.Placa.Fabricante;
-            Modelo         = inv.Placa.Modelo;
-            BusSpecs       = inv.Placa.BusSpecs ?? "–";
-            Chipset        = inv.Placa.Chipset ?? "–";
-            VersaoBios     = inv.Placa.VersaoBios ?? "–";
-            DataBios       = inv.Placa.DataBios ?? "–";
-            ModoBios       = inv.Placa.Modo ?? "–";
-            FabricanteBios = InferirFabricanteBios(inv.Placa.Fabricante);
+            foreach (var m in inv.Memoria)
+                SlotsRam.Add(new SlotRamVm(m));
         }
-        finally { Carregando = false; }
+
+        // GPU
+        if (inv.Gpu.Count > 0)
+        {
+            var gpu = inv.Gpu[0];
+            NomeGpu        = gpu.Nome;
+            VramGpu        = gpu.VramMb.HasValue ? FormatarVram(gpu.VramMb.Value) : "–";
+            ResolucaoGpu   = gpu.Resolucao ?? "–";
+            TaxaGpu        = gpu.TaxaAtualizacaoHz.HasValue ? $"{gpu.TaxaAtualizacaoHz} Hz" : "–";
+            DriverGpu      = gpu.VersaoDriver ?? "–";
+            DataDriverGpu  = gpu.DataDriver ?? "–";
+            LinkWidthAtual = gpu.LinkWidthAtual ?? "–";
+            LinkWidthMax   = gpu.LinkWidthMax ?? "x16";
+            LinkSpeedAtual = gpu.LinkSpeedAtual ?? "–";
+            LinkSpeedMax   = gpu.LinkSpeedMax ?? DerivarSpeedMaxDoChipset(inv.Placa.BusSpecs);
+        }
+
+        // Placa-mãe
+        Fabricante     = inv.Placa.Fabricante;
+        Modelo         = inv.Placa.Modelo;
+        BusSpecs       = inv.Placa.BusSpecs ?? "–";
+        Chipset        = inv.Placa.Chipset ?? "–";
+        VersaoBios     = inv.Placa.VersaoBios ?? "–";
+        DataBios       = inv.Placa.DataBios ?? "–";
+        ModoBios       = inv.Placa.Modo ?? "–";
+        FabricanteBios = InferirFabricanteBios(inv.Placa.Fabricante);
+
+        ComDados = true;
     }
 
     private static string FormatarClock(int mhz) =>
@@ -159,13 +138,13 @@ public sealed class SlotRamVm
 {
     public SlotRamVm(ModuloMemoria m)
     {
-        Slot      = m.Slot ?? "–";
-        Tamanho   = m.TamanhoGb.HasValue ? $"{m.TamanhoGb} GB" : "–";
-        TipoVel   = FormatarTipoVel(m);
+        Slot       = m.Slot ?? "–";
+        Tamanho    = m.TamanhoGb.HasValue ? $"{m.TamanhoGb} GB" : "–";
+        TipoVel    = FormatarTipoVel(m);
         Fabricante = m.Fabricante ?? "–";
-        Modelo    = m.Modelo?.Trim() ?? "–";
+        Modelo     = m.Modelo?.Trim() ?? "–";
         FormFactor = m.FormFactor ?? "–";
-        Tensao    = m.Tensao ?? "–";
+        Tensao     = m.Tensao ?? "–";
     }
 
     public string Slot       { get; }

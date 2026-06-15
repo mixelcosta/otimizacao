@@ -22,13 +22,13 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         Dashboard = new DashboardViewModel(agente);
         OtimizadorWindows = new OtimizadorWindowsViewModel(agente);
         IaCopiloto = new IaCopilotoViewModel(agente);
-        InfoSistema = new InfoSistemaViewModel(agente);
+        InfoSistema = new InfoSistemaViewModel();
         Upgrade = new UpgradeViewModel(agente);
         VidaUtil = new VidaUtilViewModel(agente);
         Drivers = new DriversViewModel(agente);
         BiosGuide = new BiosGuideViewModel(agente);
         Configuracoes = new ConfiguracoesViewModel(licenca, OnLicencaAlterada);
-        Home = new HomeViewModel(agente, () => PaginaAtual = Dashboard);
+        Home = new HomeViewModel(agente, () => PaginaAtual = Dashboard, inv => InfoSistema.Popular(inv));
 
         _ehPremium = licenca.TipoAtual == TipoLicenca.Premium;
 
@@ -64,12 +64,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     [RelayCommand] private void IrParaOtimizador() => PaginaAtual = OtimizadorWindows;
 
     [RelayCommand]
-    private void IrParaInfoSistema()
-    {
-        PaginaAtual = InfoSistema;
-        Dispatcher.UIThread.Post(async () => await InfoSistema.CarregarAsync(),
-            Avalonia.Threading.DispatcherPriority.Background);
-    }
+    private void IrParaInfoSistema() => PaginaAtual = InfoSistema;
 
     [RelayCommand]
     private void IrParaIaCopiloto()
