@@ -47,6 +47,18 @@ public partial class HomeViewModel : ObservableObject
     [ObservableProperty] private string _statusBios = "aguardando";
     [ObservableProperty] private IBrush _corBios    = new SolidColorBrush(Color.Parse("#3A3A3A"));
 
+    // ── Fases do scan (limite superior de progresso → rótulo exibido) ──────
+
+    private static readonly (double Ate, string Fase, string Status)[] _fases =
+    [
+        (0.14, "hardware básico",     "Lendo CPU, memória e placa-mãe..."),
+        (0.28, "S.M.A.R.T. discos",  "Verificando saúde dos discos..."),
+        (0.44, "drivers",             "Identificando dispositivos e drivers..."),
+        (0.58, "startup & serviços",  "Mapeando inicialização do Windows..."),
+        (0.72, "programas",           "Listando programas instalados..."),
+        (0.88, "arq. temporários",    "Analisando pastas temporárias..."),
+    ];
+
     // ── Commands ───────────────────────────────────────────────────────────
 
     [RelayCommand]
@@ -54,11 +66,11 @@ public partial class HomeViewModel : ObservableObject
     {
         if (Escaneando) return;
 
-        Escaneando = true;
-        ProgressoScan = 0;
-        TextoBotaoScan    = "...";
-        SubtextoBotaoScan = "detectando";
-        StatusText        = "Escaneando hardware...";
+        Escaneando        = true;
+        ProgressoScan     = 0;
+        TextoBotaoScan    = "0%";
+        SubtextoBotaoScan = _fases[0].Fase;
+        StatusText        = _fases[0].Status;
 
         using var cts = new CancellationTokenSource();
         _ = AvançarProgressoAsync(cts.Token);
@@ -113,21 +125,34 @@ public partial class HomeViewModel : ObservableObject
         }
 
         ProgressoScan     = 1.0;
+        TextoBotaoScan    = "100%";
+        SubtextoBotaoScan = "concluído";
         UltimoScanLabel   = $"Último scan: {DateTime.Now:HH:mm  dd/MM/yyyy}";
         StatusText        = "Hardware detectado com sucesso";
-        TextoBotaoScan    = "SCAN";
-        SubtextoBotaoScan = "escanear novamente";
         ScanConcluido     = true;
     }
 
     private async Task AvançarProgressoAsync(CancellationToken ct)
     {
+        // Preenche 0 → 88 % em ~15 s (passo de 0.01 a cada 170 ms).
+        // O salto final para 100 % acontece em AplicarResultados().
         try
         {
             while (!ct.IsCancellationRequested && ProgressoScan < 0.88)
             {
-                await Task.Delay(110, ct);
-                ProgressoScan = Math.Min(0.88, ProgressoScan + 0.04);
+                await Task.Delay(170, ct);
+                if (ct.IsCancellationRequested) break;
+                ProgressoScan = Math.Min(0.88, ProgressoScan + 0.01);
+
+                int pct = (int)(ProgressoScan * 100);
+                TextoBotaoScan = $"{pct}%";
+
+                var fase = _fases.FirstOrDefault(f => ProgressoScan <= f.Ate);
+                if (fase != default)
+                {
+                    SubtextoBotaoScan = fase.Fase;
+                    StatusText        = fase.Status;
+                }
             }
         }
         catch (OperationCanceledException) { }

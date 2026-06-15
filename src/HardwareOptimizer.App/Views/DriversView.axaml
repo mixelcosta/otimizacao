@@ -4,46 +4,15 @@
              x:Class="HardwareOptimizer.App.Views.DriversView"
              x:DataType="vm:DriversViewModel">
 
-  <UserControl.Styles>
-    <Style Selector="Button.varrer">
-      <Setter Property="Background" Value="#1A1A2A" />
-      <Setter Property="Foreground" Value="#00BFFF" />
-      <Setter Property="BorderBrush" Value="#00BFFF40" />
-      <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="CornerRadius" Value="7" />
-      <Setter Property="Padding" Value="20,9" />
-      <Setter Property="FontSize" Value="12" />
-      <Setter Property="FontWeight" Value="SemiBold" />
-    </Style>
-    <Style Selector="Button.varrer:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#222238" />
-    </Style>
-    <Style Selector="Button.varrer:disabled">
-      <Setter Property="Foreground" Value="#334455" />
-      <Setter Property="BorderBrush" Value="#223344" />
-    </Style>
-  </UserControl.Styles>
-
   <Grid RowDefinitions="Auto,*,Auto">
 
     <!-- Cabeçalho -->
-    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="24,20,24,0">
-      <StackPanel Spacing="3">
-        <TextBlock Text="DRIVERS" FontSize="13" FontWeight="Bold"
-                   Foreground="#444444" LetterSpacing="3" />
-        <TextBlock Text="Dispositivos instalados detectados via WMI (Win32_PnPSignedDriver)"
-                   Foreground="#555555" FontSize="12" />
-      </StackPanel>
-      <Button Grid.Column="1" Classes="varrer"
-              Command="{Binding VarrerCommand}"
-              IsEnabled="{Binding !Ocupado}"
-              VerticalAlignment="Center">
-        <StackPanel Orientation="Horizontal" Spacing="8">
-          <TextBlock Text="💾" FontSize="13" VerticalAlignment="Center" />
-          <TextBlock Text="Varrer Dispositivos" VerticalAlignment="Center" />
-        </StackPanel>
-      </Button>
-    </Grid>
+    <StackPanel Grid.Row="0" Margin="24,20,24,0" Spacing="3">
+      <TextBlock Text="DRIVERS" FontSize="13" FontWeight="Bold"
+                 Foreground="#444444" LetterSpacing="3" />
+      <TextBlock Text="Dispositivos instalados detectados via WMI (Win32_PnPSignedDriver)"
+                 Foreground="#555555" FontSize="12" />
+    </StackPanel>
 
     <!-- Conteúdo -->
     <ScrollViewer Grid.Row="1" Margin="0,16,0,0">

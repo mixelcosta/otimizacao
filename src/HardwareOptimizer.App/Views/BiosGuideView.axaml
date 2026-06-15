@@ -10,36 +10,24 @@
       <TextBlock Text="GUIA BIOS IA" FontSize="13" FontWeight="Bold"
                  Foreground="#444444" LetterSpacing="3" />
 
-      <!-- Cabeçalho: info da placa + botão carregar -->
-      <Grid ColumnDefinitions="*,Auto">
-        <StackPanel Spacing="4">
-          <StackPanel Orientation="Horizontal" Spacing="24">
-            <StackPanel Spacing="2">
-              <TextBlock Text="FABRICANTE" FontSize="10" Foreground="#444444" LetterSpacing="1" />
-              <TextBlock Text="{Binding FabricantePlaca}" Foreground="#FFFFFF"
-                         FontSize="14" FontWeight="SemiBold" />
-            </StackPanel>
-            <StackPanel Spacing="2">
-              <TextBlock Text="MODELO" FontSize="10" Foreground="#444444" LetterSpacing="1" />
-              <TextBlock Text="{Binding ModeloPlaca}" Foreground="#FFFFFF"
-                         FontSize="14" FontWeight="SemiBold" />
-            </StackPanel>
-            <StackPanel Spacing="2">
-              <TextBlock Text="TECLA SETUP" FontSize="10" Foreground="#444444" LetterSpacing="1" />
-              <TextBlock Text="{Binding TeclaSetup}" Foreground="#00FF88"
-                         FontSize="14" FontWeight="Bold" />
-            </StackPanel>
-          </StackPanel>
+      <!-- Cabeçalho: info da placa -->
+      <StackPanel Orientation="Horizontal" Spacing="24">
+        <StackPanel Spacing="2">
+          <TextBlock Text="FABRICANTE" FontSize="10" Foreground="#444444" LetterSpacing="1" />
+          <TextBlock Text="{Binding FabricantePlaca}" Foreground="#FFFFFF"
+                     FontSize="14" FontWeight="SemiBold" />
         </StackPanel>
-
-        <Button Grid.Column="1" Content="  Detectar placa  "
-                Command="{Binding CarregarCommand}"
-                IsEnabled="{Binding !Ocupado}"
-                Background="#1A1A1A" Foreground="#00FF88"
-                BorderBrush="#00FF8840" BorderThickness="1"
-                Padding="16,8" CornerRadius="6" FontSize="12"
-                VerticalAlignment="Center" />
-      </Grid>
+        <StackPanel Spacing="2">
+          <TextBlock Text="MODELO" FontSize="10" Foreground="#444444" LetterSpacing="1" />
+          <TextBlock Text="{Binding ModeloPlaca}" Foreground="#FFFFFF"
+                     FontSize="14" FontWeight="SemiBold" />
+        </StackPanel>
+        <StackPanel Spacing="2">
+          <TextBlock Text="TECLA SETUP" FontSize="10" Foreground="#444444" LetterSpacing="1" />
+          <TextBlock Text="{Binding TeclaSetup}" Foreground="#00FF88"
+                     FontSize="14" FontWeight="Bold" />
+        </StackPanel>
+      </StackPanel>
 
       <!-- Aviso XMP -->
       <Border Background="#FF8C0015" CornerRadius="8" Padding="14,10"
@@ -96,7 +84,7 @@
       <StackPanel HorizontalAlignment="Center" Spacing="10" Margin="0,40"
                   IsVisible="{Binding !TemPassos}">
         <TextBlock Text="⚙" FontSize="36" HorizontalAlignment="Center" />
-        <TextBlock Text="Clique em &quot;Detectar placa&quot; para gerar o guia XMP / EXPO"
+        <TextBlock Text="Guia XMP / EXPO não disponível para esta configuração."
                    Foreground="#444444" FontSize="12" HorizontalAlignment="Center" />
       </StackPanel>
 

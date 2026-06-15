@@ -24,13 +24,17 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         IaCopiloto = new IaCopilotoViewModel(agente);
         InfoSistema = new InfoSistemaViewModel();
         Upgrade = new UpgradeViewModel(agente);
-        VidaUtil = new VidaUtilViewModel(agente);
-        Drivers = new DriversViewModel(agente);
-        BiosGuide = new BiosGuideViewModel(agente);
+        VidaUtil = new VidaUtilViewModel();
+        Drivers = new DriversViewModel();
+        BiosGuide = new BiosGuideViewModel();
         Configuracoes = new ConfiguracoesViewModel(licenca, OnLicencaAlterada);
         Home = new HomeViewModel(agente, () => PaginaAtual = Dashboard, inv =>
         {
             InfoSistema.Popular(inv);
+            OtimizadorWindows.Popular(inv.EntradasStartup);
+            VidaUtil.Popular(inv.SaudeDiscos);
+            Drivers.Popular(inv.Drivers);
+            BiosGuide.Popular(inv);
             ScanConcluido = true;
         });
 

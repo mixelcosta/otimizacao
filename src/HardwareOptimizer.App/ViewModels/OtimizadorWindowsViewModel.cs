@@ -41,23 +41,12 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         finally { Ocupado = false; }
     }
 
-    [RelayCommand]
-    private async Task VarrerStartupAsync()
+    public void Popular(IReadOnlyList<InicializacaoEntrada> entradas)
     {
-        Ocupado = true;
-        StatusOtimizador = "Varrendo entradas de inicialização…";
-        try
-        {
-            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "ObterEntradasStartup" });
-            EntradasStartup.Clear();
-            if (resp.Resultado is IReadOnlyList<InicializacaoEntrada> entradas)
-            {
-                foreach (var e in entradas)
-                    EntradasStartup.Add(new InicializacaoEntradaViewModel(e));
-            }
-            StatusOtimizador = $"Encontradas {EntradasStartup.Count} entrada(s) de startup.";
-        }
-        finally { Ocupado = false; }
+        EntradasStartup.Clear();
+        foreach (var e in entradas)
+            EntradasStartup.Add(new InicializacaoEntradaViewModel(e));
+        StatusOtimizador = $"Encontradas {EntradasStartup.Count} entrada(s) de startup.";
     }
 
     [RelayCommand]

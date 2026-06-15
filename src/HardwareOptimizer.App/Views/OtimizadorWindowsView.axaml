@@ -27,15 +27,8 @@
       <!-- Startup Scanner -->
       <Border Background="#111111" CornerRadius="8" Padding="16">
         <StackPanel Spacing="8">
-          <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Text="Inicialização Automática" Foreground="#CCCCCC"
-                       FontWeight="SemiBold" VerticalAlignment="Center" />
-            <Button Grid.Column="1" Content="Varrer"
-                    Command="{Binding VarrerStartupCommand}"
-                    IsEnabled="{Binding !Ocupado}"
-                    Background="#1A2A3A" Foreground="#00BFFF"
-                    CornerRadius="6" Padding="12,6" />
-          </Grid>
+          <TextBlock Text="Inicialização Automática" Foreground="#CCCCCC"
+                     FontWeight="SemiBold" />
 
           <ItemsControl ItemsSource="{Binding EntradasStartup}">
             <ItemsControl.ItemTemplate>
