@@ -57,17 +57,96 @@ public sealed class LeitorWindows : ILeitorPlataforma
     {
         var board = PrimeiroItem("Win32_BaseBoard", "Manufacturer,Product,SerialNumber");
         var bios = PrimeiroItem("Win32_BIOS", "SMBIOSBIOSVersion,ReleaseDate");
+        var modelo = Texto(board, "Product") ?? "Desconhecido";
+        var (chipset, busSpecs) = LerChipsetEBus(modelo);
 
         return new PlacaMae
         {
             Fabricante = Texto(board, "Manufacturer") ?? "Desconhecido",
-            Modelo = Texto(board, "Product") ?? "Desconhecido",
+            Modelo = modelo,
             VersaoBios = Texto(bios, "SMBIOSBIOSVersion"),
             DataBios = NormalizadorData.Normalizar(Texto(bios, "ReleaseDate")),
             Modo = LerTexto("$env:firmware_type") is { Length: > 0 } modo ? modo : null,
             SecureBoot = LerSecureBoot(),
+            Chipset = chipset,
+            BusSpecs = busSpecs,
         };
     }
+
+    private static (string? Chipset, string? BusSpecs) LerChipsetEBus(string modeloPlaca)
+    {
+        // Busca via Win32_PnPEntity — dispositivos de sistema AMD (VEN_1022) e Intel (VEN_8086)
+        // excluindo CPU/memória/periféricos para isolar o chipset.
+        const string cmd =
+            "Get-CimInstance Win32_PnPEntity | " +
+            "Where-Object {$_.DeviceID -match '^PCI\\\\VEN_(1022|8086)' -and $_.PNPClass -eq 'System' " +
+            "-and $_.Name -notmatch 'Processor|Core|Memory|IOMMU|PSP|Crypt|Audio|USB|GPIO|I2C|SPI|UART|SMU|NTB|Dual'} | " +
+            "Select-Object Name -First 5 | ConvertTo-Json -Compress";
+
+        string? chipset = null;
+        var saida = LerTexto(cmd);
+        if (!string.IsNullOrWhiteSpace(saida))
+        {
+            try
+            {
+                var doc = JsonDocument.Parse(saida);
+                var itens = doc.RootElement.ValueKind == JsonValueKind.Array
+                    ? doc.RootElement.EnumerateArray().Select(e => e.Clone()).ToList()
+                    : new List<JsonElement> { doc.RootElement.Clone() };
+
+                // Prefere nomes que contenham identificadores de chipset conhecidos
+                string[] conhecidos = ["X570","X670","B550","B650","X470","B450","X370","B350",
+                                       "Z790","Z690","Z590","Z490","Z390","H770","B760","H670","B560"];
+                foreach (var item in itens)
+                {
+                    var nome = Texto(item, "Name");
+                    if (nome != null && conhecidos.Any(k => nome.Contains(k, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        chipset = nome;
+                        break;
+                    }
+                }
+
+                // Fallback: primeiro nome retornado
+                chipset ??= Texto(itens.FirstOrDefault(), "Name");
+            }
+            catch { }
+        }
+
+        // Se WMI não retornou, tenta derivar pelo nome do modelo da placa-mãe
+        chipset ??= DerivChipsetDoModelo(modeloPlaca);
+
+        var busSpecs = chipset != null ? DerivarBusSpecs(chipset) : DerivarBusSpecs(modeloPlaca);
+        return (chipset, busSpecs);
+    }
+
+    private static string? DerivChipsetDoModelo(string modelo)
+    {
+        string[] tokens = ["X670","B650","X570","B550","X470","B450","X370","B350",
+                           "Z790","Z690","Z590","Z490","Z390","H770","B760","H670","B560","H570"];
+        foreach (var t in tokens)
+            if (modelo.Contains(t, StringComparison.OrdinalIgnoreCase))
+                return t;
+        return null;
+    }
+
+    private static string? DerivarBusSpecs(string? nome)
+    {
+        if (nome == null) return null;
+        // PCIe 5.0 — AM5 / Intel Raptor Lake+
+        if (ContainsAny(nome, "X670","B650","Z790","H770","B760"))
+            return "PCI-Express 5.0 (32.0 GT/s)";
+        // PCIe 4.0 — AM4 high-end / Alder Lake
+        if (ContainsAny(nome, "X570","B550","Z690","Z590","H570","B560"))
+            return "PCI-Express 4.0 (16.0 GT/s)";
+        // PCIe 3.0 — AM4 mainstream / LGA1151
+        if (ContainsAny(nome, "X470","B450","X370","B350","Z490","Z390","H470","B460","Z370","H370","B365"))
+            return "PCI-Express 3.0 (8.0 GT/s)";
+        return null;
+    }
+
+    private static bool ContainsAny(string texto, params string[] tokens) =>
+        tokens.Any(t => texto.Contains(t, StringComparison.OrdinalIgnoreCase));
 
     private static Processador LerCpu()
     {
@@ -146,17 +225,88 @@ public sealed class LeitorWindows : ILeitorPlataforma
     private static IReadOnlyList<PlacaVideo> LerGpu()
     {
         var gpus = new List<PlacaVideo>();
+        var pcie = LerPcieGpu();
+        bool primeiraGpu = true;
+
         foreach (var item in Itens("Win32_VideoController", "Name,DriverVersion"))
         {
             var nome = Texto(item, "Name");
             if (!string.IsNullOrWhiteSpace(nome))
             {
-                gpus.Add(new PlacaVideo { Nome = nome, VersaoDriver = Texto(item, "DriverVersion") });
+                var gpu = new PlacaVideo
+                {
+                    Nome = nome,
+                    VersaoDriver = Texto(item, "DriverVersion"),
+                };
+
+                if (primeiraGpu && pcie.HasValue)
+                {
+                    gpu = gpu with
+                    {
+                        LinkWidthAtual  = pcie.Value.WidthAtual,
+                        LinkWidthMax    = pcie.Value.WidthMax,
+                        LinkSpeedAtual  = pcie.Value.SpeedAtual,
+                        LinkSpeedMax    = pcie.Value.SpeedMax,
+                    };
+                    primeiraGpu = false;
+                }
+
+                gpus.Add(gpu);
             }
         }
 
         return gpus;
     }
+
+    private static (string? WidthAtual, string? WidthMax, string? SpeedAtual, string? SpeedMax)? LerPcieGpu()
+    {
+        // DEVPKEY_PciDevice: {4340A6C5-93FA-4706-972C-7B648008A5A7}
+        //   6 = CurrentLinkWidth, 7 = CurrentLinkSpeed, 8 = MaxLinkWidth, 9 = MaxLinkSpeed
+        // Valores de velocidade: 1=2.5, 2=5.0, 3=8.0, 4=16.0, 5=32.0 GT/s
+        const string cmd =
+            "$id=(Get-PnpDevice -Class Display -Status OK -ErrorAction SilentlyContinue|" +
+            "Select-Object -First 1 -ExpandProperty InstanceId);" +
+            "if($id){$p=Get-PnpDeviceProperty -InstanceId $id -ErrorAction SilentlyContinue;" +
+            "$cs=($p|Where-Object{$_.KeyName -eq '{4340A6C5-93FA-4706-972C-7B648008A5A7} 7'}).Data;" +
+            "$cw=($p|Where-Object{$_.KeyName -eq '{4340A6C5-93FA-4706-972C-7B648008A5A7} 6'}).Data;" +
+            "$ms=($p|Where-Object{$_.KeyName -eq '{4340A6C5-93FA-4706-972C-7B648008A5A7} 9'}).Data;" +
+            "$mw=($p|Where-Object{$_.KeyName -eq '{4340A6C5-93FA-4706-972C-7B648008A5A7} 8'}).Data;" +
+            "[PSCustomObject]@{cs=$cs;cw=$cw;ms=$ms;mw=$mw}|ConvertTo-Json -Compress}";
+
+        var saida = LerTexto(cmd);
+        if (string.IsNullOrWhiteSpace(saida)) return null;
+
+        try
+        {
+            var doc = JsonDocument.Parse(saida);
+            var r = doc.RootElement;
+            var wa = r.TryGetProperty("cw", out var cw) && cw.ValueKind == JsonValueKind.Number ? cw.GetInt32() : 0;
+            var sa = r.TryGetProperty("cs", out var cs) && cs.ValueKind == JsonValueKind.Number ? cs.GetInt32() : 0;
+            var wm = r.TryGetProperty("mw", out var mw) && mw.ValueKind == JsonValueKind.Number ? mw.GetInt32() : 0;
+            var sm = r.TryGetProperty("ms", out var ms) && ms.ValueKind == JsonValueKind.Number ? ms.GetInt32() : 0;
+
+            if (wa == 0 && sa == 0) return null;
+
+            return (
+                wa > 0 ? $"x{wa}" : null,
+                wm > 0 ? $"x{wm}" : null,
+                DecodificarVelocidadePcie(sa),
+                DecodificarVelocidadePcie(sm)
+            );
+        }
+        catch { return null; }
+    }
+
+    private static string? DecodificarVelocidadePcie(int codigo) => codigo switch
+    {
+        1 => "2.5 GT/s",
+        2 => "5.0 GT/s",
+        3 => "8.0 GT/s",
+        4 => "16.0 GT/s",
+        5 => "32.0 GT/s",
+        6 => "64.0 GT/s",
+        _ => null,
+    };
 
     private static SistemaOperacionalInfo LerSistemaOperacional()
     {

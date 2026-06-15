@@ -128,5 +128,11 @@ public sealed class CerebroTests
         public Task<string> ResponderAsync(
             string promptSistema, string promptUsuario, CancellationToken cancellationToken = default) =>
             Task.FromResult(_resposta);
+
+        public Task<string> ResponderConversaAsync(
+            string promptSistema,
+            IReadOnlyList<(string Role, string Conteudo)> historico,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(_resposta);
     }
 }

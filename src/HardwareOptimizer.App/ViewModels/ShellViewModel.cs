@@ -22,6 +22,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         Dashboard = new DashboardViewModel(agente);
         OtimizadorWindows = new OtimizadorWindowsViewModel(agente);
         IaCopiloto = new IaCopilotoViewModel(agente);
+        InfoSistema = new InfoSistemaViewModel(agente);
         Upgrade = new UpgradeViewModel(agente);
         VidaUtil = new VidaUtilViewModel(agente);
         Drivers = new DriversViewModel(agente);
@@ -45,6 +46,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     public DashboardViewModel Dashboard { get; }
     public OtimizadorWindowsViewModel OtimizadorWindows { get; }
     public IaCopilotoViewModel IaCopiloto { get; }
+    public InfoSistemaViewModel InfoSistema { get; }
     public UpgradeViewModel Upgrade { get; }
     public VidaUtilViewModel VidaUtil { get; }
     public DriversViewModel Drivers { get; }
@@ -60,6 +62,14 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     [RelayCommand] private void IrParaDashboard() => PaginaAtual = Dashboard;
 
     [RelayCommand] private void IrParaOtimizador() => PaginaAtual = OtimizadorWindows;
+
+    [RelayCommand]
+    private void IrParaInfoSistema()
+    {
+        PaginaAtual = InfoSistema;
+        Dispatcher.UIThread.Post(async () => await InfoSistema.CarregarAsync(),
+            Avalonia.Threading.DispatcherPriority.Background);
+    }
 
     [RelayCommand]
     private void IrParaIaCopiloto()

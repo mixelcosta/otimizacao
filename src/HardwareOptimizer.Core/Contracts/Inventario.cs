@@ -42,6 +42,12 @@ public sealed record PlacaMae
     public string? Modo { get; init; }
 
     public bool? SecureBoot { get; init; }
+
+    /// <summary>Ex: "AMD X570" ou "Intel Z790".</summary>
+    public string? Chipset { get; init; }
+
+    /// <summary>Ex: "PCI-Express 4.0 (16.0 GT/s)".</summary>
+    public string? BusSpecs { get; init; }
 }
 
 public sealed record Processador
@@ -80,6 +86,18 @@ public sealed record PlacaVideo
     public double? TempIdleC { get; init; }
 
     public string? VersaoDriver { get; init; }
+
+    /// <summary>Ex: "x16".</summary>
+    public string? LinkWidthAtual { get; init; }
+
+    /// <summary>Ex: "x16".</summary>
+    public string? LinkWidthMax { get; init; }
+
+    /// <summary>Ex: "16.0 GT/s".</summary>
+    public string? LinkSpeedAtual { get; init; }
+
+    /// <summary>Ex: "16.0 GT/s".</summary>
+    public string? LinkSpeedMax { get; init; }
 }
 
 public sealed record SistemaOperacionalInfo
