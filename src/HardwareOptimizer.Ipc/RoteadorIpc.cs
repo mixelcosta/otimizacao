@@ -81,6 +81,9 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "desinstalarprogramas" => OperatingSystem.IsWindows()
                     ? await DesinstalarProgramasAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "ativarstartup" => OperatingSystem.IsWindows()
+                    ? AtivarStartupWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "chat_upgrade" => await ChatUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "analise_upgrade" => await AnaliseInicialUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
@@ -329,26 +332,43 @@ public sealed class RoteadorIpc : IRoteadorIpc
     [SupportedOSPlatform("windows")]
     private RespostaIpc DesativarStartupWindows(RequisicaoIpc req)
     {
-        var nome = req.Parametros is { } p
-            && p.TryGetProperty("nome", out var n)
-            && n.ValueKind == JsonValueKind.String
-                ? n.GetString()
-                : null;
-
-        if (string.IsNullOrEmpty(nome))
-            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
-
-        var verificador = new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance);
-        var entrada = verificador.Varrer()
-            .FirstOrDefault(e => string.Equals(e.Nome, nome, StringComparison.OrdinalIgnoreCase));
-
+        var entrada = EncontrarEntradaStartup(req);
         if (entrada is null)
-            return RespostaIpc.Falha(req.Id, $"Entrada '{nome}' não encontrada.");
+            return RespostaIpc.Falha(req.Id, "Entrada não encontrada ou parâmetro 'nome' ausente.");
 
         var gerenciador = new GerenciadorInicializacao(NullLogger<GerenciadorInicializacao>.Instance);
         var resultado = gerenciador.Desativar(entrada);
         return resultado.Sucesso
             ? RespostaIpc.Ok(req.Id, true)
             : RespostaIpc.Falha(req.Id, resultado.MensagemErro);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private RespostaIpc AtivarStartupWindows(RequisicaoIpc req)
+    {
+        var entrada = EncontrarEntradaStartup(req);
+        if (entrada is null)
+            return RespostaIpc.Falha(req.Id, "Entrada não encontrada ou parâmetro 'nome' ausente.");
+
+        var gerenciador = new GerenciadorInicializacao(NullLogger<GerenciadorInicializacao>.Instance);
+        var resultado = gerenciador.Ativar(entrada, string.Empty);
+        return resultado.Sucesso
+            ? RespostaIpc.Ok(req.Id, true)
+            : RespostaIpc.Falha(req.Id, resultado.MensagemErro);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static InicializacaoEntrada? EncontrarEntradaStartup(RequisicaoIpc req)
+    {
+        var nome = req.Parametros is { } p
+            && p.TryGetProperty("nome", out var n)
+            && n.ValueKind == JsonValueKind.String
+                ? n.GetString() : null;
+
+        if (string.IsNullOrEmpty(nome)) return null;
+
+        return new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance)
+            .Varrer()
+            .FirstOrDefault(e => string.Equals(e.Nome, nome, StringComparison.OrdinalIgnoreCase));
     }
 }

@@ -7,7 +7,7 @@ using HardwareOptimizer.Ipc;
 
 namespace HardwareOptimizer.App.ViewModels;
 
-public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados }
+public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao }
 
 public partial class OtimizadorWindowsViewModel : ObservableObject
 {
@@ -41,17 +41,22 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(MostrarEfeitosVisuais));
         OnPropertyChanged(nameof(MostrarProgramas));
+        OnPropertyChanged(nameof(MostrarInicializacao));
         OnPropertyChanged(nameof(AbaEfeitosAtiva));
         OnPropertyChanged(nameof(AbaProgramasAtiva));
+        OnPropertyChanged(nameof(AbaInicializacaoAtiva));
     }
 
     public bool MostrarEfeitosVisuais => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
     public bool MostrarProgramas      => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
+    public bool MostrarInicializacao  => SubPagina == SubPaginaOtimizador.Inicializacao;
     public bool AbaEfeitosAtiva       => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
     public bool AbaProgramasAtiva     => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
+    public bool AbaInicializacaoAtiva => SubPagina == SubPaginaOtimizador.Inicializacao;
 
     [RelayCommand] private void IrParaEfeitosVisuais() => SubPagina = SubPaginaOtimizador.EfeitosVisuais;
     [RelayCommand] private void IrParaProgramas()      => SubPagina = SubPaginaOtimizador.ProgramasInstalados;
+    [RelayCommand] private void IrParaInicializacao()  => SubPagina = SubPaginaOtimizador.Inicializacao;
 
     // ── Estado geral ───────────────────────────────────────────────────────
 
@@ -191,30 +196,43 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         finally { Ocupado = false; }
     }
 
-    // ── Startup scanner ────────────────────────────────────────────────────
+    // ── Inicialização do Windows ───────────────────────────────────────────
 
     public ObservableCollection<InicializacaoEntradaViewModel> EntradasStartup { get; }
 
     public void Popular(IReadOnlyList<InicializacaoEntrada> entradas)
     {
         EntradasStartup.Clear();
-        foreach (var e in entradas)
-            EntradasStartup.Add(new InicializacaoEntradaViewModel(e));
+
+        var ordenadas = entradas.OrderBy(e => e.Impacto switch
+        {
+            ImpactoInicializacao.Alto       => 0,
+            ImpactoInicializacao.Medio      => 1,
+            ImpactoInicializacao.Baixo      => 2,
+            ImpactoInicializacao.Desconhecido => 3,
+            _ => 4,
+        }).ThenBy(e => e.Nome, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var e in ordenadas)
+            EntradasStartup.Add(new InicializacaoEntradaViewModel(e, ToggleEntradaAsync));
     }
 
-    [RelayCommand]
-    private async Task DesativarEntradaAsync(InicializacaoEntradaViewModel entrada)
+    private async Task ToggleEntradaAsync(InicializacaoEntradaViewModel entrada)
     {
-        if (entrada is null) return;
         Ocupado = true;
         try
         {
+            var metodo = entrada.Ativo ? "DesativarStartup" : "AtivarStartup";
             var resp = await _agente.TratarAsync(new RequisicaoIpc
             {
-                Metodo     = "DesativarStartup",
+                Metodo     = metodo,
                 Parametros = JsonSerializer.SerializeToElement(new { nome = entrada.Nome }),
             });
-            if (resp.Sucesso) entrada.Ativo = false;
+
+            if (resp.Sucesso)
+                entrada.Ativo = !entrada.Ativo;
+            else
+                StatusOtimizador = "Falha: " + resp.Erro;
         }
         finally { Ocupado = false; }
     }
@@ -231,13 +249,13 @@ public partial class EfeitoVisualViewModel : ObservableObject
 
 public partial class ProgramaInstaladoViewModel : ObservableObject
 {
-    public string Nome                 { get; }
-    public string Fabricante           { get; }
-    public string Versao               { get; }
-    public string Tamanho              { get; }
-    public string Data                 { get; }
-    public bool   Bloatware            { get; }
-    public string? UninstallString     { get; }
+    public string  Nome                 { get; }
+    public string  Fabricante           { get; }
+    public string  Versao               { get; }
+    public string  Tamanho              { get; }
+    public string  Data                 { get; }
+    public bool    Bloatware            { get; }
+    public string? UninstallString      { get; }
     public string? QuietUninstallString { get; }
 
     [ObservableProperty] private bool _selecionado;
@@ -267,24 +285,63 @@ public partial class InicializacaoEntradaViewModel : ObservableObject
 {
     private readonly InicializacaoEntrada _modelo;
 
-    public InicializacaoEntradaViewModel(InicializacaoEntrada modelo)
+    public InicializacaoEntradaViewModel(InicializacaoEntrada modelo, Func<InicializacaoEntradaViewModel, Task> toggle)
     {
         _modelo = modelo;
         Ativo   = modelo.Ativo;
+        ToggleCommand = new AsyncRelayCommand(() => toggle(this));
     }
 
-    public string Nome    => _modelo.Nome;
-    public string Caminho => _modelo.Caminho;
-    public string Impacto => _modelo.Impacto.ToString();
-    public string Origem  => _modelo.Origem.ToString();
+    public IAsyncRelayCommand ToggleCommand { get; }
 
-    [ObservableProperty] private bool _ativo;
+    public string Nome   => _modelo.Nome;
+    public string Caminho => _modelo.Caminho;
+
+    public string Origem => _modelo.Origem switch
+    {
+        OrigemInicializacao.RegistroUsuario => "Usuário",
+        OrigemInicializacao.RegistroMaquina => "Sistema",
+        OrigemInicializacao.PastaStartup    => "Pasta Startup",
+        _ => _modelo.Origem.ToString(),
+    };
+
+    public string TextoImpacto => _modelo.Impacto switch
+    {
+        ImpactoInicializacao.Alto       => "Alto impacto",
+        ImpactoInicializacao.Medio      => "Médio impacto",
+        ImpactoInicializacao.Baixo      => "Baixo impacto",
+        ImpactoInicializacao.Desconhecido => "Impacto desconhecido",
+        _ => "—",
+    };
 
     public string CorImpacto => _modelo.Impacto switch
     {
-        ImpactoInicializacao.Alto  => "#FF3333",
-        ImpactoInicializacao.Medio => "#FFCC00",
-        ImpactoInicializacao.Baixo => "#00FF88",
-        _                          => "#888888",
+        ImpactoInicializacao.Alto       => "#FF4444",
+        ImpactoInicializacao.Medio      => "#FFCC00",
+        ImpactoInicializacao.Baixo      => "#00FF88",
+        _ => "#555555",
     };
+
+    public string CorImpactoFundo => _modelo.Impacto switch
+    {
+        ImpactoInicializacao.Alto       => "#2A0808",
+        ImpactoInicializacao.Medio      => "#2A2200",
+        ImpactoInicializacao.Baixo      => "#082A12",
+        _ => "#1A1A1A",
+    };
+
+    [ObservableProperty] private bool _ativo;
+
+    partial void OnAtivoChanged(bool value)
+    {
+        OnPropertyChanged(nameof(TextoBotao));
+        OnPropertyChanged(nameof(CorBotaoFundo));
+        OnPropertyChanged(nameof(CorBotaoTexto));
+        OnPropertyChanged(nameof(CorIndicador));
+    }
+
+    public string TextoBotao    => Ativo ? "DESATIVAR" : "ATIVAR";
+    public string CorBotaoFundo => Ativo ? "#2A0808"   : "#082A12";
+    public string CorBotaoTexto => Ativo ? "#CC3333"   : "#00C870";
+    public string CorIndicador  => Ativo ? "#00FF88"   : "#252525";
 }
