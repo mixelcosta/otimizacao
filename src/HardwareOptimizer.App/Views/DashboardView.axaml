@@ -6,86 +6,118 @@
              x:DataType="vm:DashboardViewModel">
 
   <ScrollViewer>
-    <StackPanel Margin="20" Spacing="20">
+    <StackPanel Margin="24,20,24,24" Spacing="24">
 
-      <!-- Título -->
-      <TextBlock Text="DASHBOARD" FontSize="13" FontWeight="Bold"
-                 Foreground="#444444" LetterSpacing="3" />
+      <!-- Cabeçalho -->
+      <Grid ColumnDefinitions="3,14,*">
+        <Border Grid.Column="0" Background="#00C8FF" CornerRadius="2" />
+        <TextBlock Grid.Column="2" Text="DASHBOARD" FontSize="12" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="4"
+                   VerticalAlignment="Center" />
+      </Grid>
 
-      <!-- Cards de sensores -->
-      <WrapPanel Orientation="Horizontal" ItemWidth="200">
+      <!-- Cards de sensores em grid 4 colunas -->
+      <Grid ColumnDefinitions="*,12,*,12,*,12,*">
 
-        <!-- CPU -->
-        <ctrl:SensorCard Margin="0,0,12,12"
+        <ctrl:SensorCard Grid.Column="0"
                          Titulo="CPU"
                          Valor="{Binding CpuTemp}"
                          Subtitulo="{Binding CpuClock}"
                          NivelAlerta="{Binding CpuNivelAlerta}" />
 
-        <!-- GPU -->
-        <ctrl:SensorCard Margin="0,0,12,12"
+        <ctrl:SensorCard Grid.Column="2"
                          Titulo="GPU"
                          Valor="{Binding GpuTemp}"
                          Subtitulo="{Binding GpuClock}"
                          NivelAlerta="{Binding GpuNivelAlerta}" />
 
-        <!-- RAM -->
-        <ctrl:SensorCard Margin="0,0,12,12"
+        <ctrl:SensorCard Grid.Column="4"
                          Titulo="RAM"
                          Valor="{Binding RamUso}"
                          Subtitulo="{Binding RamPorcentagem}"
                          NivelAlerta="{Binding RamNivelAlerta}" />
 
-        <!-- Storage -->
-        <ctrl:SensorCard Margin="0,0,12,12"
+        <ctrl:SensorCard Grid.Column="6"
                          Titulo="STORAGE"
                          Valor="{Binding StorageRead}"
                          Subtitulo="{Binding StorageWrite}"
                          NivelAlerta="{Binding StorageNivelAlerta}" />
 
-      </WrapPanel>
+      </Grid>
 
-      <!-- Gráficos -->
-      <TextBlock Text="TEMPERATURA" FontSize="11" FontWeight="Bold"
-                 Foreground="#444444" LetterSpacing="2" />
+      <!-- Seção TEMPERATURA -->
+      <Grid ColumnDefinitions="3,14,*">
+        <Border Grid.Column="0" Background="#00C8FF" CornerRadius="2" />
+        <TextBlock Grid.Column="2" Text="TEMPERATURA  ·  tempo real" FontSize="11" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="2"
+                   VerticalAlignment="Center" />
+      </Grid>
 
-      <Grid ColumnDefinitions="*,8,*">
-        <!-- Temp CPU (ou Load % quando temp não disponível sem admin) -->
-        <Border Grid.Column="0" Background="#0A0A0A" CornerRadius="8" Height="160">
+      <Grid ColumnDefinitions="*,12,*">
+        <Border Grid.Column="0" CornerRadius="10" Height="170" ClipToBounds="True">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#080814" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
           <ctrl:RealtimeChartControl x:Name="ChartCpuTemp"
                                      Label="{Binding CpuChartLabel}"
-                                     LinhaCor="#00BFFF"
+                                     LinhaCor="#00C8FF"
                                      Maximo="100" Minimo="0"
-                                     Margin="8" />
+                                     Margin="10" />
         </Border>
 
-        <!-- Temp GPU (ou Load % quando temp não disponível sem admin) -->
-        <Border Grid.Column="2" Background="#0A0A0A" CornerRadius="8" Height="160">
+        <Border Grid.Column="2" CornerRadius="10" Height="170" ClipToBounds="True">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#080814" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
           <ctrl:RealtimeChartControl x:Name="ChartGpuTemp"
                                      Label="{Binding GpuChartLabel}"
                                      LinhaCor="#FF6B35"
                                      Maximo="100" Minimo="0"
-                                     Margin="8" />
+                                     Margin="10" />
         </Border>
       </Grid>
 
-      <TextBlock Text="CLOCK" FontSize="11" FontWeight="Bold"
-                 Foreground="#444444" LetterSpacing="2" />
+      <!-- Seção CLOCK -->
+      <Grid ColumnDefinitions="3,14,*">
+        <Border Grid.Column="0" Background="#00C8FF" CornerRadius="2" />
+        <TextBlock Grid.Column="2" Text="CLOCK  ·  tempo real" FontSize="11" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="2"
+                   VerticalAlignment="Center" />
+      </Grid>
 
-      <Grid ColumnDefinitions="*,8,*">
-        <Border Grid.Column="0" Background="#0A0A0A" CornerRadius="8" Height="160">
+      <Grid ColumnDefinitions="*,12,*">
+        <Border Grid.Column="0" CornerRadius="10" Height="170" ClipToBounds="True">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#080814" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
           <ctrl:RealtimeChartControl x:Name="ChartCpuClock"
                                      Label="CPU MHz"
                                      LinhaCor="#A0FF50"
                                      Maximo="6000" Minimo="800"
-                                     Margin="8" />
+                                     Margin="10" />
         </Border>
-        <Border Grid.Column="2" Background="#0A0A0A" CornerRadius="8" Height="160">
+
+        <Border Grid.Column="2" CornerRadius="10" Height="170" ClipToBounds="True">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#080814" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
           <ctrl:RealtimeChartControl x:Name="ChartGpuClock"
                                      Label="GPU MHz"
                                      LinhaCor="#FF50A0"
                                      Maximo="3000" Minimo="100"
-                                     Margin="8" />
+                                     Margin="10" />
         </Border>
       </Grid>
 

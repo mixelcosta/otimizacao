@@ -20,8 +20,8 @@ public partial class SensorCard : UserControl
         AvaloniaProperty.Register<SensorCard, int>(nameof(NivelAlerta), 0);
 
     private static readonly IBrush CorEstavel = new SolidColorBrush(Color.Parse("#00FF88"));
-    private static readonly IBrush CorAlerta = new SolidColorBrush(Color.Parse("#FFCC00"));
-    private static readonly IBrush CorCritico = new SolidColorBrush(Color.Parse("#FF3333"));
+    private static readonly IBrush CorAlerta  = new SolidColorBrush(Color.Parse("#FFCC00"));
+    private static readonly IBrush CorCritico = new SolidColorBrush(Color.Parse("#FF3A5C"));
 
     public SensorCard()
     {
@@ -70,12 +70,13 @@ public partial class SensorCard : UserControl
 
     private void AtualizarCor()
     {
-        if (ValorText is null) return;
-        ValorText.Foreground = NivelAlerta switch
+        var cor = NivelAlerta switch
         {
             1 => CorAlerta,
             2 => CorCritico,
             _ => CorEstavel,
         };
+        if (ValorText  is not null) ValorText.Foreground = cor;
+        if (AccentRect is not null) AccentRect.Fill       = cor;
     }
 }

@@ -7,99 +7,134 @@
 
   <UserControl.Styles>
     <Style Selector="Button.scan /template/ ContentPresenter">
-      <Setter Property="Background" Value="#0A0A0A" />
+      <Setter Property="Background" Value="#08081A" />
       <Setter Property="CornerRadius" Value="85" />
     </Style>
     <Style Selector="Button.scan:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#151515" />
+      <Setter Property="Background" Value="#0D0D22" />
       <Setter Property="CornerRadius" Value="85" />
     </Style>
     <Style Selector="Button.scan:pressed /template/ ContentPresenter">
-      <Setter Property="Background" Value="#1E1E1E" />
-      <Setter Property="CornerRadius" Value="85" />
-    </Style>
-    <Style Selector="Button.scan:disabled /template/ ContentPresenter">
-      <Setter Property="Background" Value="#060606" />
+      <Setter Property="Background" Value="#121230" />
       <Setter Property="CornerRadius" Value="85" />
     </Style>
     <Style Selector="Button.acao">
-      <Setter Property="Background" Value="#141414" />
-      <Setter Property="Foreground" Value="#888888" />
-      <Setter Property="BorderBrush" Value="#282828" />
+      <Setter Property="Background"      Value="#0C0C1E" />
+      <Setter Property="Foreground"      Value="#6060A0" />
+      <Setter Property="BorderBrush"     Value="#1C1C38" />
       <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="CornerRadius" Value="8" />
-      <Setter Property="Padding" Value="28,11" />
-      <Setter Property="FontSize" Value="13" />
+      <Setter Property="CornerRadius"    Value="8" />
+      <Setter Property="Padding"         Value="28,11" />
+      <Setter Property="FontSize"        Value="13" />
     </Style>
     <Style Selector="Button.acao:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#1E1E1E" />
+      <Setter Property="Background" Value="#12122A" />
+    </Style>
+    <Style Selector="Button.acao:pointerover">
+      <Setter Property="Foreground" Value="#9090C0" />
     </Style>
   </UserControl.Styles>
 
+  <!-- Fundo com gradiente radial tecnológico -->
   <Grid RowDefinitions="Auto,*,Auto,Auto">
+    <Grid.Background>
+      <RadialGradientBrush Center="50%,46%" GradientOrigin="50%,46%"
+                           RadiusX="48%" RadiusY="48%">
+        <GradientStop Color="#060618" Offset="0" />
+        <GradientStop Color="#030308" Offset="1" />
+      </RadialGradientBrush>
+    </Grid.Background>
 
     <!-- Cabeçalho -->
-    <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,44,0,0" Spacing="7">
+    <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,44,0,0" Spacing="8">
       <TextBlock Text="OTIMIZE BUILDER" FontSize="10" FontWeight="Bold"
-                 Foreground="#303030" LetterSpacing="5"
+                 Foreground="#1E1E38" LetterSpacing="6"
                  HorizontalAlignment="Center" />
-      <TextBlock Text="{Binding StatusText}" FontSize="15"
-                 Foreground="#666666"
+      <TextBlock Text="{Binding StatusText}" FontSize="14"
+                 Foreground="#3C3C62"
                  HorizontalAlignment="Center" />
     </StackPanel>
 
-    <!-- Área central: 2 cards flanqueando o anel de scan -->
+    <!-- Área central -->
     <Grid Grid.Row="1"
           HorizontalAlignment="Center" VerticalAlignment="Center">
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="150" />
-        <ColumnDefinition Width="36" />
-        <ColumnDefinition Width="240" />
-        <ColumnDefinition Width="36" />
-        <ColumnDefinition Width="150" />
+        <ColumnDefinition Width="156" />
+        <ColumnDefinition Width="40" />
+        <ColumnDefinition Width="248" />
+        <ColumnDefinition Width="40" />
+        <ColumnDefinition Width="156" />
       </Grid.ColumnDefinitions>
 
       <!-- Card esquerdo: componentes detectados -->
       <Border Grid.Column="0"
-              Background="#0D0D0D" CornerRadius="14"
-              BorderBrush="#1E1E1E" BorderThickness="1"
-              Padding="12,22"
+              CornerRadius="14"
+              BorderThickness="1"
+              Padding="14,24"
               VerticalAlignment="Center">
-        <StackPanel HorizontalAlignment="Center" Spacing="5">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#0C0C1E" Offset="0" />
+            <GradientStop Color="#08080F" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <Border.BorderBrush>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#1E1E3C" Offset="0" />
+            <GradientStop Color="#12122A" Offset="1" />
+          </LinearGradientBrush>
+        </Border.BorderBrush>
+        <StackPanel HorizontalAlignment="Center" Spacing="6">
           <TextBlock Text="{Binding ContadorDispositivos}"
-                     FontSize="52" FontWeight="Black"
+                     FontSize="54" FontWeight="Black"
                      Foreground="{Binding CorContador}"
                      HorizontalAlignment="Center" />
-          <TextBlock Text="Componentes" Foreground="#666666" FontSize="12"
+          <Rectangle Height="1" Width="60">
+            <Rectangle.Fill>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="Transparent" Offset="0" />
+                <GradientStop Color="#22223A"     Offset="0.5" />
+                <GradientStop Color="Transparent" Offset="1" />
+              </LinearGradientBrush>
+            </Rectangle.Fill>
+          </Rectangle>
+          <TextBlock Text="Componentes" Foreground="#3A3A60" FontSize="11"
                      HorizontalAlignment="Center" />
-          <TextBlock Text="Hardware" Foreground="#333333" FontSize="11"
+          <TextBlock Text="Hardware" Foreground="#22223A" FontSize="10"
                      HorizontalAlignment="Center" />
         </StackPanel>
       </Border>
 
-      <!-- Anel de scan + botão central -->
-      <Grid Grid.Column="2" Width="240" Height="240">
+      <!-- Área do anel de scan -->
+      <Grid Grid.Column="2" Width="248" Height="248">
+
+        <!-- Anéis de radar decorativos -->
+        <Ellipse Width="248" Height="248" Stroke="#0D0D22" StrokeThickness="1" />
+        <Ellipse Width="210" Height="210" Stroke="#10102A" StrokeThickness="1" />
+
+        <!-- Controle do anel animado -->
         <ctrl:AnelScanControl
             Progresso="{Binding ProgressoScan}"
             Escaneando="{Binding Escaneando}"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch" />
 
+        <!-- Botão central -->
         <Button Classes="scan"
                 Command="{Binding ScanCommand}"
-                Width="170" Height="170"
-                CornerRadius="85"
+                Width="172" Height="172"
+                CornerRadius="86"
                 BorderThickness="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
-          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="5">
+          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6">
             <TextBlock Text="{Binding TextoBotaoScan}"
-                       FontSize="32" FontWeight="Black"
-                       Foreground="#FFFFFF"
+                       FontSize="30" FontWeight="Black"
+                       Foreground="#E0E0F2"
                        HorizontalAlignment="Center" />
             <TextBlock Text="{Binding SubtextoBotaoScan}"
-                       FontSize="11"
-                       Foreground="#00FF88"
+                       FontSize="11" LetterSpacing="1"
+                       Foreground="#00C8FF"
                        HorizontalAlignment="Center" />
           </StackPanel>
         </Button>
@@ -107,32 +142,53 @@
 
       <!-- Card direito: BIOS -->
       <Border Grid.Column="4"
-              Background="#0D0D0D" CornerRadius="14"
-              BorderBrush="#1E1E1E" BorderThickness="1"
-              Padding="12,22"
+              CornerRadius="14"
+              BorderThickness="1"
+              Padding="14,24"
               VerticalAlignment="Center">
-        <StackPanel HorizontalAlignment="Center" Spacing="5">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#0C0C1E" Offset="0" />
+            <GradientStop Color="#08080F" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <Border.BorderBrush>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#1E1E3C" Offset="0" />
+            <GradientStop Color="#12122A" Offset="1" />
+          </LinearGradientBrush>
+        </Border.BorderBrush>
+        <StackPanel HorizontalAlignment="Center" Spacing="6">
           <TextBlock Text="{Binding IconeBios}"
-                     FontSize="52" FontWeight="Black"
+                     FontSize="54" FontWeight="Black"
                      Foreground="{Binding CorBios}"
                      HorizontalAlignment="Center" />
-          <TextBlock Text="BIOS" Foreground="#666666" FontSize="12"
+          <Rectangle Height="1" Width="60">
+            <Rectangle.Fill>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="Transparent" Offset="0" />
+                <GradientStop Color="#22223A"     Offset="0.5" />
+                <GradientStop Color="Transparent" Offset="1" />
+              </LinearGradientBrush>
+            </Rectangle.Fill>
+          </Rectangle>
+          <TextBlock Text="BIOS" Foreground="#3A3A60" FontSize="11"
                      HorizontalAlignment="Center" />
-          <TextBlock Text="{Binding StatusBios}" Foreground="#333333" FontSize="11"
+          <TextBlock Text="{Binding StatusBios}" Foreground="#22223A" FontSize="10"
                      HorizontalAlignment="Center" />
         </StackPanel>
       </Border>
 
     </Grid>
 
-    <!-- Rodapé: último scan -->
+    <!-- Último scan -->
     <TextBlock Grid.Row="2"
                Text="{Binding UltimoScanLabel}"
-               Foreground="#282828" FontSize="11"
+               Foreground="#18183A" FontSize="11"
                HorizontalAlignment="Center"
-               Margin="0,18,0,0" />
+               Margin="0,20,0,0" />
 
-    <!-- Botões de ação (aparecem após o scan) -->
+    <!-- Botões pós-scan -->
     <StackPanel Grid.Row="3"
                 IsVisible="{Binding ScanConcluido}"
                 Orientation="Horizontal"

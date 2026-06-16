@@ -67,6 +67,30 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     [ObservableProperty] private bool _ehPremium;
     [ObservableProperty] private bool _scanConcluido;
 
+    // Propriedades para binding de estado ativo na sidebar
+    public bool PaginaEhDashboard    => PaginaAtual == Dashboard;
+    public bool PaginaEhOtimizador   => PaginaAtual == OtimizadorWindows;
+    public bool PaginaEhInfoSistema  => PaginaAtual == InfoSistema;
+    public bool PaginaEhIaCopiloto   => PaginaAtual == IaCopiloto;
+    public bool PaginaEhConfiguracoes => PaginaAtual == Configuracoes;
+    public bool PaginaEhUpgrade      => PaginaAtual == Upgrade;
+    public bool PaginaEhVidaUtil     => PaginaAtual == VidaUtil;
+    public bool PaginaEhDrivers      => PaginaAtual == Drivers;
+    public bool PaginaEhBiosGuide    => PaginaAtual == BiosGuide;
+
+    partial void OnPaginaAtualChanged(ObservableObject value)
+    {
+        OnPropertyChanged(nameof(PaginaEhDashboard));
+        OnPropertyChanged(nameof(PaginaEhOtimizador));
+        OnPropertyChanged(nameof(PaginaEhInfoSistema));
+        OnPropertyChanged(nameof(PaginaEhIaCopiloto));
+        OnPropertyChanged(nameof(PaginaEhConfiguracoes));
+        OnPropertyChanged(nameof(PaginaEhUpgrade));
+        OnPropertyChanged(nameof(PaginaEhVidaUtil));
+        OnPropertyChanged(nameof(PaginaEhDrivers));
+        OnPropertyChanged(nameof(PaginaEhBiosGuide));
+    }
+
     [RelayCommand] private void IrParaHome() => PaginaAtual = Home;
 
     [RelayCommand] private void IrParaDashboard() => PaginaAtual = Dashboard;

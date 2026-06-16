@@ -1,15 +1,49 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="HardwareOptimizer.App.Controls.SensorCard">
-  <Border Background="#111111" CornerRadius="8" Padding="16" MinWidth="160">
-    <StackPanel Spacing="4">
-      <TextBlock x:Name="TituloText"
-                 FontSize="11" Foreground="#888888"
-                 FontWeight="SemiBold" />
-      <TextBlock x:Name="ValorText"
-                 FontSize="28" FontWeight="Bold" Foreground="#00FF88" />
-      <TextBlock x:Name="SubtituloText"
-                 FontSize="11" Foreground="#666666" />
-    </StackPanel>
+
+  <Border CornerRadius="10" MinWidth="170" ClipToBounds="True">
+    <Border.Background>
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#0C0C1E" Offset="0" />
+        <GradientStop Color="#09091A" Offset="1" />
+      </LinearGradientBrush>
+    </Border.Background>
+
+    <Grid ColumnDefinitions="3,*">
+
+      <!-- Barra de acento lateral (colorida via code-behind) -->
+      <Rectangle x:Name="AccentRect"
+                 Grid.Column="0"
+                 Fill="#00FF88" />
+
+      <!-- Conteúdo -->
+      <Border Grid.Column="1" Padding="16,16,16,14">
+      <StackPanel Spacing="4">
+
+        <TextBlock x:Name="TituloText"
+                   FontSize="10" FontWeight="Bold"
+                   Foreground="#36365A" LetterSpacing="2" />
+
+        <TextBlock x:Name="ValorText"
+                   FontSize="32" FontWeight="Black"
+                   Foreground="#00FF88" />
+
+        <Rectangle Height="1" Margin="0,2,0,2">
+          <Rectangle.Fill>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+              <GradientStop Color="#1A1A30" Offset="0" />
+              <GradientStop Color="Transparent" Offset="1" />
+            </LinearGradientBrush>
+          </Rectangle.Fill>
+        </Rectangle>
+
+        <TextBlock x:Name="SubtituloText"
+                   FontSize="11" Foreground="#30304E" />
+
+      </StackPanel>
+      </Border>
+    </Grid>
   </Border>
+
 </UserControl>

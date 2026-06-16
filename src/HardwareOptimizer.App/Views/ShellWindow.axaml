@@ -4,211 +4,298 @@
         xmlns:views="using:HardwareOptimizer.App.Views"
         x:Class="HardwareOptimizer.App.Views.ShellWindow"
         x:DataType="vm:ShellViewModel"
-        Width="1100" Height="700"
-        MinWidth="900" MinHeight="580"
-        Background="#050505"
+        Width="1140" Height="730"
+        MinWidth="960" MinHeight="600"
+        Background="#030308"
         Title="Otimize Builder">
 
   <Window.Styles>
-    <!-- Botão de navegação lateral -->
+
+    <!-- ── Botão de navegação base ────────────────────────────────────────── -->
     <Style Selector="Button.nav">
-      <Setter Property="Background" Value="Transparent" />
-      <Setter Property="Foreground" Value="#888888" />
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="Background"              Value="Transparent" />
+      <Setter Property="Foreground"              Value="#484865" />
+      <Setter Property="BorderThickness"         Value="0" />
+      <Setter Property="HorizontalAlignment"     Value="Stretch" />
       <Setter Property="HorizontalContentAlignment" Value="Left" />
-      <Setter Property="Padding" Value="16,10" />
-      <Setter Property="FontSize" Value="13" />
-      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding"                 Value="18,11" />
+      <Setter Property="FontSize"                Value="13" />
+      <Setter Property="CornerRadius"            Value="0,8,8,0" />
     </Style>
     <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#1A1A1A" />
+      <Setter Property="Background" Value="#0C0C1E" />
     </Style>
+    <Style Selector="Button.nav:pointerover">
+      <Setter Property="Foreground" Value="#8080AA" />
+    </Style>
+
+    <!-- ativo: barra de acento ciano à esquerda via LinearGradientBrush -->
     <Style Selector="Button.nav.ativo /template/ ContentPresenter">
-      <Setter Property="Background" Value="#1E1E1E" />
+      <Setter Property="Background">
+        <Setter.Value>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+            <GradientStop Color="#00C8FF" Offset="0.000" />
+            <GradientStop Color="#00C8FF" Offset="0.018" />
+            <GradientStop Color="#111128" Offset="0.019" />
+            <GradientStop Color="#111128" Offset="1.000" />
+          </LinearGradientBrush>
+        </Setter.Value>
+      </Setter>
     </Style>
     <Style Selector="Button.nav.ativo">
-      <Setter Property="Foreground" Value="#FFFFFF" />
+      <Setter Property="Foreground" Value="#E0E0F2" />
     </Style>
-    <!-- Label de seção -->
-    <Style Selector="TextBlock.section-label">
-      <Setter Property="Foreground" Value="#333333" />
-      <Setter Property="FontSize" Value="10" />
-      <Setter Property="FontWeight" Value="Bold" />
-      <Setter Property="Margin" Value="16,12,16,4" />
-    </Style>
-    <!-- Botão premium desbloqueado -->
+
+    <!-- ── Botão premium desbloqueado ────────────────────────────────────── -->
     <Style Selector="Button.nav-premium">
-      <Setter Property="Background" Value="Transparent" />
-      <Setter Property="Foreground" Value="#888888" />
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="Background"              Value="Transparent" />
+      <Setter Property="Foreground"              Value="#484865" />
+      <Setter Property="BorderThickness"         Value="0" />
+      <Setter Property="HorizontalAlignment"     Value="Stretch" />
       <Setter Property="HorizontalContentAlignment" Value="Left" />
-      <Setter Property="Padding" Value="16,10" />
-      <Setter Property="FontSize" Value="13" />
-      <Setter Property="CornerRadius" Value="6" />
+      <Setter Property="Padding"                 Value="18,11" />
+      <Setter Property="FontSize"                Value="13" />
+      <Setter Property="CornerRadius"            Value="0,8,8,0" />
     </Style>
     <Style Selector="Button.nav-premium:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#1A1A1A" />
+      <Setter Property="Background" Value="#0C0C1E" />
     </Style>
-    <!-- Botão premium bloqueado -->
+    <Style Selector="Button.nav-premium:pointerover">
+      <Setter Property="Foreground" Value="#8080AA" />
+    </Style>
+    <Style Selector="Button.nav-premium.ativo /template/ ContentPresenter">
+      <Setter Property="Background">
+        <Setter.Value>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+            <GradientStop Color="#D4A017" Offset="0.000" />
+            <GradientStop Color="#D4A017" Offset="0.018" />
+            <GradientStop Color="#111128" Offset="0.019" />
+            <GradientStop Color="#111128" Offset="1.000" />
+          </LinearGradientBrush>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style Selector="Button.nav-premium.ativo">
+      <Setter Property="Foreground" Value="#E0E0F2" />
+    </Style>
+
+    <!-- ── Botão premium bloqueado ───────────────────────────────────────── -->
     <Style Selector="Button.nav-locked">
-      <Setter Property="Background" Value="Transparent" />
-      <Setter Property="Foreground" Value="#404040" />
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="Background"              Value="Transparent" />
+      <Setter Property="Foreground"              Value="#282840" />
+      <Setter Property="BorderThickness"         Value="0" />
+      <Setter Property="HorizontalAlignment"     Value="Stretch" />
       <Setter Property="HorizontalContentAlignment" Value="Left" />
-      <Setter Property="Padding" Value="16,10" />
-      <Setter Property="FontSize" Value="13" />
-      <Setter Property="CornerRadius" Value="6" />
-      <Setter Property="IsHitTestVisible" Value="False" />
+      <Setter Property="Padding"                 Value="18,11" />
+      <Setter Property="FontSize"                Value="13" />
+      <Setter Property="CornerRadius"            Value="0,8,8,0" />
+      <Setter Property="IsHitTestVisible"        Value="False" />
     </Style>
+
   </Window.Styles>
 
   <Grid ColumnDefinitions="Auto,*">
 
-    <!-- ═══ SIDEBAR ═══ — oculta até o SCAN ser concluído -->
-    <Border Grid.Column="0" Width="200"
-            Background="#0A0A0A"
-            BorderBrush="#1A1A1A" BorderThickness="0,0,1,0"
+    <!-- ═══ SIDEBAR ═══ -->
+    <Border Grid.Column="0" Width="220"
+            BorderBrush="#13132A" BorderThickness="0,0,1,0"
             IsVisible="{Binding ScanConcluido}">
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+          <GradientStop Color="#07070F" Offset="0" />
+          <GradientStop Color="#06060D" Offset="1" />
+        </LinearGradientBrush>
+      </Border.Background>
+
       <DockPanel>
 
-        <!-- Logo (clica para Home / tela de scan) -->
+        <!-- ── Logo ── -->
         <Button DockPanel.Dock="Top"
                 Command="{Binding IrParaHomeCommand}"
                 Background="Transparent" BorderThickness="0"
-                Padding="16,20,16,12"
+                Padding="20,24,20,16"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Left">
-          <StackPanel Spacing="2">
-            <TextBlock Text="OTIMIZE" FontSize="18" FontWeight="Black"
-                       Foreground="#FFFFFF" />
-            <TextBlock Text="BUILDER" FontSize="18" FontWeight="Black"
-                       Foreground="#00FF88" />
+          <StackPanel Spacing="0">
+            <StackPanel Orientation="Horizontal" Spacing="0">
+              <TextBlock Text="OTIMIZE" FontSize="20" FontWeight="Black"
+                         Foreground="#E0E0F2" />
+              <TextBlock Text=" BUILDER" FontSize="20" FontWeight="Black"
+                         Foreground="#00C8FF" />
+            </StackPanel>
+            <Border Height="2" Margin="0,6,0,0" CornerRadius="1">
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                  <GradientStop Color="#00C8FF" Offset="0" />
+                  <GradientStop Color="#00C8FF" Offset="0.45" />
+                  <GradientStop Color="Transparent" Offset="1" />
+                </LinearGradientBrush>
+              </Border.Background>
+            </Border>
           </StackPanel>
         </Button>
 
-        <!-- Separador -->
-        <Rectangle DockPanel.Dock="Top" Height="1" Fill="#1A1A1A" Margin="16,0" />
-
-        <!-- Configurações no rodapé -->
-        <StackPanel DockPanel.Dock="Bottom" Margin="8,0,8,8">
-          <Rectangle Height="1" Fill="#1A1A1A" Margin="8,4" />
-          <Button Classes="nav" Command="{Binding IrParaConfiguracoesCommand}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="⚙" FontSize="14" />
+        <!-- ── Rodapé (configurações + versão) ── -->
+        <StackPanel DockPanel.Dock="Bottom" Margin="8,0,8,12" Spacing="2">
+          <Rectangle Height="1" Margin="10,6,10,4">
+            <Rectangle.Fill>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="Transparent"  Offset="0" />
+                <GradientStop Color="#18182C" Offset="0.3" />
+                <GradientStop Color="#18182C" Offset="0.7" />
+                <GradientStop Color="Transparent"  Offset="1" />
+              </LinearGradientBrush>
+            </Rectangle.Fill>
+          </Rectangle>
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhConfiguracoes}"
+                  Command="{Binding IrParaConfiguracoesCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="◌" FontSize="14" VerticalAlignment="Center" />
               <TextBlock Text="Configurações" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
-          <TextBlock Text="v1.0.0-beta" Foreground="#333333" FontSize="10"
-                     Margin="16,4,16,0" />
+          <TextBlock Text="v1.0.0-beta"
+                     Foreground="#22223A" FontSize="10"
+                     Margin="20,4,0,0" />
         </StackPanel>
 
-        <!-- Navegação gratuita -->
-        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="8,8">
+        <!-- ── Seção Premium ── -->
+        <StackPanel DockPanel.Dock="Bottom" Margin="8,0,8,0" Spacing="2">
 
-          <Button Classes="nav" Command="{Binding IrParaDashboardCommand}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="⬛" FontSize="14" />
-              <TextBlock Text="Dashboard" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
-
-          <Button Classes="nav" Command="{Binding IrParaOtimizadorCommand}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="⚡" FontSize="14" />
-              <TextBlock Text="Otimizador Windows" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
-
-          <Button Classes="nav" Command="{Binding IrParaInfoSistemaCommand}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="🖥" FontSize="14" />
-              <TextBlock Text="Info Sistema" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
-
-          <!-- IA Copiloto com badge -->
-          <Button Classes="nav" Command="{Binding IrParaIaCopilotoCommand}">
-            <Grid ColumnDefinitions="*,Auto">
-              <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBlock Text="🤖" FontSize="14" />
-                <TextBlock Text="IA Copiloto" VerticalAlignment="Center" />
-              </StackPanel>
-              <Ellipse Grid.Column="1" Width="8" Height="8"
-                       Fill="#FF3333" Margin="0,0,4,0"
-                       IsVisible="{Binding TemAlertaIa}" />
-            </Grid>
-          </Button>
-
-        </StackPanel>
-
-        <!-- Separador Premium -->
-        <Rectangle DockPanel.Dock="Top" Height="1" Fill="#1A1A1A" Margin="16,4" />
-        <TextBlock DockPanel.Dock="Top" Classes="section-label" Text="PREMIUM" />
-
-        <!-- Navegação premium -->
-        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="8,0">
+          <Grid Margin="12,8,12,6" ColumnDefinitions="Auto,*">
+            <Border Grid.Column="0"
+                    Background="#1A1000" CornerRadius="3"
+                    Padding="6,2">
+              <TextBlock Text="PRO" FontSize="9" FontWeight="Black"
+                         Foreground="#D4A017" LetterSpacing="2" />
+            </Border>
+            <Rectangle Grid.Column="1" Height="1" Margin="8,0,0,0" VerticalAlignment="Center">
+              <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                  <GradientStop Color="#2A1E00" Offset="0" />
+                  <GradientStop Color="Transparent" Offset="1" />
+                </LinearGradientBrush>
+              </Rectangle.Fill>
+            </Rectangle>
+          </Grid>
 
           <!-- UPGRADE -->
-          <Button Classes="nav-premium" Command="{Binding IrParaUpgradeCommand}"
+          <Button Classes="nav-premium"
+                  Classes.ativo="{Binding PaginaEhUpgrade}"
+                  Command="{Binding IrParaUpgradeCommand}"
                   IsVisible="{Binding EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="🔧" FontSize="12" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="▲" FontSize="11" VerticalAlignment="Center" />
               <TextBlock Text="UPGRADE" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
           <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="🔒" FontSize="12" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
               <TextBlock Text="UPGRADE" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
 
           <!-- Vida Útil -->
-          <Button Classes="nav-premium" Command="{Binding IrParaVidaUtilCommand}"
+          <Button Classes="nav-premium"
+                  Classes.ativo="{Binding PaginaEhVidaUtil}"
+                  Command="{Binding IrParaVidaUtilCommand}"
                   IsVisible="{Binding EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="❤" FontSize="12" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="◆" FontSize="11" VerticalAlignment="Center" />
               <TextBlock Text="Vida Útil" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
           <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="🔒" FontSize="12" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
               <TextBlock Text="Vida Útil" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
 
           <!-- Drivers -->
-          <Button Classes="nav-premium" Command="{Binding IrParaDriversCommand}"
+          <Button Classes="nav-premium"
+                  Classes.ativo="{Binding PaginaEhDrivers}"
+                  Command="{Binding IrParaDriversCommand}"
                   IsVisible="{Binding EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="💾" FontSize="12" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="≡" FontSize="14" VerticalAlignment="Center" />
               <TextBlock Text="Drivers" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
           <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="🔒" FontSize="12" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
               <TextBlock Text="Drivers" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
 
           <!-- Guia BIOS IA -->
-          <Button Classes="nav-premium" Command="{Binding IrParaBiosGuideCommand}"
+          <Button Classes="nav-premium"
+                  Classes.ativo="{Binding PaginaEhBiosGuide}"
+                  Command="{Binding IrParaBiosGuideCommand}"
                   IsVisible="{Binding EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="⚙" FontSize="12" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="▸" FontSize="13" VerticalAlignment="Center" />
               <TextBlock Text="Guia BIOS IA" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
           <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="🔒" FontSize="12" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
               <TextBlock Text="Guia BIOS IA" VerticalAlignment="Center" />
             </StackPanel>
+          </Button>
+
+        </StackPanel>
+
+        <!-- ── Navegação principal ── -->
+        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="8,10,8,0">
+
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhDashboard}"
+                  Command="{Binding IrParaDashboardCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="■" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Dashboard" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhOtimizador}"
+                  Command="{Binding IrParaOtimizadorCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="⚡" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Otimizador Windows" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhInfoSistema}"
+                  Command="{Binding IrParaInfoSistemaCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="◉" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Info Sistema" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- IA Copiloto com badge -->
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhIaCopiloto}"
+                  Command="{Binding IrParaIaCopilotoCommand}">
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock Text="○" FontSize="13" VerticalAlignment="Center" />
+                <TextBlock Text="IA Copiloto" VerticalAlignment="Center" />
+              </StackPanel>
+              <Border Grid.Column="1" Background="#3D0000" CornerRadius="8"
+                      Padding="5,1" Margin="0,0,2,0"
+                      IsVisible="{Binding TemAlertaIa}">
+                <TextBlock Text="!" Foreground="#FF3A5C" FontSize="10"
+                           FontWeight="Black" />
+              </Border>
+            </Grid>
           </Button>
 
         </StackPanel>
@@ -219,7 +306,7 @@
     <!-- ═══ ÁREA DE CONTEÚDO ═══ -->
     <ContentControl Grid.Column="1"
                     Content="{Binding PaginaAtual}"
-                    Background="#050505">
+                    Background="#030308">
       <ContentControl.DataTemplates>
 
         <DataTemplate DataType="vm:HomeViewModel">
