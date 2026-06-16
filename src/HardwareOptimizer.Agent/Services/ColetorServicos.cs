@@ -1,5 +1,6 @@
 using System.Management;
 using System.Runtime.Versioning;
+using HardwareOptimizer.Agent.Security;
 using HardwareOptimizer.Core.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -50,7 +51,10 @@ public sealed class ColetorServicos
             _log.LogError(ex, "Falha ao enumerar serviços via WMI.");
         }
 
-        return lista.OrderBy(s => s.Nome, StringComparer.OrdinalIgnoreCase).ToList();
+        return lista
+            .Where(ListaNegraServicos.EhSeguro)
+            .OrderBy(s => s.Nome, StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     private static string? SimplificarGrupo(string? startName) => startName switch

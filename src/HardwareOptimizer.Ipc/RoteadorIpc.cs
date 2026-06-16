@@ -5,6 +5,7 @@ using System.Text.Json;
 using HardwareOptimizer.Agent.Backup;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Drivers;
+using HardwareOptimizer.Agent.Security;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Execution.Windows;
 using HardwareOptimizer.Agent.Sensors;
@@ -129,6 +130,11 @@ public sealed class RoteadorIpc : IRoteadorIpc
         if (string.IsNullOrEmpty(nome))
             return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
 
+        // Trava de segurança: bloqueia operação em serviços críticos do SO
+        var svcDummy = new ServicoWindows { Nome = nome, Descricao = nome, Status = "Unknown" };
+        if (!ListaNegraServicos.EhSeguro(svcDummy))
+            return RespostaIpc.Falha(req.Id, $"Operação bloqueada: '{nome}' é um serviço crítico do sistema.");
+
         var nomePs = nome.Replace("'", "''");
         var comando = iniciar
             ? $"Start-Service -Name '{nomePs}' -ErrorAction Stop"
@@ -179,6 +185,11 @@ public sealed class RoteadorIpc : IRoteadorIpc
             return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
         if (string.IsNullOrEmpty(modo))
             return RespostaIpc.Falha(req.Id, "Parâmetro 'modo' obrigatório.");
+
+        // Trava de segurança: bloqueia alteração em serviços críticos do SO
+        var svcDummy = new ServicoWindows { Nome = nome, Descricao = nome, Status = "Unknown" };
+        if (!ListaNegraServicos.EhSeguro(svcDummy))
+            return RespostaIpc.Falha(req.Id, $"Operação bloqueada: '{nome}' é um serviço crítico do sistema.");
 
         // Mapear PT-BR → PowerShell Set-Service -StartupType value
         var startupType = modo switch

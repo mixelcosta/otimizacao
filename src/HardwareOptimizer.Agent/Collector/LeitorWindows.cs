@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text.Json;
 using HardwareOptimizer.Agent.Drivers;
+using HardwareOptimizer.Agent.Security;
 using HardwareOptimizer.Agent.Smart;
 using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Core.Common;
@@ -596,7 +597,10 @@ public sealed class LeitorWindows : ILeitorPlataforma
             }
         }
 
-        return programas.Values.OrderBy(p => p.Nome).ToList();
+        return programas.Values
+            .Where(ListaNegraProgramas.EhSeguro)
+            .OrderBy(p => p.Nome)
+            .ToList();
     }
 
     private static bool ClassificarBloatware(string nome)
