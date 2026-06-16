@@ -25,6 +25,36 @@
       <TextBlock Text="INFORMAÇÕES DO SISTEMA" FontSize="13" FontWeight="Bold"
                  Foreground="#444444" LetterSpacing="3" />
 
+      <!-- ═══ SISTEMA OPERACIONAL ═══ -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="20">
+        <StackPanel Spacing="10">
+
+          <TextBlock Text="SISTEMA OPERACIONAL" FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <Grid ColumnDefinitions="160,*">
+            <TextBlock Text="Nome" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding NomeOs}"
+                       Foreground="#FFFFFF" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+          </Grid>
+
+          <Grid ColumnDefinitions="160,180,120,*">
+            <TextBlock Text="Versão" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding VersaoOs}"
+                       Foreground="#AAAAAA" FontSize="12" />
+            <TextBlock Grid.Column="2" Text="Arquitetura" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3" Text="{Binding ArquiteturaOs}"
+                       Foreground="#AAAAAA" FontSize="12" />
+          </Grid>
+
+        </StackPanel>
+      </Border>
+
       <!-- ═══ PROCESSADOR ═══ -->
       <Border Background="#0D0D0D" CornerRadius="10" Padding="20">
         <StackPanel Spacing="10">
@@ -41,17 +71,14 @@
                        TextWrapping="Wrap" />
           </Grid>
 
-          <Grid ColumnDefinitions="160,*">
+          <Grid ColumnDefinitions="160,180,120,*">
             <TextBlock Text="Fabricante" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
             <TextBlock Grid.Column="1" Text="{Binding FabricanteCpu}"
                        Foreground="#AAAAAA" FontSize="12" />
-          </Grid>
-
-          <Grid ColumnDefinitions="160,*">
-            <TextBlock Text="Soquete" Foreground="#555555" FontSize="12"
+            <TextBlock Grid.Column="2" Text="Soquete" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="{Binding SoqueteCpu}"
+            <TextBlock Grid.Column="3" Text="{Binding SoqueteCpu}"
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
@@ -62,7 +89,6 @@
                        Foreground="#00FF88" FontSize="12" FontWeight="SemiBold" />
           </Grid>
 
-          <!-- Clock Base / Atual -->
           <Grid ColumnDefinitions="160,80,140,*">
             <TextBlock Text="Clock Base" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
@@ -74,7 +100,6 @@
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
-          <!-- Cache L2 / L3 -->
           <Grid ColumnDefinitions="160,80,140,*">
             <TextBlock Text="Cache L2" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
@@ -83,6 +108,13 @@
             <TextBlock Grid.Column="2" Text="Cache L3" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
             <TextBlock Grid.Column="3" Text="{Binding CacheL3Cpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
+          </Grid>
+
+          <Grid ColumnDefinitions="160,*">
+            <TextBlock Text="Temp. Idle" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding TempIdleCpu}"
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
@@ -111,17 +143,21 @@
                        Foreground="#FFFFFF" FontSize="12" FontWeight="SemiBold" />
           </Grid>
 
-          <Grid ColumnDefinitions="160,*">
-            <TextBlock Text="Bus Specs" Foreground="#555555" FontSize="12"
+          <Grid ColumnDefinitions="160,180,120,*">
+            <TextBlock Text="Chipset" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="{Binding BusSpecs}"
+            <TextBlock Grid.Column="1" Text="{Binding Chipset}"
+                       Foreground="#AAAAAA" FontSize="12" />
+            <TextBlock Grid.Column="2" Text="Bus Specs" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3" Text="{Binding BusSpecs}"
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
           <Grid ColumnDefinitions="160,*">
-            <TextBlock Text="Chipset" Foreground="#555555" FontSize="12"
+            <TextBlock Text="Secure Boot" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="{Binding Chipset}"
+            <TextBlock Grid.Column="1" Text="{Binding SecureBoot}"
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
@@ -143,17 +179,14 @@
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
-          <Grid ColumnDefinitions="160,*">
+          <Grid ColumnDefinitions="160,180,120,*">
             <TextBlock Text="Versão" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
             <TextBlock Grid.Column="1" Text="{Binding VersaoBios}"
                        Foreground="#00FF88" FontSize="12" FontWeight="SemiBold" />
-          </Grid>
-
-          <Grid ColumnDefinitions="160,*">
-            <TextBlock Text="Data" Foreground="#555555" FontSize="12"
+            <TextBlock Grid.Column="2" Text="Data" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="{Binding DataBios}"
+            <TextBlock Grid.Column="3" Text="{Binding DataBios}"
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
@@ -175,7 +208,6 @@
                      Foreground="#555555" LetterSpacing="2" />
           <Rectangle Height="1" Fill="#1A1A1A" />
 
-          <!-- Resumo total -->
           <Grid ColumnDefinitions="160,*">
             <TextBlock Text="Total" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
@@ -196,7 +228,6 @@
           </Grid>
           <Rectangle Height="1" Fill="#1A1A1A" />
 
-          <!-- Linhas por slot -->
           <ItemsControl ItemsSource="{Binding SlotsRam}">
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:SlotRamVm">
@@ -255,23 +286,26 @@
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
-          <Grid ColumnDefinitions="160,*">
+          <Grid ColumnDefinitions="160,180,120,*">
             <TextBlock Text="Driver" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
             <TextBlock Grid.Column="1" Text="{Binding DriverGpu}"
                        Foreground="#AAAAAA" FontSize="12" />
+            <TextBlock Grid.Column="2" Text="Data do Driver" Foreground="#555555" FontSize="12"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3" Text="{Binding DataDriverGpu}"
+                       Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
           <Grid ColumnDefinitions="160,*">
-            <TextBlock Text="Data do Driver" Foreground="#555555" FontSize="12"
+            <TextBlock Text="Temp. Idle" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
-            <TextBlock Grid.Column="1" Text="{Binding DataDriverGpu}"
+            <TextBlock Grid.Column="1" Text="{Binding TempIdleGpu}"
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
           <Rectangle Height="1" Fill="#1A1A1A" Margin="0,4,0,0" />
 
-          <!-- Link Width -->
           <Grid ColumnDefinitions="160,80,140,*">
             <TextBlock Text="Current Link Width" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
@@ -283,7 +317,6 @@
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
 
-          <!-- Link Speed -->
           <Grid ColumnDefinitions="160,80,140,*">
             <TextBlock Text="Current Link Speed" Foreground="#555555" FontSize="12"
                        VerticalAlignment="Center" />
@@ -294,6 +327,119 @@
             <TextBlock Grid.Column="3" Text="{Binding LinkSpeedMax}"
                        Foreground="#AAAAAA" FontSize="12" />
           </Grid>
+
+        </StackPanel>
+      </Border>
+
+      <!-- ═══ ARMAZENAMENTO ═══ -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="20"
+              IsVisible="{Binding TemDiscos}">
+        <StackPanel Spacing="10">
+
+          <TextBlock Text="ARMAZENAMENTO" FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <!-- Cabeçalho -->
+          <Grid ColumnDefinitions="60,100,100,100,70" Margin="0,4,0,2">
+            <TextBlock Text="Drive"   Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="1" Text="Total"  Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="2" Text="Usado"  Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="3" Text="Livre"  Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="4" Text="Uso %"  Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+          </Grid>
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <ItemsControl ItemsSource="{Binding DiscosSistema}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:DadosDiscoVm">
+                <Grid ColumnDefinitions="60,100,100,100,70" Margin="0,4,0,0">
+                  <TextBlock Text="{Binding Letra}"      Foreground="#FFFFFF" FontSize="11" FontWeight="SemiBold" />
+                  <TextBlock Grid.Column="1" Text="{Binding Total}"      Foreground="#AAAAAA" FontSize="11" />
+                  <TextBlock Grid.Column="2" Text="{Binding Usado}"      Foreground="#AAAAAA" FontSize="11" />
+                  <TextBlock Grid.Column="3" Text="{Binding Livre}"      Foreground="#AAAAAA" FontSize="11" />
+                  <TextBlock Grid.Column="4" Text="{Binding UsoPercent}"
+                             Foreground="{Binding CorUso}" FontSize="11" FontWeight="SemiBold" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+        </StackPanel>
+      </Border>
+
+      <!-- ═══ SAÚDE DOS DISCOS (S.M.A.R.T.) ═══ -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="20"
+              IsVisible="{Binding TemSaudeDiscos}">
+        <StackPanel Spacing="10">
+
+          <TextBlock Text="SAÚDE DOS DISCOS  ·  S.M.A.R.T." FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <!-- Cabeçalho -->
+          <Grid ColumnDefinitions="2*,50,70,80,80,70,60,60" Margin="0,4,0,2">
+            <TextBlock Text="Modelo"         Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="1" Text="Drive"          Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="2" Text="Status"         Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="3" Text="Vida rest."     Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="4" Text="Horas uso"      Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="5" Text="TBW escrito"    Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="6" Text="Erros"          Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="7" Text="Setores"        Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+          </Grid>
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <ItemsControl ItemsSource="{Binding SaudeDiscosSmart}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:SaudeDiscoVm">
+                <Grid ColumnDefinitions="2*,50,70,80,80,70,60,60" Margin="0,5,0,0">
+                  <TextBlock Text="{Binding Modelo}"       Foreground="#AAAAAA" FontSize="11"
+                             TextTrimming="CharacterEllipsis" />
+                  <TextBlock Grid.Column="1" Text="{Binding Letra}"        Foreground="#FFFFFF" FontSize="11" FontWeight="SemiBold" />
+                  <TextBlock Grid.Column="2" Text="{Binding Status}"       Foreground="{Binding CorStatus}" FontSize="11" FontWeight="SemiBold" />
+                  <TextBlock Grid.Column="3" Text="{Binding VidaRestante}" Foreground="#AAAAAA" FontSize="11" />
+                  <TextBlock Grid.Column="4" Text="{Binding HorasUso}"     Foreground="#AAAAAA" FontSize="11" />
+                  <TextBlock Grid.Column="5" Text="{Binding TbwEscrito}"   Foreground="#AAAAAA" FontSize="11" />
+                  <TextBlock Grid.Column="6" Text="{Binding Erros}"        Foreground="{Binding CorErros}" FontSize="11" />
+                  <TextBlock Grid.Column="7" Text="{Binding Setores}"      Foreground="#555555" FontSize="11" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+        </StackPanel>
+      </Border>
+
+      <!-- ═══ REDE ═══ -->
+      <Border Background="#0D0D0D" CornerRadius="10" Padding="20"
+              IsVisible="{Binding TemRede}">
+        <StackPanel Spacing="10">
+
+          <TextBlock Text="INTERFACES DE REDE" FontSize="10" FontWeight="Bold"
+                     Foreground="#555555" LetterSpacing="2" />
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <!-- Cabeçalho -->
+          <Grid ColumnDefinitions="2*,120,*" Margin="0,4,0,2">
+            <TextBlock Text="Nome"        Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="1" Text="Tipo"        Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+            <TextBlock Grid.Column="2" Text="MAC"         Foreground="#3A3A3A" FontSize="10" LetterSpacing="1" />
+          </Grid>
+          <Rectangle Height="1" Fill="#1A1A1A" />
+
+          <ItemsControl ItemsSource="{Binding InterfacesRede}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:InterfaceRedeVm">
+                <Grid ColumnDefinitions="2*,120,*" Margin="0,4,0,0">
+                  <TextBlock Text="{Binding Nome}" Foreground="#AAAAAA" FontSize="11"
+                             TextTrimming="CharacterEllipsis" />
+                  <TextBlock Grid.Column="1" Text="{Binding Tipo}" Foreground="#AAAAAA" FontSize="11" />
+                  <TextBlock Grid.Column="2" Text="{Binding Mac}"  Foreground="#444444" FontSize="11" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
 
         </StackPanel>
       </Border>

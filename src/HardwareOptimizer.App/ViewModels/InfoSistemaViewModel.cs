@@ -6,6 +6,11 @@ namespace HardwareOptimizer.App.ViewModels;
 
 public partial class InfoSistemaViewModel : ObservableObject
 {
+    // Sistema Operacional
+    [ObservableProperty] private string _nomeOs = "–";
+    [ObservableProperty] private string _versaoOs = "–";
+    [ObservableProperty] private string _arquiteturaOs = "–";
+
     // CPU
     [ObservableProperty] private string _nomeCpu = "–";
     [ObservableProperty] private string _fabricanteCpu = "–";
@@ -15,6 +20,7 @@ public partial class InfoSistemaViewModel : ObservableObject
     [ObservableProperty] private string _clockAtualCpu = "–";
     [ObservableProperty] private string _cacheL2Cpu = "–";
     [ObservableProperty] private string _cacheL3Cpu = "–";
+    [ObservableProperty] private string _tempIdleCpu = "–";
 
     // RAM — resumo
     [ObservableProperty] private string _resumoRam = "–";
@@ -31,12 +37,14 @@ public partial class InfoSistemaViewModel : ObservableObject
     [ObservableProperty] private string _linkWidthMax = "x16";
     [ObservableProperty] private string _linkSpeedAtual = "–";
     [ObservableProperty] private string _linkSpeedMax = "–";
+    [ObservableProperty] private string _tempIdleGpu = "–";
 
     // Placa-mãe
     [ObservableProperty] private string _fabricante = "–";
     [ObservableProperty] private string _modelo = "–";
     [ObservableProperty] private string _busSpecs = "–";
     [ObservableProperty] private string _chipset = "–";
+    [ObservableProperty] private string _secureBoot = "–";
 
     // BIOS
     [ObservableProperty] private string _fabricanteBios = "–";
@@ -44,10 +52,27 @@ public partial class InfoSistemaViewModel : ObservableObject
     [ObservableProperty] private string _dataBios = "–";
     [ObservableProperty] private string _modoBios = "–";
 
+    // Armazenamento
+    public ObservableCollection<DadosDiscoVm> DiscosSistema { get; } = [];
+    [ObservableProperty] private bool _temDiscos;
+
+    // Rede
+    public ObservableCollection<InterfaceRedeVm> InterfacesRede { get; } = [];
+    [ObservableProperty] private bool _temRede;
+
+    // S.M.A.R.T.
+    public ObservableCollection<SaudeDiscoVm> SaudeDiscosSmart { get; } = [];
+    [ObservableProperty] private bool _temSaudeDiscos;
+
     [ObservableProperty] private bool _comDados;
 
     public void Popular(Inventario inv)
     {
+        // Sistema Operacional
+        NomeOs        = inv.SistemaOperacional.Nome ?? "Windows";
+        VersaoOs      = inv.SistemaOperacional.Versao ?? "–";
+        ArquiteturaOs = inv.SistemaOperacional.Arquitetura ?? "–";
+
         // CPU
         var cpu = inv.Cpu;
         NomeCpu       = cpu.Nome;
@@ -60,6 +85,7 @@ public partial class InfoSistemaViewModel : ObservableObject
         ClockAtualCpu = cpu.ClockAtualMhz.HasValue ? FormatarClock(cpu.ClockAtualMhz.Value) : "–";
         CacheL2Cpu    = cpu.L2CacheKb.HasValue     ? FormatarCache(cpu.L2CacheKb.Value)     : "–";
         CacheL3Cpu    = cpu.L3CacheKb.HasValue     ? FormatarCache(cpu.L3CacheKb.Value)     : "–";
+        TempIdleCpu   = cpu.TempIdleC.HasValue     ? $"{cpu.TempIdleC:F1} °C"               : "–";
 
         // RAM
         SlotsRam.Clear();
@@ -90,17 +116,44 @@ public partial class InfoSistemaViewModel : ObservableObject
             LinkWidthMax   = gpu.LinkWidthMax ?? "x16";
             LinkSpeedAtual = gpu.LinkSpeedAtual ?? "–";
             LinkSpeedMax   = gpu.LinkSpeedMax ?? DerivarSpeedMaxDoChipset(inv.Placa.BusSpecs);
+            TempIdleGpu    = gpu.TempIdleC.HasValue ? $"{gpu.TempIdleC:F1} °C" : "–";
         }
 
         // Placa-mãe
-        Fabricante     = inv.Placa.Fabricante;
-        Modelo         = inv.Placa.Modelo;
-        BusSpecs       = inv.Placa.BusSpecs ?? "–";
-        Chipset        = inv.Placa.Chipset ?? "–";
+        Fabricante  = inv.Placa.Fabricante;
+        Modelo      = inv.Placa.Modelo;
+        BusSpecs    = inv.Placa.BusSpecs ?? "–";
+        Chipset     = inv.Placa.Chipset ?? "–";
+        SecureBoot  = inv.Placa.SecureBoot.HasValue
+            ? (inv.Placa.SecureBoot.Value ? "Ativado" : "Desativado")
+            : "–";
+
+        // BIOS
         VersaoBios     = inv.Placa.VersaoBios ?? "–";
         DataBios       = inv.Placa.DataBios ?? "–";
         ModoBios       = inv.Placa.Modo ?? "–";
         FabricanteBios = InferirFabricanteBios(inv.Placa.Fabricante);
+
+        // Armazenamento
+        DiscosSistema.Clear();
+        if (inv.Metricas?.Discos != null)
+        {
+            foreach (var d in inv.Metricas.Discos)
+                DiscosSistema.Add(new DadosDiscoVm(d));
+        }
+        TemDiscos = DiscosSistema.Count > 0;
+
+        // Rede
+        InterfacesRede.Clear();
+        foreach (var r in inv.Rede)
+            InterfacesRede.Add(new InterfaceRedeVm(r));
+        TemRede = InterfacesRede.Count > 0;
+
+        // S.M.A.R.T.
+        SaudeDiscosSmart.Clear();
+        foreach (var s in inv.SaudeDiscos)
+            SaudeDiscosSmart.Add(new SaudeDiscoVm(s));
+        TemSaudeDiscos = SaudeDiscosSmart.Count > 0;
 
         ComDados = true;
     }
@@ -161,4 +214,80 @@ public sealed class SlotRamVm
         var vel  = m.VelocidadeConfiguradaMhz ?? m.VelocidadeMhz;
         return vel.HasValue ? $"{tipo}-{vel}" : tipo;
     }
+}
+
+public sealed class DadosDiscoVm
+{
+    public DadosDiscoVm(MetricaDisco d)
+    {
+        Letra      = d.Letra;
+        Total      = $"{d.TotalGb} GB";
+        Usado      = $"{d.UsadoGb} GB";
+        Livre      = $"{d.LivreGb} GB";
+        UsoPercent = $"{d.UsoPercent}%";
+        CorUso     = d.UsoPercent >= 90 ? "#CC3333"
+                   : d.UsoPercent >= 75 ? "#FFAA00"
+                   : "#00C870";
+    }
+
+    public string Letra      { get; }
+    public string Total      { get; }
+    public string Usado      { get; }
+    public string Livre      { get; }
+    public string UsoPercent { get; }
+    public string CorUso     { get; }
+}
+
+public sealed class InterfaceRedeVm
+{
+    public InterfaceRedeVm(InterfaceRede r)
+    {
+        Nome = r.Nome;
+        Tipo = r.Tipo ?? "–";
+        Mac  = r.EnderecoMac ?? "–";
+    }
+
+    public string Nome { get; }
+    public string Tipo { get; }
+    public string Mac  { get; }
+}
+
+public sealed class SaudeDiscoVm
+{
+    public SaudeDiscoVm(SaudeDisco s)
+    {
+        Modelo        = s.Modelo;
+        Letra         = s.Letra;
+        VidaRestante  = $"{s.PorcentagemVidaRestante:F0}%";
+        HorasUso      = s.HorasUso > 0 ? $"{s.HorasUso:N0} h" : "–";
+        TbwEscrito    = s.TbwEscritoGb > 0 ? $"{s.TbwEscritoGb} GB" : "–";
+        Status        = s.Nivel switch
+        {
+            NivelSaudeDisco.Bom     => "Bom",
+            NivelSaudeDisco.Atencao => "Atenção",
+            NivelSaudeDisco.Critico => "Crítico",
+            _ => "–"
+        };
+        CorStatus     = s.Nivel switch
+        {
+            NivelSaudeDisco.Bom     => "#00C870",
+            NivelSaudeDisco.Atencao => "#FFAA00",
+            NivelSaudeDisco.Critico => "#CC3333",
+            _ => "#555555"
+        };
+        Erros    = s.TemErrosNaoCorrigiveis ? "Sim" : "Não";
+        CorErros = s.TemErrosNaoCorrigiveis ? "#CC3333" : "#555555";
+        Setores  = s.SetoresComProblema > 0 ? s.SetoresComProblema.ToString() : "–";
+    }
+
+    public string Modelo       { get; }
+    public string Letra        { get; }
+    public string VidaRestante { get; }
+    public string HorasUso     { get; }
+    public string TbwEscrito   { get; }
+    public string Status       { get; }
+    public string CorStatus    { get; }
+    public string Erros        { get; }
+    public string CorErros     { get; }
+    public string Setores      { get; }
 }
