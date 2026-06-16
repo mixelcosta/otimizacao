@@ -197,7 +197,7 @@ public sealed class OtimizadorWindowsViewModelTests
     {
         var svc = new ServicoViewModel(
             new ServicoWindows { Nome = "spooler", Descricao = "Print Spooler", Status = "Running", Pid = 1 },
-            _ => Task.CompletedTask);
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
 
         Assert.Equal("PARAR", svc.TextoBotao);
         Assert.True(svc.Rodando);
@@ -208,7 +208,7 @@ public sealed class OtimizadorWindowsViewModelTests
     {
         var svc = new ServicoViewModel(
             new ServicoWindows { Nome = "spooler", Descricao = "Print Spooler", Status = "Stopped", Pid = 0 },
-            _ => Task.CompletedTask);
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
 
         Assert.Equal("INICIAR", svc.TextoBotao);
         Assert.False(svc.Rodando);
@@ -219,9 +219,61 @@ public sealed class OtimizadorWindowsViewModelTests
     {
         var svc = new ServicoViewModel(
             new ServicoWindows { Nome = "spooler", Descricao = "Print Spooler", Status = "Stopped", Pid = 0 },
-            _ => Task.CompletedTask);
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
 
         Assert.Equal("—", svc.PidTexto);
+    }
+
+    [Fact]
+    public void ServicoViewModel_modo_auto_converte_para_portugues()
+    {
+        var svc = new ServicoViewModel(
+            new ServicoWindows { Nome = "wuauserv", Descricao = "Windows Update", Status = "Running", Pid = 1, ModoInicio = "Auto" },
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
+
+        Assert.Equal("Automático", svc.ModoInicioSelecionado);
+    }
+
+    [Fact]
+    public void ServicoViewModel_modo_disabled_converte_para_portugues()
+    {
+        var svc = new ServicoViewModel(
+            new ServicoWindows { Nome = "spooler", Descricao = "Print Spooler", Status = "Stopped", Pid = 0, ModoInicio = "Disabled" },
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
+
+        Assert.Equal("Desativado", svc.ModoInicioSelecionado);
+    }
+
+    [Fact]
+    public async Task AlterarModoInicio_chama_rota_correta()
+    {
+        string? metodoCapturado = null;
+        string? modoCapturado   = null;
+
+        var servicos = new List<ServicoWindows>
+        {
+            new() { Nome = "spooler", Descricao = "Print Spooler", Status = "Stopped", Pid = 0, ModoInicio = "Auto" },
+        };
+
+        var roteador = new RoteadorFake(req =>
+        {
+            metodoCapturado = req.Metodo;
+            if (req.Parametros is { } p && p.TryGetProperty("modo", out var m))
+                modoCapturado = m.GetString();
+            return req.Metodo == "obterservicos"
+                ? RespostaIpc.Ok(req.Id, (IReadOnlyList<ServicoWindows>)servicos)
+                : RespostaIpc.Ok(req.Id, true);
+        });
+
+        var vm = new OtimizadorWindowsViewModel(roteador);
+        vm.SubPagina = SubPaginaOtimizador.Servicos;
+        await Task.Delay(50);
+
+        vm.ServicosFiltrados[0].ModoInicioSelecionado = "Desativado";
+        await Task.Delay(50);
+
+        Assert.Equal("alterarmododeinicio", metodoCapturado);
+        Assert.Equal("Desativado", modoCapturado);
     }
 
     private sealed class RoteadorFake : IRoteadorIpc

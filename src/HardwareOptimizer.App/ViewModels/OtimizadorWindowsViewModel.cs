@@ -271,7 +271,7 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
 
             if (resp.Resultado is not IReadOnlyList<ServicoWindows> lista) return;
             _todosServicos = lista
-                .Select(s => new ServicoViewModel(s, ToggleServicoAsync))
+                .Select(s => new ServicoViewModel(s, ToggleServicoAsync, AlterarModoServicoAsync))
                 .ToList();
             _servicosCarregados = true;
             AplicarFiltroServicos();
@@ -324,6 +324,25 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         }
         finally { Ocupado = false; }
     }
+
+    private async Task AlterarModoServicoAsync(ServicoViewModel svc, string novoModo)
+    {
+        Ocupado = true;
+        StatusOtimizador = $"Alterando modo de início de '{svc.Nome}' para '{novoModo}'…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "alterarmododeinicio",
+                Parametros = JsonSerializer.SerializeToElement(new { nome = svc.Nome, modo = novoModo }),
+            });
+
+            StatusOtimizador = resp.Sucesso
+                ? $"'{svc.Nome}': tipo de início alterado para '{novoModo}'."
+                : "Falha: " + resp.Erro;
+        }
+        finally { Ocupado = false; }
+    }
 }
 
 // ── ViewModels auxiliares ──────────────────────────────────────────────────
@@ -372,12 +391,23 @@ public partial class ProgramaInstaladoViewModel : ObservableObject
 public partial class ServicoViewModel : ObservableObject
 {
     private readonly ServicoWindows _modelo;
+    private readonly Func<ServicoViewModel, string, Task> _alterarModoCallback;
+    private bool _inicializado;
 
-    public ServicoViewModel(ServicoWindows modelo, Func<ServicoViewModel, Task> toggle)
+    public static readonly IReadOnlyList<string> ModoInicioOpcoes =
+        ["Automático", "Automático (Atraso na Inicialização)", "Manual", "Desativado"];
+
+    public ServicoViewModel(
+        ServicoWindows modelo,
+        Func<ServicoViewModel, Task> toggle,
+        Func<ServicoViewModel, string, Task> alterarModo)
     {
         _modelo = modelo;
+        _alterarModoCallback = alterarModo;
         _status = modelo.Status;
+        _modoInicioSelecionado = ConverterModoInicio(modelo.ModoInicio);
         ToggleCommand = new AsyncRelayCommand(() => toggle(this));
+        _inicializado = true;
     }
 
     public IAsyncRelayCommand ToggleCommand { get; }
@@ -385,10 +415,9 @@ public partial class ServicoViewModel : ObservableObject
     public string  Nome     => _modelo.Nome;
     public string  Descricao => _modelo.Descricao;
     public int     Pid      => _modelo.Pid;
-    public string? Grupo    => _modelo.Grupo;
-    public string? ModoInicio => _modelo.ModoInicio;
 
     [ObservableProperty] private string _status;
+    [ObservableProperty] private string _modoInicioSelecionado;
 
     partial void OnStatusChanged(string value)
     {
@@ -401,6 +430,12 @@ public partial class ServicoViewModel : ObservableObject
         OnPropertyChanged(nameof(Rodando));
     }
 
+    partial void OnModoInicioSelecionadoChanged(string value)
+    {
+        if (_inicializado)
+            _ = _alterarModoCallback(this, value);
+    }
+
     public bool   Rodando      => Status == "Running";
     public string TextoStatus  => Status == "Running" ? "Em execução" : Status == "Stopped" ? "Parado" : Status;
     public string CorStatus    => Status == "Running" ? "#00C870" : "#555555";
@@ -408,6 +443,14 @@ public partial class ServicoViewModel : ObservableObject
     public string CorBotaoFundo => Status == "Running" ? "#2A0808" : "#082A12";
     public string CorBotaoTexto => Status == "Running" ? "#CC3333" : "#00C870";
     public string PidTexto     => Pid > 0 ? Pid.ToString() : "—";
+
+    private static string ConverterModoInicio(string? wmiMode) => wmiMode switch
+    {
+        "Auto"     => "Automático",
+        "Manual"   => "Manual",
+        "Disabled" => "Desativado",
+        _          => "Manual",
+    };
 }
 
 public partial class InicializacaoEntradaViewModel : ObservableObject

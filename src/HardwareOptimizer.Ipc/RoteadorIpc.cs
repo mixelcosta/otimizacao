@@ -95,6 +95,9 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "pararservico" => OperatingSystem.IsWindows()
                     ? await ToggleServicoAsync(requisicao, iniciar: false, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "alterarmododeinicio" => OperatingSystem.IsWindows()
+                    ? await AlterarModoInicioAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "chat_upgrade" => await ChatUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "analise_upgrade" => await AnaliseInicialUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
@@ -150,6 +153,66 @@ public sealed class RoteadorIpc : IRoteadorIpc
             return proc.ExitCode == 0
                 ? RespostaIpc.Ok(req.Id, true)
                 : RespostaIpc.Falha(req.Id, $"Falha ao {(iniciar ? "iniciar" : "parar")} '{nome}' (código {proc.ExitCode}).");
+        }
+        catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+        {
+            return RespostaIpc.Falha(req.Id, "Operação cancelada (UAC negado).");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> AlterarModoInicioAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p)
+            return RespostaIpc.Falha(req.Id, "Parâmetros obrigatórios.");
+
+        var nome = p.TryGetProperty("nome", out var n) && n.ValueKind == JsonValueKind.String
+            ? n.GetString() : null;
+        var modo = p.TryGetProperty("modo", out var m) && m.ValueKind == JsonValueKind.String
+            ? m.GetString() : null;
+
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+        if (string.IsNullOrEmpty(modo))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'modo' obrigatório.");
+
+        // Mapear PT-BR → PowerShell Set-Service -StartupType value
+        var startupType = modo switch
+        {
+            "Automático"                       => "Automatic",
+            "Automático (Atraso na Inicialização)" => "AutomaticDelayedStart",
+            "Manual"                           => "Manual",
+            "Desativado"                       => "Disabled",
+            _ => null,
+        };
+
+        if (startupType is null)
+            return RespostaIpc.Falha(req.Id, $"Modo de início desconhecido: '{modo}'.");
+
+        var nomePs = nome.Replace("'", "''");
+        var script  = $"try {{ Set-Service -Name '{nomePs}' -StartupType {startupType} -ErrorAction Stop }} catch {{ Write-Error $_; exit 1 }}; exit 0";
+        var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+
+        var psi = new ProcessStartInfo
+        {
+            FileName        = "powershell.exe",
+            Arguments       = $"-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -EncodedCommand {encoded}",
+            UseShellExecute = true,
+            Verb            = "runas",
+            WindowStyle     = ProcessWindowStyle.Hidden,
+        };
+
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+            return proc.ExitCode == 0
+                ? RespostaIpc.Ok(req.Id, true)
+                : RespostaIpc.Falha(req.Id, $"Falha ao alterar modo de início de '{nome}' (código {proc.ExitCode}).");
         }
         catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
         {

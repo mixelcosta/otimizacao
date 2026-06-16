@@ -413,7 +413,7 @@
           <!-- Cabeçalho de colunas -->
           <Border Background="#0A0A0A" CornerRadius="6" Padding="14,7" Margin="0,0,0,2"
                   IsVisible="{Binding !CarregandoServicos}">
-            <Grid ColumnDefinitions="2*,3*,60,120,100,90">
+            <Grid ColumnDefinitions="2*,2*,50,100,160,90">
               <TextBlock Grid.Column="0" Text="NOME"
                          Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
               <TextBlock Grid.Column="1" Text="DESCRIÇÃO"
@@ -422,7 +422,7 @@
                          Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
               <TextBlock Grid.Column="3" Text="STATUS"
                          Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
-              <TextBlock Grid.Column="4" Text="GRUPO"
+              <TextBlock Grid.Column="4" Text="TIPO DE INÍCIO"
                          Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
             </Grid>
           </Border>
@@ -432,8 +432,8 @@
                         IsVisible="{Binding !CarregandoServicos}">
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:ServicoViewModel">
-                <Border Background="#0F0F0F" CornerRadius="5" Padding="14,8" Margin="0,1">
-                  <Grid ColumnDefinitions="2*,3*,60,120,100,90">
+                <Border Background="#0F0F0F" CornerRadius="5" Padding="14,6" Margin="0,1">
+                  <Grid ColumnDefinitions="2*,2*,50,100,160,90">
 
                     <!-- Nome do serviço -->
                     <TextBlock Grid.Column="0"
@@ -463,12 +463,19 @@
                                FontSize="12" FontWeight="SemiBold"
                                VerticalAlignment="Center" />
 
-                    <!-- Grupo -->
-                    <TextBlock Grid.Column="4"
-                               Text="{Binding Grupo}"
-                               Foreground="#383838" FontSize="10"
-                               VerticalAlignment="Center"
-                               TextTrimming="CharacterEllipsis" />
+                    <!-- Tipo de Início (ComboBox) -->
+                    <ComboBox Grid.Column="4"
+                              ItemsSource="{x:Static vm:ServicoViewModel.ModoInicioOpcoes}"
+                              SelectedItem="{Binding ModoInicioSelecionado}"
+                              Background="#111111"
+                              Foreground="#AAAAAA"
+                              BorderBrush="#222222"
+                              BorderThickness="1"
+                              FontSize="11"
+                              Padding="6,4"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Stretch"
+                              Margin="4,0,4,0" />
 
                     <!-- Botão PARAR / INICIAR -->
                     <Button Grid.Column="5"
