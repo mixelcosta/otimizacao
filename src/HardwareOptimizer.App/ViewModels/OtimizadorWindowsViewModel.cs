@@ -7,18 +7,22 @@ using HardwareOptimizer.Ipc;
 
 namespace HardwareOptimizer.App.ViewModels;
 
-public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao }
+public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao, Servicos }
 
 public partial class OtimizadorWindowsViewModel : ObservableObject
 {
     private readonly IRoteadorIpc _agente;
     private List<ProgramaInstaladoViewModel> _todosProgramas = [];
 
+    private List<ServicoViewModel> _todosServicos = [];
+    private bool _servicosCarregados;
+
     public OtimizadorWindowsViewModel(IRoteadorIpc agente)
     {
         _agente = agente;
         EntradasStartup = [];
         ProgramasFiltrados = [];
+        ServicosFiltrados = [];
         EfeitosVisuais =
         [
             new("Animações ao minimizar e maximizar janelas"),
@@ -37,26 +41,34 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
 
     [ObservableProperty] private SubPaginaOtimizador _subPagina = SubPaginaOtimizador.EfeitosVisuais;
 
-    partial void OnSubPaginaChanged(SubPaginaOtimizador _)
+    partial void OnSubPaginaChanged(SubPaginaOtimizador value)
     {
         OnPropertyChanged(nameof(MostrarEfeitosVisuais));
         OnPropertyChanged(nameof(MostrarProgramas));
         OnPropertyChanged(nameof(MostrarInicializacao));
+        OnPropertyChanged(nameof(MostrarServicos));
         OnPropertyChanged(nameof(AbaEfeitosAtiva));
         OnPropertyChanged(nameof(AbaProgramasAtiva));
         OnPropertyChanged(nameof(AbaInicializacaoAtiva));
+        OnPropertyChanged(nameof(AbaServicosAtiva));
+
+        if (value == SubPaginaOtimizador.Servicos && !_servicosCarregados)
+            _ = CarregarServicosAsync();
     }
 
     public bool MostrarEfeitosVisuais => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
     public bool MostrarProgramas      => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
     public bool MostrarInicializacao  => SubPagina == SubPaginaOtimizador.Inicializacao;
+    public bool MostrarServicos       => SubPagina == SubPaginaOtimizador.Servicos;
     public bool AbaEfeitosAtiva       => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
     public bool AbaProgramasAtiva     => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
     public bool AbaInicializacaoAtiva => SubPagina == SubPaginaOtimizador.Inicializacao;
+    public bool AbaServicosAtiva      => SubPagina == SubPaginaOtimizador.Servicos;
 
     [RelayCommand] private void IrParaEfeitosVisuais() => SubPagina = SubPaginaOtimizador.EfeitosVisuais;
     [RelayCommand] private void IrParaProgramas()      => SubPagina = SubPaginaOtimizador.ProgramasInstalados;
     [RelayCommand] private void IrParaInicializacao()  => SubPagina = SubPaginaOtimizador.Inicializacao;
+    [RelayCommand] private void IrParaServicos()       => SubPagina = SubPaginaOtimizador.Servicos;
 
     // ── Estado geral ───────────────────────────────────────────────────────
 
@@ -236,6 +248,82 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         }
         finally { Ocupado = false; }
     }
+
+    // ── Serviços Windows ───────────────────────────────────────────────────
+
+    [ObservableProperty] private string _filtroServicos      = "";
+    [ObservableProperty] private string _totalServicosLabel  = "—";
+    [ObservableProperty] private bool   _carregandoServicos;
+
+    public ObservableCollection<ServicoViewModel> ServicosFiltrados { get; }
+
+    partial void OnFiltroServicosChanged(string value) => AplicarFiltroServicos();
+
+    [RelayCommand]
+    private async Task CarregarServicosAsync()
+    {
+        CarregandoServicos = true;
+        StatusOtimizador   = "Carregando serviços…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "obterservicos" });
+            if (!resp.Sucesso) { StatusOtimizador = "Falha: " + resp.Erro; return; }
+
+            if (resp.Resultado is not IReadOnlyList<ServicoWindows> lista) return;
+            _todosServicos = lista
+                .Select(s => new ServicoViewModel(s, ToggleServicoAsync))
+                .ToList();
+            _servicosCarregados = true;
+            AplicarFiltroServicos();
+            StatusOtimizador = "Pronto.";
+        }
+        finally { CarregandoServicos = false; }
+    }
+
+    private void AplicarFiltroServicos()
+    {
+        var filtro = FiltroServicos.Trim();
+        var resultado = string.IsNullOrEmpty(filtro)
+            ? _todosServicos
+            : _todosServicos.Where(s =>
+                s.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
+                s.Descricao.Contains(filtro, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        ServicosFiltrados.Clear();
+        foreach (var s in resultado) ServicosFiltrados.Add(s);
+
+        int n = resultado.Count;
+        TotalServicosLabel = n == 0
+            ? "Nenhum serviço encontrado"
+            : $"{n} serviço{(n != 1 ? "s" : "")} encontrado{(n != 1 ? "s" : "")}";
+    }
+
+    private async Task ToggleServicoAsync(ServicoViewModel svc)
+    {
+        Ocupado = true;
+        var iniciar = svc.Status != "Running";
+        StatusOtimizador = $"{(iniciar ? "Iniciando" : "Parando")} '{svc.Nome}'…";
+        try
+        {
+            var metodo = iniciar ? "iniciarservico" : "pararservico";
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = metodo,
+                Parametros = JsonSerializer.SerializeToElement(new { nome = svc.Nome }),
+            });
+
+            if (resp.Sucesso)
+            {
+                svc.Status = iniciar ? "Running" : "Stopped";
+                StatusOtimizador = $"'{svc.Nome}' {(iniciar ? "iniciado" : "parado")} com sucesso.";
+            }
+            else
+            {
+                StatusOtimizador = "Falha: " + resp.Erro;
+            }
+        }
+        finally { Ocupado = false; }
+    }
 }
 
 // ── ViewModels auxiliares ──────────────────────────────────────────────────
@@ -279,6 +367,47 @@ public partial class ProgramaInstaladoViewModel : ObservableObject
             ? $"{d[6..8]}/{d[4..6]}/{d[0..4]}"
             : "";
     }
+}
+
+public partial class ServicoViewModel : ObservableObject
+{
+    private readonly ServicoWindows _modelo;
+
+    public ServicoViewModel(ServicoWindows modelo, Func<ServicoViewModel, Task> toggle)
+    {
+        _modelo = modelo;
+        _status = modelo.Status;
+        ToggleCommand = new AsyncRelayCommand(() => toggle(this));
+    }
+
+    public IAsyncRelayCommand ToggleCommand { get; }
+
+    public string  Nome     => _modelo.Nome;
+    public string  Descricao => _modelo.Descricao;
+    public int     Pid      => _modelo.Pid;
+    public string? Grupo    => _modelo.Grupo;
+    public string? ModoInicio => _modelo.ModoInicio;
+
+    [ObservableProperty] private string _status;
+
+    partial void OnStatusChanged(string value)
+    {
+        OnPropertyChanged(nameof(TextoStatus));
+        OnPropertyChanged(nameof(CorStatus));
+        OnPropertyChanged(nameof(TextoBotao));
+        OnPropertyChanged(nameof(CorBotaoFundo));
+        OnPropertyChanged(nameof(CorBotaoTexto));
+        OnPropertyChanged(nameof(PidTexto));
+        OnPropertyChanged(nameof(Rodando));
+    }
+
+    public bool   Rodando      => Status == "Running";
+    public string TextoStatus  => Status == "Running" ? "Em execução" : Status == "Stopped" ? "Parado" : Status;
+    public string CorStatus    => Status == "Running" ? "#00C870" : "#555555";
+    public string TextoBotao   => Status == "Running" ? "PARAR" : "INICIAR";
+    public string CorBotaoFundo => Status == "Running" ? "#2A0808" : "#082A12";
+    public string CorBotaoTexto => Status == "Running" ? "#CC3333" : "#00C870";
+    public string PidTexto     => Pid > 0 ? Pid.ToString() : "—";
 }
 
 public partial class InicializacaoEntradaViewModel : ObservableObject

@@ -8,6 +8,7 @@ using HardwareOptimizer.Agent.Drivers;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Execution.Windows;
 using HardwareOptimizer.Agent.Sensors;
+using HardwareOptimizer.Agent.Services;
 using HardwareOptimizer.Agent.Smart;
 using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Agent.Validation;
@@ -85,6 +86,15 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "ativarstartup" => OperatingSystem.IsWindows()
                     ? await ToggleStartupAsync(requisicao, ativar: true, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "obterservicos" => OperatingSystem.IsWindows()
+                    ? await ObterServicosAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "iniciarservico" => OperatingSystem.IsWindows()
+                    ? await ToggleServicoAsync(requisicao, iniciar: true, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "pararservico" => OperatingSystem.IsWindows()
+                    ? await ToggleServicoAsync(requisicao, iniciar: false, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "chat_upgrade" => await ChatUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "analise_upgrade" => await AnaliseInicialUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
@@ -94,6 +104,60 @@ public sealed class RoteadorIpc : IRoteadorIpc
         {
             _log.LogError(ex, "IPC: falha no método '{Metodo}'.", requisicao.Metodo);
             return RespostaIpc.Falha(requisicao.Id, ex.Message);
+        }
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> ObterServicosAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var coletor = new ColetorServicos(NullLogger<ColetorServicos>.Instance);
+        var servicos = await coletor.ColetarAsync(ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, servicos);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> ToggleServicoAsync(RequisicaoIpc req, bool iniciar, CancellationToken ct)
+    {
+        var nome = req.Parametros is { } p
+            && p.TryGetProperty("nome", out var n)
+            && n.ValueKind == JsonValueKind.String
+                ? n.GetString() : null;
+
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+
+        var nomePs = nome.Replace("'", "''");
+        var comando = iniciar
+            ? $"Start-Service -Name '{nomePs}' -ErrorAction Stop"
+            : $"Stop-Service  -Name '{nomePs}' -Force -ErrorAction Stop";
+
+        var script  = $"try {{ {comando} }} catch {{ Write-Error $_; exit 1 }}; exit 0";
+        var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+
+        var psi = new ProcessStartInfo
+        {
+            FileName        = "powershell.exe",
+            Arguments       = $"-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -EncodedCommand {encoded}",
+            UseShellExecute = true,
+            Verb            = "runas",
+            WindowStyle     = ProcessWindowStyle.Hidden,
+        };
+
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+            return proc.ExitCode == 0
+                ? RespostaIpc.Ok(req.Id, true)
+                : RespostaIpc.Falha(req.Id, $"Falha ao {(iniciar ? "iniciar" : "parar")} '{nome}' (código {proc.ExitCode}).");
+        }
+        catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+        {
+            return RespostaIpc.Falha(req.Id, "Operação cancelada (UAC negado).");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
         }
     }
 
