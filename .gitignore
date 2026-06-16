@@ -6,7 +6,6 @@ out/
 *.suo
 .vs/
 artifacts/
-publish/
 
 ## Test / coverage
 [Tt]est[Rr]esults/

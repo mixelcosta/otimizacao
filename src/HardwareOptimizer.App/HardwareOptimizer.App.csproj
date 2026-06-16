@@ -11,21 +11,6 @@
          não tratamos avisos como erro NESTE projeto (o restante da solução trata). -->
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 
-    <!-- Metadados do produto -->
-    <AssemblyTitle>Otimize Builder</AssemblyTitle>
-    <Product>Otimize Builder</Product>
-    <Company>Otimize Builder</Company>
-    <Version>1.0.0</Version>
-    <FileVersion>1.0.0.0</FileVersion>
-
-    <!-- Publish self-contained single-file (win-x64) -->
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <SelfContained>true</SelfContained>
-    <PublishSingleFile>true</PublishSingleFile>
-    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    <PublishReadyToRun>true</PublishReadyToRun>
-    <DebugType>None</DebugType>
-    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
