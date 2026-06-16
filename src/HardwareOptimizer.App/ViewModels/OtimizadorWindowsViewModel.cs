@@ -294,8 +294,9 @@ public partial class InicializacaoEntradaViewModel : ObservableObject
 
     public IAsyncRelayCommand ToggleCommand { get; }
 
-    public string Nome   => _modelo.Nome;
-    public string Caminho => _modelo.Caminho;
+    public string  Nome      => _modelo.Nome;
+    public string  Caminho   => _modelo.Caminho;
+    public string  Fabricante => _modelo.Fabricante ?? "—";
 
     public string Origem => _modelo.Origem switch
     {
@@ -307,41 +308,32 @@ public partial class InicializacaoEntradaViewModel : ObservableObject
 
     public string TextoImpacto => _modelo.Impacto switch
     {
-        ImpactoInicializacao.Alto       => "Alto impacto",
-        ImpactoInicializacao.Medio      => "Médio impacto",
-        ImpactoInicializacao.Baixo      => "Baixo impacto",
-        ImpactoInicializacao.Desconhecido => "Impacto desconhecido",
-        _ => "—",
+        ImpactoInicializacao.Alto  => "Alto",
+        ImpactoInicializacao.Medio => "Médio",
+        ImpactoInicializacao.Baixo => "Baixo",
+        _ => "Nenhum",
     };
 
     public string CorImpacto => _modelo.Impacto switch
     {
-        ImpactoInicializacao.Alto       => "#FF4444",
-        ImpactoInicializacao.Medio      => "#FFCC00",
-        ImpactoInicializacao.Baixo      => "#00FF88",
+        ImpactoInicializacao.Alto  => "#FF4444",
+        ImpactoInicializacao.Medio => "#FFCC00",
+        ImpactoInicializacao.Baixo => "#00FF88",
         _ => "#555555",
-    };
-
-    public string CorImpactoFundo => _modelo.Impacto switch
-    {
-        ImpactoInicializacao.Alto       => "#2A0808",
-        ImpactoInicializacao.Medio      => "#2A2200",
-        ImpactoInicializacao.Baixo      => "#082A12",
-        _ => "#1A1A1A",
     };
 
     [ObservableProperty] private bool _ativo;
 
     partial void OnAtivoChanged(bool value)
     {
-        OnPropertyChanged(nameof(TextoBotao));
+        OnPropertyChanged(nameof(TextoStatus));
+        OnPropertyChanged(nameof(CorStatus));
         OnPropertyChanged(nameof(CorBotaoFundo));
         OnPropertyChanged(nameof(CorBotaoTexto));
-        OnPropertyChanged(nameof(CorIndicador));
     }
 
-    public string TextoBotao    => Ativo ? "DESATIVAR" : "ATIVAR";
-    public string CorBotaoFundo => Ativo ? "#2A0808"   : "#082A12";
-    public string CorBotaoTexto => Ativo ? "#CC3333"   : "#00C870";
-    public string CorIndicador  => Ativo ? "#00FF88"   : "#252525";
+    public string TextoStatus   => Ativo ? "Habilitado"   : "Desabilitado";
+    public string CorStatus     => Ativo ? "#00C870"      : "#555555";
+    public string CorBotaoFundo => Ativo ? "#2A0808"      : "#082A12";
+    public string CorBotaoTexto => Ativo ? "#CC3333"      : "#00C870";
 }

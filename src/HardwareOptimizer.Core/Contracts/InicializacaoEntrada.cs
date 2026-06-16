@@ -27,6 +27,9 @@ public sealed record InicializacaoEntrada
 
     public bool Ativo { get; init; }
 
+    /// <summary>Nome do fabricante lido do FileVersionInfo do executável.</summary>
+    public string? Fabricante { get; init; }
+
     /// <summary>Chave de registro ou caminho de arquivo usada para desfazer a alteração.</summary>
     public string? ChaveRollback { get; init; }
 }

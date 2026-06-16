@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using System.Text;
 using System.Text.Json;
 using HardwareOptimizer.Agent.Backup;
 using HardwareOptimizer.Agent.Collector;
@@ -70,7 +71,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     ? ObterEntradasStartupWindows(requisicao)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "desativarstartup" => OperatingSystem.IsWindows()
-                    ? DesativarStartupWindows(requisicao)
+                    ? await ToggleStartupAsync(requisicao, ativar: false, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "obtersaudediscos" => OperatingSystem.IsWindows()
                     ? ObterSaudeDiscosWindows(requisicao)
@@ -82,7 +83,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     ? await DesinstalarProgramasAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "ativarstartup" => OperatingSystem.IsWindows()
-                    ? AtivarStartupWindows(requisicao)
+                    ? await ToggleStartupAsync(requisicao, ativar: true, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "chat_upgrade" => await ChatUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "analise_upgrade" => await AnaliseInicialUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
@@ -330,45 +331,73 @@ public sealed class RoteadorIpc : IRoteadorIpc
     }
 
     [SupportedOSPlatform("windows")]
-    private RespostaIpc DesativarStartupWindows(RequisicaoIpc req)
-    {
-        var entrada = EncontrarEntradaStartup(req);
-        if (entrada is null)
-            return RespostaIpc.Falha(req.Id, "Entrada não encontrada ou parâmetro 'nome' ausente.");
-
-        var gerenciador = new GerenciadorInicializacao(NullLogger<GerenciadorInicializacao>.Instance);
-        var resultado = gerenciador.Desativar(entrada);
-        return resultado.Sucesso
-            ? RespostaIpc.Ok(req.Id, true)
-            : RespostaIpc.Falha(req.Id, resultado.MensagemErro);
-    }
-
-    [SupportedOSPlatform("windows")]
-    private RespostaIpc AtivarStartupWindows(RequisicaoIpc req)
-    {
-        var entrada = EncontrarEntradaStartup(req);
-        if (entrada is null)
-            return RespostaIpc.Falha(req.Id, "Entrada não encontrada ou parâmetro 'nome' ausente.");
-
-        var gerenciador = new GerenciadorInicializacao(NullLogger<GerenciadorInicializacao>.Instance);
-        var resultado = gerenciador.Ativar(entrada, string.Empty);
-        return resultado.Sucesso
-            ? RespostaIpc.Ok(req.Id, true)
-            : RespostaIpc.Falha(req.Id, resultado.MensagemErro);
-    }
-
-    [SupportedOSPlatform("windows")]
-    private static InicializacaoEntrada? EncontrarEntradaStartup(RequisicaoIpc req)
+    private static async Task<RespostaIpc> ToggleStartupAsync(RequisicaoIpc req, bool ativar, CancellationToken ct)
     {
         var nome = req.Parametros is { } p
             && p.TryGetProperty("nome", out var n)
             && n.ValueKind == JsonValueKind.String
                 ? n.GetString() : null;
 
-        if (string.IsNullOrEmpty(nome)) return null;
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
 
-        return new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance)
+        // Localiza a entrada para saber hive (HKCU/HKLM) e se é pasta de startup.
+        var entrada = new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance)
             .Varrer()
             .FirstOrDefault(e => string.Equals(e.Nome, nome, StringComparison.OrdinalIgnoreCase));
+
+        if (entrada is null)
+            return RespostaIpc.Falha(req.Id, $"Entrada '{nome}' não encontrada no registro.");
+
+        // Entradas de pasta de startup: renomear arquivo (sem script de registro).
+        if (entrada.Origem == OrigemInicializacao.PastaStartup)
+        {
+            var gerenciador = new GerenciadorInicializacao(NullLogger<GerenciadorInicializacao>.Instance);
+            var r = ativar ? gerenciador.Ativar(entrada, "") : gerenciador.Desativar(entrada);
+            return r.Sucesso ? RespostaIpc.Ok(req.Id, true) : RespostaIpc.Falha(req.Id, r.MensagemErro);
+        }
+
+        // Entradas de registro: usa PowerShell com -EncodedCommand para garantir execução nativa.
+        var hive = entrada.Origem == OrigemInicializacao.RegistroUsuario ? "HKCU" : "HKLM";
+        var statusByte = ativar ? 2 : 3;
+        var nomePs = nome.Replace("'", "''"); // escapa aspas simples para PS
+
+        var script = $@"
+$hive = '{hive}:'
+$path = Join-Path $hive 'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run'
+if (-not (Test-Path $path)) {{ New-Item -Path $path -Force | Out-Null }}
+$bytes = [byte[]]@({statusByte},0,0,0,0,0,0,0,0,0,0,0)
+Set-ItemProperty -Path $path -Name '{nomePs}' -Value $bytes -Type Binary -Force
+Write-Output 'OK'
+";
+        var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+
+        var psi = new ProcessStartInfo
+        {
+            FileName        = "powershell.exe",
+            Arguments       = $"-NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand {encoded}",
+            UseShellExecute = false,
+            CreateNoWindow  = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError  = true,
+        };
+
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            var stdout = await proc.StandardOutput.ReadToEndAsync(ct).ConfigureAwait(false);
+            var stderr = await proc.StandardError.ReadToEndAsync(ct).ConfigureAwait(false);
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+
+            return proc.ExitCode == 0 && stdout.Contains("OK")
+                ? RespostaIpc.Ok(req.Id, true)
+                : RespostaIpc.Falha(req.Id, string.IsNullOrWhiteSpace(stderr)
+                    ? $"Script saiu com código {proc.ExitCode}."
+                    : stderr.Trim());
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.Versioning;
 using HardwareOptimizer.Core.Contracts;
 using Microsoft.Extensions.Logging;
@@ -157,11 +158,12 @@ public sealed class VerificadorInicializacao
 
                 destino.Add(new InicializacaoEntrada
                 {
-                    Nome = nome,
-                    Caminho = caminho,
-                    Impacto = ClassificarImpacto(nome, caminho),
-                    Origem = origem,
-                    Ativo = ativo,
+                    Nome          = nome,
+                    Caminho       = caminho,
+                    Impacto       = ClassificarImpacto(nome, caminho),
+                    Origem        = origem,
+                    Ativo         = ativo,
+                    Fabricante    = LerFabricante(caminho),
                     ChaveRollback = $"{raiz.Name}\\{subcaminho}\\{nome}",
                 });
             }
@@ -204,6 +206,30 @@ public sealed class VerificadorInicializacao
         {
             _log.LogWarning(ex, "Falha ao varrer pasta {Pasta}.", pasta);
         }
+    }
+
+    private static string? LerFabricante(string caminho)
+    {
+        try
+        {
+            var exe = ExtrairExePath(caminho);
+            if (exe is null || !File.Exists(exe)) return null;
+            var company = FileVersionInfo.GetVersionInfo(exe).CompanyName?.Trim();
+            return string.IsNullOrWhiteSpace(company) ? null : company;
+        }
+        catch { return null; }
+    }
+
+    private static string? ExtrairExePath(string cmd)
+    {
+        cmd = cmd.Trim();
+        if (cmd.StartsWith('"'))
+        {
+            var end = cmd.IndexOf('"', 1);
+            return end > 0 ? cmd[1..end] : null;
+        }
+        var sp = cmd.IndexOf(' ');
+        return sp > 0 ? cmd[..sp] : cmd;
     }
 
     private static ImpactoInicializacao ClassificarImpacto(string nome, string caminho)
