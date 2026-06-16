@@ -22,6 +22,8 @@ Executados com `dotnet test --configuration Release`.
 | HardwareOptimizer.App.Tests | 36 | 0 | 0 | ~235 ms |
 | **TOTAL** | **285** | **0** | **0** | |
 
+> Última execução com 0 falhas: 2026-06-15.
+
 ---
 
 ## 2. Testes por Módulo
@@ -120,11 +122,33 @@ O aplicativo foi iniciado com `dotnet run --project src/HardwareOptimizer.App --
 
 | # | Ação | Resultado Esperado |
 |---|---|---|
-| 25 | Sidebar → Dashboard | Cards de CPU / GPU / RAM em tempo real |
-| 26 | Sidebar → IA Copiloto | Chat funcional com análise do inventário |
+| 25 | Sidebar → Dashboard | Cards de CPU / GPU / RAM em tempo real; gráficos de temperatura e clock |
+| 26 | Sidebar → IA Copiloto | Chat funcional com análise do inventário; badge "!" some ao abrir |
 | 27 | Sidebar → UPGRADE (Premium) | Tela de compatibilidade de hardware |
 | 28 | Sidebar → Vida Útil (Premium) | Dados S.M.A.R.T. dos discos |
 | 29 | Sidebar → Drivers (Premium) | Lista de drivers instalados |
+
+### 3.7 Tela Info Sistema — Especificações completas
+
+| # | Ação | Resultado Esperado |
+|---|---|---|
+| 30 | Sidebar → Info Sistema | Todas as 7+ seções visíveis: SO, CPU, Placa-mãe, BIOS, RAM, GPU |
+| 31 | Verificar seção Sistema Operacional | Nome, versão, build, arquitetura e Secure Boot exibidos |
+| 32 | Verificar seção Processador | Modelo, núcleos, threads, clock base, temperatura idle |
+| 33 | Verificar seção Armazenamento | Aparece apenas se discos foram detectados; exibe capacidade e espaço usado |
+| 34 | Verificar seção S.M.A.R.T. | Aparece apenas se dados disponíveis; status colorido (verde/amarelo/vermelho) |
+| 35 | Verificar seção Interfaces de Rede | Aparece apenas se adaptadores detectados; exibe IP, MAC, velocidade |
+
+### 3.8 Visual — Otimize Builder (redesign)
+
+| # | Ação | Resultado Esperado |
+|---|---|---|
+| 36 | Verificar sidebar após scan | Item ativo tem barra ciana de 3px na esquerda; item inativo em cinza |
+| 37 | Trocar de página na sidebar | Barra ciana migra para o novo item ativo; anterior volta ao estado inativo |
+| 38 | Verificar tela Home | Fundo gradiente radial azul; dois anéis de radar ao redor do botão SCAN |
+| 39 | Verificar cards do Dashboard | Cada card tem barra lateral colorida por nível de alerta (verde/amarelo/vermelho) |
+| 40 | Verificar badge IA na sidebar | Badge "!" vermelho exibido quando há alerta pendente; some ao acessar IA Copiloto |
+| 41 | Verificar seção Premium na sidebar | Badge "PRO" dourado visível; módulos bloqueados em cinza sem interação |
 
 ---
 

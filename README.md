@@ -1,10 +1,14 @@
-# Agente de Otimização e Confiabilidade de Hardware
+# Otimize Builder — Agente de Otimização e Confiabilidade de Hardware
 
-Sistema que **diagnostica, recomenda e aplica** otimizações de desempenho em
-computadores e notebooks com base em evidências coletadas do próprio
-equipamento. O cérebro (LLM) **propõe**, o agente local **executa apenas com
-aprovação explícita**, e a BIOS é sempre ajustada **manualmente** pelo usuário
-com orientação do sistema.
+**Otimize Builder** é um sistema que **diagnostica, recomenda e aplica**
+otimizações de desempenho em computadores e notebooks com base em evidências
+coletadas do próprio equipamento. O cérebro (LLM) **propõe**, o agente local
+**executa apenas com aprovação explícita**, e a BIOS é sempre ajustada
+**manualmente** pelo usuário com orientação do sistema.
+
+A interface desktop (Avalonia) segue uma **estética tecnológica** com tema
+escuro profundo, acento ciano `#00C8FF`, módulos gratuitos e uma camada
+**Premium** (UPGRADE, Vida Útil, Drivers, Guia BIOS IA) com gating por licença.
 
 > Implementação em **C# / .NET 8**. MVP prioriza **Windows 11**; o coletor já
 > roda também em **Linux** (usado como ambiente de validação contínua).
@@ -41,7 +45,7 @@ Início rápido (do código-fonte):
 ```bash
 dotnet build HardwareOptimizer.sln -c Release && dotnet test HardwareOptimizer.sln -c Release
 dotnet run --project src/HardwareOptimizer.Cli -- demo      # fluxo completo (simulação segura)
-dotnet run --project src/HardwareOptimizer.App              # interface gráfica
+dotnet run --project src/HardwareOptimizer.App              # interface gráfica Otimize Builder
 ```
 
 ---
@@ -68,39 +72,60 @@ via LLM).
 ```
 HardwareOptimizer.sln
 ├── src/
-│   ├── HardwareOptimizer.Core/      Domínio puro (sem efeitos colaterais)
-│   │   ├── Common/                  Resultado<T>, enums, categorias
-│   │   ├── Contracts/               Inventario, Recomendacao, ResultadoValidacao
-│   │   ├── Catalog/                 Catálogo whitelisted + validador de limites
-│   │   ├── Profiles/                Perfil seguro / customizado + validação ao salvar
-│   │   ├── Consent/                 Termo, checkboxes, auditoria de consentimento
-│   │   ├── Privacy/                 Pipeline de sanitização
-│   │   ├── Bios/                    Normalização, comparação de versão, decisão e guia
-│   │   └── Reporting/               Notas 0-100 por domínio + relatório executivo
-│   ├── HardwareOptimizer.Agent/     Agente local (efeitos colaterais isolados)
-│   │   ├── Collector/               Coletor read-only (Linux real + Windows/CIM)
-│   │   ├── Sensors/                 Sensores em tempo real (Linux /sys/hwmon + Windows WMI)
-│   │   ├── Backup/                  Backup obrigatório e bloqueante
-│   │   ├── Execution/               Executor controlado, comandos, estado, rollback
-│   │   ├── Validation/              Runner de estresse: parser + análise de regressão
-│   │   ├── Bios/                    Orquestrador do fluxo de BIOS + cache do fabricante
-│   │   └── Persistence/             Repositório SQLite (inventário, auditoria, cache BIOS)
-│   ├── HardwareOptimizer.Cerebro/   Plano Cérebro: matriz de decisão, guard, local + LLM
-│   │   ├── ICerebro / MatrizDecisao   Contrato e proposta priorizada (só IDs do catálogo)
-│   │   ├── ConstrutorPrompt           System/user prompt a partir do inventário sanitizado
-│   │   ├── LeitorRespostaCerebro      Guard: valida a saída do LLM contra o catálogo
-│   │   ├── CerebroLocal / CerebroLlm  Offline (padrão) e via LLM
-│   │   ├── ClienteLlmAnthropic        Adapter do SDK oficial da Anthropic
-│   │   └── Visao/                     Leitura de fotos + confiança + conferência com inventário
-│   ├── HardwareOptimizer.Ipc/       Camada IPC: protocolo, roteador, servidor/cliente named pipe
-│   ├── HardwareOptimizer.App/       UI desktop Avalonia (MVVM) consumindo o IPC
-│   └── HardwareOptimizer.Cli/       Demonstração ponta a ponta (orquestra todos os planos)
+│   ├── HardwareOptimizer.Core/           Domínio puro (sem efeitos colaterais)
+│   │   ├── Common/                       Resultado<T>, enums, categorias
+│   │   ├── Contracts/                    Inventario, Recomendacao, ResultadoValidacao
+│   │   ├── Catalog/                      Catálogo whitelisted + validador de limites
+│   │   ├── Profiles/                     Perfil seguro / customizado + validação ao salvar
+│   │   ├── Consent/                      Termo, checkboxes, auditoria de consentimento
+│   │   ├── Privacy/                      Pipeline de sanitização
+│   │   ├── Bios/                         Normalização, comparação de versão, decisão e guia
+│   │   └── Reporting/                    Notas 0-100 por domínio + relatório executivo
+│   ├── HardwareOptimizer.Agent/          Agente local (efeitos colaterais isolados)
+│   │   ├── Collector/                    Coletor read-only (Linux real + Windows/CIM)
+│   │   ├── Sensors/                      Sensores em tempo real (Linux /sys/hwmon + Windows WMI)
+│   │   ├── Backup/                       Backup obrigatório e bloqueante
+│   │   ├── Execution/                    Executor controlado, comandos, estado, rollback
+│   │   ├── Validation/                   Runner de estresse: parser + análise de regressão
+│   │   ├── Bios/                         Orquestrador do fluxo de BIOS + cache do fabricante
+│   │   └── Persistence/                  Repositório SQLite (inventário, auditoria, cache BIOS)
+│   ├── HardwareOptimizer.Cerebro/        Plano Cérebro: matriz de decisão, guard, local + LLM
+│   │   ├── ICerebro / MatrizDecisao      Contrato e proposta priorizada (só IDs do catálogo)
+│   │   ├── ConstrutorPrompt              System/user prompt a partir do inventário sanitizado
+│   │   ├── LeitorRespostaCerebro         Guard: valida a saída do LLM contra o catálogo
+│   │   ├── CerebroLocal / CerebroLlm     Offline (padrão) e via LLM
+│   │   ├── ClienteLlmAnthropic           Adapter do SDK oficial da Anthropic
+│   │   └── Visao/                        Leitura de fotos + confiança + conferência com inventário
+│   ├── HardwareOptimizer.Ipc/            Camada IPC: protocolo, roteador, servidor/cliente named pipe
+│   ├── HardwareOptimizer.App/            UI desktop Avalonia (MVVM) — Otimize Builder
+│   │   ├── Views/
+│   │   │   ├── ShellWindow.axaml         Janela principal: sidebar + área de conteúdo
+│   │   │   ├── HomeView.axaml            Tela de SCAN inicial
+│   │   │   ├── DashboardView.axaml       Cards de sensores + gráficos em tempo real
+│   │   │   ├── OtimizadorWindowsView     Exibições, programas, inicialização, serviços
+│   │   │   ├── InfoSistemaView.axaml     Todas as especificações de hardware
+│   │   │   ├── IaCopilotoView.axaml      Chat com análise de inventário
+│   │   │   ├── UpgradeView.axaml         Compatibilidade + gargalo [Premium]
+│   │   │   ├── VidaUtilView.axaml        Saúde S.M.A.R.T. dos discos [Premium]
+│   │   │   ├── DriversView.axaml         HWID + atualização de drivers [Premium]
+│   │   │   ├── BiosGuideView.axaml       Guia BIOS passo a passo [Premium]
+│   │   │   └── ConfiguracoesView.axaml   Configurações do sistema
+│   │   ├── ViewModels/
+│   │   │   └── ShellViewModel.cs         Navegação + 9 propriedades PaginaEhXxx
+│   │   └── Controls/
+│   │       ├── SensorCard.axaml          Card de sensor com barra de acento colorida
+│   │       ├── AnelScanControl.axaml     Anel animado de progresso de scan
+│   │       └── RealtimeChartControl      Gráfico de linha deslizante (60 pontos)
+│   └── HardwareOptimizer.Cli/            Demonstração ponta a ponta (orquestra todos os planos)
 ├── tests/
-│   ├── HardwareOptimizer.Core.Tests/    Regras invariantes do domínio
-│   ├── HardwareOptimizer.Agent.Tests/   Executor, coletor, persistência, backup, sensores, validação
-│   ├── HardwareOptimizer.Cerebro.Tests/ Guard, matriz, cérebro local/LLM, visão, privacidade
-│   ├── HardwareOptimizer.Ipc.Tests/     Roteador + loopback real de named pipe
-│   └── HardwareOptimizer.App.Tests/     ViewModels da UI (com roteador falso)
+│   ├── HardwareOptimizer.Core.Tests/               Regras invariantes do domínio
+│   ├── HardwareOptimizer.Agent.Tests/              Executor, coletor, persistência, backup, sensores, validação
+│   ├── HardwareOptimizer.Cerebro.Tests/            Guard, matriz, cérebro local/LLM, visão, privacidade
+│   ├── HardwareOptimizer.Ipc.Tests/                Roteador + loopback real de named pipe
+│   ├── HardwareOptimizer.App.Tests/                ViewModels da UI (com roteador falso)
+│   ├── HardwareOptimizer.Features.Upgrade.Tests/   Compatibilidade + cálculo de gargalo
+│   ├── HardwareOptimizer.Features.LifeCounter.Tests/ Cálculo de vida útil S.M.A.R.T.
+│   └── HardwareOptimizer.Features.Licensing.Tests/  Gate Freemium/Premium
 ├── scripts/publish.sh               Publicação self-contained multiplataforma
 ├── Dockerfile                       Imagem de distribuição (Linux)
 ├── docs/INSTALACAO.md · docs/MANUAL.md  Instalação e manual de uso
@@ -263,7 +288,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 0 | Fundação e setup | ✅ Solução .NET, CI, contratos + schemas, limites de segurança |
 | 1 | Coletor read-only | ✅ Linux (real) + Windows/CIM (estruturado); orquestrador multiplataforma |
 | 2 | Sensores | ✅ Leitura em tempo real (Linux `/sys/class/hwmon` real + clock; Windows **LibreHardwareMonitor** — clock/voltagem/fan/consumo/temperatura — com fallback automático para WMI) |
-| 3 | UI e IPC | ✅ IPC (named pipe) + **UI Avalonia (MVVM)** com inventário, sensores, matriz e aprovação por ação |
+| 3 | UI e IPC | ✅ IPC (named pipe) + **UI Avalonia (MVVM)** com sidebar navegável, dashboard em tempo real, info sistema completa, otimizador Windows, IA copiloto e módulos Premium (UPGRADE / Vida Útil / Drivers / Guia BIOS IA) com gating de licença |
 | 4 | Cérebro / LLM | ✅ Matriz de decisão + guard contra alucinação + cérebro local e LLM (SDK Anthropic); sanitização aplicada antes do envio |
 | 5 | Módulo BIOS | ✅ Identificação, normalização, banco curado + cache SQLite, decisão conservadora e guia por fabricante |
 | 6 | Visão | ✅ Pipeline (leitura estruturada + confiança), conferência com o inventário e cliente multimodal (SDK Anthropic) |

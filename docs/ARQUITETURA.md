@@ -15,14 +15,16 @@ original, veja [`arquitetura_otimizador.json`](arquitetura_otimizador.json).
 ## Visão em três planos
 
 ```
-┌──────────────┐     IPC      ┌─────────────────┐    JSON     ┌────────────────┐
-│      UI      │ ───────────▶ │  Agente Local   │ ──────────▶ │     Cérebro    │
-│  (Avalonia)  │ ◀─────────── │   (.NET 8)      │ ◀────────── │ (local ou LLM) │
-└──────────────┘              └─────────────────┘             └────────────────┘
+┌──────────────────────────┐    IPC     ┌─────────────────┐    JSON     ┌────────────────┐
+│   UI — Otimize Builder   │ ─────────▶ │  Agente Local   │ ──────────▶ │     Cérebro    │
+│      (Avalonia MVVM)     │ ◀───────── │   (.NET 8)      │ ◀────────── │ (local ou LLM) │
+└──────────────────────────┘            └─────────────────┘             └────────────────┘
 ```
 
-- **UI** — interface desktop (Avalonia/MVVM). Exibe inventário, sensores e a
-  matriz de decisão; coleta a **aprovação explícita** do usuário.
+- **UI (Otimize Builder)** — interface desktop Avalonia/MVVM com tema escuro tecnológico.
+  Sidebar de navegação com estado ativo dinâmico, dashboard de sensores em tempo real,
+  tela de scan, info sistema completa, otimizador Windows e módulos Premium com gating de licença.
+  Coleta a **aprovação explícita** do usuário antes de qualquer execução.
 - **Agente Local** — processo .NET 8 que coleta inventário, lê sensores, faz
   backup, executa mudanças aprovadas e roda a validação. Hospeda o IPC.
 - **Cérebro** — seleciona e prioriza ações do catálogo (offline ou via LLM).
@@ -54,7 +56,7 @@ HardwareOptimizer.Agent   HardwareOptimizer.Cerebro   (efeitos colaterais / LLM)
 | `HardwareOptimizer.Agent` | Efeitos colaterais: coletor, sensores, backup, executor, validação, persistência SQLite. | Core |
 | `HardwareOptimizer.Cerebro` | Cérebro: matriz de decisão, guard, local/LLM, visão. | Core, SDK Anthropic |
 | `HardwareOptimizer.Ipc` | Protocolo, roteador (dispatcher) e transporte named pipe. | Core, Agent, Cerebro |
-| `HardwareOptimizer.App` | UI desktop Avalonia (MVVM). | Ipc |
+| `HardwareOptimizer.App` | UI desktop Avalonia (MVVM) — produto **Otimize Builder**. Sidebar com estado ativo, dashboard de sensores, info sistema, otimizador Windows, IA copiloto e módulos Premium. | Ipc |
 | `HardwareOptimizer.Cli` | Linha de comando (orquestra tudo). | Core, Agent, Cerebro, Ipc |
 
 ### Mapa de módulos (resumo)
@@ -119,3 +121,74 @@ permitindo localizar o ponto exato de qualquer falha.
 | **IPC desacoplado por `IRoteadorIpc`** | A UI fala com o agente em processo ou remoto (named pipe) de forma intercambiável; ViewModels testáveis. |
 
 Para o detalhamento das regras invariantes, veja [SEGURANCA.md](SEGURANCA.md).
+
+---
+
+## UI — Sistema de design (Otimize Builder)
+
+### Paleta de cores
+
+| Token | Valor | Uso |
+| --- | --- | --- |
+| Fundo janela | `#030308` | `Window.Background` e `ContentControl.Background` |
+| Fundo sidebar | `#07070F` → `#06060D` | `LinearGradientBrush` horizontal |
+| Superfície card | `#0C0C1E` → `#09091A` | `LinearGradientBrush` vertical |
+| Borda card | `#1E1E3C` → `#12122A` | `LinearGradientBrush` vertical |
+| Acento ativo (nav) | `#111128` | Fundo do item ativo da sidebar |
+| Acento primário | `#00C8FF` | Ciano — barra ativo, headers, separadores |
+| Acento métrica | `#00FF88` | Verde — sensor em nível estável |
+| Acento premium | `#D4A017` | Dourado — módulos PRO |
+| Crítico | `#FF3A5C` | Alerta e valores críticos |
+| Texto ativo | `#E0E0F2` | Labels ativas, valores |
+| Texto mudo | `#484865` | Labels inativas |
+| Texto escuro | `#282840` | Items bloqueados (Premium) |
+| Fundo badge PRO | `#1A1000` | Border do badge "PRO" na sidebar |
+| Fundo badge alerta | `#3D0000` | Border do badge "!" de alerta IA |
+
+### Padrão: barra de acento lateral sem code-behind
+
+Item ativo na sidebar usa `LinearGradientBrush` no `ContentPresenter` do botão
+em vez de `BorderThickness` (que exigiria template override):
+
+```xml
+<Style Selector="Button.nav.ativo /template/ ContentPresenter">
+  <Setter Property="Background">
+    <Setter.Value>
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Color="#00C8FF" Offset="0.000" />
+        <GradientStop Color="#00C8FF" Offset="0.018" />  <!-- ~3px em 184px -->
+        <GradientStop Color="#111128" Offset="0.019" />
+        <GradientStop Color="#111128" Offset="1.000" />
+      </LinearGradientBrush>
+    </Setter.Value>
+  </Setter>
+</Style>
+```
+
+### Padrão: estado ativo do item de navegação
+
+`ShellViewModel` expõe 9 propriedades booleanas derivadas de `PaginaAtual`:
+
+```csharp
+public bool PaginaEhDashboard  => PaginaAtual == Dashboard;
+// … (PaginaEhOtimizador, PaginaEhInfoSistema, etc.)
+
+partial void OnPaginaAtualChanged(ObservableObject value)
+{
+    OnPropertyChanged(nameof(PaginaEhDashboard));
+    // … notifica todas as 9 propriedades
+}
+```
+
+Cada botão de navegação aplica a classe com binding:
+```xml
+<Button Classes="nav" Classes.ativo="{Binding PaginaEhDashboard}" … />
+```
+
+### Restrições do Avalonia 12 a observar
+
+| Elemento | Restrição | Solução |
+| --- | --- | --- |
+| `Rectangle` | Sem `CornerRadius` | Substituir por `Border` com `Background` |
+| `StackPanel` | Sem `Padding` | Embrulhar em `Border Padding="…"` |
+| `Button` | `BorderThickness` unilateral via estilo exige template override | Usar `LinearGradientBrush` no `ContentPresenter` |
