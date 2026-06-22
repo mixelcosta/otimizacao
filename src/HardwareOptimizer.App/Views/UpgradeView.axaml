@@ -14,20 +14,26 @@
       <!-- Header -->
       <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="20,16,16,12">
         <StackPanel Spacing="3">
-          <TextBlock Text="UPGRADE" FontSize="13" FontWeight="Bold"
-                     Foreground="#444444" LetterSpacing="3" />
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Border Width="3" Height="14" Background="#00C8FF" CornerRadius="2"
+                    VerticalAlignment="Center" />
+            <TextBlock Text="UPGRADE" FontSize="13" FontWeight="Bold"
+                       Foreground="#484865" LetterSpacing="3"
+                       VerticalAlignment="Center" />
+          </StackPanel>
           <TextBlock Text="{Binding NomePlacaMae}"
-                     Foreground="#555555" FontSize="11" />
+                     Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
         </StackPanel>
 
         <Button Grid.Column="1"
                 Content="{Binding TextoBotao}"
                 Command="{Binding CarregarCommand}"
                 IsEnabled="{Binding !Carregando}"
-                Background="#1A1A1A" Foreground="#00FF88"
-                BorderBrush="#00FF8840" BorderThickness="1"
+                Background="#00C8FF18" Foreground="#00C8FF"
+                BorderBrush="#00C8FF40" BorderThickness="1"
                 Padding="14,8" CornerRadius="6" FontSize="11"
-                VerticalAlignment="Center" />
+                VerticalAlignment="Center"
+                Cursor="Hand" />
       </Grid>
 
       <!-- Isometric diagram -->
@@ -45,11 +51,12 @@
       <Border Grid.Row="1"
               VerticalAlignment="Bottom" HorizontalAlignment="Center"
               Margin="0,0,0,20"
-              Background="#0D0D0D" CornerRadius="20" Padding="16,7"
+              Background="#09091A" CornerRadius="20" Padding="16,7"
+              BorderBrush="#1E1E3C" BorderThickness="1"
               IsVisible="{Binding Carregado}">
         <TextBlock Text="{Binding GargaloLabel}"
                    FontSize="12" FontWeight="SemiBold"
-                   Foreground="#00FF88"
+                   Foreground="#00C870"
                    IsVisible="{Binding !IsGargalo}" />
       </Border>
 
@@ -57,6 +64,7 @@
               VerticalAlignment="Bottom" HorizontalAlignment="Center"
               Margin="0,0,0,20"
               Background="#1A0800" CornerRadius="20" Padding="16,7"
+              BorderBrush="#FF8C0040" BorderThickness="1"
               IsVisible="{Binding IsGargalo}">
         <TextBlock Text="{Binding GargaloLabel}"
                    FontSize="12" FontWeight="SemiBold"
@@ -68,7 +76,7 @@
                   Margin="0,0,0,20"
                   IsVisible="{Binding !Carregado}">
         <TextBlock Text="Clique em  Detectar Hardware  para escanear os componentes"
-                   Foreground="#333333" FontSize="11"
+                   Foreground="#282840" FontSize="11"
                    HorizontalAlignment="Center" />
       </StackPanel>
 
@@ -76,109 +84,123 @@
 
     <!-- ═══════════════ CENTER — Parts List ═══════════════ -->
     <Border Grid.Column="1"
-            Background="#060606"
-            BorderBrush="#181818" BorderThickness="1,0,0,0">
+            Background="#06060F"
+            BorderBrush="#1E1E3C" BorderThickness="1,0,0,0">
       <ScrollViewer>
         <StackPanel Margin="20,18,20,24" Spacing="0">
 
           <TextBlock Text="PEÇAS DETECTADAS" FontSize="10" FontWeight="Bold"
-                     Foreground="#444444" LetterSpacing="2"
+                     Foreground="#282840" LetterSpacing="2"
                      Margin="0,0,0,18" />
 
           <!-- CPU -->
           <StackPanel Spacing="3" Margin="0,0,0,14">
-            <TextBlock Text="CPU" FontSize="9" Foreground="#3A3A3A" LetterSpacing="1" />
+            <TextBlock Text="CPU" FontSize="9" Foreground="#282840" LetterSpacing="1"
+                       FontWeight="Bold" />
             <TextBlock Text="{Binding NomeCpu}"
-                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
                        TextWrapping="Wrap" />
             <TextBlock Text="{Binding InfosCpu}"
-                       Foreground="#4A4A4A" FontSize="10"
+                       Foreground="#484865" FontSize="10"
                        IsVisible="{Binding InfosCpu,
                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           </StackPanel>
 
-          <Rectangle Height="1" Fill="#181818" Margin="0,0,0,14" />
+          <Rectangle Height="1" Fill="#1E1E3C" Margin="0,0,0,14" />
 
           <!-- GPU -->
           <StackPanel Spacing="3" Margin="0,0,0,14">
-            <TextBlock Text="GPU" FontSize="9" Foreground="#3A3A3A" LetterSpacing="1" />
+            <TextBlock Text="GPU" FontSize="9" Foreground="#282840" LetterSpacing="1"
+                       FontWeight="Bold" />
             <TextBlock Text="{Binding NomeGpu}"
-                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
                        TextWrapping="Wrap" />
             <TextBlock Text="{Binding InfosGpu}"
-                       Foreground="#4A4A4A" FontSize="10"
+                       Foreground="#484865" FontSize="10"
                        IsVisible="{Binding InfosGpu,
                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           </StackPanel>
 
-          <Rectangle Height="1" Fill="#181818" Margin="0,0,0,14" />
+          <Rectangle Height="1" Fill="#1E1E3C" Margin="0,0,0,14" />
 
           <!-- RAM -->
           <StackPanel Spacing="3" Margin="0,0,0,14">
-            <TextBlock Text="MEMÓRIA RAM" FontSize="9" Foreground="#3A3A3A" LetterSpacing="1" />
+            <TextBlock Text="MEMÓRIA RAM" FontSize="9" Foreground="#282840" LetterSpacing="1"
+                       FontWeight="Bold" />
             <TextBlock Text="{Binding NomeRam}"
-                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
                        TextWrapping="Wrap" />
             <TextBlock Text="{Binding FabricanteRam}"
-                       Foreground="#4A4A4A" FontSize="10"
+                       Foreground="#484865" FontSize="10"
                        IsVisible="{Binding FabricanteRam,
                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
             <TextBlock Text="{Binding InfosRam}"
-                       Foreground="#3A3A3A" FontSize="10"
+                       Foreground="#282840" FontSize="10"
                        TextWrapping="Wrap"
                        IsVisible="{Binding InfosRam,
                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           </StackPanel>
 
-          <Rectangle Height="1" Fill="#181818" Margin="0,0,0,14" />
+          <Rectangle Height="1" Fill="#1E1E3C" Margin="0,0,0,14" />
 
           <!-- Motherboard -->
           <StackPanel Spacing="3" Margin="0,0,0,14">
-            <TextBlock Text="PLACA-MÃE" FontSize="9" Foreground="#3A3A3A" LetterSpacing="1" />
+            <TextBlock Text="PLACA-MÃE" FontSize="9" Foreground="#282840" LetterSpacing="1"
+                       FontWeight="Bold" />
             <TextBlock Text="{Binding NomePlacaMae}"
-                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
                        TextWrapping="Wrap" />
             <TextBlock Text="{Binding InfosPlaca}"
-                       Foreground="#4A4A4A" FontSize="10"
+                       Foreground="#484865" FontSize="10"
                        IsVisible="{Binding InfosPlaca,
                            Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
           </StackPanel>
 
-          <Rectangle Height="1" Fill="#181818" Margin="0,0,0,14" />
+          <Rectangle Height="1" Fill="#1E1E3C" Margin="0,0,0,14" />
 
           <!-- OS -->
           <StackPanel Spacing="3" Margin="0,0,0,24">
-            <TextBlock Text="SISTEMA OPERACIONAL" FontSize="9" Foreground="#3A3A3A" LetterSpacing="1" />
+            <TextBlock Text="SISTEMA OPERACIONAL" FontSize="9" Foreground="#282840"
+                       LetterSpacing="1" FontWeight="Bold" />
             <TextBlock Text="{Binding NomeOs}"
-                       Foreground="#CCCCCC" FontSize="12" FontWeight="SemiBold"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
                        TextWrapping="Wrap" />
           </StackPanel>
 
           <!-- Bottleneck Analysis -->
-          <Border Background="#0A0A0A" CornerRadius="8" Padding="14,12"
+          <Border CornerRadius="8" Padding="14,12"
+                  BorderBrush="#1E1E3C" BorderThickness="1"
                   IsVisible="{Binding Carregado}">
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Color="#0C0C1E" Offset="0" />
+                <GradientStop Color="#09091A" Offset="1" />
+              </LinearGradientBrush>
+            </Border.Background>
             <StackPanel Spacing="10">
 
               <TextBlock Text="ANÁLISE DE GARGALO" FontSize="9" FontWeight="Bold"
-                         Foreground="#3A3A3A" LetterSpacing="2" />
+                         Foreground="#282840" LetterSpacing="2" />
 
-              <Border Background="#061206" CornerRadius="6" Padding="10,8"
+              <Border CornerRadius="6" Padding="10,8"
+                      Background="#00C87018" BorderBrush="#00C87040" BorderThickness="1"
                       IsVisible="{Binding !IsGargalo}">
                 <StackPanel Spacing="4">
                   <TextBlock Text="{Binding GargaloLabel}"
-                             Foreground="#00FF88" FontSize="12" FontWeight="SemiBold" />
+                             Foreground="#00C870" FontSize="12" FontWeight="SemiBold" />
                   <TextBlock Text="{Binding GargaloDescricao}"
-                             Foreground="#4A4A4A" FontSize="10" TextWrapping="Wrap" />
+                             Foreground="#484865" FontSize="10" TextWrapping="Wrap" />
                 </StackPanel>
               </Border>
 
-              <Border Background="#160A00" CornerRadius="6" Padding="10,8"
+              <Border CornerRadius="6" Padding="10,8"
+                      Background="#1A0800" BorderBrush="#FF8C0040" BorderThickness="1"
                       IsVisible="{Binding IsGargalo}">
                 <StackPanel Spacing="4">
                   <TextBlock Text="{Binding GargaloLabel}"
                              Foreground="#FF8C00" FontSize="12" FontWeight="SemiBold" />
                   <TextBlock Text="{Binding GargaloDescricao}"
-                             Foreground="#5A4A30" FontSize="10" TextWrapping="Wrap" />
+                             Foreground="#484865" FontSize="10" TextWrapping="Wrap" />
                 </StackPanel>
               </Border>
 
@@ -189,9 +211,9 @@
           <StackPanel HorizontalAlignment="Center" Spacing="8" Margin="0,40,0,0"
                       IsVisible="{Binding !Carregado}">
             <TextBlock Text="–" FontSize="24" HorizontalAlignment="Center"
-                       Foreground="#2A2A2A" />
+                       Foreground="#282840" />
             <TextBlock Text="Aguardando detecção"
-                       Foreground="#2A2A2A" FontSize="11"
+                       Foreground="#282840" FontSize="11"
                        HorizontalAlignment="Center" />
           </StackPanel>
 
@@ -201,22 +223,22 @@
 
     <!-- ═══════════════ RIGHT — IA Upgrade Chat ═══════════════ -->
     <Border Grid.Column="2"
-            Background="#040404"
-            BorderBrush="#181818" BorderThickness="1,0,0,0">
+            Background="#030308"
+            BorderBrush="#1E1E3C" BorderThickness="1,0,0,0">
       <Grid RowDefinitions="Auto,*,Auto,Auto">
 
         <!-- Chat header -->
         <Border Grid.Row="0" Padding="16,14,16,12"
-                BorderBrush="#181818" BorderThickness="0,0,0,1">
+                BorderBrush="#1E1E3C" BorderThickness="0,0,0,1">
           <StackPanel Spacing="2">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <Border Width="7" Height="7" CornerRadius="4"
-                      Background="#00FF88" VerticalAlignment="Center" />
+                      Background="#00C8FF" VerticalAlignment="Center" />
               <TextBlock Text="IA UPGRADE" FontSize="10" FontWeight="Bold"
-                         Foreground="#444444" LetterSpacing="2" />
+                         Foreground="#484865" LetterSpacing="2" />
             </StackPanel>
             <TextBlock Text="Sugere upgrades e verifica compatibilidade"
-                       Foreground="#2A2A2A" FontSize="9" />
+                       Foreground="#282840" FontSize="9" />
           </StackPanel>
         </Border>
 
@@ -229,22 +251,29 @@
 
                   <!-- Bubble usuário (direita) -->
                   <Border IsVisible="{Binding IsUser}"
-                          Background="#0D1F12" CornerRadius="8,8,2,8"
+                          Background="#00C8FF18" CornerRadius="8,8,2,8"
+                          BorderBrush="#00C8FF30" BorderThickness="1"
                           Padding="11,8" HorizontalAlignment="Right"
                           Margin="40,0,12,0" MaxWidth="240">
                     <TextBlock Text="{Binding Texto}"
-                               Foreground="#B0F0C0" FontSize="11"
+                               Foreground="#E0E0F2" FontSize="11"
                                TextWrapping="Wrap" />
                   </Border>
 
                   <!-- Bubble assistente (esquerda) -->
                   <Border IsVisible="{Binding IsAssistant}"
-                          Background="#0A0A0A" CornerRadius="8,8,8,2"
-                          BorderBrush="#1E1E1E" BorderThickness="1"
+                          CornerRadius="8,8,8,2"
+                          BorderBrush="#1E1E3C" BorderThickness="1"
                           Padding="11,8" HorizontalAlignment="Left"
                           Margin="12,0,40,0" MaxWidth="260">
+                    <Border.Background>
+                      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Color="#0C0C1E" Offset="0" />
+                        <GradientStop Color="#09091A" Offset="1" />
+                      </LinearGradientBrush>
+                    </Border.Background>
                     <TextBlock Text="{Binding Texto}"
-                               Foreground="#999999" FontSize="11"
+                               Foreground="#E0E0F2" FontSize="11"
                                TextWrapping="Wrap" />
                   </Border>
 
@@ -259,28 +288,28 @@
                 IsVisible="{Binding ChatCarregando}">
           <StackPanel Orientation="Horizontal" Spacing="6">
             <Border Width="5" Height="5" CornerRadius="3"
-                    Background="#00FF88" VerticalAlignment="Center" />
+                    Background="#00C8FF" VerticalAlignment="Center" />
             <TextBlock Text="Claude está analisando..."
-                       Foreground="#3A3A3A" FontSize="10"
+                       Foreground="#484865" FontSize="10"
                        VerticalAlignment="Center" />
           </StackPanel>
         </Border>
 
         <!-- Input -->
         <Border Grid.Row="3" Padding="12,10,12,14"
-                BorderBrush="#181818" BorderThickness="0,1,0,0"
+                BorderBrush="#1E1E3C" BorderThickness="0,1,0,0"
                 IsVisible="{Binding ChatVisivel}">
           <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
             <Border Grid.Column="0"
-                    Background="#0A0A0A"
-                    BorderBrush="#252525" BorderThickness="1"
+                    Background="#09091A"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
                     CornerRadius="8">
               <TextBox Text="{Binding MensagemInput}"
                        PlaceholderText="Ex: Quero trocar minha GPU por uma RTX 5080..."
                        Background="Transparent"
                        BorderThickness="0"
-                       Foreground="#CCCCCC"
-                       CaretBrush="#00FF88"
+                       Foreground="#E0E0F2"
+                       CaretBrush="#00C8FF"
                        FontSize="11"
                        Padding="10,8"
                        TextWrapping="Wrap"
@@ -295,12 +324,13 @@
             <Button Grid.Column="1"
                     Command="{Binding EnviarMensagemCommand}"
                     IsEnabled="{Binding PodeEnviar}"
-                    Background="#00FF8820" Foreground="#00FF88"
-                    BorderBrush="#00FF8840" BorderThickness="1"
+                    Background="#00C8FF18" Foreground="#00C8FF"
+                    BorderBrush="#00C8FF40" BorderThickness="1"
                     CornerRadius="8" Padding="12,8"
-                    Margin="8,0,0,0" FontSize="13"
+                    Margin="8,0,0,0" FontSize="14" FontWeight="Bold"
                     Content="→"
-                    VerticalAlignment="Stretch" />
+                    VerticalAlignment="Stretch"
+                    Cursor="Hand" />
           </Grid>
         </Border>
 
@@ -309,11 +339,12 @@
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Spacing="8"
                     IsVisible="{Binding !ChatVisivel}">
-          <TextBlock Text="🤖" FontSize="28" HorizontalAlignment="Center" />
-          <TextBlock Text="Detecte o hardware" Foreground="#2A2A2A" FontSize="11"
+          <TextBlock Text="○" FontSize="32" HorizontalAlignment="Center"
+                     Foreground="#282840" />
+          <TextBlock Text="Detecte o hardware" Foreground="#484865" FontSize="12"
                      HorizontalAlignment="Center" />
           <TextBlock Text="para ativar o assistente de upgrade"
-                     Foreground="#222222" FontSize="10"
+                     Foreground="#282840" FontSize="10"
                      HorizontalAlignment="Center" />
         </StackPanel>
 

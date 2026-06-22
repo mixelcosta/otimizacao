@@ -6,26 +6,31 @@
 
   <Grid RowDefinitions="Auto,*,Auto">
 
-    <!-- Cabeçalho -->
+    <!-- ── Cabeçalho ── -->
     <StackPanel Grid.Row="0" Margin="24,20,24,0" Spacing="3">
-      <TextBlock Text="VIDA ÚTIL" FontSize="13" FontWeight="Bold"
-                 Foreground="#444444" LetterSpacing="3" />
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                VerticalAlignment="Center" />
+        <TextBlock Text="VIDA ÚTIL" FontSize="13" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="3"
+                   VerticalAlignment="Center" />
+      </StackPanel>
       <TextBlock Text="S.M.A.R.T. — Saúde e estimativa de vida dos discos"
-                 Foreground="#555555" FontSize="12" />
+                 Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
     </StackPanel>
 
-    <!-- Conteúdo principal -->
+    <!-- ── Conteúdo principal ── -->
     <ScrollViewer Grid.Row="1" Margin="0,16,0,0">
-      <StackPanel Margin="24,0,24,24" Spacing="12">
+      <StackPanel Margin="24,0,24,24" Spacing="10">
 
-        <!-- Estado inicial / vazio -->
+        <!-- Estado vazio -->
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
                     Spacing="14" Margin="0,60"
                     IsVisible="{Binding !TemResultados}">
-          <TextBlock Text="❤" FontSize="44" HorizontalAlignment="Center"
-                     Foreground="#1A1A1A" />
+          <TextBlock Text="◆" FontSize="44" HorizontalAlignment="Center"
+                     Foreground="#1A1A2E" />
           <TextBlock Text="{Binding StatusText}"
-                     Foreground="#444444" FontSize="13"
+                     Foreground="#484865" FontSize="13"
                      HorizontalAlignment="Center" TextAlignment="Center"
                      TextWrapping="Wrap" MaxWidth="400" />
         </StackPanel>
@@ -36,15 +41,21 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:SaudeDiscoViewModel">
 
-              <Border Background="#0D0D0D" CornerRadius="12"
-                      BorderBrush="#1C1C1C" BorderThickness="1"
-                      Padding="20,16" Margin="0,0,0,2">
+              <Border CornerRadius="12"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
+                      Padding="20,16" Margin="0,0,0,8">
+                <Border.Background>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#0C0C1E" Offset="0" />
+                    <GradientStop Color="#09091A" Offset="1" />
+                  </LinearGradientBrush>
+                </Border.Background>
                 <StackPanel Spacing="12">
 
-                  <!-- Linha superior: modelo + badge de nível -->
+                  <!-- Modelo + badge de nível -->
                   <Grid ColumnDefinitions="*,Auto">
                     <TextBlock Text="{Binding Modelo}"
-                               Foreground="#DDDDDD" FontSize="14"
+                               Foreground="#E0E0F2" FontSize="14"
                                FontWeight="SemiBold"
                                VerticalAlignment="Center" />
                     <Border Grid.Column="1"
@@ -58,46 +69,51 @@
                   </Grid>
 
                   <!-- Barra de vida útil -->
-                  <Grid ColumnDefinitions="*,60" RowDefinitions="Auto,Auto">
-                    <StackPanel Grid.Column="0" Grid.Row="0" Spacing="5">
+                  <Grid ColumnDefinitions="*,60">
+                    <StackPanel Grid.Column="0" Spacing="5">
                       <TextBlock Text="Vida útil restante"
-                                 Foreground="#555555" FontSize="11" />
+                                 Foreground="#282840" FontSize="11" />
                       <ProgressBar Value="{Binding Porcentagem}" Maximum="100"
                                    Foreground="{Binding CorNivel}"
-                                   Background="#1A1A1A"
+                                   Background="#09091A"
                                    Height="10" CornerRadius="5" />
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Grid.Row="0"
+                    <TextBlock Grid.Column="1"
                                Text="{Binding PorcentagemTexto}"
                                Foreground="{Binding CorNivel}"
-                               FontSize="20" FontWeight="Black"
+                               FontSize="22" FontWeight="Black"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center" />
                   </Grid>
 
-                  <!-- Detalhes: TBW e horas -->
+                  <!-- Detalhes: TBW e horas de uso -->
                   <Grid ColumnDefinitions="*,*">
                     <StackPanel Grid.Column="0" Spacing="3">
                       <TextBlock Text="ESCRITA ACUMULADA" FontSize="10"
-                                 Foreground="#333333" LetterSpacing="1" />
+                                 Foreground="#282840" LetterSpacing="1" FontWeight="Bold" />
                       <TextBlock Text="{Binding TbwTexto}"
-                                 Foreground="#888888" FontSize="12"
+                                 Foreground="#484865" FontSize="11"
                                  TextWrapping="Wrap" />
                     </StackPanel>
                     <StackPanel Grid.Column="1" Spacing="3">
                       <TextBlock Text="TEMPO DE USO" FontSize="10"
-                                 Foreground="#333333" LetterSpacing="1" />
+                                 Foreground="#282840" LetterSpacing="1" FontWeight="Bold" />
                       <TextBlock Text="{Binding HorasUso}"
-                                 Foreground="#888888" FontSize="12" />
+                                 Foreground="#484865" FontSize="11" />
                     </StackPanel>
                   </Grid>
 
-                  <!-- Aviso de erro (visível somente se houver) -->
-                  <Border Background="#FF333320" CornerRadius="6" Padding="12,8"
+                  <!-- Aviso de erro -->
+                  <Border CornerRadius="6" Padding="12,8"
+                          Background="#CC000018" BorderBrush="#CC000040" BorderThickness="1"
                           IsVisible="{Binding TemErros}">
-                    <TextBlock Text="{Binding AvisoErro}"
-                               Foreground="#FF6666" FontSize="12"
-                               TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <TextBlock Text="⚠" Foreground="#FF4444" FontSize="12"
+                                 VerticalAlignment="Top" Margin="0,1,0,0" />
+                      <TextBlock Text="{Binding AvisoErro}"
+                                 Foreground="#FF4444" FontSize="12"
+                                 TextWrapping="Wrap" />
+                    </StackPanel>
                   </Border>
 
                 </StackPanel>
@@ -110,16 +126,18 @@
       </StackPanel>
     </ScrollViewer>
 
-    <!-- Rodapé -->
-    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="16"
-                Margin="24,0,24,16" IsVisible="{Binding TemResultados}">
-      <TextBlock Text="{Binding StatusText}"
-                 Foreground="#444444" FontSize="11"
-                 VerticalAlignment="Center" />
-      <TextBlock Text="{Binding UltimoScan}"
-                 Foreground="#2A2A2A" FontSize="11"
-                 VerticalAlignment="Center" />
-    </StackPanel>
+    <!-- ── Rodapé ── -->
+    <Border Grid.Row="2" BorderBrush="#13132A" BorderThickness="0,1,0,0"
+            IsVisible="{Binding TemResultados}">
+      <StackPanel Orientation="Horizontal" Spacing="16" Margin="24,10,24,12">
+        <TextBlock Text="{Binding StatusText}"
+                   Foreground="#484865" FontSize="11"
+                   VerticalAlignment="Center" />
+        <TextBlock Text="{Binding UltimoScan}"
+                   Foreground="#282840" FontSize="11"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
 
   </Grid>
 </UserControl>

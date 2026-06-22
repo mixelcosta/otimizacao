@@ -4,52 +4,162 @@
              x:Class="HardwareOptimizer.App.Views.IaCopilotoView"
              x:DataType="vm:IaCopilotoViewModel">
 
-  <DockPanel Margin="20">
+  <Grid RowDefinitions="Auto,*,Auto">
 
-    <TextBlock DockPanel.Dock="Top"
-               Text="IA COPILOTO" FontSize="13" FontWeight="Bold"
-               Foreground="#444444" LetterSpacing="3" Margin="0,0,0,16" />
+    <!-- ── Cabeçalho ── -->
+    <Border Grid.Row="0" BorderBrush="#13132A" BorderThickness="0,0,0,1"
+            Padding="24,16,24,14">
+      <StackPanel Spacing="3">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                  VerticalAlignment="Center" />
+          <TextBlock Text="IA COPILOTO" FontSize="13" FontWeight="Bold"
+                     Foreground="#484865" LetterSpacing="3"
+                     VerticalAlignment="Center" />
+          <Border Width="7" Height="7" CornerRadius="4"
+                  Background="#00C8FF" VerticalAlignment="Center"
+                  Opacity="0.8" />
+        </StackPanel>
+        <TextBlock Text="Assistente de inteligência artificial para análise de hardware"
+                   Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+      </StackPanel>
+    </Border>
 
-    <!-- Input area -->
-    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,8,Auto" Margin="0,8,0,0">
-      <TextBox Grid.Column="0"
-               Text="{Binding InputUsuario}"
-               PlaceholderText="Pergunte algo sobre o seu PC…"
-               Background="#111111" Foreground="#CCCCCC"
-               BorderBrush="#2A2A2A" CornerRadius="8"
-               Padding="12,10" AcceptsReturn="False" />
-      <Button Grid.Column="2"
-              Content="Enviar"
-              Command="{Binding EnviarCommand}"
-              IsEnabled="{Binding !Ocupado}"
-              Background="#1A3A2A" Foreground="#00FF88"
-              CornerRadius="8" Padding="16,10" />
-    </Grid>
+    <!-- ── Histórico de mensagens ── -->
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Margin="20,12,20,12" Spacing="6">
 
-    <!-- Chat history -->
-    <ScrollViewer>
-      <ItemsControl ItemsSource="{Binding Mensagens}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="vm:MensagemChatViewModel">
-            <Border Margin="0,4"
-                    Background="#111111"
-                    CornerRadius="8" Padding="12,10">
-              <StackPanel Spacing="4">
-                <Grid ColumnDefinitions="*,Auto">
-                  <TextBlock Text="{Binding Autor}"
-                             FontWeight="Bold" Foreground="#00FF88" FontSize="12" />
-                  <TextBlock Grid.Column="1"
-                             Text="{Binding Hora, StringFormat={}{0:HH:mm}}"
-                             Foreground="#444444" FontSize="11" />
-                </Grid>
-                <TextBlock Text="{Binding Texto}"
-                           Foreground="#CCCCCC" TextWrapping="Wrap" />
-              </StackPanel>
-            </Border>
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+        <!-- Estado vazio -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="12" Margin="0,60"
+                    IsVisible="{Binding MensagensVazio}">
+          <TextBlock Text="○" FontSize="44" HorizontalAlignment="Center"
+                     Foreground="#1A1A2E" />
+          <TextBlock Text="Faça uma pergunta sobre o seu hardware."
+                     Foreground="#484865" FontSize="13"
+                     HorizontalAlignment="Center" TextAlignment="Center" />
+          <TextBlock Text="Ex: Como posso melhorar a temperatura da CPU?"
+                     Foreground="#282840" FontSize="11"
+                     HorizontalAlignment="Center" TextAlignment="Center" />
+        </StackPanel>
+
+        <!-- Lista de mensagens -->
+        <ItemsControl ItemsSource="{Binding Mensagens}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:MensagemChatViewModel">
+              <Panel>
+
+              <!-- Alerta do sistema -->
+              <Border IsVisible="{Binding EhAlerta}"
+                      CornerRadius="8" Padding="14,10" Margin="0,0,0,2"
+                      Background="#1A0800" BorderBrush="#FF8C0040" BorderThickness="1">
+                <StackPanel Spacing="6">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="⚠" Foreground="#FF8C00" FontSize="11"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Autor}"
+                               Foreground="#FF8C00" FontSize="11" FontWeight="Bold"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Hora, StringFormat={}{0:HH:mm}}"
+                               Foreground="#282840" FontSize="10"
+                               VerticalAlignment="Center" />
+                  </StackPanel>
+                  <TextBlock Text="{Binding Texto}"
+                             Foreground="#FF8C00" FontSize="12"
+                             TextWrapping="Wrap" LineHeight="18" Opacity="0.85" />
+                </StackPanel>
+              </Border>
+
+              <!-- Mensagem normal -->
+              <Border IsVisible="{Binding !EhAlerta}"
+                      CornerRadius="8"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
+                      Padding="14,10" Margin="0,0,0,2">
+                <Border.Background>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#0C0C1E" Offset="0" />
+                    <GradientStop Color="#09091A" Offset="1" />
+                  </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel Spacing="6">
+                  <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Border Grid.Column="0" Width="3" Height="14" CornerRadius="2"
+                            Background="{Binding CorAutor}"
+                            Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Autor}"
+                               Foreground="{Binding CorAutor}"
+                               FontSize="11" FontWeight="Bold"
+                               VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding Hora, StringFormat={}{0:HH:mm}}"
+                               Foreground="#282840" FontSize="10"
+                               VerticalAlignment="Center" />
+                  </Grid>
+                  <TextBlock Text="{Binding Texto}"
+                             Foreground="#E0E0F2" FontSize="12"
+                             TextWrapping="Wrap" LineHeight="19" />
+                </StackPanel>
+              </Border>
+
+              </Panel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+      </StackPanel>
     </ScrollViewer>
 
-  </DockPanel>
+    <!-- ── Área de input ── -->
+    <Border Grid.Row="2" BorderBrush="#13132A" BorderThickness="0,1,0,0"
+            Padding="20,12,20,16">
+      <StackPanel Spacing="8">
+
+        <!-- Indicador de carregamento -->
+        <StackPanel Orientation="Horizontal" Spacing="8"
+                    IsVisible="{Binding Ocupado}">
+          <Border Width="6" Height="6" CornerRadius="3"
+                  Background="#00C8FF" VerticalAlignment="Center" />
+          <TextBlock Text="IA processando…"
+                     Foreground="#484865" FontSize="11"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+
+        <!-- Campo de entrada + botão -->
+        <Grid ColumnDefinitions="*,Auto">
+          <Border Grid.Column="0"
+                  Background="#09091A"
+                  BorderBrush="#1E1E3C" BorderThickness="1"
+                  CornerRadius="8">
+            <TextBox Text="{Binding InputUsuario}"
+                     PlaceholderText="Pergunte algo sobre o seu PC…"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Foreground="#E0E0F2"
+                     CaretBrush="#00C8FF"
+                     FontSize="12"
+                     Padding="12,10"
+                     AcceptsReturn="False">
+              <TextBox.KeyBindings>
+                <KeyBinding Gesture="Return" Command="{Binding EnviarCommand}" />
+              </TextBox.KeyBindings>
+            </TextBox>
+          </Border>
+
+          <Button Grid.Column="1"
+                  Command="{Binding EnviarCommand}"
+                  IsEnabled="{Binding !Ocupado}"
+                  Background="#00C8FF18" Foreground="#00C8FF"
+                  BorderBrush="#00C8FF40" BorderThickness="1"
+                  CornerRadius="8" Padding="18,10"
+                  Margin="8,0,0,0" FontSize="15" FontWeight="Bold"
+                  Content="→"
+                  VerticalAlignment="Stretch"
+                  Cursor="Hand" />
+        </Grid>
+
+      </StackPanel>
+    </Border>
+
+  </Grid>
 </UserControl>

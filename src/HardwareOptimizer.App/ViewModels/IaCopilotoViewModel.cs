@@ -17,11 +17,14 @@ public partial class IaCopilotoViewModel : ObservableObject
     {
         _agente = agente;
         Mensagens = new ObservableCollection<MensagemChatViewModel>();
+        Mensagens.CollectionChanged += (_, _) => OnPropertyChanged(nameof(MensagensVazio));
     }
 
     [ObservableProperty] private bool _ocupado;
     [ObservableProperty] private string _inputUsuario = string.Empty;
     [ObservableProperty] private bool _temAlertaPendente;
+
+    public bool MensagensVazio => Mensagens.Count == 0;
 
     public ObservableCollection<MensagemChatViewModel> Mensagens { get; }
 
@@ -108,4 +111,8 @@ public sealed record MensagemChatViewModel(
     string Autor,
     string Texto,
     DateTimeOffset Hora,
-    bool EhAlerta = false);
+    bool EhAlerta = false)
+{
+    public bool   EhUsuario => Autor == "Você";
+    public string CorAutor  => EhAlerta ? "#FF8C00" : EhUsuario ? "#484865" : "#00C8FF";
+}
