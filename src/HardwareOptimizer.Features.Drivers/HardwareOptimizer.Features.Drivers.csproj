@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Data\whql_catalog.json" />
+  </ItemGroup>
+
 </Project>

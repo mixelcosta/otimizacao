@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.Licensing.Tests", "tests\HardwareOptimizer.Features.Licensing.Tests\HardwareOptimizer.Features.Licensing.Tests.csproj", "{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.Drivers.Tests", "tests\HardwareOptimizer.Features.Drivers.Tests\HardwareOptimizer.Features.Drivers.Tests.csproj", "{58E6D403-4A46-4545-BE1F-87592A02E57C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -283,6 +285,18 @@ Global
 		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Release|x64.Build.0 = Release|Any CPU
 		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Release|x86.ActiveCfg = Release|Any CPU
 		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Release|x86.Build.0 = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|x64.Build.0 = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|x86.Build.0 = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|x64.ActiveCfg = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|x64.Build.0 = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|x86.ActiveCfg = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -307,5 +321,6 @@ Global
 		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
 		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
 		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
+		{58E6D403-4A46-4545-BE1F-87592A02E57C} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
 	EndGlobalSection
 EndGlobal

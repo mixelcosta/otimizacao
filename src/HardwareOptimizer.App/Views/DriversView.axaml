@@ -4,43 +4,63 @@
              x:Class="HardwareOptimizer.App.Views.DriversView"
              x:DataType="vm:DriversViewModel">
 
-  <Grid RowDefinitions="Auto,*,Auto">
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
 
-    <!-- Cabeçalho -->
+    <!-- ── Cabeçalho ── -->
     <StackPanel Grid.Row="0" Margin="24,20,24,0" Spacing="3">
-      <TextBlock Text="DRIVERS" FontSize="13" FontWeight="Bold"
-                 Foreground="#444444" LetterSpacing="3" />
-      <TextBlock Text="Dispositivos instalados detectados via WMI (Win32_PnPSignedDriver)"
-                 Foreground="#555555" FontSize="12" />
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                VerticalAlignment="Center" />
+        <TextBlock Text="DRIVERS" FontSize="13" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="3"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+      <TextBlock Text="Dispositivos detectados via WMI — Display, Rede, Áudio, USB, Armazenamento"
+                 Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
     </StackPanel>
 
-    <!-- Conteúdo -->
-    <ScrollViewer Grid.Row="1" Margin="0,16,0,0">
-      <StackPanel Margin="24,0,24,24" Spacing="10">
+    <!-- ── Filtro ── -->
+    <Border Grid.Row="1" Margin="24,12,24,0"
+            Background="#0C0C1E" CornerRadius="8"
+            BorderBrush="#1E1E3C" BorderThickness="1"
+            IsVisible="{Binding TemResultados}">
+      <TextBox Text="{Binding FiltroTexto}"
+               Watermark="Filtrar por dispositivo ou fabricante…"
+               Background="Transparent"
+               BorderThickness="0"
+               Foreground="#E0E0F2"
+               CaretBrush="#00C8FF"
+               Padding="14,10"
+               FontSize="12" />
+    </Border>
 
-        <!-- Estado inicial / vazio -->
+    <!-- ── Conteúdo ── -->
+    <ScrollViewer Grid.Row="2" Margin="0,12,0,0">
+      <StackPanel Margin="24,0,24,24" Spacing="8">
+
+        <!-- Estado vazio / aguardando scan -->
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
                     Spacing="14" Margin="0,60"
                     IsVisible="{Binding !TemResultados}">
-          <TextBlock Text="💾" FontSize="44" HorizontalAlignment="Center"
-                     Foreground="#1A1A1A" />
+          <TextBlock Text="≡" FontSize="44" HorizontalAlignment="Center"
+                     Foreground="#1A1A2E" />
           <TextBlock Text="{Binding StatusText}"
-                     Foreground="#444444" FontSize="13"
+                     Foreground="#484865" FontSize="13"
                      HorizontalAlignment="Center" TextAlignment="Center"
                      TextWrapping="Wrap" MaxWidth="400" />
         </StackPanel>
 
-        <!-- Cabeçalho da tabela (visível com resultados) -->
-        <Grid ColumnDefinitions="*,140,120,80"
+        <!-- Cabeçalho da tabela -->
+        <Grid ColumnDefinitions="*,140,130,90"
               Margin="4,0" IsVisible="{Binding TemResultados}">
           <TextBlock Grid.Column="0" Text="DISPOSITIVO" FontSize="10" FontWeight="Bold"
-                     Foreground="#333333" LetterSpacing="1" />
+                     Foreground="#282840" LetterSpacing="1" />
           <TextBlock Grid.Column="1" Text="FABRICANTE" FontSize="10" FontWeight="Bold"
-                     Foreground="#333333" LetterSpacing="1" />
-          <TextBlock Grid.Column="2" Text="VERSÃO" FontSize="10" FontWeight="Bold"
-                     Foreground="#333333" LetterSpacing="1" />
+                     Foreground="#282840" LetterSpacing="1" />
+          <TextBlock Grid.Column="2" Text="VERSÃO ATUAL" FontSize="10" FontWeight="Bold"
+                     Foreground="#282840" LetterSpacing="1" />
           <TextBlock Grid.Column="3" Text="STATUS" FontSize="10" FontWeight="Bold"
-                     Foreground="#333333" LetterSpacing="1"
+                     Foreground="#282840" LetterSpacing="1"
                      HorizontalAlignment="Right" />
         </Grid>
 
@@ -50,20 +70,27 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:InfoDriverViewModel">
 
-              <Border Background="#0D0D0D" CornerRadius="8"
-                      BorderBrush="#191919" BorderThickness="1"
+              <Border CornerRadius="8"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
                       Padding="14,10" Margin="0,0,0,2">
-                <Grid ColumnDefinitions="*,140,120,80">
+                <Border.Background>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#0C0C1E" Offset="0" />
+                    <GradientStop Color="#09091A" Offset="1" />
+                  </LinearGradientBrush>
+                </Border.Background>
+
+                <Grid ColumnDefinitions="*,140,130,90">
 
                   <!-- Dispositivo + HWID -->
                   <StackPanel Grid.Column="0" Spacing="2"
                               VerticalAlignment="Center">
                     <TextBlock Text="{Binding Descricao}"
-                               Foreground="#CCCCCC" FontSize="13"
+                               Foreground="#E0E0F2" FontSize="13"
                                FontWeight="SemiBold"
                                TextTrimming="CharacterEllipsis" />
                     <TextBlock Text="{Binding HwidCurto}"
-                               Foreground="#333333" FontSize="10"
+                               Foreground="#282840" FontSize="10"
                                FontFamily="Consolas,Courier New,monospace"
                                TextTrimming="CharacterEllipsis" />
                   </StackPanel>
@@ -71,14 +98,14 @@
                   <!-- Fabricante -->
                   <TextBlock Grid.Column="1"
                              Text="{Binding Fabricante}"
-                             Foreground="#666666" FontSize="12"
+                             Foreground="#484865" FontSize="12"
                              VerticalAlignment="Center"
                              TextTrimming="CharacterEllipsis" />
 
-                  <!-- Versão -->
+                  <!-- Versão atual -->
                   <TextBlock Grid.Column="2"
                              Text="{Binding VersaoAtual}"
-                             Foreground="#555555" FontSize="11"
+                             Foreground="#484865" FontSize="11"
                              FontFamily="Consolas,Courier New,monospace"
                              VerticalAlignment="Center" />
 
@@ -101,29 +128,38 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <!-- Nota informativa sobre WHQL (visível com resultados) -->
-        <Border Background="#0D0D0D" CornerRadius="8" Padding="14,10"
+        <!-- Nota WHQL -->
+        <Border CornerRadius="8" Padding="14,10"
                 IsVisible="{Binding TemResultados}"
-                BorderBrush="#1C1C1C" BorderThickness="1">
-          <TextBlock TextWrapping="Wrap" Foreground="#333333" FontSize="11">
-            <Run Text="ℹ " Foreground="#2A2A2A" />
-            <Run Text="Verificação WHQL online não está disponível nesta versão. Os status exibidos refletem apenas dados locais do sistema." />
+                BorderBrush="#1E1E3C" BorderThickness="1">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <TextBlock TextWrapping="Wrap" Foreground="#282840" FontSize="11">
+            <Run Text="◎  " Foreground="#282840" />
+            <Run Text="Verificação WHQL via catálogo local. Para drivers mais recentes, acesse o site do fabricante." />
           </TextBlock>
         </Border>
 
       </StackPanel>
     </ScrollViewer>
 
-    <!-- Rodapé -->
-    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="16"
-                Margin="24,0,24,16" IsVisible="{Binding TemResultados}">
-      <TextBlock Text="{Binding StatusText}"
-                 Foreground="#444444" FontSize="11"
-                 VerticalAlignment="Center" />
-      <TextBlock Text="{Binding UltimoScan}"
-                 Foreground="#2A2A2A" FontSize="11"
-                 VerticalAlignment="Center" />
-    </StackPanel>
+    <!-- ── Rodapé ── -->
+    <Border Grid.Row="3" BorderBrush="#13132A" BorderThickness="0,1,0,0"
+            IsVisible="{Binding TemResultados}">
+      <StackPanel Orientation="Horizontal" Spacing="16"
+                  Margin="24,10,24,12">
+        <TextBlock Text="{Binding StatusText}"
+                   Foreground="#484865" FontSize="11"
+                   VerticalAlignment="Center" />
+        <TextBlock Text="{Binding UltimoScan}"
+                   Foreground="#282840" FontSize="11"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
 
   </Grid>
 </UserControl>

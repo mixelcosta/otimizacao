@@ -1,4 +1,3 @@
-using System.Runtime.Versioning;
 using HardwareOptimizer.Agent.Drivers;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
@@ -8,12 +7,12 @@ namespace HardwareOptimizer.Features.Drivers;
 
 public sealed class AtualizadorDrivers
 {
-    private readonly ColetorHwid _coletor;
+    private readonly IColetorHwid _coletor;
     private readonly IRepositorioDriversWhql _repositorio;
     private readonly ILogger<AtualizadorDrivers> _log;
 
     public AtualizadorDrivers(
-        ColetorHwid coletor,
+        IColetorHwid coletor,
         IRepositorioDriversWhql repositorio,
         ILogger<AtualizadorDrivers> log)
     {
@@ -22,7 +21,6 @@ public sealed class AtualizadorDrivers
         _log = log;
     }
 
-    [SupportedOSPlatform("windows")]
     public async Task<IReadOnlyList<InfoDriver>> VarrerAsync(CancellationToken ct = default)
     {
         var dispositivos = _coletor.Coletar();

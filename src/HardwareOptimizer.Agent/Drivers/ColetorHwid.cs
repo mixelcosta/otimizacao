@@ -11,7 +11,7 @@ namespace HardwareOptimizer.Agent.Drivers;
 /// Operação somente leitura.
 /// </summary>
 [SupportedOSPlatform("windows")]
-public sealed class ColetorHwid
+public sealed class ColetorHwid : IColetorHwid
 {
     private static readonly HashSet<string> _categoriasRelevantes = new(StringComparer.OrdinalIgnoreCase)
     {
