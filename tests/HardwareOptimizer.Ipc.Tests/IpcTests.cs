@@ -120,6 +120,37 @@ public sealed class IpcTests
         }
     }
 
+    // ---- exportarbackupdrivers --------------------------------------------------
+
+    [Fact]
+    public async Task ExportarBackupDrivers_NaoWindows_RetornaFalha()
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("exportarbackupdrivers"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("Windows", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ExportarBackupDrivers_Windows_CriaSubpasta()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("exportarbackupdrivers"));
+
+        var raiz = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "OtimizeBuilder", "DriverBackups");
+
+        // A pasta base sempre deve ser criada, independentemente do pnputil ter êxito.
+        Assert.True(Directory.Exists(raiz), $"Esperava: {raiz}");
+
+        // Se pnputil teve êxito, Resultado deve ser a pasta com timestamp.
+        if (r.Sucesso)
+            Assert.IsType<string>(r.Resultado);
+    }
+
     private sealed class ColetorFake : IColetorInventario
     {
         private readonly Inventario _inventario;

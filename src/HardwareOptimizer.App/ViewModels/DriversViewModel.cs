@@ -1,17 +1,21 @@
 using System.Collections.ObjectModel;
+using System.Text.Json;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
 
 namespace HardwareOptimizer.App.ViewModels;
 
 public partial class DriversViewModel : ObservableObject
 {
+    private readonly IRoteadorIpc? _agente;
     private IReadOnlyList<InfoDriver> _todosDrivers = [];
 
-    public DriversViewModel()
+    public DriversViewModel(IRoteadorIpc? agente = null)
     {
+        _agente = agente;
         Drivers = new ObservableCollection<InfoDriverViewModel>();
     }
 
@@ -19,6 +23,10 @@ public partial class DriversViewModel : ObservableObject
     [ObservableProperty] private string _ultimoScan = string.Empty;
     [ObservableProperty] private bool _temResultados;
     [ObservableProperty] private string _filtroTexto = string.Empty;
+    [ObservableProperty] private string _backupStatus = string.Empty;
+    [ObservableProperty] private bool _exportando;
+
+    public bool PodeExportarBackup => _agente is not null;
 
     partial void OnFiltroTextoChanged(string value) => AplicarFiltro();
 
@@ -56,6 +64,28 @@ public partial class DriversViewModel : ObservableObject
         if (driver?.UrlDownload is null) return;
         System.Diagnostics.Process.Start(
             new System.Diagnostics.ProcessStartInfo(driver.UrlDownload) { UseShellExecute = true });
+    }
+
+    [RelayCommand]
+    private async Task ExportarBackupAsync()
+    {
+        if (_agente is null || Exportando) return;
+
+        Exportando = true;
+        BackupStatus = "Exportando drivers via pnputil…";
+        try
+        {
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "exportarbackupdrivers" });
+
+            BackupStatus = resp.Sucesso
+                ? $"Backup salvo em: {resp.Resultado}"
+                : "Falha: " + resp.Erro;
+        }
+        finally
+        {
+            Exportando = false;
+        }
     }
 }
 

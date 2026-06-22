@@ -248,6 +248,21 @@
             </StackPanel>
           </Button>
 
+          <!-- CTA: Ativar Premium (visível somente no plano gratuito) -->
+          <Button Margin="12,6,12,0"
+                  Command="{Binding IrParaConfiguracoesCommand}"
+                  IsVisible="{Binding !EhPremium}"
+                  Background="#1A1000" Foreground="#D4A017"
+                  BorderBrush="#2A1E00" BorderThickness="1"
+                  CornerRadius="6" Padding="12,8"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  FontSize="11" FontWeight="SemiBold"
+                  Cursor="Hand">
+            <TextBlock Text="⭐  Ativar Premium"
+                       HorizontalAlignment="Center" />
+          </Button>
+
         </StackPanel>
 
         <!-- ── Navegação principal ── -->

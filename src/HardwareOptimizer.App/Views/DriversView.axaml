@@ -161,15 +161,42 @@
     <!-- ── Rodapé ── -->
     <Border Grid.Row="3" BorderBrush="#13132A" BorderThickness="0,1,0,0"
             IsVisible="{Binding TemResultados}">
-      <StackPanel Orientation="Horizontal" Spacing="16"
-                  Margin="24,10,24,12">
-        <TextBlock Text="{Binding StatusText}"
-                   Foreground="#484865" FontSize="11"
-                   VerticalAlignment="Center" />
-        <TextBlock Text="{Binding UltimoScan}"
-                   Foreground="#282840" FontSize="11"
-                   VerticalAlignment="Center" />
-      </StackPanel>
+      <Grid ColumnDefinitions="*,Auto" Margin="24,10,24,12">
+
+        <!-- Status + último scan -->
+        <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+          <TextBlock Text="{Binding StatusText}"
+                     Foreground="#484865" FontSize="11"
+                     VerticalAlignment="Center" />
+          <TextBlock Text="{Binding UltimoScan}"
+                     Foreground="#282840" FontSize="11"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+
+        <!-- Backup -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding PodeExportarBackup}">
+          <TextBlock Text="{Binding BackupStatus}"
+                     Foreground="#282840" FontSize="11"
+                     VerticalAlignment="Center" MaxWidth="300"
+                     TextTrimming="CharacterEllipsis"
+                     IsVisible="{Binding BackupStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          <Button Command="{Binding ExportarBackupCommand}"
+                  IsEnabled="{Binding !Exportando}"
+                  Background="#00C8FF18" Foreground="#00C8FF"
+                  BorderBrush="#00C8FF40" BorderThickness="1"
+                  Padding="12,5" CornerRadius="5"
+                  FontSize="11" FontWeight="SemiBold"
+                  Cursor="Hand">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="↑" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Backup drivers" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+
+      </Grid>
     </Border>
 
   </Grid>

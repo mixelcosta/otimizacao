@@ -131,6 +131,83 @@ public class BiosGuideViewModelTests
     }
 }
 
+public class DriversViewModelBackupTests
+{
+    [Fact]
+    public void PodeExportarBackup_SemAgente_Falso()
+    {
+        var vm = new DriversViewModel();
+        Assert.False(vm.PodeExportarBackup);
+    }
+
+    [Fact]
+    public void PodeExportarBackup_ComAgente_Verdadeiro()
+    {
+        var vm = new DriversViewModel(new AgenteBackupFake());
+        Assert.True(vm.PodeExportarBackup);
+    }
+
+    [Fact]
+    public void EstadoInicial_NaoExportando_StatusVazio()
+    {
+        var vm = new DriversViewModel(new AgenteBackupFake());
+        Assert.False(vm.Exportando);
+        Assert.Equal(string.Empty, vm.BackupStatus);
+    }
+
+    [Fact]
+    public async Task ExportarBackupCommand_Sucesso_AtualizaBackupStatus()
+    {
+        var agente = new AgenteBackupFake("/tmp/OtimizeBuilder/DriverBackups/2026-01-01");
+        var vm = new DriversViewModel(agente);
+
+        await vm.ExportarBackupCommand.ExecuteAsync(null);
+
+        Assert.False(vm.Exportando);
+        Assert.Contains("2026-01-01", vm.BackupStatus);
+    }
+
+    [Fact]
+    public async Task ExportarBackupCommand_Falha_MostraMensagemErro()
+    {
+        var agente = new AgenteBackupFake(sucesso: false);
+        var vm = new DriversViewModel(agente);
+
+        await vm.ExportarBackupCommand.ExecuteAsync(null);
+
+        Assert.False(vm.Exportando);
+        Assert.Contains("Falha", vm.BackupStatus);
+    }
+
+    [Fact]
+    public async Task ExportarBackupCommand_SemAgente_NaoAlteraStatus()
+    {
+        var vm = new DriversViewModel(); // sem agente
+        await vm.ExportarBackupCommand.ExecuteAsync(null);
+        Assert.Equal(string.Empty, vm.BackupStatus);
+    }
+
+    private sealed class AgenteBackupFake : IRoteadorIpc
+    {
+        private readonly string _pasta;
+        private readonly bool _sucesso;
+
+        public AgenteBackupFake(string pasta = "/drivers", bool sucesso = true)
+        {
+            _pasta   = pasta;
+            _sucesso = sucesso;
+        }
+
+        public Task<RespostaIpc> TratarAsync(RequisicaoIpc req, CancellationToken ct = default)
+        {
+            var resp = _sucesso
+                ? RespostaIpc.Ok(req.Id, _pasta)
+                : RespostaIpc.Falha(req.Id, "Erro simulado.");
+            return Task.FromResult(resp);
+        }
+    }
+}
+
 public class InfoDriverViewModelDownloadTests
 {
     [Fact]

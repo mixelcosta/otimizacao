@@ -102,6 +102,9 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "chat_upgrade" => await ChatUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "analise_upgrade" => await AnaliseInicialUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "chat_bios" => await ChatBiosAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "exportarbackupdrivers" => OperatingSystem.IsWindows()
+                    ? await ExportarBackupDriversAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
         }
@@ -367,6 +370,42 @@ public sealed class RoteadorIpc : IRoteadorIpc
         var agente = new AgenteUpgrade(ObterClienteLlm(), _log);
         var resposta = await agente.AnalisarInicialAsync(inventario, ct).ConfigureAwait(false);
         return RespostaIpc.Ok(req.Id, resposta);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> ExportarBackupDriversAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var pasta = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "OtimizeBuilder", "DriverBackups",
+            DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+
+        Directory.CreateDirectory(pasta);
+
+        var psi = new ProcessStartInfo
+        {
+            FileName               = "pnputil.exe",
+            Arguments              = $"/export-driver * \"{pasta}\"",
+            UseShellExecute        = false,
+            CreateNoWindow         = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError  = true,
+        };
+
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            await proc.StandardOutput.ReadToEndAsync(ct).ConfigureAwait(false);
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+
+            return proc.ExitCode == 0
+                ? RespostaIpc.Ok(req.Id, pasta)
+                : RespostaIpc.Falha(req.Id, $"pnputil saiu com código {proc.ExitCode}.");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
     }
 
     private async Task<RespostaIpc> ChatBiosAsync(RequisicaoIpc req, CancellationToken ct)
