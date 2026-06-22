@@ -2,6 +2,7 @@ using System.Text.Json;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.App.Services;
 using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Features.Licensing;
 using HardwareOptimizer.Ipc;
@@ -13,6 +14,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     private readonly IRoteadorIpc _agente;
     private readonly IServicoLicenca _licenca;
     private readonly DispatcherTimer _timerSensores;
+    private readonly ListenerAlertasServico _listenerAlertas;
 
     public ShellViewModel(IRoteadorIpc agente, IServicoLicenca licenca)
     {
@@ -47,6 +49,9 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         };
         _timerSensores.Tick += async (_, _) => await TickSensoresAsync();
         _timerSensores.Start();
+
+        _listenerAlertas = new ListenerAlertasServico(msg =>
+            Dispatcher.UIThread.Post(() => ReceberAlertaServico(msg)));
 
         PaginaAtual = Home;
     }
@@ -170,5 +175,9 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         }
     }
 
-    public void Dispose() => _timerSensores.Stop();
+    public void Dispose()
+    {
+        _timerSensores.Stop();
+        _listenerAlertas.Dispose();
+    }
 }
