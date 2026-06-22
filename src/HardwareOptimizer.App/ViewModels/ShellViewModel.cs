@@ -28,7 +28,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         Upgrade = new UpgradeViewModel(agente);
         VidaUtil = new VidaUtilViewModel();
         Drivers = new DriversViewModel();
-        BiosGuide = new BiosGuideViewModel();
+        BiosGuide = new BiosGuideViewModel(agente);
         Configuracoes = new ConfiguracoesViewModel(licenca, OnLicencaAlterada);
         Home = new HomeViewModel(agente, () => PaginaAtual = Dashboard, inv =>
         {

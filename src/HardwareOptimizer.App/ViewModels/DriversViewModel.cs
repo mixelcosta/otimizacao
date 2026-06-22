@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using HardwareOptimizer.Core.Contracts;
 
 namespace HardwareOptimizer.App.ViewModels;
@@ -48,12 +49,21 @@ public partial class DriversViewModel : ObservableObject
             ? "Nenhum dispositivo detectado."
             : $"{Drivers.Count} de {_todosDrivers.Count} dispositivo(s).";
     }
+
+    [RelayCommand]
+    private void AbrirDownload(InfoDriverViewModel? driver)
+    {
+        if (driver?.UrlDownload is null) return;
+        System.Diagnostics.Process.Start(
+            new System.Diagnostics.ProcessStartInfo(driver.UrlDownload) { UseShellExecute = true });
+    }
 }
 
 public sealed class InfoDriverViewModel
 {
     public InfoDriverViewModel(InfoDriver d)
     {
+        HardwareId = d.HardwareId;
         Descricao = d.Descricao;
         Fabricante = string.IsNullOrWhiteSpace(d.Fabricante) ? "—" : d.Fabricante;
         VersaoAtual = string.IsNullOrWhiteSpace(d.VersaoAtual) ? "—" : d.VersaoAtual;
@@ -67,16 +77,23 @@ public sealed class InfoDriverViewModel
 
         CertificadoWhql = d.CertificadoWhql;
 
+        UrlDownload = d.UrlDownload;
+        TemDownload = d.Status == StatusDriver.AtualizacaoDisponivel
+                      && !string.IsNullOrEmpty(d.UrlDownload);
+
         var hwid = d.HardwareId;
         HwidCurto = hwid.Length > 50 ? hwid[..47] + "…" : hwid;
     }
 
-    public string Descricao       { get; }
-    public string Fabricante      { get; }
-    public string VersaoAtual     { get; }
-    public string StatusTexto     { get; }
-    public IBrush CorStatus       { get; }
-    public IBrush CorFundo        { get; }
-    public bool   CertificadoWhql { get; }
-    public string HwidCurto       { get; }
+    public string  HardwareId     { get; }
+    public string  Descricao      { get; }
+    public string  Fabricante     { get; }
+    public string  VersaoAtual    { get; }
+    public string  StatusTexto    { get; }
+    public IBrush  CorStatus      { get; }
+    public IBrush  CorFundo       { get; }
+    public bool    CertificadoWhql { get; }
+    public string? UrlDownload    { get; }
+    public bool    TemDownload    { get; }
+    public string  HwidCurto     { get; }
 }

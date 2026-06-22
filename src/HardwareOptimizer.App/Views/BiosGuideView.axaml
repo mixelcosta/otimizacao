@@ -131,7 +131,7 @@
         </Border>
 
         <!-- Estado vazio -->
-        <StackPanel HorizontalAlignment="Center" Spacing="12" Margin="0,60"
+        <StackPanel HorizontalAlignment="Center" Spacing="12" Margin="0,40"
                     IsVisible="{Binding !TemPassos}">
           <TextBlock Text="⚙" FontSize="40" HorizontalAlignment="Center"
                      Foreground="#282840" />
@@ -140,6 +140,75 @@
                      HorizontalAlignment="Center" TextAlignment="Center"
                      TextWrapping="Wrap" MaxWidth="380" />
         </StackPanel>
+
+        <!-- ── Chat IA ── -->
+        <Border CornerRadius="10"
+                BorderBrush="#1E1E3C" BorderThickness="1"
+                Padding="20"
+                IsVisible="{Binding ChatDisponivel}">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="12">
+
+            <!-- Título -->
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Border Width="3" Height="12" Background="#00C8FF" CornerRadius="1"
+                      VerticalAlignment="Center" />
+              <TextBlock Text="PERGUNTAR À IA" FontSize="10" FontWeight="Bold"
+                         Foreground="#282840" LetterSpacing="2"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Input -->
+            <TextBox Text="{Binding Pergunta}"
+                     PlaceholderText="Ex: Como desativo CSM no BIOS ASUS Z790?"
+                     IsEnabled="{Binding !Perguntando}"
+                     Background="#0C0C1E" Foreground="#E0E0F2"
+                     BorderBrush="#1E1E3C" BorderThickness="1"
+                     CaretBrush="#00C8FF"
+                     Padding="12,10" FontSize="12" CornerRadius="6" />
+
+            <!-- Botão enviar -->
+            <Button Command="{Binding PerguntarCommand}"
+                    IsEnabled="{Binding !Perguntando}"
+                    Background="#00C8FF18" Foreground="#00C8FF"
+                    BorderBrush="#00C8FF40" BorderThickness="1"
+                    Padding="16,8" CornerRadius="6"
+                    FontSize="12" FontWeight="SemiBold"
+                    HorizontalAlignment="Left" Cursor="Hand">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="✦" FontSize="11" VerticalAlignment="Center" />
+                <TextBlock Text="Perguntar" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <!-- Aguardando IA -->
+            <TextBlock Text="Consultando IA…"
+                       Foreground="#484865" FontSize="12"
+                       HorizontalAlignment="Center"
+                       IsVisible="{Binding Perguntando}" />
+
+            <!-- Resposta -->
+            <Border CornerRadius="8" Padding="14,12"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    IsVisible="{Binding TemResposta}">
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                  <GradientStop Color="#0F0F22" Offset="0" />
+                  <GradientStop Color="#0C0C1E" Offset="1" />
+                </LinearGradientBrush>
+              </Border.Background>
+              <TextBlock Text="{Binding RespostaIa}"
+                         Foreground="#E0E0F2" FontSize="12"
+                         TextWrapping="Wrap" LineHeight="20" />
+            </Border>
+
+          </StackPanel>
+        </Border>
 
       </StackPanel>
     </ScrollViewer>

@@ -56,7 +56,7 @@
                      Foreground="#666666" FontSize="12" TextWrapping="Wrap" />
 
           <TextBox Text="{Binding ChaveAtivacao}"
-                   Watermark="XXXX-XXXX-XXXX-XXXX"
+                   PlaceholderText="XXXX-XXXX-XXXX-XXXX"
                    FontFamily="Consolas,monospace"
                    FontSize="14"
                    Background="#111111"

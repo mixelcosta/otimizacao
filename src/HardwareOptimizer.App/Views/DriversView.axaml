@@ -25,7 +25,7 @@
             BorderBrush="#1E1E3C" BorderThickness="1"
             IsVisible="{Binding TemResultados}">
       <TextBox Text="{Binding FiltroTexto}"
-               Watermark="Filtrar por dispositivo ou fabricante…"
+               PlaceholderText="Filtrar por dispositivo ou fabricante…"
                Background="Transparent"
                BorderThickness="0"
                Foreground="#E0E0F2"
@@ -109,17 +109,28 @@
                              FontFamily="Consolas,Courier New,monospace"
                              VerticalAlignment="Center" />
 
-                  <!-- Badge de status -->
-                  <Border Grid.Column="3"
-                          Background="{Binding CorFundo}"
-                          CornerRadius="4" Padding="8,3"
-                          HorizontalAlignment="Right"
-                          VerticalAlignment="Center">
-                    <TextBlock Text="{Binding StatusTexto}"
-                               Foreground="{Binding CorStatus}"
-                               FontSize="10" FontWeight="Bold"
-                               LetterSpacing="0.5" />
-                  </Border>
+                  <!-- Status badge + botão download -->
+                  <StackPanel Grid.Column="3" Spacing="4"
+                              HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Border Background="{Binding CorFundo}"
+                            CornerRadius="4" Padding="8,3"
+                            HorizontalAlignment="Right">
+                      <TextBlock Text="{Binding StatusTexto}"
+                                 Foreground="{Binding CorStatus}"
+                                 FontSize="10" FontWeight="Bold"
+                                 LetterSpacing="0.5" />
+                    </Border>
+                    <Button Content="↓ baixar"
+                            IsVisible="{Binding TemDownload}"
+                            Command="{Binding $parent[ItemsControl].DataContext.AbrirDownloadCommand}"
+                            CommandParameter="{Binding}"
+                            Background="#00C8FF18" Foreground="#00C8FF"
+                            BorderBrush="#00C8FF40" BorderThickness="1"
+                            Padding="6,2" CornerRadius="4"
+                            FontSize="10" FontWeight="SemiBold"
+                            HorizontalAlignment="Right"
+                            Cursor="Hand" />
+                  </StackPanel>
 
                 </Grid>
               </Border>

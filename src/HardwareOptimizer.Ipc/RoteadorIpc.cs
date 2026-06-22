@@ -101,6 +101,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "chat_upgrade" => await ChatUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "analise_upgrade" => await AnaliseInicialUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "chat_bios" => await ChatBiosAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
         }
@@ -365,6 +366,41 @@ public sealed class RoteadorIpc : IRoteadorIpc
         var inventario = await _coletor.ColetarAsync(ct).ConfigureAwait(false);
         var agente = new AgenteUpgrade(ObterClienteLlm(), _log);
         var resposta = await agente.AnalisarInicialAsync(inventario, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, resposta);
+    }
+
+    private async Task<RespostaIpc> ChatBiosAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var pergunta = req.Parametros is { } p
+            && p.TryGetProperty("pergunta", out var q) && q.ValueKind == JsonValueKind.String
+            ? q.GetString() : null;
+
+        if (string.IsNullOrWhiteSpace(pergunta))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'pergunta' obrigatório.");
+
+        var inventario = await _coletor.ColetarAsync(ct).ConfigureAwait(false);
+
+        var ram = inventario.Memoria.FirstOrDefault();
+        var velocidadeRam = ram?.VelocidadeMhz > 0 ? $"{ram.VelocidadeMhz} MHz" : "desconhecida";
+        var tipoRam = ram?.VelocidadeMhz >= 4800 ? "DDR5" : "DDR4";
+
+        var systemPrompt = $"""
+            Você é um especialista técnico em BIOS de placas-mãe para Windows.
+
+            Configuração do sistema do usuário:
+            - Placa-mãe: {inventario.Placa.Fabricante} {inventario.Placa.Modelo}
+            - CPU: {inventario.Cpu.Nome}
+            - RAM: {inventario.Memoria.Count}x módulo(s) {tipoRam} @ {velocidadeRam}
+            - BIOS versão: {inventario.Placa.VersaoBios ?? "desconhecida"}
+
+            Responda em português, de forma direta e técnica.
+            Indique o caminho de menu específico para o fabricante quando relevante
+            (ex: ASUS → AI Tweaker › X.M.P., MSI → OC › XMP).
+            Máximo 200 palavras.
+            """;
+
+        var cliente = ObterClienteLlm();
+        var resposta = await cliente.ResponderAsync(systemPrompt, pergunta, ct).ConfigureAwait(false);
         return RespostaIpc.Ok(req.Id, resposta);
     }
 
