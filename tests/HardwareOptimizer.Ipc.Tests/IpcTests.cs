@@ -252,6 +252,8 @@ public sealed class IpcTests
         public LicencaFake(TipoLicenca tipo) => _tipo = tipo;
 
         public TipoLicenca TipoAtual => _tipo;
+        public string? NomeCliente => null;
+        public string? EmailCliente => null;
 
         public bool TemAcesso(FuncionalidadePremium _) => _tipo == TipoLicenca.Premium;
 
@@ -260,5 +262,8 @@ public sealed class IpcTests
 
         public Task<ResultadoAtivacao> DesativarAsync(CancellationToken ct = default) =>
             Task.FromResult(ResultadoAtivacao.Ok(TipoLicenca.Gratuita));
+
+        public Task<ResultadoAtivacao> ValidarOnlineAsync(CancellationToken ct = default) =>
+            Task.FromResult(ResultadoAtivacao.Ok(_tipo));
     }
 }

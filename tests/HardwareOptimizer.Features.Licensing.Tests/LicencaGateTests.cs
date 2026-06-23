@@ -116,24 +116,96 @@ public sealed class LicencaGateTests
         Assert.True(validador.ChaveValida(chave, "maquina-x"));
     }
 
+    // ---- ResultadoAtivacao — campos NomeCliente / EmailCliente ----
+
+    [Fact]
+    public void ResultadoAtivacao_Ok_com_nome_e_email_preenche_campos()
+    {
+        var r = ResultadoAtivacao.Ok(TipoLicenca.Premium, "João Silva", "joao@test.com");
+
+        Assert.True(r.Sucesso);
+        Assert.Equal("João Silva", r.NomeCliente);
+        Assert.Equal("joao@test.com", r.EmailCliente);
+    }
+
+    [Fact]
+    public void ResultadoAtivacao_Ok_sem_nome_mantem_null()
+    {
+        var r = ResultadoAtivacao.Ok(TipoLicenca.Premium);
+
+        Assert.Null(r.NomeCliente);
+        Assert.Null(r.EmailCliente);
+    }
+
+    [Fact]
+    public void ResultadoAtivacao_Falhar_nao_tem_nome_nem_email()
+    {
+        var r = ResultadoAtivacao.Falhar("chave inválida");
+
+        Assert.Null(r.NomeCliente);
+        Assert.Null(r.EmailCliente);
+    }
+
+    // ---- LicencaConfig ----
+
+    [Fact]
+    public void LicencaConfig_url_compra_nao_e_vazia()
+    {
+        Assert.NotEmpty(LicencaConfig.UrlCompra);
+    }
+
+    [Fact]
+    public void LicencaConfig_grace_period_e_positivo()
+    {
+        Assert.True(LicencaConfig.DiasGracePeriodo > 0);
+    }
+
+    // ---- ValidarOnlineAsync nos fakes ----
+
+    [Fact]
+    public async Task LicencaGratuita_validar_online_retorna_gratuita()
+    {
+        IServicoLicenca licenca = new LicencaGratuita();
+        var resultado = await licenca.ValidarOnlineAsync();
+        Assert.True(resultado.Sucesso);
+        Assert.Equal(TipoLicenca.Gratuita, resultado.NovoTipo);
+    }
+
+    [Fact]
+    public async Task LicencaPremium_validar_online_retorna_premium()
+    {
+        IServicoLicenca licenca = new LicencaPremium();
+        var resultado = await licenca.ValidarOnlineAsync();
+        Assert.True(resultado.Sucesso);
+        Assert.Equal(TipoLicenca.Premium, resultado.NovoTipo);
+    }
+
     // Fakes para testar o comportamento do gate sem DPAPI/Registry
     private sealed class LicencaGratuita : IServicoLicenca
     {
         public TipoLicenca TipoAtual => TipoLicenca.Gratuita;
+        public string? NomeCliente => null;
+        public string? EmailCliente => null;
         public bool TemAcesso(FuncionalidadePremium f) => false;
         public Task<ResultadoAtivacao> AtivarAsync(string chave, CancellationToken ct = default)
             => Task.FromResult(ResultadoAtivacao.Ok(TipoLicenca.Premium));
         public Task<ResultadoAtivacao> DesativarAsync(CancellationToken ct = default)
+            => Task.FromResult(ResultadoAtivacao.Ok(TipoLicenca.Gratuita));
+        public Task<ResultadoAtivacao> ValidarOnlineAsync(CancellationToken ct = default)
             => Task.FromResult(ResultadoAtivacao.Ok(TipoLicenca.Gratuita));
     }
 
     private sealed class LicencaPremium : IServicoLicenca
     {
         public TipoLicenca TipoAtual => TipoLicenca.Premium;
+        public string? NomeCliente => null;
+        public string? EmailCliente => null;
         public bool TemAcesso(FuncionalidadePremium f) => true;
         public Task<ResultadoAtivacao> AtivarAsync(string chave, CancellationToken ct = default)
             => Task.FromResult(ResultadoAtivacao.Ok(TipoLicenca.Premium));
         public Task<ResultadoAtivacao> DesativarAsync(CancellationToken ct = default)
             => Task.FromResult(ResultadoAtivacao.Ok(TipoLicenca.Gratuita));
+        public Task<ResultadoAtivacao> ValidarOnlineAsync(CancellationToken ct = default)
+            => Task.FromResult(ResultadoAtivacao.Ok(TipoLicenca.Premium));
     }
 }
