@@ -6,6 +6,7 @@
     <ProjectReference Include="..\HardwareOptimizer.Cerebro\HardwareOptimizer.Cerebro.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Features.LifeCounter\HardwareOptimizer.Features.LifeCounter.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Features.Upgrade\HardwareOptimizer.Features.Upgrade.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Licensing\HardwareOptimizer.Features.Licensing.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,6 +2,7 @@ using System.Text.Json;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Features.Licensing;
 using HardwareOptimizer.Ipc;
 using Xunit;
 
@@ -151,6 +152,51 @@ public sealed class IpcTests
             Assert.IsType<string>(r.Resultado);
     }
 
+    // ---- obterstatuslicenca ---------------------------------------------------
+
+    [Fact]
+    public async Task ObterStatusLicenca_SemLicenca_RetornaGratuita()
+    {
+        var r = await Roteador().TratarAsync(Req("obterstatuslicenca"));
+        Assert.True(r.Sucesso);
+        var dto = Assert.IsType<StatusLicencaDto>(r.Resultado);
+        Assert.Equal("Gratuita", dto.Tipo);
+        Assert.False(dto.ModuloUpgrade);
+        Assert.False(dto.ContadorVidaUtil);
+        Assert.False(dto.GerenciadorDrivers);
+        Assert.False(dto.GuiaBiosIa);
+    }
+
+    [Fact]
+    public async Task ObterStatusLicenca_ComLicencaGratuita_SemAcesso()
+    {
+        var roteador = new RoteadorIpc(
+            coletor: new ColetorFake(Inventario()),
+            licenca: new LicencaFake(TipoLicenca.Gratuita));
+        var r = await roteador.TratarAsync(Req("obterstatuslicenca"));
+        Assert.True(r.Sucesso);
+        var dto = Assert.IsType<StatusLicencaDto>(r.Resultado);
+        Assert.Equal("Gratuita", dto.Tipo);
+        Assert.False(dto.ModuloUpgrade);
+        Assert.False(dto.GuiaBiosIa);
+    }
+
+    [Fact]
+    public async Task ObterStatusLicenca_ComLicencaPremium_TodasFuncionalidades()
+    {
+        var roteador = new RoteadorIpc(
+            coletor: new ColetorFake(Inventario()),
+            licenca: new LicencaFake(TipoLicenca.Premium));
+        var r = await roteador.TratarAsync(Req("obterstatuslicenca"));
+        Assert.True(r.Sucesso);
+        var dto = Assert.IsType<StatusLicencaDto>(r.Resultado);
+        Assert.Equal("Premium", dto.Tipo);
+        Assert.True(dto.ModuloUpgrade);
+        Assert.True(dto.ContadorVidaUtil);
+        Assert.True(dto.GerenciadorDrivers);
+        Assert.True(dto.GuiaBiosIa);
+    }
+
     private sealed class ColetorFake : IColetorInventario
     {
         private readonly Inventario _inventario;
@@ -159,5 +205,22 @@ public sealed class IpcTests
 
         public Task<Inventario> ColetarAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult(_inventario);
+    }
+
+    private sealed class LicencaFake : IServicoLicenca
+    {
+        private readonly TipoLicenca _tipo;
+
+        public LicencaFake(TipoLicenca tipo) => _tipo = tipo;
+
+        public TipoLicenca TipoAtual => _tipo;
+
+        public bool TemAcesso(FuncionalidadePremium _) => _tipo == TipoLicenca.Premium;
+
+        public Task<ResultadoAtivacao> AtivarAsync(string chave, CancellationToken ct = default) =>
+            Task.FromResult(ResultadoAtivacao.Ok(_tipo));
+
+        public Task<ResultadoAtivacao> DesativarAsync(CancellationToken ct = default) =>
+            Task.FromResult(ResultadoAtivacao.Ok(TipoLicenca.Gratuita));
     }
 }

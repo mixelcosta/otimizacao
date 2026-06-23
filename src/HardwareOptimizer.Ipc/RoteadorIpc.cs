@@ -19,6 +19,7 @@ using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Core.Privacy;
 using HardwareOptimizer.Core.Profiles;
 using HardwareOptimizer.Core.Reporting;
+using HardwareOptimizer.Features.Licensing;
 using HardwareOptimizer.Features.LifeCounter;
 using HardwareOptimizer.Features.Upgrade.Agente;
 using Microsoft.Extensions.Logging;
@@ -38,19 +39,22 @@ public sealed class RoteadorIpc : IRoteadorIpc
     private readonly ServicoSensores _sensores;
     private readonly ICerebro _cerebro;
     private readonly ILogger _log;
+    private readonly IServicoLicenca? _licenca;
 
     public RoteadorIpc(
         CatalogoAcoes? catalogo = null,
         IColetorInventario? coletor = null,
         ServicoSensores? sensores = null,
         ICerebro? cerebro = null,
-        ILogger? logger = null)
+        ILogger? logger = null,
+        IServicoLicenca? licenca = null)
     {
         _catalogo = catalogo ?? CatalogoPadrao.Criar();
         _coletor = coletor ?? new ColetorInventario();
         _sensores = sensores ?? new ServicoSensores();
         _cerebro = cerebro ?? new CerebroLocal();
         _log = logger ?? NullLogger.Instance;
+        _licenca = licenca;
     }
 
     public async Task<RespostaIpc> TratarAsync(RequisicaoIpc requisicao, CancellationToken cancellationToken = default)
@@ -105,6 +109,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "exportarbackupdrivers" => OperatingSystem.IsWindows()
                     ? await ExportarBackupDriversAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "obterstatuslicenca" => ObterStatusLicenca(requisicao),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
         }
@@ -237,6 +242,20 @@ public sealed class RoteadorIpc : IRoteadorIpc
         {
             return RespostaIpc.Falha(req.Id, ex.Message);
         }
+    }
+
+    private RespostaIpc ObterStatusLicenca(RequisicaoIpc req)
+    {
+        var tipo = _licenca?.TipoAtual ?? TipoLicenca.Gratuita;
+        var dto = new StatusLicencaDto
+        {
+            Tipo               = tipo.ToString(),
+            ModuloUpgrade      = _licenca?.TemAcesso(FuncionalidadePremium.ModuloUpgrade)      ?? false,
+            ContadorVidaUtil   = _licenca?.TemAcesso(FuncionalidadePremium.ContadorVidaUtil)   ?? false,
+            GerenciadorDrivers = _licenca?.TemAcesso(FuncionalidadePremium.GerenciadorDrivers) ?? false,
+            GuiaBiosIa         = _licenca?.TemAcesso(FuncionalidadePremium.GuiaBiosIa)         ?? false,
+        };
+        return RespostaIpc.Ok(req.Id, dto);
     }
 
     private IReadOnlyList<AcaoResumoDto> ListarCatalogo() =>

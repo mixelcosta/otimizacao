@@ -90,6 +90,16 @@ public sealed record ParametroResumoDto
     };
 }
 
+/// <summary>Status da licença retornado pelo método <c>obterstatuslicenca</c>.</summary>
+public sealed record StatusLicencaDto
+{
+    public required string Tipo { get; init; }
+    public required bool ModuloUpgrade { get; init; }
+    public required bool ContadorVidaUtil { get; init; }
+    public required bool GerenciadorDrivers { get; init; }
+    public required bool GuiaBiosIa { get; init; }
+}
+
 /// <summary>Opções de serialização compartilhadas pelo protocolo IPC.</summary>
 public static class ProtocoloIpc
 {
