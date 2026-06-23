@@ -9,7 +9,7 @@
     <!-- Abas do submenu -->
     <Style Selector="Button.aba">
       <Setter Property="Background"      Value="Transparent" />
-      <Setter Property="Foreground"      Value="#555555" />
+      <Setter Property="Foreground"      Value="#282840" />
       <Setter Property="FontSize"        Value="13" />
       <Setter Property="FontWeight"      Value="SemiBold" />
       <Setter Property="Padding"         Value="0,10,0,8" />
@@ -19,29 +19,29 @@
     </Style>
     <Style Selector="Button.aba:pointerover /template/ ContentPresenter">
       <Setter Property="Background" Value="Transparent" />
-      <Setter Property="Foreground" Value="#888888" />
+      <Setter Property="Foreground" Value="#484865" />
     </Style>
     <Style Selector="Button.aba-ativa">
-      <Setter Property="Foreground"  Value="#CCCCCC" />
-      <Setter Property="BorderBrush" Value="#00FF88" />
+      <Setter Property="Foreground"  Value="#E0E0F2" />
+      <Setter Property="BorderBrush" Value="#00C8FF" />
     </Style>
 
     <!-- Botões de seleção rápida -->
     <Style Selector="Button.sel-rapida">
-      <Setter Property="Background"      Value="#1A1A1A" />
-      <Setter Property="Foreground"      Value="#666666" />
+      <Setter Property="Background"      Value="#09091A" />
+      <Setter Property="Foreground"      Value="#484865" />
       <Setter Property="FontSize"        Value="11" />
       <Setter Property="CornerRadius"    Value="4" />
       <Setter Property="Padding"         Value="10,4" />
       <Setter Property="BorderThickness" Value="0" />
     </Style>
     <Style Selector="Button.sel-rapida:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#252525" />
+      <Setter Property="Background" Value="#0F0F1E" />
     </Style>
 
     <!-- Checkboxes dos efeitos visuais -->
     <Style Selector="CheckBox.efeito">
-      <Setter Property="Foreground" Value="#AAAAAA" />
+      <Setter Property="Foreground" Value="#484865" />
       <Setter Property="FontSize"   Value="12" />
     </Style>
     <Style Selector="CheckBox.efeito:checked /template/ Border#NormalRectangle">
@@ -49,10 +49,10 @@
       <Setter Property="BorderBrush" Value="#00C870" />
     </Style>
     <Style Selector="CheckBox.efeito:checked">
-      <Setter Property="Foreground" Value="#CCCCCC" />
+      <Setter Property="Foreground" Value="#E0E0F2" />
     </Style>
     <Style Selector="CheckBox.efeito:unchecked">
-      <Setter Property="Foreground" Value="#555555" />
+      <Setter Property="Foreground" Value="#282840" />
     </Style>
 
     <!-- Checkboxes dos programas -->
@@ -62,12 +62,12 @@
       <Setter Property="Height"     Value="20" />
     </Style>
     <Style Selector="CheckBox.programa /template/ Border#NormalRectangle">
-      <Setter Property="BorderBrush" Value="#333333" />
+      <Setter Property="BorderBrush" Value="#1E1E3C" />
       <Setter Property="Background"  Value="Transparent" />
     </Style>
     <Style Selector="CheckBox.programa:checked /template/ Border#NormalRectangle">
-      <Setter Property="Background"  Value="#CC3333" />
-      <Setter Property="BorderBrush" Value="#CC3333" />
+      <Setter Property="Background"  Value="#FF4444" />
+      <Setter Property="BorderBrush" Value="#FF4444" />
     </Style>
 
   </UserControl.Styles>
@@ -77,8 +77,13 @@
     <!-- ── Cabeçalho fixo + abas ────────────────────────────────────────── -->
     <StackPanel Grid.Row="0" Margin="20,20,20,0" Spacing="0">
 
-      <TextBlock Text="OTIMIZADOR WINDOWS" FontSize="13" FontWeight="Bold"
-                 Foreground="#444444" LetterSpacing="3" Margin="0,0,0,16" />
+      <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,16">
+        <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                VerticalAlignment="Center" />
+        <TextBlock Text="OTIMIZADOR WINDOWS" FontSize="13" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="3"
+                   VerticalAlignment="Center" />
+      </StackPanel>
 
       <!-- Abas do submenu -->
       <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*">
@@ -108,7 +113,7 @@
       </Grid>
 
       <!-- Linha separadora -->
-      <Border Height="1" Background="#1E1E1E" Margin="0,0,0,0" />
+      <Border Height="1" Background="#1E1E3C" />
 
     </StackPanel>
 
@@ -119,26 +124,33 @@
         <!-- ════ ABA: EXIBIÇÕES GRÁFICAS ════════════════════════════════════ -->
         <StackPanel IsVisible="{Binding MostrarEfeitosVisuais}" Spacing="16">
 
-          <Border Background="#111111" CornerRadius="8" Padding="16">
+          <Border CornerRadius="8" Padding="16" BorderBrush="#1E1E3C" BorderThickness="1">
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Color="#0C0C1E" Offset="0" />
+                <GradientStop Color="#09091A" Offset="1" />
+              </LinearGradientBrush>
+            </Border.Background>
             <StackPanel Spacing="10">
 
               <!-- Cabeçalho do card + badge -->
               <Grid ColumnDefinitions="*,Auto">
                 <StackPanel>
-                  <TextBlock Text="Efeitos Visuais" Foreground="#CCCCCC" FontWeight="SemiBold" />
-                  <TextBlock Foreground="#555555" FontSize="11" Margin="0,2,0,0"
+                  <TextBlock Text="Efeitos Visuais" Foreground="#E0E0F2" FontWeight="SemiBold" />
+                  <TextBlock Foreground="#282840" FontSize="11" Margin="0,2,0,0"
                              Text="VisualFXSetting → Melhor Desempenho (registro HKCU)" />
                 </StackPanel>
-                <Border Grid.Column="1" Background="#0D2A1A" CornerRadius="4"
+                <Border Grid.Column="1" Background="#09091A" CornerRadius="4"
                         Padding="8,4" VerticalAlignment="Center"
+                        BorderBrush="#00C87040" BorderThickness="1"
                         IsVisible="{Binding EfeitosVisuaisDesativados}">
-                  <TextBlock Text="✓ aplicado" Foreground="#00FF88" FontSize="11" />
+                  <TextBlock Text="✓ aplicado" Foreground="#00C870" FontSize="11" />
                 </Border>
               </Grid>
 
               <!-- Seleção rápida -->
               <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2,0,0">
-                <TextBlock Text="SELECIONAR:" Foreground="#383838" FontSize="10"
+                <TextBlock Text="SELECIONAR:" Foreground="#282840" FontSize="10"
                            FontWeight="Bold" LetterSpacing="2" VerticalAlignment="Center" />
                 <Button Classes="sel-rapida" Content="Tudo"   Command="{Binding SelecionarTudoCommand}" />
                 <Button Classes="sel-rapida" Content="Nenhum" Command="{Binding LimparSelecaoCommand}" />
@@ -148,7 +160,7 @@
               <ItemsControl ItemsSource="{Binding EfeitosVisuais}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate x:DataType="vm:EfeitoVisualViewModel">
-                    <Border Background="#0D0D0D" CornerRadius="5" Padding="12,9" Margin="0,2">
+                    <Border Background="#06060F" CornerRadius="5" Padding="12,9" Margin="0,2">
                       <CheckBox Classes="efeito"
                                 IsChecked="{Binding Selecionado}"
                                 Content="{Binding Nome}" />
@@ -161,7 +173,8 @@
               <Button Content="Confirmar e desativar selecionados"
                       Command="{Binding AplicarEfeitosSelecionadosCommand}"
                       IsEnabled="{Binding !Ocupado}"
-                      Background="#1A3A2A" Foreground="#00FF88"
+                      Background="#00C87018" Foreground="#00C870"
+                      BorderBrush="#00C87040" BorderThickness="1"
                       CornerRadius="6" Padding="14,10"
                       HorizontalAlignment="Stretch"
                       HorizontalContentAlignment="Center"
@@ -172,7 +185,7 @@
           </Border>
 
           <!-- Status -->
-          <TextBlock Text="{Binding StatusOtimizador}" Foreground="#555555" FontSize="12" />
+          <TextBlock Text="{Binding StatusOtimizador}" Foreground="#484865" FontSize="12" />
 
         </StackPanel>
 
@@ -180,34 +193,36 @@
         <StackPanel IsVisible="{Binding MostrarProgramas}" Spacing="12">
 
           <!-- Caixa de busca -->
-          <Border Background="#111111" CornerRadius="8" Padding="12,10">
+          <Border Background="#09091A" CornerRadius="8" Padding="12,10"
+                  BorderBrush="#1E1E3C" BorderThickness="1">
             <Grid ColumnDefinitions="Auto,*">
               <TextBlock Grid.Column="0" Text="⌕" FontSize="16"
-                         Foreground="#555555" VerticalAlignment="Center"
+                         Foreground="#282840" VerticalAlignment="Center"
                          Margin="0,0,8,0" />
               <TextBox Grid.Column="1"
                        Text="{Binding FiltroProgramas}"
                        PlaceholderText="Buscar programa ou fabricante…"
                        Background="Transparent"
                        BorderThickness="0"
-                       Foreground="#CCCCCC"
+                       Foreground="#E0E0F2"
                        FontSize="13"
                        VerticalAlignment="Center"
-                       CaretBrush="#00FF88" />
+                       CaretBrush="#00C8FF" />
             </Grid>
           </Border>
 
           <!-- Contador de resultados -->
           <TextBlock Text="{Binding TotalProgramasLabel}"
-                     Foreground="#444444" FontSize="11"
+                     Foreground="#484865" FontSize="11"
                      Margin="4,0" />
 
           <!-- Lista de programas -->
           <ItemsControl ItemsSource="{Binding ProgramasFiltrados}">
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:ProgramaInstaladoViewModel">
-                <Border Background="#0F0F0F" CornerRadius="6"
-                        Padding="10,8" Margin="0,2">
+                <Border Background="#06060F" CornerRadius="6"
+                        Padding="10,8" Margin="0,2"
+                        BorderBrush="#1E1E3C" BorderThickness="1">
                   <Grid ColumnDefinitions="Auto,*,Auto">
 
                     <!-- Checkbox de seleção -->
@@ -222,7 +237,7 @@
                       <!-- Nome + badge bloatware -->
                       <StackPanel Orientation="Horizontal" Spacing="8">
                         <TextBlock Text="{Binding Nome}"
-                                   Foreground="#CCCCCC" FontWeight="SemiBold"
+                                   Foreground="#E0E0F2" FontWeight="SemiBold"
                                    FontSize="13" />
                         <Border Background="#3A1800" CornerRadius="3"
                                 Padding="5,1"
@@ -232,7 +247,7 @@
                         </Border>
                       </StackPanel>
                       <!-- Fabricante + versão -->
-                      <TextBlock Foreground="#555555" FontSize="11">
+                      <TextBlock Foreground="#282840" FontSize="11">
                         <Run Text="{Binding Fabricante}" />
                         <Run Text=" · v" />
                         <Run Text="{Binding Versao}" />
@@ -243,10 +258,10 @@
                     <StackPanel Grid.Column="2" HorizontalAlignment="Right"
                                 VerticalAlignment="Center" Spacing="2">
                       <TextBlock Text="{Binding Tamanho}"
-                                 Foreground="#444444" FontSize="11"
+                                 Foreground="#484865" FontSize="11"
                                  HorizontalAlignment="Right" />
                       <TextBlock Text="{Binding Data}"
-                                 Foreground="#333333" FontSize="10"
+                                 Foreground="#282840" FontSize="10"
                                  HorizontalAlignment="Right" />
                     </StackPanel>
 
@@ -260,7 +275,8 @@
           <Button Content="{Binding DesinstalarLabel}"
                   Command="{Binding DesinstalarSelecionadosCommand}"
                   IsEnabled="{Binding !Ocupado}"
-                  Background="#2A0A0A" Foreground="#CC3333"
+                  Background="#1A0000" Foreground="#FF4444"
+                  BorderBrush="#FF444440" BorderThickness="1"
                   CornerRadius="6" Padding="14,10"
                   HorizontalAlignment="Stretch"
                   HorizontalContentAlignment="Center"
@@ -269,7 +285,7 @@
 
           <!-- Status -->
           <TextBlock Text="{Binding StatusOtimizador}"
-                     Foreground="#555555" FontSize="12"
+                     Foreground="#484865" FontSize="12"
                      Margin="4,0" />
 
         </StackPanel>
@@ -278,16 +294,16 @@
         <StackPanel IsVisible="{Binding MostrarInicializacao}" Spacing="0">
 
           <!-- Cabeçalho de colunas (estilo Task Manager) -->
-          <Border Background="#0A0A0A" CornerRadius="6" Padding="14,7" Margin="0,0,0,2">
+          <Border Background="#06060F" CornerRadius="6" Padding="14,7" Margin="0,0,0,2">
             <Grid ColumnDefinitions="3*,2*,120,80,90">
               <TextBlock Grid.Column="0" Text="NOME"
-                         Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
               <TextBlock Grid.Column="1" Text="FORNECEDOR"
-                         Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
               <TextBlock Grid.Column="2" Text="STATUS"
-                         Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
               <TextBlock Grid.Column="3" Text="IMPACTO"
-                         Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
             </Grid>
           </Border>
 
@@ -295,23 +311,23 @@
           <ItemsControl ItemsSource="{Binding EntradasStartup}">
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:InicializacaoEntradaViewModel">
-                <Border Background="#0F0F0F" CornerRadius="5" Padding="14,9" Margin="0,1">
+                <Border Background="#06060F" CornerRadius="5" Padding="14,9" Margin="0,1">
                   <Grid ColumnDefinitions="3*,2*,120,80,90">
 
                     <!-- Nome + caminho -->
                     <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
                       <TextBlock Text="{Binding Nome}"
-                                 Foreground="#CCCCCC" FontWeight="SemiBold"
+                                 Foreground="#E0E0F2" FontWeight="SemiBold"
                                  FontSize="12" TextTrimming="CharacterEllipsis" />
                       <TextBlock Text="{Binding Caminho}"
-                                 Foreground="#2E2E2E" FontSize="10"
+                                 Foreground="#282840" FontSize="10"
                                  TextTrimming="CharacterEllipsis" />
                     </StackPanel>
 
                     <!-- Fornecedor -->
                     <TextBlock Grid.Column="1"
                                Text="{Binding Fabricante}"
-                               Foreground="#555555" FontSize="12"
+                               Foreground="#282840" FontSize="12"
                                VerticalAlignment="Center"
                                TextTrimming="CharacterEllipsis"
                                Margin="8,0,4,0" />
@@ -364,7 +380,7 @@
 
           <!-- Status de operação -->
           <TextBlock Text="{Binding StatusOtimizador}"
-                     Foreground="#555555" FontSize="12"
+                     Foreground="#484865" FontSize="12"
                      Margin="4,8,0,0" />
 
         </StackPanel>
@@ -374,56 +390,58 @@
 
           <!-- Barra de busca + botão atualizar -->
           <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-            <Border Grid.Column="0" Background="#111111" CornerRadius="8" Padding="12,10">
+            <Border Grid.Column="0" Background="#09091A" CornerRadius="8" Padding="12,10"
+                    BorderBrush="#1E1E3C" BorderThickness="1">
               <Grid ColumnDefinitions="Auto,*">
                 <TextBlock Grid.Column="0" Text="⌕" FontSize="16"
-                           Foreground="#555555" VerticalAlignment="Center"
+                           Foreground="#282840" VerticalAlignment="Center"
                            Margin="0,0,8,0" />
                 <TextBox Grid.Column="1"
                          Text="{Binding FiltroServicos}"
                          PlaceholderText="Buscar serviço…"
                          Background="Transparent"
                          BorderThickness="0"
-                         Foreground="#CCCCCC"
+                         Foreground="#E0E0F2"
                          FontSize="13"
                          VerticalAlignment="Center"
-                         CaretBrush="#00FF88" />
+                         CaretBrush="#00C8FF" />
               </Grid>
             </Border>
             <Button Grid.Column="1"
                     Command="{Binding CarregarServicosCommand}"
                     IsEnabled="{Binding !CarregandoServicos}"
-                    Background="#1A1A1A" Foreground="#555555"
+                    Background="#09091A" Foreground="#484865"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
                     CornerRadius="8" Padding="14,10"
                     FontSize="12" Content="↺ Atualizar" />
           </Grid>
 
           <!-- Contador -->
           <TextBlock Text="{Binding TotalServicosLabel}"
-                     Foreground="#444444" FontSize="11"
+                     Foreground="#484865" FontSize="11"
                      Margin="4,0" />
 
           <!-- Indicador de carregamento -->
           <TextBlock Text="Carregando serviços…"
                      IsVisible="{Binding CarregandoServicos}"
-                     Foreground="#555555" FontSize="13"
+                     Foreground="#484865" FontSize="13"
                      HorizontalAlignment="Center"
                      Margin="0,20" />
 
           <!-- Cabeçalho de colunas -->
-          <Border Background="#0A0A0A" CornerRadius="6" Padding="14,7" Margin="0,0,0,2"
+          <Border Background="#06060F" CornerRadius="6" Padding="14,7" Margin="0,0,0,2"
                   IsVisible="{Binding !CarregandoServicos}">
             <Grid ColumnDefinitions="2*,2*,50,100,160,90">
               <TextBlock Grid.Column="0" Text="NOME"
-                         Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
               <TextBlock Grid.Column="1" Text="DESCRIÇÃO"
-                         Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
               <TextBlock Grid.Column="2" Text="PID"
-                         Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
               <TextBlock Grid.Column="3" Text="STATUS"
-                         Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
               <TextBlock Grid.Column="4" Text="TIPO DE INÍCIO"
-                         Foreground="#383838" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
             </Grid>
           </Border>
 
@@ -432,20 +450,20 @@
                         IsVisible="{Binding !CarregandoServicos}">
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:ServicoViewModel">
-                <Border Background="#0F0F0F" CornerRadius="5" Padding="14,6" Margin="0,1">
+                <Border Background="#06060F" CornerRadius="5" Padding="14,6" Margin="0,1">
                   <Grid ColumnDefinitions="2*,2*,50,100,160,90">
 
                     <!-- Nome do serviço -->
                     <TextBlock Grid.Column="0"
                                Text="{Binding Nome}"
-                               Foreground="#CCCCCC" FontWeight="SemiBold"
+                               Foreground="#E0E0F2" FontWeight="SemiBold"
                                FontSize="12" VerticalAlignment="Center"
                                TextTrimming="CharacterEllipsis" />
 
                     <!-- Descrição -->
                     <TextBlock Grid.Column="1"
                                Text="{Binding Descricao}"
-                               Foreground="#555555" FontSize="11"
+                               Foreground="#282840" FontSize="11"
                                VerticalAlignment="Center"
                                TextTrimming="CharacterEllipsis"
                                Margin="8,0,4,0" />
@@ -453,7 +471,7 @@
                     <!-- PID -->
                     <TextBlock Grid.Column="2"
                                Text="{Binding PidTexto}"
-                               Foreground="#444444" FontSize="11"
+                               Foreground="#484865" FontSize="11"
                                VerticalAlignment="Center" />
 
                     <!-- Status -->
@@ -467,9 +485,9 @@
                     <ComboBox Grid.Column="4"
                               ItemsSource="{x:Static vm:ServicoViewModel.ModoInicioOpcoes}"
                               SelectedItem="{Binding ModoInicioSelecionado}"
-                              Background="#111111"
-                              Foreground="#AAAAAA"
-                              BorderBrush="#222222"
+                              Background="#09091A"
+                              Foreground="#484865"
+                              BorderBrush="#1E1E3C"
                               BorderThickness="1"
                               FontSize="11"
                               Padding="6,4"
@@ -497,7 +515,7 @@
 
           <!-- Status de operação -->
           <TextBlock Text="{Binding StatusOtimizador}"
-                     Foreground="#555555" FontSize="12"
+                     Foreground="#484865" FontSize="12"
                      Margin="4,4,0,0" />
 
         </StackPanel>
