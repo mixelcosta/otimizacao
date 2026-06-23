@@ -32,6 +32,8 @@ public sealed class ServicoLicencaLocal : IServicoLicenca
     }
 
     public TipoLicenca TipoAtual => _tipoAtual;
+    public string? NomeCliente => null;
+    public string? EmailCliente => null;
 
     public bool TemAcesso(FuncionalidadePremium funcionalidade) =>
         _tipoAtual == TipoLicenca.Premium;
@@ -68,6 +70,9 @@ public sealed class ServicoLicencaLocal : IServicoLicenca
             return ResultadoAtivacao.Falhar("Erro ao salvar licença: " + ex.Message);
         }
     }
+
+    public Task<ResultadoAtivacao> ValidarOnlineAsync(CancellationToken ct = default) =>
+        Task.FromResult(ResultadoAtivacao.Ok(_tipoAtual));
 
     public async Task<ResultadoAtivacao> DesativarAsync(CancellationToken ct = default)
     {

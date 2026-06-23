@@ -48,10 +48,10 @@
     <!-- Cabeçalho -->
     <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,44,0,0" Spacing="8">
       <TextBlock Text="OTIMIZE BUILDER" FontSize="10" FontWeight="Bold"
-                 Foreground="#1E1E38" LetterSpacing="6"
+                 Foreground="#4A4A70" LetterSpacing="6"
                  HorizontalAlignment="Center" />
       <TextBlock Text="{Binding StatusText}" FontSize="14"
-                 Foreground="#3C3C62"
+                 Foreground="#6868A0"
                  HorizontalAlignment="Center" />
     </StackPanel>
 
@@ -124,7 +124,8 @@
                 Command="{Binding ScanCommand}"
                 Width="172" Height="172"
                 CornerRadius="86"
-                BorderThickness="0"
+                BorderBrush="#1E1E3C"
+                BorderThickness="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
           <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6">
@@ -191,13 +192,21 @@
     <!-- Botões pós-scan -->
     <StackPanel Grid.Row="3"
                 IsVisible="{Binding ScanConcluido}"
-                Orientation="Horizontal"
                 HorizontalAlignment="Center"
-                Spacing="12"
+                Spacing="10"
                 Margin="0,18,0,44">
-      <Button Classes="acao"
-              Command="{Binding IrParaDashboardCommand}"
-              Content="Ver Dashboard" />
+      <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+        <Button Classes="acao"
+                Command="{Binding IrParaDashboardCommand}"
+                Content="Ver Dashboard" />
+        <Button Classes="acao"
+                Command="{Binding ExportarRelatorioCommand}"
+                Content="↓  Exportar Relatório HTML" />
+      </StackPanel>
+      <TextBlock Text="{Binding StatusExport}"
+                 Foreground="#484865" FontSize="11"
+                 HorizontalAlignment="Center"
+                 IsVisible="{Binding StatusExport, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
     </StackPanel>
 
   </Grid>

@@ -20,13 +20,16 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var roteador = new RoteadorIpc();
-            var licenca = new ServicoLicencaLocal(
-                NullLogger<ServicoLicencaLocal>.Instance);
+            var licenca = new ServicoLicencaLemonSqueezy(
+                NullLogger<ServicoLicencaLemonSqueezy>.Instance);
 
             desktop.MainWindow = new ShellWindow
             {
                 DataContext = new ShellViewModel(roteador, licenca),
             };
+
+            // Valida a licença em background assim que o app sobe
+            _ = Task.Run(() => licenca.ValidarOnlineAsync());
         }
 
         base.OnFrameworkInitializationCompleted();

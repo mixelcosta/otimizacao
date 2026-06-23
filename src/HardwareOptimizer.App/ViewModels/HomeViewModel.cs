@@ -1,6 +1,7 @@
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.App.Services;
 using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Ipc;
 
@@ -12,6 +13,7 @@ public partial class HomeViewModel : ObservableObject
     private readonly Action _navegarParaDashboard;
 
     private readonly Action<Inventario>? _onScanCompleto;
+    private Inventario? _ultimoInventario;
 
     public HomeViewModel(IRoteadorIpc agente, Action navegarParaDashboard, Action<Inventario>? onScanCompleto = null)
     {
@@ -24,6 +26,7 @@ public partial class HomeViewModel : ObservableObject
 
     [ObservableProperty] private bool _escaneando;
     [ObservableProperty] private bool _scanConcluido;
+    [ObservableProperty] private string _statusExport = "";
     [ObservableProperty] private double _progressoScan;
 
     // ── Scan button text ───────────────────────────────────────────────────
@@ -101,6 +104,29 @@ public partial class HomeViewModel : ObservableObject
     [RelayCommand]
     private void IrParaDashboard() => _navegarParaDashboard();
 
+    [RelayCommand]
+    private async Task ExportarRelatorioAsync()
+    {
+        if (_ultimoInventario is null) return;
+        try
+        {
+            StatusExport = "Gerando relatório...";
+            if (!OperatingSystem.IsWindows()) { StatusExport = "Exportação disponível apenas no Windows."; return; }
+            var arquivo = await ServicoRelatorio.ExportarHtmlAsync(_ultimoInventario);
+            StatusExport = $"Relatório salvo em: {Path.GetFileName(arquivo)}";
+            // Abre no navegador padrão
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = arquivo,
+                UseShellExecute = true,
+            });
+        }
+        catch (Exception ex)
+        {
+            StatusExport = $"Erro ao exportar: {ex.Message}";
+        }
+    }
+
     // ── Helpers ────────────────────────────────────────────────────────────
 
     private void AplicarResultados(Inventario inv)
@@ -124,6 +150,7 @@ public partial class HomeViewModel : ObservableObject
             CorBios    = new SolidColorBrush(Color.Parse("#FF8C00"));
         }
 
+        _ultimoInventario = inv;
         ProgressoScan     = 1.0;
         TextoBotaoScan    = "100%";
         SubtextoBotaoScan = "concluído";

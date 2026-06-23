@@ -47,6 +47,12 @@ public partial class UpgradeViewModel : ObservableObject
     [ObservableProperty] private string _gargaloLabel      = "";
     [ObservableProperty] private string _gargaloDescricao  = "";
 
+    // ── Sugestões concretas ────────────────────────────────────────────────
+    [ObservableProperty] private bool   _temSugestoes;
+    [ObservableProperty] private string _sugestaoTitulo   = "";
+    [ObservableProperty] private string _sugestaoImpacto  = "";
+    public ObservableCollection<SugestaoUpgradeVm> Sugestoes { get; } = [];
+
     public bool IsGargalo =>
         ComponenteLimitante.Equals("CPU", StringComparison.OrdinalIgnoreCase) ||
         ComponenteLimitante.Equals("GPU", StringComparison.OrdinalIgnoreCase);
@@ -269,7 +275,153 @@ public partial class UpgradeViewModel : ObservableObject
             "GPU" => $"⚠  Gargalo: GPU  (+{g.GanhoEstimadoPercent:F0}% estimado)",
             _     => "✓  Setup Balanceado",
         };
+
+        GerarSugestoes(inv, g);
     }
+
+    private void GerarSugestoes(Inventario inv, GargaloResult g)
+    {
+        Sugestoes.Clear();
+
+        switch (g.ComponenteLimitante)
+        {
+            case "CPU":
+                SugestaoTitulo  = "Upgrade de CPU Recomendado";
+                SugestaoImpacto = $"+{g.GanhoEstimadoPercent:F0}% de ganho estimado";
+                foreach (var s in SugestoesCpu(inv))
+                    Sugestoes.Add(s);
+                break;
+
+            case "GPU":
+                SugestaoTitulo  = "Upgrade de GPU Recomendado";
+                SugestaoImpacto = $"+{g.GanhoEstimadoPercent:F0}% de ganho estimado";
+                foreach (var s in SugestoesGpu(inv))
+                    Sugestoes.Add(s);
+                break;
+
+            default:
+                SugestaoTitulo  = "Melhorias de Custo-Benefício";
+                SugestaoImpacto = "Setup balanceado — melhorias incrementais disponíveis";
+                foreach (var s in SugestoesBalanceadas(inv))
+                    Sugestoes.Add(s);
+                break;
+        }
+
+        TemSugestoes = Sugestoes.Count > 0;
+    }
+
+    private static IEnumerable<SugestaoUpgradeVm> SugestoesCpu(Inventario inv)
+    {
+        var soquete = inv.Cpu.Soquete ?? "";
+        var nomeCpu = inv.Cpu.Nome;
+
+        // AM5 socket → Ryzen 7000/9000
+        if (soquete.Contains("AM5", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return new("Ryzen 7 7700X", "CPU", "AMD", "8C/16T · 4.5–5.4 GHz · AM5 · 105W", "Upgrade direto no socket atual — excelente custo-benefício");
+            yield return new("Ryzen 9 7900X", "CPU", "AMD", "12C/24T · 4.7–5.6 GHz · AM5 · 170W", "Alta performance para produtividade + gaming");
+            yield return new("Ryzen 9 9900X", "CPU", "AMD", "12C/24T · Zen 5 · AM5 · 120W", "Geração mais recente — melhor eficiência");
+        }
+        // AM4 socket → Ryzen 5000
+        else if (soquete.Contains("AM4", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return new("Ryzen 7 5700X", "CPU", "AMD", "8C/16T · 3.4–4.6 GHz · AM4 · 65W", "Drop-in upgrade — sem trocar placa-mãe");
+            yield return new("Ryzen 9 5900X", "CPU", "AMD", "12C/24T · 3.7–4.8 GHz · AM4 · 105W", "Melhor Ryzen para AM4 em uso geral + streaming");
+            if (!nomeCpu.Contains("5800X3D", StringComparison.OrdinalIgnoreCase))
+                yield return new("Ryzen 7 5800X3D", "CPU", "AMD", "8C/16T · 3D V-Cache · AM4 · 105W", "Melhor para gaming no socket AM4 — recomendado");
+        }
+        // LGA1700 → Intel 12th/13th/14th gen
+        else if (soquete.Contains("1700", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return new("Core i5-13400F", "CPU", "Intel", "6P+4E · 2.5–4.6 GHz · LGA1700 · 65W", "Custo-benefício — drop-in upgrade");
+            yield return new("Core i7-13700K", "CPU", "Intel", "8P+8E · 3.4–5.4 GHz · LGA1700 · 125W", "Alta performance gaming + multitarefa");
+            yield return new("Core i9-14900K", "CPU", "Intel", "8P+16E · 3.2–6.0 GHz · LGA1700 · 125W", "Melhor desempenho disponível para LGA1700");
+        }
+        else
+        {
+            yield return new("Verificar CPUs compatíveis", "CPU", "–", $"Socket: {(string.IsNullOrEmpty(soquete) ? "não detectado" : soquete)}", "Consulte o manual da placa-mãe para CPUs suportadas");
+        }
+    }
+
+    private static IEnumerable<SugestaoUpgradeVm> SugestoesGpu(Inventario inv)
+    {
+        var nomeGpu = inv.Gpu.FirstOrDefault()?.Nome ?? "";
+
+        // RTX 4000 series — sugerir upgrade conservador
+        if (nomeGpu.Contains("RTX 40", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return new("RTX 5080", "GPU", "NVIDIA", "16 GB GDDR7 · PCIe 5.0 · 360W", "Geração Blackwell — ganho máximo disponível");
+            yield return new("RTX 5090", "GPU", "NVIDIA", "32 GB GDDR7 · PCIe 5.0 · 575W", "Melhor GPU do mercado · Verifique a fonte de alimentação");
+        }
+        // RTX 3000 series
+        else if (nomeGpu.Contains("RTX 30", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return new("RTX 4070", "GPU", "NVIDIA", "12 GB GDDR6X · PCIe 4.0 · 200W", "Melhor custo-benefício para upgrade da RTX 30xx");
+            yield return new("RTX 4070 Ti Super", "GPU", "NVIDIA", "16 GB GDDR6X · PCIe 4.0 · 285W", "Alta performance 1440p / 4K");
+            yield return new("RTX 4080 Super", "GPU", "NVIDIA", "16 GB GDDR6X · PCIe 4.0 · 320W", "Performance de topo na série Ada Lovelace");
+        }
+        // RX 6000/7000 series AMD
+        else if (nomeGpu.Contains("RX 6", StringComparison.OrdinalIgnoreCase) || nomeGpu.Contains("RX 7", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return new("RX 7800 XT", "GPU", "AMD", "16 GB GDDR6 · PCIe 4.0 · 263W", "Excelente custo-benefício 1440p");
+            yield return new("RX 7900 GRE", "GPU", "AMD", "16 GB GDDR6 · PCIe 4.0 · 260W", "Alta performance 1440p/4K · Boa relação preço/desempenho");
+            yield return new("RX 7900 XTX", "GPU", "AMD", "24 GB GDDR6 · PCIe 4.0 · 355W", "Melhor GPU AMD disponível");
+        }
+        else
+        {
+            yield return new("RTX 4060 Ti", "GPU", "NVIDIA", "16 GB GDDR6 · PCIe 4.0 · 165W", "Upgrade moderno de excelente custo-benefício");
+            yield return new("RX 7700 XT", "GPU", "AMD", "12 GB GDDR6 · PCIe 4.0 · 245W", "Alternativa AMD de alto desempenho 1080p/1440p");
+        }
+    }
+
+    private static IEnumerable<SugestaoUpgradeVm> SugestoesBalanceadas(Inventario inv)
+    {
+        var totalRam = inv.Memoria.Sum(m => m.TamanhoGb ?? 0);
+        var qtdPentes = inv.Memoria.Count;
+
+        // RAM: Single-channel → Dual-channel
+        if (qtdPentes == 1)
+            yield return new("Adicionar 2º pente de RAM", "RAM", "–", $"Total atual: {totalRam} GB em 1 slot (Single-Channel)", "Habilitar Dual-Channel — ganho de ~15% em memória sem trocar nada");
+
+        // RAM: 16 GB → 32 GB
+        if (totalRam <= 16)
+            yield return new($"Upgrade para 32 GB RAM", "RAM", "–", $"Atual: {totalRam} GB · Adicionar módulos compatíveis", "32 GB é o novo padrão para gaming + produtividade simultâneos");
+
+        // SSD NVMe
+        if (inv.Metricas?.Discos?.Any(d => d.UsoPercent >= 80) == true)
+            yield return new("SSD NVMe PCIe 4.0 / 5.0", "Storage", "–", "1 TB ou 2 TB · Sequencial > 7000 MB/s", "Partição de sistema acima de 80% — impacta desempenho geral");
+
+        yield return new("Pasta térmica de alta performance", "Cooling", "–", "Noctua NT-H2 / Thermal Grizzly Kryonaut", "Custo mínimo — reduz temperatura da CPU em 5–15°C");
+    }
+}
+
+/// <summary>Sugestão concreta de upgrade exibida na UI.</summary>
+public sealed class SugestaoUpgradeVm
+{
+    public SugestaoUpgradeVm(string nome, string categoria, string fabricante, string specs, string motivo)
+    {
+        Nome       = nome;
+        Categoria  = categoria;
+        Fabricante = fabricante;
+        Specs      = specs;
+        Motivo     = motivo;
+        CorCategoria = categoria switch
+        {
+            "CPU"     => "#00C8FF",
+            "GPU"     => "#A060FF",
+            "RAM"     => "#00C870",
+            "Storage" => "#FFAA00",
+            "Cooling" => "#FF6060",
+            _         => "#484865",
+        };
+    }
+
+    public string Nome        { get; }
+    public string Categoria   { get; }
+    public string Fabricante  { get; }
+    public string Specs       { get; }
+    public string Motivo      { get; }
+    public string CorCategoria { get; }
 }
 
 /// <summary>Item de mensagem no chat de upgrade.</summary>

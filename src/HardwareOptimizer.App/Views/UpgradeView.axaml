@@ -207,6 +207,64 @@
             </StackPanel>
           </Border>
 
+          <!-- Sugestões concretas de upgrade -->
+          <StackPanel IsVisible="{Binding TemSugestoes}" Spacing="10" Margin="0,10,0,0">
+
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <TextBlock Text="SUGESTÕES DE UPGRADE" FontSize="9" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+
+            <!-- Título + impacto -->
+            <StackPanel Spacing="2">
+              <TextBlock Text="{Binding SugestaoTitulo}"
+                         Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding SugestaoImpacto}"
+                         Foreground="#00C8FF" FontSize="10" />
+            </StackPanel>
+
+            <!-- Lista de sugestões -->
+            <ItemsControl ItemsSource="{Binding Sugestoes}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:SugestaoUpgradeVm">
+                  <Border CornerRadius="8" Padding="12,10" Margin="0,0,0,5"
+                          BorderBrush="#1E1E3C" BorderThickness="1">
+                    <Border.Background>
+                      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Color="#0C0C1E" Offset="0" />
+                        <GradientStop Color="#09091A" Offset="1" />
+                      </LinearGradientBrush>
+                    </Border.Background>
+                    <StackPanel Spacing="4">
+                      <!-- Nome + badge categoria -->
+                      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Border Background="#09091A" CornerRadius="3" Padding="5,2">
+                          <TextBlock Text="{Binding Categoria}"
+                                     Foreground="{Binding CorCategoria}"
+                                     FontSize="9" FontWeight="Bold" />
+                        </Border>
+                        <TextBlock Text="{Binding Nome}"
+                                   Foreground="#E0E0F2" FontSize="12"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center" />
+                      </StackPanel>
+                      <!-- Specs -->
+                      <TextBlock Text="{Binding Specs}"
+                                 Foreground="#484865" FontSize="10"
+                                 TextWrapping="Wrap" />
+                      <!-- Motivo -->
+                      <TextBlock Text="{Binding Motivo}"
+                                 Foreground="#3A3A60" FontSize="10"
+                                 FontStyle="Italic"
+                                 TextWrapping="Wrap" />
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+          </StackPanel>
+
           <!-- Empty state -->
           <StackPanel HorizontalAlignment="Center" Spacing="8" Margin="0,40,0,0"
                       IsVisible="{Binding !Carregado}">

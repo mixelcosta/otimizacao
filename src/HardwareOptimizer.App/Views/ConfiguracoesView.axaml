@@ -20,6 +20,70 @@
                    Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
       </StackPanel>
 
+      <!-- Card: Comprar Premium (visível apenas quando Gratuita) -->
+      <Border CornerRadius="10" BorderThickness="1" Padding="20"
+              IsVisible="{Binding !EPremium}">
+        <Border.BorderBrush>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#9B59B640" Offset="0" />
+            <GradientStop Color="#00C8FF40" Offset="1" />
+          </LinearGradientBrush>
+        </Border.BorderBrush>
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#0D0D20" Offset="0" />
+            <GradientStop Color="#090918" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <StackPanel Spacing="14">
+
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="⭐" FontSize="14" VerticalAlignment="Center" />
+            <TextBlock Text="OTIMIZE BUILDER PREMIUM" FontSize="11" FontWeight="Bold"
+                       Foreground="#9B59B6" LetterSpacing="2" VerticalAlignment="Center" />
+          </StackPanel>
+
+          <StackPanel Spacing="6">
+            <TextBlock Foreground="#484865" FontSize="12"
+                       Text="Desbloqueie todos os módulos avançados:" />
+            <StackPanel Spacing="3" Margin="4,0,0,0">
+              <TextBlock Text="✓  Módulo UPGRADE — análise de gargalo e sugestões concretas"
+                         Foreground="#6868A0" FontSize="11" />
+              <TextBlock Text="✓  Vida Útil — estimativa S.M.A.R.T. dos seus SSDs/HDDs"
+                         Foreground="#6868A0" FontSize="11" />
+              <TextBlock Text="✓  Gerenciador de Drivers — atualização WHQL automática"
+                         Foreground="#6868A0" FontSize="11" />
+              <TextBlock Text="✓  Guia BIOS por IA — configuração XMP/EXPO passo a passo"
+                         Foreground="#6868A0" FontSize="11" />
+            </StackPanel>
+          </StackPanel>
+
+          <Button Content="  Assinar Premium →  "
+                  Command="{Binding AbrirPaginaCompraCommand}"
+                  Cursor="Hand"
+                  FontWeight="Bold" FontSize="13"
+                  Padding="20,10" CornerRadius="6"
+                  HorizontalAlignment="Left">
+            <Button.Background>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="#7D3C98" Offset="0" />
+                <GradientStop Color="#0088CC" Offset="1" />
+              </LinearGradientBrush>
+            </Button.Background>
+            <Button.Foreground>
+              <SolidColorBrush Color="#FFFFFF" />
+            </Button.Foreground>
+            <Button.BorderBrush>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="#9B59B6" Offset="0" />
+                <GradientStop Color="#00C8FF" Offset="1" />
+              </LinearGradientBrush>
+            </Button.BorderBrush>
+          </Button>
+
+        </StackPanel>
+      </Border>
+
       <!-- Card: Status da licença -->
       <Border CornerRadius="10" BorderBrush="#1E1E3C" BorderThickness="1" Padding="20">
         <Border.Background>
@@ -37,12 +101,20 @@
           <Border CornerRadius="6" Padding="14,10"
                   Background="#00C8FF18" BorderBrush="#00C8FF40" BorderThickness="1"
                   IsVisible="{Binding EPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-              <TextBlock Text="✓" Foreground="#00C8FF" FontSize="14"
-                         VerticalAlignment="Center" FontWeight="Bold" />
-              <TextBlock Text="Premium — todos os módulos desbloqueados"
-                         Foreground="#E0E0F2" FontSize="13" FontWeight="SemiBold"
-                         VerticalAlignment="Center" />
+            <StackPanel Spacing="6">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="✓" Foreground="#00C8FF" FontSize="14"
+                           VerticalAlignment="Center" FontWeight="Bold" />
+                <TextBlock Text="Premium — todos os módulos desbloqueados"
+                           Foreground="#E0E0F2" FontSize="13" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+              </StackPanel>
+              <!-- Info do cliente (quando disponível) -->
+              <StackPanel Margin="24,0,0,0" Spacing="2"
+                          IsVisible="{Binding NomeCliente, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                <TextBlock Text="{Binding NomeCliente}" Foreground="#6868A0" FontSize="11" />
+                <TextBlock Text="{Binding EmailCliente}" Foreground="#484865" FontSize="10" />
+              </StackPanel>
             </StackPanel>
           </Border>
 
@@ -59,19 +131,28 @@
             </StackPanel>
           </Border>
 
-          <Button Content="Revogar licença Premium"
-                  Command="{Binding DesativarCommand}"
-                  IsVisible="{Binding EPremium}"
-                  Background="Transparent"
-                  BorderBrush="#1E1E3C" BorderThickness="1"
-                  Foreground="#484865" Padding="12,6"
-                  CornerRadius="6" FontSize="12"
-                  HorizontalAlignment="Left" />
+          <!-- Ações para Premium ativo -->
+          <StackPanel Orientation="Horizontal" Spacing="10"
+                      IsVisible="{Binding EPremium}">
+            <Button Content="Verificar online"
+                    Command="{Binding ValidarOnlineCommand}"
+                    IsEnabled="{Binding !Ocupado}"
+                    Background="Transparent"
+                    BorderBrush="#00C8FF40" BorderThickness="1"
+                    Foreground="#00C8FF" Padding="12,6"
+                    CornerRadius="6" FontSize="12" Cursor="Hand" />
+            <Button Content="Revogar licença"
+                    Command="{Binding DesativarCommand}"
+                    Background="Transparent"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    Foreground="#484865" Padding="12,6"
+                    CornerRadius="6" FontSize="12" Cursor="Hand" />
+          </StackPanel>
 
         </StackPanel>
       </Border>
 
-      <!-- Card: Ativação -->
+      <!-- Card: Ativação (inserir chave) -->
       <Border CornerRadius="10" BorderBrush="#1E1E3C" BorderThickness="1" Padding="20">
         <Border.Background>
           <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
@@ -84,8 +165,9 @@
           <TextBlock Text="ATIVAR LICENÇA" FontSize="10" FontWeight="Bold"
                      Foreground="#282840" LetterSpacing="2" />
 
-          <TextBlock Text="Insira sua chave de ativação para desbloquear todos os módulos Premium."
-                     Foreground="#484865" FontSize="12" TextWrapping="Wrap" />
+          <TextBlock Foreground="#484865" FontSize="12" TextWrapping="Wrap">
+            Insira a chave de ativação recebida após a compra para desbloquear os módulos Premium.
+          </TextBlock>
 
           <TextBox Text="{Binding ChaveAtivacao}"
                    PlaceholderText="XXXX-XXXX-XXXX-XXXX"
@@ -103,10 +185,8 @@
                   Command="{Binding AtivarCommand}"
                   Background="#00C8FF18" Foreground="#00C8FF"
                   BorderBrush="#00C8FF40" BorderThickness="1"
-                  FontWeight="SemiBold"
-                  FontSize="13"
-                  Padding="20,10"
-                  CornerRadius="6"
+                  FontWeight="SemiBold" FontSize="13"
+                  Padding="20,10" CornerRadius="6"
                   HorizontalAlignment="Left"
                   Cursor="Hand" />
 

@@ -15,6 +15,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     private readonly IServicoLicenca _licenca;
     private readonly DispatcherTimer _timerSensores;
     private readonly ListenerAlertasServico _listenerAlertas;
+    private ServicoNotificacaoWindows? _notificacao;
 
     public ShellViewModel(IRoteadorIpc agente, IServicoLicenca licenca)
     {
@@ -149,11 +150,22 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void IrParaConfiguracoes() => PaginaAtual = Configuracoes;
 
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+    public void RegistrarNotificacao(nint hwnd)
+    {
+        _notificacao?.Dispose();
+        _notificacao = new ServicoNotificacaoWindows(hwnd);
+    }
+
     public void ReceberAlertaServico(string mensagem)
     {
         IaCopiloto.ReceberAlerta(mensagem);
         if (PaginaAtual != IaCopiloto)
+        {
             TemAlertaIa = true;
+            if (OperatingSystem.IsWindows())
+                _notificacao?.MostrarAlerta("Otimize Builder — Anomalia Detectada", mensagem);
+        }
     }
 
     private void OnLicencaAlterada()
@@ -179,5 +191,6 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     {
         _timerSensores.Stop();
         _listenerAlertas.Dispose();
+        if (OperatingSystem.IsWindows()) _notificacao?.Dispose();
     }
 }
