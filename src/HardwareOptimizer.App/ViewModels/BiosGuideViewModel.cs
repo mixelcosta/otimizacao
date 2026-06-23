@@ -45,6 +45,14 @@ public partial class BiosGuideViewModel : ObservableObject
 
     partial void OnRespostaIaChanged(string value) => OnPropertyChanged(nameof(TemResposta));
 
+    // ── Análise de foto ───────────────────────────────────────────────────────
+    [ObservableProperty] private bool _analisandoFoto;
+    [ObservableProperty] private string _resultadoFoto = string.Empty;
+
+    public bool TemResultadoFoto => !string.IsNullOrEmpty(ResultadoFoto);
+
+    partial void OnResultadoFotoChanged(string value) => OnPropertyChanged(nameof(TemResultadoFoto));
+
     // ── Navegação stepper ─────────────────────────────────────────────────────
     public void Popular(Inventario inv)
     {
@@ -84,6 +92,43 @@ public partial class BiosGuideViewModel : ObservableObject
         {
             PassoAtual--;
             OnPropertyChanged(nameof(PassoAtualInstrucao));
+        }
+    }
+
+    public async Task AnalisarFotoAsync(string caminhoArquivo)
+    {
+        if (string.IsNullOrEmpty(caminhoArquivo) || _agente is null || AnalisandoFoto) return;
+
+        AnalisandoFoto = true;
+        ResultadoFoto = string.Empty;
+
+        try
+        {
+            var bytes = await File.ReadAllBytesAsync(caminhoArquivo).ConfigureAwait(false);
+            var base64 = Convert.ToBase64String(bytes);
+            var mediaType = Path.GetExtension(caminhoArquivo).ToLowerInvariant() switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".webp"           => "image/webp",
+                ".gif"            => "image/gif",
+                _                 => "image/png",
+            };
+
+            var payload = JsonSerializer.SerializeToElement(new { imagemBase64 = base64, mediaType });
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "analisarbiosfoto", Parametros = payload });
+
+            ResultadoFoto = resp.Sucesso && resp.Resultado is string s
+                ? s
+                : "Não foi possível interpretar a imagem. Tente uma foto mais nítida.";
+        }
+        catch (Exception ex)
+        {
+            ResultadoFoto = $"Erro ao processar imagem: {ex.Message}";
+        }
+        finally
+        {
+            AnalisandoFoto = false;
         }
     }
 

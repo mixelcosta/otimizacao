@@ -152,6 +152,44 @@ public sealed class IpcTests
             Assert.IsType<string>(r.Resultado);
     }
 
+    // ---- instalardriver ---------------------------------------------------------
+
+    [Fact]
+    public async Task InstalarDriver_SemParametros_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("instalardriver"));
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    [Fact]
+    public async Task InstalarDriver_UrlVazia_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("instalardriver", new { urlDownload = "" }));
+        Assert.False(r.Sucesso);
+        Assert.Contains("urlDownload", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    // ---- analisarbiosfoto -------------------------------------------------------
+
+    [Fact]
+    public async Task AnalisarBiosFoto_SemParametros_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("analisarbiosfoto"));
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    [Fact]
+    public async Task AnalisarBiosFoto_SemBase64_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("analisarbiosfoto", new { mediaType = "image/png" }));
+        Assert.False(r.Sucesso);
+        Assert.Contains("imagemBase64", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
     // ---- obterstatuslicenca ---------------------------------------------------
 
     [Fact]

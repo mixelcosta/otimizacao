@@ -25,6 +25,8 @@ public partial class DriversViewModel : ObservableObject
     [ObservableProperty] private string _filtroTexto = string.Empty;
     [ObservableProperty] private string _backupStatus = string.Empty;
     [ObservableProperty] private bool _exportando;
+    [ObservableProperty] private bool _instalando;
+    [ObservableProperty] private string _statusInstalacao = string.Empty;
 
     public bool PodeExportarBackup => _agente is not null;
 
@@ -56,6 +58,33 @@ public partial class DriversViewModel : ObservableObject
         StatusText = _todosDrivers.Count == 0
             ? "Nenhum dispositivo detectado."
             : $"{Drivers.Count} de {_todosDrivers.Count} dispositivo(s).";
+    }
+
+    [RelayCommand]
+    private async Task InstalarDriverAsync(InfoDriverViewModel? driver)
+    {
+        if (driver?.UrlDownload is null || _agente is null || Instalando) return;
+
+        Instalando = true;
+        StatusInstalacao = $"Baixando {driver.Descricao}…";
+        try
+        {
+            var payload = JsonSerializer.SerializeToElement(new
+            {
+                urlDownload = driver.UrlDownload,
+                descricao   = driver.Descricao,
+            });
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "instalardriver", Parametros = payload });
+
+            StatusInstalacao = resp.Sucesso
+                ? "✓ Driver instalado com sucesso."
+                : $"Falha: {resp.Erro}";
+        }
+        finally
+        {
+            Instalando = false;
+        }
     }
 
     [RelayCommand]

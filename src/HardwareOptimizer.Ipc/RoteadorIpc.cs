@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net.Http;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Text.Json;
@@ -14,6 +15,7 @@ using HardwareOptimizer.Agent.Smart;
 using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Cerebro;
+using HardwareOptimizer.Cerebro.Visao;
 using HardwareOptimizer.Core.Catalog;
 using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Core.Privacy;
@@ -109,6 +111,10 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "exportarbackupdrivers" => OperatingSystem.IsWindows()
                     ? await ExportarBackupDriversAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "instalardriver" => OperatingSystem.IsWindows()
+                    ? await InstalarDriverAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "analisarbiosfoto" => await AnalisarBiosFotoAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "obterstatuslicenca" => ObterStatusLicenca(requisicao),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
@@ -425,6 +431,144 @@ public sealed class RoteadorIpc : IRoteadorIpc
         {
             return RespostaIpc.Falha(req.Id, ex.Message);
         }
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> InstalarDriverAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p
+            || !p.TryGetProperty("urlDownload", out var u)
+            || u.ValueKind != JsonValueKind.String
+            || string.IsNullOrWhiteSpace(u.GetString()))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'urlDownload' obrigatório.");
+
+        var url = u.GetString()!;
+
+        string ext;
+        try { ext = Path.GetExtension(new Uri(url).LocalPath).ToLowerInvariant(); }
+        catch { ext = Path.GetExtension(url).ToLowerInvariant(); }
+
+        var pastaTemp = Path.Combine(Path.GetTempPath(), "OtimizeBuilder", "Drivers", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(pastaTemp);
+
+        string nomeArq;
+        try { nomeArq = Path.GetFileName(new Uri(url).LocalPath); }
+        catch { nomeArq = string.Empty; }
+        if (string.IsNullOrEmpty(nomeArq)) nomeArq = $"driver{ext}";
+
+        var destino = Path.Combine(pastaTemp, nomeArq);
+
+        try
+        {
+            using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
+            var bytes = await http.GetByteArrayAsync(url, ct).ConfigureAwait(false);
+            await File.WriteAllBytesAsync(destino, bytes, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, $"Falha no download: {ex.Message}");
+        }
+
+        return ext switch
+        {
+            ".inf" or ".cab" => await InstalarComPnputilAsync(req, destino, ct).ConfigureAwait(false),
+            ".exe"           => IniciarInstalador(req, destino),
+            _                => RespostaIpc.Falha(req.Id, $"Formato '{ext}' não suportado para instalação silenciosa."),
+        };
+    }
+
+    private static async Task<RespostaIpc> InstalarComPnputilAsync(RequisicaoIpc req, string caminho, CancellationToken ct)
+    {
+        var psi = new ProcessStartInfo
+        {
+            FileName               = "pnputil.exe",
+            Arguments              = $"/add-driver \"{caminho}\" /install",
+            UseShellExecute        = false,
+            CreateNoWindow         = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError  = true,
+        };
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            var stdout = await proc.StandardOutput.ReadToEndAsync(ct).ConfigureAwait(false);
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+            return proc.ExitCode == 0
+                ? RespostaIpc.Ok(req.Id, stdout.Trim())
+                : RespostaIpc.Falha(req.Id, $"pnputil saiu com código {proc.ExitCode}.");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
+    }
+
+    private static RespostaIpc IniciarInstalador(RequisicaoIpc req, string caminho)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = caminho, UseShellExecute = true });
+            return RespostaIpc.Ok(req.Id, "Instalador iniciado.");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
+    }
+
+    private async Task<RespostaIpc> AnalisarBiosFotoAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p)
+            return RespostaIpc.Falha(req.Id, "Parâmetros obrigatórios.");
+
+        var b64 = p.TryGetProperty("imagemBase64", out var b) && b.ValueKind == JsonValueKind.String
+            ? b.GetString() : null;
+        var mt = p.TryGetProperty("mediaType", out var m) && m.ValueKind == JsonValueKind.String
+            ? m.GetString() ?? "image/png" : "image/png";
+
+        if (string.IsNullOrWhiteSpace(b64))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'imagemBase64' obrigatório.");
+
+        var imagem = new ImagemEntrada { Base64 = b64, MediaType = mt };
+        var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
+        var modelo = Environment.GetEnvironmentVariable("CLAUDE_MODEL") ?? "claude-sonnet-4-6";
+        var cliente = new ClienteVisaoAnthropic(modelo, apiKey);
+        var modulo = new ModuloVisao(cliente, _log);
+
+        try
+        {
+            var leitura = await modulo.InterpretarAsync(imagem, CasoUsoVisao.LerVersaoBios, ct).ConfigureAwait(false);
+            return RespostaIpc.Ok(req.Id, FormatarLeituraBios(leitura));
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, $"Erro na análise da imagem: {ex.Message}");
+        }
+    }
+
+    private static string FormatarLeituraBios(LeituraVisual leitura)
+    {
+        if (leitura.TipoTela == TipoTela.Desconhecida || leitura.Confianca == NivelConfianca.Baixa)
+            return leitura.ProximoPasso
+                ?? "Não foi possível identificar a tela de BIOS. Envie uma foto mais nítida.";
+
+        var sb = new StringBuilder();
+        sb.AppendLine("Imagem identificada: BIOS/UEFI");
+
+        if (leitura.Campo("fabricante") is { Length: > 0 } fab)
+            sb.AppendLine($"Fabricante: {fab}");
+        if (leitura.Campo("modelo") is { Length: > 0 } mod)
+            sb.AppendLine($"Modelo: {mod}");
+        if (leitura.Campo("versao") is { Length: > 0 } ver)
+            sb.AppendLine($"Versão BIOS: {ver}");
+
+        if (leitura.ProximoPasso is { Length: > 0 } prox)
+        {
+            sb.AppendLine();
+            sb.Append($"→ {prox}");
+        }
+
+        return sb.ToString().TrimEnd();
     }
 
     private async Task<RespostaIpc> ChatBiosAsync(RequisicaoIpc req, CancellationToken ct)

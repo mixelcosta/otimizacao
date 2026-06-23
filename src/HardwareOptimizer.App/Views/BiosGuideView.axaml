@@ -154,7 +154,53 @@
           </Border.Background>
           <StackPanel Spacing="12">
 
-            <!-- Título -->
+            <!-- Título foto -->
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Border Width="3" Height="12" Background="#00C8FF" CornerRadius="1"
+                      VerticalAlignment="Center" />
+              <TextBlock Text="ANALISAR FOTO DO BIOS" FontSize="10" FontWeight="Bold"
+                         Foreground="#282840" LetterSpacing="2"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Botão carregar foto -->
+            <Button Click="OnCarregarFotoClick"
+                    IsEnabled="{Binding !AnalisandoFoto}"
+                    Background="#09091A" Foreground="#484865"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    Padding="14,8" CornerRadius="6"
+                    FontSize="12" HorizontalAlignment="Left" Cursor="Hand">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="📷" FontSize="12" VerticalAlignment="Center" />
+                <TextBlock Text="Carregar foto do BIOS" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <!-- Aguardando análise de foto -->
+            <TextBlock Text="Analisando imagem…"
+                       Foreground="#484865" FontSize="12"
+                       HorizontalAlignment="Center"
+                       IsVisible="{Binding AnalisandoFoto}" />
+
+            <!-- Resultado foto -->
+            <Border CornerRadius="8" Padding="14,12"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    IsVisible="{Binding TemResultadoFoto}">
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                  <GradientStop Color="#0F0F22" Offset="0" />
+                  <GradientStop Color="#0C0C1E" Offset="1" />
+                </LinearGradientBrush>
+              </Border.Background>
+              <TextBlock Text="{Binding ResultadoFoto}"
+                         Foreground="#E0E0F2" FontSize="12"
+                         TextWrapping="Wrap" LineHeight="20" />
+            </Border>
+
+            <!-- Separador -->
+            <Border Background="#1E1E3C" Height="1" />
+
+            <!-- Título chat -->
             <StackPanel Orientation="Horizontal" Spacing="8">
               <Border Width="3" Height="12" Background="#00C8FF" CornerRadius="1"
                       VerticalAlignment="Center" />

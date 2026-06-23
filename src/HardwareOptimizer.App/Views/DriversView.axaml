@@ -130,6 +130,16 @@
                             FontSize="10" FontWeight="SemiBold"
                             HorizontalAlignment="Right"
                             Cursor="Hand" />
+                    <Button Content="⬆ instalar"
+                            IsVisible="{Binding TemDownload}"
+                            Command="{Binding $parent[ItemsControl].DataContext.InstalarDriverCommand}"
+                            CommandParameter="{Binding}"
+                            Background="#09091A" Foreground="#484865"
+                            BorderBrush="#1E1E3C" BorderThickness="1"
+                            Padding="6,2" CornerRadius="4"
+                            FontSize="10" FontWeight="SemiBold"
+                            HorizontalAlignment="Right"
+                            Cursor="Hand" />
                   </StackPanel>
 
                 </Grid>
@@ -163,7 +173,7 @@
             IsVisible="{Binding TemResultados}">
       <Grid ColumnDefinitions="*,Auto" Margin="24,10,24,12">
 
-        <!-- Status + último scan -->
+        <!-- Status + último scan + instalação -->
         <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
           <TextBlock Text="{Binding StatusText}"
                      Foreground="#484865" FontSize="11"
@@ -171,6 +181,10 @@
           <TextBlock Text="{Binding UltimoScan}"
                      Foreground="#282840" FontSize="11"
                      VerticalAlignment="Center" />
+          <TextBlock Text="{Binding StatusInstalacao}"
+                     Foreground="#484865" FontSize="11"
+                     VerticalAlignment="Center"
+                     IsVisible="{Binding StatusInstalacao, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
         </StackPanel>
 
         <!-- Backup -->
