@@ -819,11 +819,12 @@ public sealed class LeitorWindows : ILeitorPlataforma
             var psi = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
-                Arguments = $"-NoProfile -NonInteractive -Command \"{comando}\"",
+                Arguments = $"-NoProfile -NonInteractive -Command \"$OutputEncoding=[System.Text.Encoding]::UTF8; {comando}\"",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
+                StandardOutputEncoding = System.Text.Encoding.UTF8,
             };
 
             using var processo = Process.Start(psi);

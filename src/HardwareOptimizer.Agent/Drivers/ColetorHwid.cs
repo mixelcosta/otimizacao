@@ -40,13 +40,13 @@ public sealed class ColetorHwid : IColetorHwid
         try
         {
             using var searcher = new ManagementObjectSearcher(
-                "SELECT DeviceID, Name, Manufacturer, DriverVersion, ClassGuid, PNPClass FROM Win32_PnPSignedDriver");
+                "SELECT DeviceID, Name, Manufacturer, DriverVersion, ClassGuid, DeviceClass FROM Win32_PnPSignedDriver");
 
             foreach (ManagementObject obj in searcher.Get())
             {
-                var pnpClass = obj["PNPClass"]?.ToString() ?? string.Empty;
+                var deviceClass = obj["DeviceClass"]?.ToString() ?? string.Empty;
                 if (!_categoriasRelevantes.Any(c =>
-                    pnpClass.Contains(c, StringComparison.OrdinalIgnoreCase)))
+                    deviceClass.Contains(c, StringComparison.OrdinalIgnoreCase)))
                     continue;
 
                 var hwid = obj["DeviceID"]?.ToString() ?? string.Empty;

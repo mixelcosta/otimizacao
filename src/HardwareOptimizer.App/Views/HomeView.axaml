@@ -100,7 +100,7 @@
           </Rectangle>
           <TextBlock Text="Componentes" Foreground="#3A3A60" FontSize="11"
                      HorizontalAlignment="Center" />
-          <TextBlock Text="Hardware" Foreground="#22223A" FontSize="10"
+          <TextBlock Text="Hardware" Foreground="#5A5A80" FontSize="10"
                      HorizontalAlignment="Center" />
         </StackPanel>
       </Border>
@@ -174,7 +174,7 @@
           </Rectangle>
           <TextBlock Text="BIOS" Foreground="#3A3A60" FontSize="11"
                      HorizontalAlignment="Center" />
-          <TextBlock Text="{Binding StatusBios}" Foreground="#22223A" FontSize="10"
+          <TextBlock Text="{Binding StatusBios}" Foreground="#5A5A80" FontSize="10"
                      HorizontalAlignment="Center" />
         </StackPanel>
       </Border>
@@ -184,7 +184,7 @@
     <!-- Último scan -->
     <TextBlock Grid.Row="2"
                Text="{Binding UltimoScanLabel}"
-               Foreground="#18183A" FontSize="11"
+               Foreground="#4A4A6A" FontSize="11"
                HorizontalAlignment="Center"
                Margin="0,20,0,0" />
 
