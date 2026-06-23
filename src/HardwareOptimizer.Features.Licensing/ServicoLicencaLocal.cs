@@ -18,11 +18,16 @@ public sealed class ServicoLicencaLocal : IServicoLicenca
         "OtimizeBuilder", "license.dat");
 
     private readonly ILogger<ServicoLicencaLocal> _log;
+    private readonly ValidadorChaveLicenca _validador;
     private TipoLicenca _tipoAtual = TipoLicenca.Gratuita;
 
     public ServicoLicencaLocal(ILogger<ServicoLicencaLocal> log)
+        : this(log, new ValidadorChaveLicenca()) { }
+
+    internal ServicoLicencaLocal(ILogger<ServicoLicencaLocal> log, ValidadorChaveLicenca validador)
     {
         _log = log;
+        _validador = validador;
         CarregarDoDisco();
     }
 
@@ -35,6 +40,13 @@ public sealed class ServicoLicencaLocal : IServicoLicenca
     {
         if (string.IsNullOrWhiteSpace(chave))
             return ResultadoAtivacao.Falhar("Chave não pode ser vazia.");
+
+        var machineId = ObterIdMaquina();
+        if (!_validador.ChaveValida(chave, machineId))
+        {
+            _log.LogWarning("Tentativa de ativação com chave inválida.");
+            return ResultadoAtivacao.Falhar("Chave inválida para esta máquina.");
+        }
 
         try
         {

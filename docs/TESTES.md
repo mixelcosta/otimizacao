@@ -19,14 +19,15 @@ A suíte roda no CI (`.github/workflows/ci.yml`) a cada push/PR.
 | `HardwareOptimizer.Core.Tests` | Catálogo, validador, perfis, consentimento, sanitização, BIOS, versão, score, `Resultado`, `FaixaNumerica`. | 87 |
 | `HardwareOptimizer.Agent.Tests` | Executor + rollback, comandos, pré-condições, coletor, backup, persistência, sensores, validação/regressão, BIOS+cache, startup scanner, HWID, S.M.A.R.T., serviços Windows. | 151 |
 | `HardwareOptimizer.Cerebro.Tests` | Guard da resposta, matriz, cérebro local/LLM, privacidade, visão (parser, módulo, conferência). | 26 |
-| `HardwareOptimizer.Features.Licensing.Tests` | `IServicoLicenca`, `ServicoLicencaLocal`, gating de funcionalidades. | — |
+| `HardwareOptimizer.Features.Licensing.Tests` | `IServicoLicenca`, `ServicoLicencaLocal`, gating de funcionalidades, `ValidadorChaveLicenca` (HMAC offline). | 13 |
 | `HardwareOptimizer.Features.Upgrade.Tests` | `ValidadorCompatibilidade`, `CalculadoraGargalo`, `AgenteUpgrade`. | 20 |
 | `HardwareOptimizer.Features.LifeCounter.Tests` | `CalculadoraVidaUtil`, TBW estimado, S.M.A.R.T. | 8 |
 | `HardwareOptimizer.Features.Drivers.Tests` | `AtualizadorDrivers`, `ColetorHwid`, repositório WHQL. | 17 |
 | `HardwareOptimizer.Ipc.Tests` | Roteador (todos os métodos) + loopback real de named pipe. | 24 |
 | `HardwareOptimizer.App.Tests` | ViewModels da UI (com roteador falso). | 71 |
+| `HardwareOptimizer.WindowsService.Tests` | `DetectorAnomalias`: RAM/CPU spike, janela de histórico, `ExtrairValor`. | 10 |
 
-**Total: 404 testes** (0 falhas).
+**Total: 427 testes** (0 falhas).
 
 ## Rastreabilidade — regras invariantes ↔ testes
 
@@ -46,6 +47,10 @@ A suíte roda no CI (`.github/workflows/ci.yml`) a cada push/PR.
 | Driver inexistente/url vazia retorna falha | `IpcTests.InstalarDriver_*` |
 | Foto sem base64 retorna falha | `IpcTests.AnalisarBiosFoto_*` |
 | Serviços críticos do SO são bloqueados | `IpcTests` (via `ListaNegraServicos`) |
+| Chave de licença inválida é rejeitada | `LicencaGateTests.ValidadorChave_*` |
+| Chave de outra máquina não ativa Premium | `LicencaGateTests.ValidadorChave_chave_de_outra_maquina_e_invalida` |
+| CPU spike detectado após janela mínima | `DetectorAnomaliasTests.Cpu_spike_completo_*` |
+| RAM alta gera alerta imediato | `DetectorAnomaliasTests.Ram_acima_do_limiar_*` |
 
 ## Tipos de teste
 

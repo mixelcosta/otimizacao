@@ -67,6 +67,55 @@ public sealed class LicencaGateTests
         Assert.Null(r.NovoTipo);
     }
 
+    // ---- ValidadorChaveLicenca ----
+
+    [Fact]
+    public void ValidadorChave_chave_gerada_para_mesma_maquina_e_valida()
+    {
+        var validador = new ValidadorChaveLicenca();
+        var chave = validador.GerarChave("test-machine-guid-123");
+        Assert.True(validador.ChaveValida(chave, "test-machine-guid-123"));
+    }
+
+    [Fact]
+    public void ValidadorChave_chave_de_outra_maquina_e_invalida()
+    {
+        var validador = new ValidadorChaveLicenca();
+        var chave = validador.GerarChave("maquina-A");
+        Assert.False(validador.ChaveValida(chave, "maquina-B"));
+    }
+
+    [Fact]
+    public void ValidadorChave_chave_vazia_e_invalida()
+    {
+        var validador = new ValidadorChaveLicenca();
+        Assert.False(validador.ChaveValida("", "qualquer-maquina"));
+    }
+
+    [Fact]
+    public void ValidadorChave_chave_aleatoria_e_invalida()
+    {
+        var validador = new ValidadorChaveLicenca();
+        Assert.False(validador.ChaveValida("AAAAA-BBBBB-CCCCC-DDDDD", "test-machine-guid-123"));
+    }
+
+    [Fact]
+    public void ValidadorChave_formato_com_tracos_e_aceito()
+    {
+        var validador = new ValidadorChaveLicenca();
+        var chave = validador.GerarChave("minha-maquina");
+        Assert.Contains("-", chave);
+        Assert.True(validador.ChaveValida(chave, "minha-maquina"));
+    }
+
+    [Fact]
+    public void ValidadorChave_chave_sem_tracos_tambem_valida()
+    {
+        var validador = new ValidadorChaveLicenca();
+        var chave = validador.GerarChave("maquina-x").Replace("-", "");
+        Assert.True(validador.ChaveValida(chave, "maquina-x"));
+    }
+
     // Fakes para testar o comportamento do gate sem DPAPI/Registry
     private sealed class LicencaGratuita : IServicoLicenca
     {

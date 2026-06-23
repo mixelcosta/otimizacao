@@ -92,59 +92,291 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.App", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.App.Tests", "tests\HardwareOptimizer.App.Tests\HardwareOptimizer.App.Tests.csproj", "{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.Licensing", "src\HardwareOptimizer.Features.Licensing\HardwareOptimizer.Features.Licensing.csproj", "{01828335-AE8F-4647-A6FE-11E05D31CBF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.LifeCounter", "src\HardwareOptimizer.Features.LifeCounter\HardwareOptimizer.Features.LifeCounter.csproj", "{322A6837-F4DD-4027-AA69-FCC3A06E0032}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.Upgrade", "src\HardwareOptimizer.Features.Upgrade\HardwareOptimizer.Features.Upgrade.csproj", "{6FCC1903-E29A-4B06-89B0-D721383D154D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.Drivers", "src\HardwareOptimizer.Features.Drivers\HardwareOptimizer.Features.Drivers.csproj", "{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.WindowsService", "src\HardwareOptimizer.WindowsService\HardwareOptimizer.WindowsService.csproj", "{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.Upgrade.Tests", "tests\HardwareOptimizer.Features.Upgrade.Tests\HardwareOptimizer.Features.Upgrade.Tests.csproj", "{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.LifeCounter.Tests", "tests\HardwareOptimizer.Features.LifeCounter.Tests\HardwareOptimizer.Features.LifeCounter.Tests.csproj", "{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.Licensing.Tests", "tests\HardwareOptimizer.Features.Licensing.Tests\HardwareOptimizer.Features.Licensing.Tests.csproj", "{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.Features.Drivers.Tests", "tests\HardwareOptimizer.Features.Drivers.Tests\HardwareOptimizer.Features.Drivers.Tests.csproj", "{58E6D403-4A46-4545-BE1F-87592A02E57C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareOptimizer.WindowsService.Tests", "tests\HardwareOptimizer.WindowsService.Tests\HardwareOptimizer.WindowsService.Tests.csproj", "{F9090507-2524-4FB0-A705-B80BDE7C58DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8D74C898-7973-48B0-813B-9B13B1C15350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8D74C898-7973-48B0-813B-9B13B1C15350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Debug|x64.Build.0 = Debug|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Debug|x86.Build.0 = Debug|Any CPU
 		{8D74C898-7973-48B0-813B-9B13B1C15350}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D74C898-7973-48B0-813B-9B13B1C15350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Release|x64.ActiveCfg = Release|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Release|x64.Build.0 = Release|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Release|x86.ActiveCfg = Release|Any CPU
+		{8D74C898-7973-48B0-813B-9B13B1C15350}.Release|x86.Build.0 = Release|Any CPU
 		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Debug|x64.Build.0 = Debug|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Debug|x86.Build.0 = Debug|Any CPU
 		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Release|x64.ActiveCfg = Release|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Release|x64.Build.0 = Release|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Release|x86.ActiveCfg = Release|Any CPU
+		{8A363550-F36E-49CB-BACC-32C9A7BFEF16}.Release|x86.Build.0 = Release|Any CPU
 		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Debug|x64.Build.0 = Debug|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Debug|x86.Build.0 = Debug|Any CPU
 		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Release|x64.ActiveCfg = Release|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Release|x64.Build.0 = Release|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Release|x86.ActiveCfg = Release|Any CPU
+		{4D8B1681-8D82-4D60-9918-3FC82A7AA6BB}.Release|x86.Build.0 = Release|Any CPU
 		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Debug|x64.Build.0 = Debug|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Debug|x86.Build.0 = Debug|Any CPU
 		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Release|x64.ActiveCfg = Release|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Release|x64.Build.0 = Release|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Release|x86.ActiveCfg = Release|Any CPU
+		{E62EFD74-581B-4B0E-ACF3-C20158989D12}.Release|x86.Build.0 = Release|Any CPU
 		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Debug|x64.Build.0 = Debug|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Debug|x86.Build.0 = Debug|Any CPU
 		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|x64.ActiveCfg = Release|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|x64.Build.0 = Release|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|x86.ActiveCfg = Release|Any CPU
+		{EF7F6C1B-6784-464F-83C2-70C539F12B1E}.Release|x86.Build.0 = Release|Any CPU
 		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Debug|x64.Build.0 = Debug|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Debug|x86.Build.0 = Debug|Any CPU
 		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Release|x64.ActiveCfg = Release|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Release|x64.Build.0 = Release|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Release|x86.ActiveCfg = Release|Any CPU
+		{BFFDBDC2-D12A-4062-B5DC-3F54CB13847F}.Release|x86.Build.0 = Release|Any CPU
 		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Debug|x64.Build.0 = Debug|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Debug|x86.Build.0 = Debug|Any CPU
 		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Release|x64.ActiveCfg = Release|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Release|x64.Build.0 = Release|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Release|x86.ActiveCfg = Release|Any CPU
+		{D7400844-450D-4B7A-BD7C-B77AB6CB60E9}.Release|x86.Build.0 = Release|Any CPU
 		{365E3882-8526-41DB-A266-4AC5A961A482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{365E3882-8526-41DB-A266-4AC5A961A482}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{365E3882-8526-41DB-A266-4AC5A961A482}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{365E3882-8526-41DB-A266-4AC5A961A482}.Debug|x64.Build.0 = Debug|Any CPU
+		{365E3882-8526-41DB-A266-4AC5A961A482}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{365E3882-8526-41DB-A266-4AC5A961A482}.Debug|x86.Build.0 = Debug|Any CPU
 		{365E3882-8526-41DB-A266-4AC5A961A482}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{365E3882-8526-41DB-A266-4AC5A961A482}.Release|Any CPU.Build.0 = Release|Any CPU
+		{365E3882-8526-41DB-A266-4AC5A961A482}.Release|x64.ActiveCfg = Release|Any CPU
+		{365E3882-8526-41DB-A266-4AC5A961A482}.Release|x64.Build.0 = Release|Any CPU
+		{365E3882-8526-41DB-A266-4AC5A961A482}.Release|x86.ActiveCfg = Release|Any CPU
+		{365E3882-8526-41DB-A266-4AC5A961A482}.Release|x86.Build.0 = Release|Any CPU
 		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Debug|x64.Build.0 = Debug|Any CPU
+		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Debug|x86.Build.0 = Debug|Any CPU
 		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Release|x64.ActiveCfg = Release|Any CPU
+		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Release|x64.Build.0 = Release|Any CPU
+		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Release|x86.ActiveCfg = Release|Any CPU
+		{D5A4ABFE-B323-448D-947E-3FDBC58A1918}.Release|x86.Build.0 = Release|Any CPU
 		{18F90665-1268-4617-AD40-220E53A2C0AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{18F90665-1268-4617-AD40-220E53A2C0AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18F90665-1268-4617-AD40-220E53A2C0AA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{18F90665-1268-4617-AD40-220E53A2C0AA}.Debug|x64.Build.0 = Debug|Any CPU
+		{18F90665-1268-4617-AD40-220E53A2C0AA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{18F90665-1268-4617-AD40-220E53A2C0AA}.Debug|x86.Build.0 = Debug|Any CPU
 		{18F90665-1268-4617-AD40-220E53A2C0AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18F90665-1268-4617-AD40-220E53A2C0AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18F90665-1268-4617-AD40-220E53A2C0AA}.Release|x64.ActiveCfg = Release|Any CPU
+		{18F90665-1268-4617-AD40-220E53A2C0AA}.Release|x64.Build.0 = Release|Any CPU
+		{18F90665-1268-4617-AD40-220E53A2C0AA}.Release|x86.ActiveCfg = Release|Any CPU
+		{18F90665-1268-4617-AD40-220E53A2C0AA}.Release|x86.Build.0 = Release|Any CPU
 		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Debug|x64.Build.0 = Debug|Any CPU
+		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Debug|x86.Build.0 = Debug|Any CPU
 		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Release|x64.ActiveCfg = Release|Any CPU
+		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Release|x64.Build.0 = Release|Any CPU
+		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Release|x86.ActiveCfg = Release|Any CPU
+		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C}.Release|x86.Build.0 = Release|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Debug|x64.Build.0 = Debug|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Debug|x86.Build.0 = Debug|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Release|x64.ActiveCfg = Release|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Release|x64.Build.0 = Release|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Release|x86.ActiveCfg = Release|Any CPU
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4}.Release|x86.Build.0 = Release|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Debug|x64.Build.0 = Debug|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Debug|x86.Build.0 = Debug|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Release|Any CPU.Build.0 = Release|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Release|x64.ActiveCfg = Release|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Release|x64.Build.0 = Release|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Release|x86.ActiveCfg = Release|Any CPU
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032}.Release|x86.Build.0 = Release|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Debug|x64.Build.0 = Debug|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Debug|x86.Build.0 = Debug|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Release|x64.ActiveCfg = Release|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Release|x64.Build.0 = Release|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Release|x86.ActiveCfg = Release|Any CPU
+		{6FCC1903-E29A-4B06-89B0-D721383D154D}.Release|x86.Build.0 = Release|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Debug|x64.Build.0 = Debug|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Debug|x86.Build.0 = Debug|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Release|x64.ActiveCfg = Release|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Release|x64.Build.0 = Release|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Release|x86.ActiveCfg = Release|Any CPU
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B}.Release|x86.Build.0 = Release|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Debug|x64.Build.0 = Debug|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Debug|x86.Build.0 = Debug|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Release|x64.ActiveCfg = Release|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Release|x64.Build.0 = Release|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Release|x86.ActiveCfg = Release|Any CPU
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B}.Release|x86.Build.0 = Release|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Debug|x64.Build.0 = Debug|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Debug|x86.Build.0 = Debug|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Release|x64.ActiveCfg = Release|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Release|x64.Build.0 = Release|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Release|x86.ActiveCfg = Release|Any CPU
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61}.Release|x86.Build.0 = Release|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Debug|x64.Build.0 = Debug|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Debug|x86.Build.0 = Debug|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Release|x64.ActiveCfg = Release|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Release|x64.Build.0 = Release|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Release|x86.ActiveCfg = Release|Any CPU
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC}.Release|x86.Build.0 = Release|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Debug|x64.Build.0 = Debug|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Debug|x86.Build.0 = Debug|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Release|x64.ActiveCfg = Release|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Release|x64.Build.0 = Release|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Release|x86.ActiveCfg = Release|Any CPU
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F}.Release|x86.Build.0 = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|x64.Build.0 = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Debug|x86.Build.0 = Debug|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|x64.ActiveCfg = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|x64.Build.0 = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|x86.ActiveCfg = Release|Any CPU
+		{58E6D403-4A46-4545-BE1F-87592A02E57C}.Release|x86.Build.0 = Release|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Debug|x64.Build.0 = Debug|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Debug|x86.Build.0 = Debug|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Release|x64.ActiveCfg = Release|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Release|x64.Build.0 = Release|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Release|x86.ActiveCfg = Release|Any CPU
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8D74C898-7973-48B0-813B-9B13B1C15350} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
@@ -158,6 +390,16 @@ Global
 		{D5A4ABFE-B323-448D-947E-3FDBC58A1918} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
 		{18F90665-1268-4617-AD40-220E53A2C0AA} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
 		{92B80DB0-44A8-4D6E-975F-CBE96F521A4C} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
+		{01828335-AE8F-4647-A6FE-11E05D31CBF4} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
+		{322A6837-F4DD-4027-AA69-FCC3A06E0032} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
+		{6FCC1903-E29A-4B06-89B0-D721383D154D} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
+		{309081FE-7D29-4E22-86AA-B9BEF14C6E2B} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
+		{68BB7A05-F6E0-44F1-B422-0EA4434E0D2B} = {64ECA693-93D1-4726-B357-0FABBD0F5776}
+		{B4C9A2AF-D93F-4440-A1D8-5AF28FBA0B61} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
+		{C49B9C7F-8B0B-40CA-BD79-32E4DCF5E5DC} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
+		{8AD82117-F8FE-4FC1-8860-4C68BE1E964F} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
+		{58E6D403-4A46-4545-BE1F-87592A02E57C} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
+		{F9090507-2524-4FB0-A705-B80BDE7C58DA} = {5E9DE1B1-2FF0-4D76-97DF-5906B8D5E1F5}
 	EndGlobalSection
 EndGlobal
 ````
@@ -326,6 +568,133 @@ public sealed class GeradorGuiaBios
             "ASRock" => ("F2 ou Del", "ASRock Instant Flash"),
             _ => ("Del ou F2 (varia por fabricante)", "utilitário de atualização do próprio fabricante"),
         };
+}
+````
+
+### `src/HardwareOptimizer.Core/Bios/GeradorGuiaXmpExpo.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Bios;
+
+/// <summary>
+/// Gera guia passo a passo para ativação de XMP (Intel) / EXPO ou DOCP (AMD)
+/// específico por fabricante de placa-mãe. Nunca aplica — apenas orienta.
+/// </summary>
+public sealed class GeradorGuiaXmpExpo
+{
+    public GuiaXmpExpo Gerar(IdentificacaoBios identificacao, string? tipoRam = null)
+    {
+        ArgumentNullException.ThrowIfNull(identificacao);
+
+        var (teclaSetup, passos, aviso) = FabricanteParaGuia(identificacao.Fabricante, tipoRam);
+
+        return new GuiaXmpExpo
+        {
+            Fabricante = identificacao.Fabricante,
+            Modelo = identificacao.Modelo,
+            TeclaSetup = teclaSetup,
+            Passos = passos,
+            Aviso = aviso,
+            TipoRam = tipoRam ?? "DDR4/DDR5",
+        };
+    }
+
+    private static (string Tecla, IReadOnlyList<string> Passos, string Aviso) FabricanteParaGuia(
+        string fabricante, string? tipoRam)
+    {
+        var nomeConfig = ObterNomeConfiguracao(fabricante, tipoRam);
+
+        return fabricante switch
+        {
+            "ASUS" => (
+                "Del (ou F2)",
+                new[]
+                {
+                    "Reinicie o PC e pressione Del (ou F2) para entrar na BIOS UEFI.",
+                    "Na tela inicial da BIOS, clique em 'Ai Tweaker' (modo Advanced) ou use o perfil 'D.O.C.P.' visível na tela inicial.",
+                    $"Localize a opção '{nomeConfig}' e mude de 'Disabled' para o perfil desejado (ex: '3200MHz' ou o perfil mais alto disponível).",
+                    "Pressione F10 para salvar e sair. O sistema reiniciará.",
+                    "Confirme a velocidade da RAM com CPU-Z após reiniciar (guia de Memória → DRAM Frequency).",
+                },
+                $"⚠ Se o PC não inicializar após ativar {nomeConfig}, pressione Del no POST para entrar na BIOS e reduza para um perfil inferior."
+            ),
+
+            "MSI" => (
+                "Del",
+                new[]
+                {
+                    "Reinicie e pressione Del para entrar na BIOS MSI Click BIOS.",
+                    "Clique em 'Settings' → 'Advanced' → 'DRAM Configuration'.",
+                    $"Localize 'Memory Try It!' ou '{nomeConfig}' e selecione o perfil mais alto compatível.",
+                    "Pressione F10 para Salvar e Reiniciar.",
+                    "Verifique a velocidade da RAM com CPU-Z.",
+                },
+                $"⚠ MSI 'Memory Try It!' inclui perfis pré-testados: prefira este ao {nomeConfig} manual para maior estabilidade."
+            ),
+
+            "Gigabyte" => (
+                "Del",
+                new[]
+                {
+                    "Reinicie e pressione Del para entrar na BIOS Gigabyte.",
+                    "Clique em 'Tweaker' → role até 'Extreme Memory Profile (X.M.P.)'.",
+                    $"Mude de 'Disabled' para 'Profile 1' (ou '{nomeConfig}' em placas AMD).",
+                    "Pressione F10 → 'Yes' para salvar e sair.",
+                    "Se ocorrer falha no boot, pressione Del durante o POST para reverter ao padrão.",
+                },
+                "⚠ Gigabyte recomenda 'Profile 1' como ponto seguro; 'Profile 2' pode ser instável em kits extremos."
+            ),
+
+            "ASRock" => (
+                "F2 ou Del",
+                new[]
+                {
+                    "Reinicie e pressione F2 (ou Del) para entrar na BIOS ASRock UEFI.",
+                    "Vá em 'OC Tweaker' → 'DRAM Timing Configuration'.",
+                    $"Mude '{nomeConfig}' de 'Auto' para o perfil desejado.",
+                    "Pressione F10 para salvar. O sistema reiniciará uma ou duas vezes.",
+                    "Valide com CPU-Z após o boot.",
+                },
+                "⚠ ASRock reinicia duas vezes após ativar XMP/EXPO; isso é normal."
+            ),
+
+            _ => (
+                "Del ou F2 (varia por fabricante)",
+                new[]
+                {
+                    "Reinicie e pressione Del, F2 ou F10 (dependendo do fabricante) para entrar na BIOS.",
+                    "Procure por 'XMP', 'EXPO', 'DOCP' ou 'Memory Profile' nas abas OC, Tweaker ou Advanced.",
+                    "Selecione o perfil desejado (geralmente Profile 1).",
+                    "Salve com F10 e reinicie.",
+                },
+                "⚠ Consulte o manual da placa-mãe se não encontrar a opção de perfil de memória."
+            ),
+        };
+    }
+
+    private static string ObterNomeConfiguracao(string fabricante, string? tipoRam) =>
+        (fabricante, tipoRam?.ToUpperInvariant()) switch
+        {
+            ("ASUS", "DDR5") => "EXPO",
+            ("ASUS", _) => "D.O.C.P.",
+            ("MSI", "DDR5") => "EXPO",
+            ("MSI", _) => "XMP",
+            ("Gigabyte", "DDR5") => "EXPO",
+            ("Gigabyte", _) => "X.M.P.",
+            ("ASRock", "DDR5") => "EXPO/XMP",
+            ("ASRock", _) => "XMP",
+            _ => "XMP/EXPO",
+        };
+}
+
+public sealed record GuiaXmpExpo
+{
+    public required string Fabricante { get; init; }
+    public required string Modelo { get; init; }
+    public required string TeclaSetup { get; init; }
+    public required IReadOnlyList<string> Passos { get; init; }
+    public required string Aviso { get; init; }
+    public required string TipoRam { get; init; }
 }
 ````
 
@@ -1759,6 +2128,104 @@ public sealed class TermoConsentimento
 }
 ````
 
+### `src/HardwareOptimizer.Core/Contracts/AnaliseTemp.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+/// <summary>Resumo dos arquivos temporários encontrados no sistema.</summary>
+public sealed record AnaliseTemp
+{
+    /// <summary>Espaço total ocupado por arquivos temporários em MB.</summary>
+    public long TamanhoTotalMb { get; init; }
+
+    public int QuantidadeArquivos { get; init; }
+
+    public IReadOnlyList<PastaTemp> Pastas { get; init; } = Array.Empty<PastaTemp>();
+}
+
+public sealed record PastaTemp
+{
+    public required string Caminho { get; init; }
+
+    public long TamanhoMb { get; init; }
+
+    public int QuantidadeArquivos { get; init; }
+}
+````
+
+### `src/HardwareOptimizer.Core/Contracts/InfoDriver.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+public enum StatusDriver
+{
+    Atualizado = 0,
+    AtualizacaoDisponivel = 1,
+    Desconhecido = 2,
+}
+
+public sealed record InfoDriver
+{
+    public required string HardwareId { get; init; }
+
+    public required string Descricao { get; init; }
+
+    public string? Fabricante { get; init; }
+
+    public string? VersaoAtual { get; init; }
+
+    public string? VersaoDisponivel { get; init; }
+
+    public string? UrlDownload { get; init; }
+
+    public bool CertificadoWhql { get; init; }
+
+    public StatusDriver Status { get; init; }
+}
+````
+
+### `src/HardwareOptimizer.Core/Contracts/InicializacaoEntrada.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+public enum ImpactoInicializacao
+{
+    Baixo = 0,
+    Medio = 1,
+    Alto = 2,
+    Desconhecido = 3,
+}
+
+public enum OrigemInicializacao
+{
+    RegistroUsuario = 0,
+    RegistroMaquina = 1,
+    PastaStartup = 2,
+}
+
+public sealed record InicializacaoEntrada
+{
+    public required string Nome { get; init; }
+
+    public required string Caminho { get; init; }
+
+    public required ImpactoInicializacao Impacto { get; init; }
+
+    public required OrigemInicializacao Origem { get; init; }
+
+    public bool Ativo { get; init; }
+
+    /// <summary>Nome do fabricante lido do FileVersionInfo do executável.</summary>
+    public string? Fabricante { get; init; }
+
+    /// <summary>Chave de registro ou caminho de arquivo usada para desfazer a alteração.</summary>
+    public string? ChaveRollback { get; init; }
+}
+````
+
 ### `src/HardwareOptimizer.Core/Contracts/Inventario.cs`
 
 ````csharp
@@ -1786,6 +2253,30 @@ public sealed record Inventario
 
     public IReadOnlyList<InterfaceRede> Rede { get; init; } = Array.Empty<InterfaceRede>();
 
+    /// <summary>Programas configurados para iniciar com o Windows.</summary>
+    public IReadOnlyList<InicializacaoEntrada> EntradasStartup { get; init; } = Array.Empty<InicializacaoEntrada>();
+
+    /// <summary>Serviços do Windows no momento da coleta.</summary>
+    public IReadOnlyList<ServicoSistema> Servicos { get; init; } = Array.Empty<ServicoSistema>();
+
+    /// <summary>Processos em execução no momento da coleta (top 150 por memória).</summary>
+    public IReadOnlyList<ProcessoSistema> Processos { get; init; } = Array.Empty<ProcessoSistema>();
+
+    /// <summary>Saúde dos discos via S.M.A.R.T.</summary>
+    public IReadOnlyList<SaudeDisco> SaudeDiscos { get; init; } = Array.Empty<SaudeDisco>();
+
+    /// <summary>Dispositivos e seus drivers (Display, Rede, Áudio, USB, Armazenamento).</summary>
+    public IReadOnlyList<InfoDriver> Drivers { get; init; } = Array.Empty<InfoDriver>();
+
+    /// <summary>Snapshot de métricas de uso no momento do SCAN (CPU%, RAM, espaço em disco).</summary>
+    public MetricasSistema? Metricas { get; init; }
+
+    /// <summary>Programas instalados via registro do Windows.</summary>
+    public IReadOnlyList<ProgramaInstalado> ProgramasInstalados { get; init; } = Array.Empty<ProgramaInstalado>();
+
+    /// <summary>Análise das pastas de arquivos temporários.</summary>
+    public AnaliseTemp? ArquivosTemporarios { get; init; }
+
     /// <summary>Identificadores sensíveis. Nulo após a sanitização.</summary>
     public IdentificadoresSensiveis? Identificadores { get; init; }
 
@@ -1806,6 +2297,12 @@ public sealed record PlacaMae
     public string? Modo { get; init; }
 
     public bool? SecureBoot { get; init; }
+
+    /// <summary>Ex: "AMD X570" ou "Intel Z790".</summary>
+    public string? Chipset { get; init; }
+
+    /// <summary>Ex: "PCI-Express 4.0 (16.0 GT/s)".</summary>
+    public string? BusSpecs { get; init; }
 }
 
 public sealed record Processador
@@ -1817,6 +2314,24 @@ public sealed record Processador
     public int? Threads { get; init; }
 
     public double? TempIdleC { get; init; }
+
+    /// <summary>Ex: "AMD" | "Intel".</summary>
+    public string? Fabricante { get; init; }
+
+    /// <summary>Ex: "AM4", "AM5", "LGA1700".</summary>
+    public string? Soquete { get; init; }
+
+    /// <summary>Clock base em MHz (MaxClockSpeed do WMI).</summary>
+    public int? ClockBaseMhz { get; init; }
+
+    /// <summary>Clock atual em MHz (CurrentClockSpeed do WMI).</summary>
+    public int? ClockAtualMhz { get; init; }
+
+    /// <summary>Cache L2 em KB.</summary>
+    public int? L2CacheKb { get; init; }
+
+    /// <summary>Cache L3 em KB.</summary>
+    public int? L3CacheKb { get; init; }
 }
 
 public sealed record ModuloMemoria
@@ -1826,6 +2341,24 @@ public sealed record ModuloMemoria
     public int? VelocidadeMhz { get; init; }
 
     public string? Fabricante { get; init; }
+
+    /// <summary>Número de parte (PartNumber) — ex: "CMK16GX4M2B3200C16".</summary>
+    public string? Modelo { get; init; }
+
+    /// <summary>Slot físico — ex: "DIMM A1".</summary>
+    public string? Slot { get; init; }
+
+    /// <summary>Tipo de memória decodificado — ex: "DDR4", "DDR5".</summary>
+    public string? Tipo { get; init; }
+
+    /// <summary>"DIMM" | "SO-DIMM" | null.</summary>
+    public string? FormFactor { get; init; }
+
+    /// <summary>Velocidade configurada (XMP/EXPO) em MHz.</summary>
+    public int? VelocidadeConfiguradaMhz { get; init; }
+
+    /// <summary>Tensão configurada — ex: "1.35V".</summary>
+    public string? Tensao { get; init; }
 }
 
 public sealed record PlacaVideo
@@ -1835,6 +2368,30 @@ public sealed record PlacaVideo
     public double? TempIdleC { get; init; }
 
     public string? VersaoDriver { get; init; }
+
+    /// <summary>Ex: "x16".</summary>
+    public string? LinkWidthAtual { get; init; }
+
+    /// <summary>Ex: "x16".</summary>
+    public string? LinkWidthMax { get; init; }
+
+    /// <summary>Ex: "16.0 GT/s".</summary>
+    public string? LinkSpeedAtual { get; init; }
+
+    /// <summary>Ex: "16.0 GT/s".</summary>
+    public string? LinkSpeedMax { get; init; }
+
+    /// <summary>VRAM em MB (AdapterRAM / 1024 / 1024).</summary>
+    public int? VramMb { get; init; }
+
+    /// <summary>Ex: "1920×1080".</summary>
+    public string? Resolucao { get; init; }
+
+    /// <summary>Taxa de atualização em Hz.</summary>
+    public int? TaxaAtualizacaoHz { get; init; }
+
+    /// <summary>Data do driver — ex: "20240115".</summary>
+    public string? DataDriver { get; init; }
 }
 
 public sealed record SistemaOperacionalInfo
@@ -1890,6 +2447,7 @@ public enum TipoSensor
     Fan = 3,
     Potencia = 4,
     Outro = 5,
+    Carga = 6,
 }
 
 /// <summary>Leitura de um único sensor.</summary>
@@ -1925,6 +2483,87 @@ public sealed record LeituraSensores
             return temperaturas.Count == 0 ? null : temperaturas.Max();
         }
     }
+}
+````
+
+### `src/HardwareOptimizer.Core/Contracts/MetricasSistema.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+/// <summary>Snapshot de métricas de uso do sistema no momento do SCAN.</summary>
+public sealed record MetricasSistema
+{
+    /// <summary>Uso médio de CPU em % no momento da coleta.</summary>
+    public int CpuUsoPercent { get; init; }
+
+    public long RamTotalMb { get; init; }
+
+    public long RamLivreMb { get; init; }
+
+    public long RamUsadaMb => RamTotalMb - RamLivreMb;
+
+    public IReadOnlyList<MetricaDisco> Discos { get; init; } = Array.Empty<MetricaDisco>();
+}
+
+public sealed record MetricaDisco
+{
+    /// <summary>Ex: "C:", "D:".</summary>
+    public required string Letra { get; init; }
+
+    public long TotalGb { get; init; }
+
+    public long LivreGb { get; init; }
+
+    public long UsadoGb { get; init; }
+
+    public int UsoPercent => TotalGb > 0 ? (int)(UsadoGb * 100 / TotalGb) : 0;
+}
+````
+
+### `src/HardwareOptimizer.Core/Contracts/ProcessoSistema.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+public sealed record ProcessoSistema
+{
+    public required string Nome { get; init; }
+
+    public int Pid { get; init; }
+
+    /// <summary>Memória de trabalho em KB (WorkingSet).</summary>
+    public long MemoriaKb { get; init; }
+}
+````
+
+### `src/HardwareOptimizer.Core/Contracts/ProgramaInstalado.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+public sealed record ProgramaInstalado
+{
+    public required string Nome { get; init; }
+
+    public string? Versao { get; init; }
+
+    public string? Fabricante { get; init; }
+
+    /// <summary>Data no formato YYYYMMDD vinda do registro.</summary>
+    public string? DataInstalacao { get; init; }
+
+    /// <summary>Tamanho estimado em MB (campo EstimatedSize do registro, originalmente em KB).</summary>
+    public int? TamanhoMb { get; init; }
+
+    /// <summary>Heurística: nome coincide com padrões conhecidos de bloatware/adware.</summary>
+    public bool Bloatware { get; init; }
+
+    /// <summary>Comando registrado para desinstalar o programa (valor UninstallString do registro).</summary>
+    public string? UninstallString { get; init; }
+
+    /// <summary>Comando de desinstalação silenciosa, quando disponível (QuietUninstallString).</summary>
+    public string? QuietUninstallString { get; init; }
 }
 ````
 
@@ -1965,6 +2604,89 @@ public sealed record Recomendacao
 }
 ````
 
+### `src/HardwareOptimizer.Core/Contracts/ResultadoCompatibilidade.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+public enum TipoPecaUpgrade
+{
+    Cpu = 0,
+    Gpu = 1,
+    Ram = 2,
+    SsdM2 = 3,
+    Fonte = 4,
+}
+
+public enum ModoSugestao
+{
+    CustoBeneficio = 0,
+    HighEnd = 1,
+}
+
+public sealed record PecaSubstituta
+{
+    public required TipoPecaUpgrade Tipo { get; init; }
+
+    public required string Modelo { get; init; }
+
+    public string? Fabricante { get; init; }
+
+    public string? Socket { get; init; }
+
+    public string? TipoDdr { get; init; }
+
+    public int? VelocidadeMhz { get; init; }
+
+    public int? TdpW { get; init; }
+
+    public string? InterfacePcie { get; init; }
+
+    public decimal? PrecoEstimado { get; init; }
+}
+
+public sealed record ResultadoCompatibilidade
+{
+    public required bool Compativel { get; init; }
+
+    public required string PecaModelo { get; init; }
+
+    public IReadOnlyList<string> Incompatibilidades { get; init; } = Array.Empty<string>();
+
+    public IReadOnlyList<string> Avisos { get; init; } = Array.Empty<string>();
+
+    public double? GanhoEstimadoPercent { get; init; }
+
+    public int? ConsumoTotalEstimadoW { get; init; }
+
+    public int? HeadroomFonteW { get; init; }
+}
+
+public sealed record SugestaoUpgrade
+{
+    public required ModoSugestao Modo { get; init; }
+
+    public required PecaSubstituta Peca { get; init; }
+
+    public required ResultadoCompatibilidade Compatibilidade { get; init; }
+
+    public required string Justificativa { get; init; }
+
+    public string? UrlAfiliado { get; init; }
+}
+
+public sealed record GargaloResult
+{
+    public required string ComponenteLimitante { get; init; }
+
+    public required double PorcentagemGargalo { get; init; }
+
+    public required double GanhoEstimadoPercent { get; init; }
+
+    public required string Descricao { get; init; }
+}
+````
+
 ### `src/HardwareOptimizer.Core/Contracts/ResultadoValidacao.cs`
 
 ````csharp
@@ -2001,6 +2723,101 @@ public sealed record MedicaoTeste
     public double? ClockMhz { get; init; }
 
     public double? ConsumoW { get; init; }
+}
+````
+
+### `src/HardwareOptimizer.Core/Contracts/SaudeDisco.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+public enum NivelSaudeDisco
+{
+    Bom = 0,
+    Atencao = 1,
+    Critico = 2,
+}
+
+public sealed record SaudeDisco
+{
+    public required string Modelo { get; init; }
+
+    public required string Letra { get; init; }
+
+    public long TbwEscritoGb { get; init; }
+
+    /// <summary>TBW máximo garantido pelo fabricante para este modelo. Zero = desconhecido.</summary>
+    public long TbwFabricanteGb { get; init; }
+
+    public int HorasUso { get; init; }
+
+    public double PorcentagemVidaRestante { get; init; }
+
+    public NivelSaudeDisco Nivel { get; init; }
+
+    public bool TemErrosNaoCorrigiveis { get; init; }
+
+    public int SetoresComProblema { get; init; }
+
+    public DateTimeOffset AtualizadoEm { get; init; } = DateTimeOffset.UtcNow;
+}
+````
+
+### `src/HardwareOptimizer.Core/Contracts/ServicoSistema.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+public enum StatusServico
+{
+    Rodando = 0,
+    Parado = 1,
+    Outro = 2,
+}
+
+public enum TipoInicioServico
+{
+    Automatico = 0,
+    Manual = 1,
+    Desabilitado = 2,
+    Outro = 3,
+}
+
+public sealed record ServicoSistema
+{
+    public required string Nome { get; init; }
+
+    public string? NomeExibicao { get; init; }
+
+    public StatusServico Status { get; init; }
+
+    public TipoInicioServico TipoInicio { get; init; }
+}
+````
+
+### `src/HardwareOptimizer.Core/Contracts/ServicoWindows.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+public sealed record ServicoWindows
+{
+    public required string Nome { get; init; }
+
+    /// <summary>DisplayName — nome legível do serviço.</summary>
+    public required string Descricao { get; init; }
+
+    /// <summary>ProcessId: 0 quando o serviço está parado.</summary>
+    public int Pid { get; init; }
+
+    /// <summary>"Running", "Stopped", "Start Pending", etc.</summary>
+    public required string Status { get; init; }
+
+    /// <summary>Conta/grupo de execução (StartName do Win32_Service).</summary>
+    public string? Grupo { get; init; }
+
+    /// <summary>"Auto", "Manual", "Disabled".</summary>
+    public string? ModoInicio { get; init; }
 }
 ````
 
@@ -2822,6 +3639,7 @@ public sealed record Score
     <!-- Acesso ao registro do Windows (usado só sob Windows; em outras plataformas
          os tipos existem mas lançam em tempo de execução). -->
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <!-- System.Management vem transitivamente via LibreHardwareMonitorLib -->
   </ItemGroup>
 
   <PropertyGroup>
@@ -3473,10 +4291,15 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text.Json;
+using HardwareOptimizer.Agent.Drivers;
+using HardwareOptimizer.Agent.Security;
+using HardwareOptimizer.Agent.Smart;
+using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Win32;
 
 namespace HardwareOptimizer.Agent.Collector;
 
@@ -3495,21 +4318,51 @@ public sealed class LeitorWindows : ILeitorPlataforma
 
     public SistemaOperacionalTipo Tipo => SistemaOperacionalTipo.Windows;
 
-    public Task<Inventario> LerAsync(CancellationToken cancellationToken = default)
+    public async Task<Inventario> LerAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        _log.LogDebug("Lendo inventário do Windows via PowerShell/CIM (Get-CimInstance).");
+        _log.LogDebug("Lendo inventário do Windows via PowerShell/CIM + WMI (paralelo).");
+
+        // Tarefas lentas (WMI/System.Management + filesystem) rodam em paralelo
+        // enquanto as consultas CIM/PowerShell executam sequencialmente no thread atual.
+        var saudeTask    = Task.Run(() => ColetarSaudeDiscos(),          cancellationToken);
+        var driversTask  = Task.Run(() => ColetarDrivers(),              cancellationToken);
+        var tempTask     = Task.Run(() => ColetarArquivosTemporarios(),  cancellationToken);
+        var programasTask = Task.Run(() => ColetarProgramasInstalados(), cancellationToken);
+
+        // Coleta de hardware via PowerShell/CIM (sequencial)
+        var placa    = LerPlaca();
+        var cpu      = LerCpu();
+        var memoria  = LerMemoria();
+        var gpu      = LerGpu();
+        var so       = LerSistemaOperacional();
+        var rede     = LerRede();
+        var idents   = LerIdentificadores();
+        var startup  = ColetarEntradasStartup();
+        var servicos = ColetarServicos();
+        var processos = ColetarProcessos();
+        var metricas = ColetarMetricas();
+
+        await Task.WhenAll(saudeTask, driversTask, tempTask, programasTask).ConfigureAwait(false);
 
         var inventario = new Inventario
         {
-            Placa = LerPlaca(),
-            Cpu = LerCpu(),
-            Memoria = LerMemoria(),
-            Gpu = LerGpu(),
-            SistemaOperacional = LerSistemaOperacional(),
-            Rede = LerRede(),
-            Identificadores = LerIdentificadores(),
-            ColetadoEm = DateTimeOffset.UtcNow,
+            Placa                = placa,
+            Cpu                  = cpu,
+            Memoria              = memoria,
+            Gpu                  = gpu,
+            SistemaOperacional   = so,
+            Rede                 = rede,
+            EntradasStartup      = startup,
+            Servicos             = servicos,
+            Processos            = processos,
+            SaudeDiscos          = saudeTask.Result,
+            Drivers              = driversTask.Result,
+            Metricas             = metricas,
+            ProgramasInstalados  = programasTask.Result,
+            ArquivosTemporarios  = tempTask.Result,
+            Identificadores      = idents,
+            ColetadoEm           = DateTimeOffset.UtcNow,
         };
 
         if (inventario.Placa.Fabricante == "Desconhecido")
@@ -3519,72 +4372,323 @@ public sealed class LeitorWindows : ILeitorPlataforma
                 + "(PowerShell ausente, sem permissão ou execução bloqueada).");
         }
 
-        return Task.FromResult(inventario);
+        _log.LogInformation(
+            "Coleta concluída: CPU '{Cpu}', {Mem} módulo(s) RAM, {Gpu} GPU(s), "
+            + "{Discos} disco(s), {Drivers} driver(s), {Programas} programa(s), "
+            + "{Startup} entrada(s) startup, {Servicos} serviço(s), {Processos} processo(s).",
+            inventario.Cpu.Nome,
+            inventario.Memoria.Count,
+            inventario.Gpu.Count,
+            inventario.SaudeDiscos.Count,
+            inventario.Drivers.Count,
+            inventario.ProgramasInstalados.Count,
+            inventario.EntradasStartup.Count,
+            inventario.Servicos.Count,
+            inventario.Processos.Count);
+
+        return inventario;
     }
 
     private static PlacaMae LerPlaca()
     {
         var board = PrimeiroItem("Win32_BaseBoard", "Manufacturer,Product,SerialNumber");
         var bios = PrimeiroItem("Win32_BIOS", "SMBIOSBIOSVersion,ReleaseDate");
+        var modelo = Texto(board, "Product") ?? "Desconhecido";
+        var (chipset, busSpecs) = LerChipsetEBus(modelo);
 
         return new PlacaMae
         {
             Fabricante = Texto(board, "Manufacturer") ?? "Desconhecido",
-            Modelo = Texto(board, "Product") ?? "Desconhecido",
+            Modelo = modelo,
             VersaoBios = Texto(bios, "SMBIOSBIOSVersion"),
             DataBios = NormalizadorData.Normalizar(Texto(bios, "ReleaseDate")),
             Modo = LerTexto("$env:firmware_type") is { Length: > 0 } modo ? modo : null,
             SecureBoot = LerSecureBoot(),
+            Chipset = chipset,
+            BusSpecs = busSpecs,
         };
     }
 
+    private static (string? Chipset, string? BusSpecs) LerChipsetEBus(string modeloPlaca)
+    {
+        // Busca via Win32_PnPEntity — dispositivos de sistema AMD (VEN_1022) e Intel (VEN_8086)
+        // excluindo CPU/memória/periféricos para isolar o chipset.
+        const string cmd =
+            "Get-CimInstance Win32_PnPEntity | " +
+            "Where-Object {$_.DeviceID -match '^PCI\\\\VEN_(1022|8086)' -and $_.PNPClass -eq 'System' " +
+            "-and $_.Name -notmatch 'Processor|Core|Memory|IOMMU|PSP|Crypt|Audio|USB|GPIO|I2C|SPI|UART|SMU|NTB|Dual'} | " +
+            "Select-Object Name -First 5 | ConvertTo-Json -Compress";
+
+        string? chipset = null;
+        var saida = LerTexto(cmd);
+        if (!string.IsNullOrWhiteSpace(saida))
+        {
+            try
+            {
+                var doc = JsonDocument.Parse(saida);
+                var itens = doc.RootElement.ValueKind == JsonValueKind.Array
+                    ? doc.RootElement.EnumerateArray().Select(e => e.Clone()).ToList()
+                    : new List<JsonElement> { doc.RootElement.Clone() };
+
+                // Prefere nomes que contenham identificadores de chipset conhecidos
+                string[] conhecidos = ["X570","X670","B550","B650","X470","B450","X370","B350",
+                                       "Z790","Z690","Z590","Z490","Z390","H770","B760","H670","B560"];
+                foreach (var item in itens)
+                {
+                    var nome = Texto(item, "Name");
+                    if (nome != null && conhecidos.Any(k => nome.Contains(k, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        chipset = nome;
+                        break;
+                    }
+                }
+
+                // Fallback: primeiro nome retornado
+                chipset ??= Texto(itens.FirstOrDefault(), "Name");
+            }
+            catch { }
+        }
+
+        // Se WMI não retornou, tenta derivar pelo nome do modelo da placa-mãe
+        chipset ??= DerivChipsetDoModelo(modeloPlaca);
+
+        var busSpecs = chipset != null ? DerivarBusSpecs(chipset) : DerivarBusSpecs(modeloPlaca);
+        return (chipset, busSpecs);
+    }
+
+    private static string? DerivChipsetDoModelo(string modelo)
+    {
+        string[] tokens = ["X670","B650","X570","B550","X470","B450","X370","B350",
+                           "Z790","Z690","Z590","Z490","Z390","H770","B760","H670","B560","H570"];
+        foreach (var t in tokens)
+            if (modelo.Contains(t, StringComparison.OrdinalIgnoreCase))
+                return t;
+        return null;
+    }
+
+    private static string? DerivarBusSpecs(string? nome)
+    {
+        if (nome == null) return null;
+        // PCIe 5.0 — AM5 / Intel Raptor Lake+
+        if (ContainsAny(nome, "X670","B650","Z790","H770","B760"))
+            return "PCI-Express 5.0 (32.0 GT/s)";
+        // PCIe 4.0 — AM4 high-end / Alder Lake
+        if (ContainsAny(nome, "X570","B550","Z690","Z590","H570","B560"))
+            return "PCI-Express 4.0 (16.0 GT/s)";
+        // PCIe 3.0 — AM4 mainstream / LGA1151
+        if (ContainsAny(nome, "X470","B450","X370","B350","Z490","Z390","H470","B460","Z370","H370","B365"))
+            return "PCI-Express 3.0 (8.0 GT/s)";
+        return null;
+    }
+
+    private static bool ContainsAny(string texto, params string[] tokens) =>
+        tokens.Any(t => texto.Contains(t, StringComparison.OrdinalIgnoreCase));
+
     private static Processador LerCpu()
     {
-        var cpu = PrimeiroItem("Win32_Processor", "Name,NumberOfCores,NumberOfLogicalProcessors");
+        var cpu = PrimeiroItem("Win32_Processor",
+            "Name,NumberOfCores,NumberOfLogicalProcessors,Manufacturer," +
+            "MaxClockSpeed,CurrentClockSpeed,SocketDesignation,L2CacheSize,L3CacheSize");
+
+        var fabricanteRaw = Texto(cpu, "Manufacturer");
+        var fabricante = fabricanteRaw switch
+        {
+            { } f when f.Contains("AMD",   StringComparison.OrdinalIgnoreCase) => "AMD",
+            { } f when f.Contains("Intel", StringComparison.OrdinalIgnoreCase) => "Intel",
+            { } f when f.Contains("Qualcomm", StringComparison.OrdinalIgnoreCase) => "Qualcomm",
+            _ => fabricanteRaw,
+        };
+
         return new Processador
         {
-            Nome = Texto(cpu, "Name") ?? "Desconhecido",
-            Nucleos = Inteiro(cpu, "NumberOfCores"),
-            Threads = Inteiro(cpu, "NumberOfLogicalProcessors"),
+            Nome       = Texto(cpu, "Name") ?? "Desconhecido",
+            Nucleos    = Inteiro(cpu, "NumberOfCores"),
+            Threads    = Inteiro(cpu, "NumberOfLogicalProcessors"),
+            Fabricante = fabricante,
+            Soquete    = Texto(cpu, "SocketDesignation"),
+            ClockBaseMhz   = Inteiro(cpu, "MaxClockSpeed"),
+            ClockAtualMhz  = Inteiro(cpu, "CurrentClockSpeed"),
+            L2CacheKb  = Inteiro(cpu, "L2CacheSize"),
+            L3CacheKb  = Inteiro(cpu, "L3CacheSize"),
         };
     }
 
     private static IReadOnlyList<ModuloMemoria> LerMemoria()
     {
         var modulos = new List<ModuloMemoria>();
-        foreach (var item in Itens("Win32_PhysicalMemory", "Capacity,Speed,Manufacturer"))
+        foreach (var item in Itens("Win32_PhysicalMemory",
+            "Capacity,Speed,ConfiguredClockSpeed,Manufacturer,PartNumber," +
+            "DeviceLocator,SMBIOSMemoryType,FormFactor,ConfiguredVoltage"))
         {
             int? gb = null;
-            if (long.TryParse(Texto(item, "Capacity"), NumberStyles.Integer, CultureInfo.InvariantCulture, out var bytes))
-            {
-                gb = (int)Math.Round(bytes / 1024.0 / 1024.0 / 1024.0);
-            }
+            var capacidade = NumeroLong(item, "Capacity");
+            if (capacidade.HasValue && capacidade.Value > 0)
+                gb = (int)Math.Round(capacidade.Value / 1024.0 / 1024.0 / 1024.0);
+
+            var tensaoMv = Inteiro(item, "ConfiguredVoltage");
+            var tensao = tensaoMv is > 0 ? $"{tensaoMv.Value / 1000.0:F2}V" : null;
 
             modulos.Add(new ModuloMemoria
             {
                 TamanhoGb = gb,
                 VelocidadeMhz = Inteiro(item, "Speed"),
-                Fabricante = Texto(item, "Manufacturer"),
+                VelocidadeConfiguradaMhz = Inteiro(item, "ConfiguredClockSpeed"),
+                Fabricante = DecodificarFabricanteRam(Texto(item, "Manufacturer")),
+                Modelo = Texto(item, "PartNumber"),
+                Slot = Texto(item, "DeviceLocator"),
+                Tipo = DecodificarTipoMemoria(Inteiro(item, "SMBIOSMemoryType")),
+                FormFactor = DecodificarFormFactor(Inteiro(item, "FormFactor")),
+                Tensao = tensao,
             });
         }
 
         return modulos;
     }
 
+    private static string? DecodificarFormFactor(int? ff) => ff switch
+    {
+        8  => "DIMM",
+        12 => "SO-DIMM",
+        13 => "SO-DIMM",
+        _  => null,
+    };
+
+    private static string? DecodificarFabricanteRam(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return null;
+        var trim = raw.Trim();
+        // Se já é nome legível (contém letra não-hex), devolve direto
+        if (trim.Any(c => c is > 'F' and <= 'Z' or > 'f' and <= 'z' or ' '))
+            return trim;
+        return trim.ToUpperInvariant().Replace(" ", "") switch
+        {
+            "CE"     or "04CE" or "80CE"     => "Samsung",
+            "AD"     or "80AD" or "04AD"     => "SK Hynix",
+            "2C"     or "802C" or "04F1"     => "Micron",
+            "9E"     or "029E"               => "Corsair",
+            "61"     or "04CB" or "04CD"
+                    or "0198"                => "Kingston",
+            "5105"                           => "Qimonda",
+            "C1"     or "04C1"               => "Infineon",
+            "51"     or "0151"               => "Qimonda",
+            "98"     or "0198"               => "Crucial",
+            _ => trim,
+        };
+    }
+
+    private static string? DecodificarTipoMemoria(int? tipo) => tipo switch
+    {
+        20 => "DDR",
+        21 => "DDR2",
+        24 => "DDR3",
+        26 => "DDR4",
+        27 => "LPDDR",
+        28 => "LPDDR2",
+        29 => "LPDDR3",
+        30 => "LPDDR4",
+        34 => "DDR5",
+        35 => "LPDDR5",
+        _  => null,
+    };
+
     private static IReadOnlyList<PlacaVideo> LerGpu()
     {
         var gpus = new List<PlacaVideo>();
-        foreach (var item in Itens("Win32_VideoController", "Name,DriverVersion"))
+        var pcie = LerPcieGpu();
+        bool primeiraGpu = true;
+
+        foreach (var item in Itens("Win32_VideoController",
+            "Name,DriverVersion,DriverDate,AdapterRAM," +
+            "CurrentHorizontalResolution,CurrentVerticalResolution,CurrentRefreshRate"))
         {
             var nome = Texto(item, "Name");
             if (!string.IsNullOrWhiteSpace(nome))
             {
-                gpus.Add(new PlacaVideo { Nome = nome, VersaoDriver = Texto(item, "DriverVersion") });
+                var vramBytes = NumeroLong(item, "AdapterRAM");
+                var vramMb = vramBytes is > 0 ? (int)(vramBytes.Value / 1024 / 1024) : (int?)null;
+
+                var resH = Inteiro(item, "CurrentHorizontalResolution");
+                var resV = Inteiro(item, "CurrentVerticalResolution");
+                var resolucao = resH is > 0 && resV is > 0 ? $"{resH}×{resV}" : null;
+
+                var gpu = new PlacaVideo
+                {
+                    Nome             = nome,
+                    VersaoDriver     = Texto(item, "DriverVersion"),
+                    DataDriver       = NormalizadorData.Normalizar(Texto(item, "DriverDate")),
+                    VramMb           = vramMb,
+                    Resolucao        = resolucao,
+                    TaxaAtualizacaoHz = Inteiro(item, "CurrentRefreshRate"),
+                };
+
+                if (primeiraGpu && pcie.HasValue)
+                {
+                    gpu = gpu with
+                    {
+                        LinkWidthAtual  = pcie.Value.WidthAtual,
+                        LinkWidthMax    = pcie.Value.WidthMax,
+                        LinkSpeedAtual  = pcie.Value.SpeedAtual,
+                        LinkSpeedMax    = pcie.Value.SpeedMax,
+                    };
+                    primeiraGpu = false;
+                }
+
+                gpus.Add(gpu);
             }
         }
 
         return gpus;
     }
+
+    private static (string? WidthAtual, string? WidthMax, string? SpeedAtual, string? SpeedMax)? LerPcieGpu()
+    {
+        // DEVPKEY_PciDevice: {4340A6C5-93FA-4706-972C-7B648008A5A7}
+        //   6 = CurrentLinkWidth, 7 = CurrentLinkSpeed, 8 = MaxLinkWidth, 9 = MaxLinkSpeed
+        // Valores de velocidade: 1=2.5, 2=5.0, 3=8.0, 4=16.0, 5=32.0 GT/s
+        const string cmd =
+            "$id=(Get-PnpDevice -Class Display -Status OK -ErrorAction SilentlyContinue|" +
+            "Select-Object -First 1 -ExpandProperty InstanceId);" +
+            "if($id){$p=Get-PnpDeviceProperty -InstanceId $id -ErrorAction SilentlyContinue;" +
+            "$cs=($p|Where-Object{$_.KeyName -eq '{4340A6C5-93FA-4706-972C-7B648008A5A7} 7'}).Data;" +
+            "$cw=($p|Where-Object{$_.KeyName -eq '{4340A6C5-93FA-4706-972C-7B648008A5A7} 6'}).Data;" +
+            "$ms=($p|Where-Object{$_.KeyName -eq '{4340A6C5-93FA-4706-972C-7B648008A5A7} 9'}).Data;" +
+            "$mw=($p|Where-Object{$_.KeyName -eq '{4340A6C5-93FA-4706-972C-7B648008A5A7} 8'}).Data;" +
+            "[PSCustomObject]@{cs=$cs;cw=$cw;ms=$ms;mw=$mw}|ConvertTo-Json -Compress}";
+
+        var saida = LerTexto(cmd);
+        if (string.IsNullOrWhiteSpace(saida)) return null;
+
+        try
+        {
+            var doc = JsonDocument.Parse(saida);
+            var r = doc.RootElement;
+            var wa = r.TryGetProperty("cw", out var cw) && cw.ValueKind == JsonValueKind.Number ? cw.GetInt32() : 0;
+            var sa = r.TryGetProperty("cs", out var cs) && cs.ValueKind == JsonValueKind.Number ? cs.GetInt32() : 0;
+            var wm = r.TryGetProperty("mw", out var mw) && mw.ValueKind == JsonValueKind.Number ? mw.GetInt32() : 0;
+            var sm = r.TryGetProperty("ms", out var ms) && ms.ValueKind == JsonValueKind.Number ? ms.GetInt32() : 0;
+
+            if (wa == 0 && sa == 0) return null;
+
+            return (
+                wa > 0 ? $"x{wa}" : null,
+                wm > 0 ? $"x{wm}" : null,
+                DecodificarVelocidadePcie(sa),
+                DecodificarVelocidadePcie(sm)
+            );
+        }
+        catch { return null; }
+    }
+
+    private static string? DecodificarVelocidadePcie(int codigo) => codigo switch
+    {
+        1 => "2.5 GT/s",
+        2 => "5.0 GT/s",
+        3 => "8.0 GT/s",
+        4 => "16.0 GT/s",
+        5 => "32.0 GT/s",
+        6 => "64.0 GT/s",
+        _ => null,
+    };
 
     private static SistemaOperacionalInfo LerSistemaOperacional()
     {
@@ -3632,6 +4736,292 @@ public sealed class LeitorWindows : ILeitorPlataforma
     {
         var saida = LerTexto("try { Confirm-SecureBootUEFI } catch { '' }");
         return bool.TryParse(saida, out var valor) ? valor : null;
+    }
+
+    // ---- SMART / Drivers / Métricas / Programas / Temp ----------------------------------
+
+    private IReadOnlyList<SaudeDisco> ColetarSaudeDiscos()
+    {
+        try
+        {
+            var leitor = new LeitorSmart(NullLogger<LeitorSmart>.Instance);
+            return leitor.LerDados()
+                .Select(b => new SaudeDisco
+                {
+                    Modelo                  = b.Modelo,
+                    Letra                   = "–",
+                    TbwEscritoGb            = b.TbwEscritoGb,
+                    TbwFabricanteGb         = 0,
+                    HorasUso                = b.HorasUso,
+                    PorcentagemVidaRestante = 100,
+                    TemErrosNaoCorrigiveis  = b.TemErrosNaoCorrigiveis,
+                    SetoresComProblema      = b.SetoresPendentes,
+                    Nivel                   = ClassificarNivelSaude(b),
+                })
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao coletar dados S.M.A.R.T.");
+            return Array.Empty<SaudeDisco>();
+        }
+    }
+
+    private static NivelSaudeDisco ClassificarNivelSaude(DadosSmartBrutos b)
+    {
+        if (b.TemErrosNaoCorrigiveis || b.SetoresPendentes > 0) return NivelSaudeDisco.Critico;
+        if (b.HorasUso > 30_000) return NivelSaudeDisco.Atencao;
+        return NivelSaudeDisco.Bom;
+    }
+
+    private IReadOnlyList<InfoDriver> ColetarDrivers()
+    {
+        try
+        {
+            var coletor = new ColetorHwid(NullLogger<ColetorHwid>.Instance);
+            return coletor.Coletar();
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao coletar informações de drivers.");
+            return Array.Empty<InfoDriver>();
+        }
+    }
+
+    private static MetricasSistema ColetarMetricas()
+    {
+        var cpuItem  = PrimeiroItem("Win32_Processor", "LoadPercentage");
+        var cpuUso   = Inteiro(cpuItem, "LoadPercentage") ?? 0;
+
+        var osItem   = PrimeiroItem("Win32_OperatingSystem", "TotalVisibleMemorySize,FreePhysicalMemory");
+        var totalKb  = NumeroLong(osItem, "TotalVisibleMemorySize") ?? 0;
+        var livreKb  = NumeroLong(osItem, "FreePhysicalMemory")     ?? 0;
+
+        var discos = DriveInfo.GetDrives()
+            .Where(d => d.IsReady && d.DriveType == DriveType.Fixed)
+            .Select(d => new MetricaDisco
+            {
+                Letra   = d.Name.TrimEnd('\\'),
+                TotalGb = d.TotalSize            / 1024 / 1024 / 1024,
+                LivreGb = d.AvailableFreeSpace   / 1024 / 1024 / 1024,
+                UsadoGb = (d.TotalSize - d.AvailableFreeSpace) / 1024 / 1024 / 1024,
+            })
+            .ToList<MetricaDisco>();
+
+        return new MetricasSistema
+        {
+            CpuUsoPercent = cpuUso,
+            RamTotalMb    = totalKb / 1024,
+            RamLivreMb    = livreKb / 1024,
+            Discos        = discos,
+        };
+    }
+
+    private static IReadOnlyList<ProgramaInstalado> ColetarProgramasInstalados()
+    {
+        var programas = new Dictionary<string, ProgramaInstalado>(StringComparer.OrdinalIgnoreCase);
+
+        RegistryKey[] raizes =
+        [
+            Registry.LocalMachine,
+            Registry.CurrentUser,
+        ];
+
+        string[] subcaminhos =
+        [
+            @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+            @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+        ];
+
+        foreach (var raiz in raizes)
+        {
+            foreach (var subcaminho in subcaminhos)
+            {
+                try
+                {
+                    using var chave = raiz.OpenSubKey(subcaminho, writable: false);
+                    if (chave is null) continue;
+
+                    foreach (var subNome in chave.GetSubKeyNames())
+                    {
+                        try
+                        {
+                            using var sub = chave.OpenSubKey(subNome, writable: false);
+                            if (sub is null) continue;
+
+                            var nome = sub.GetValue("DisplayName") as string;
+                            if (string.IsNullOrWhiteSpace(nome)) continue;
+                            nome = nome.Trim();
+
+                            // Ignora atualizações do sistema
+                            if (nome.StartsWith("KB", StringComparison.OrdinalIgnoreCase) && nome.Length < 15) continue;
+                            if (nome.Contains("Hotfix",          StringComparison.OrdinalIgnoreCase)) continue;
+                            if (nome.Contains("Security Update", StringComparison.OrdinalIgnoreCase)) continue;
+                            if (nome.Contains("Update for Windows", StringComparison.OrdinalIgnoreCase)) continue;
+
+                            if (programas.ContainsKey(nome)) continue;
+
+                            int? tamanhoMb = null;
+                            if (sub.GetValue("EstimatedSize") is int kb && kb > 0)
+                                tamanhoMb = kb / 1024;
+
+                            programas[nome] = new ProgramaInstalado
+                            {
+                                Nome                 = nome,
+                                Versao               = sub.GetValue("DisplayVersion") as string,
+                                Fabricante           = sub.GetValue("Publisher") as string,
+                                DataInstalacao       = sub.GetValue("InstallDate") as string,
+                                TamanhoMb            = tamanhoMb,
+                                Bloatware            = ClassificarBloatware(nome),
+                                UninstallString      = sub.GetValue("UninstallString") as string,
+                                QuietUninstallString = sub.GetValue("QuietUninstallString") as string,
+                            };
+                        }
+                        catch { }
+                    }
+                }
+                catch { }
+            }
+        }
+
+        return programas.Values
+            .Where(ListaNegraProgramas.EhSeguro)
+            .OrderBy(p => p.Nome)
+            .ToList();
+    }
+
+    private static bool ClassificarBloatware(string nome)
+    {
+        string[] padroes =
+        [
+            "toolbar", "search assistant", "browser guard", "browser protector",
+            "pc cleaner", "registry cleaner", "registry optimizer", "system optimizer",
+            "pc optimizer", "speed booster", "driver booster", "driver easy",
+            "driver genius", "coupon", "savings", "deals", "discount",
+            "ask toolbar", "babylon", "conduit", "sweetpacks",
+            "mcafee security scan", "norton security scan", "norton online backup",
+            "wildtangent", "cyberlink", "roxio", "trial",
+        ];
+        var lower = nome.ToLowerInvariant();
+        return padroes.Any(p => lower.Contains(p));
+    }
+
+    private static AnaliseTemp ColetarArquivosTemporarios()
+    {
+        var vistos  = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var pastas  = new List<PastaTemp>();
+
+        var caminhos = new[]
+        {
+            Environment.GetEnvironmentVariable("TEMP"),
+            Environment.GetEnvironmentVariable("TMP"),
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp"),
+            @"C:\Windows\Temp",
+        };
+
+        foreach (var caminho in caminhos)
+        {
+            if (string.IsNullOrEmpty(caminho) || !vistos.Add(caminho)) continue;
+            try
+            {
+                var di = new DirectoryInfo(caminho);
+                if (!di.Exists) continue;
+
+                long bytes    = 0;
+                int  contagem = 0;
+
+                foreach (var fi in di.EnumerateFiles("*", SearchOption.AllDirectories).Take(10_000))
+                {
+                    try { bytes += fi.Length; contagem++; } catch { }
+                }
+
+                pastas.Add(new PastaTemp
+                {
+                    Caminho           = caminho,
+                    TamanhoMb         = bytes / 1024 / 1024,
+                    QuantidadeArquivos = contagem,
+                });
+            }
+            catch { }
+        }
+
+        return new AnaliseTemp
+        {
+            TamanhoTotalMb    = pastas.Sum(p => p.TamanhoMb),
+            QuantidadeArquivos = pastas.Sum(p => p.QuantidadeArquivos),
+            Pastas            = pastas,
+        };
+    }
+
+    // ---- Startup / Serviços / Processos --------------------------------------------------
+
+    private IReadOnlyList<InicializacaoEntrada> ColetarEntradasStartup()
+    {
+        try
+        {
+            var verificador = new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance);
+            return verificador.Varrer();
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao coletar entradas de inicialização.");
+            return Array.Empty<InicializacaoEntrada>();
+        }
+    }
+
+    private static IReadOnlyList<ServicoSistema> ColetarServicos()
+    {
+        var servicos = new List<ServicoSistema>();
+        foreach (var item in Itens("Win32_Service", "Name,DisplayName,State,StartMode"))
+        {
+            var nome = Texto(item, "Name");
+            if (string.IsNullOrWhiteSpace(nome)) continue;
+
+            var state     = Texto(item, "State")     ?? "";
+            var startMode = Texto(item, "StartMode") ?? "";
+
+            servicos.Add(new ServicoSistema
+            {
+                Nome         = nome,
+                NomeExibicao = Texto(item, "DisplayName"),
+                Status = state switch
+                {
+                    "Running" => StatusServico.Rodando,
+                    "Stopped" => StatusServico.Parado,
+                    _         => StatusServico.Outro,
+                },
+                TipoInicio = startMode switch
+                {
+                    "Auto"     => TipoInicioServico.Automatico,
+                    "Manual"   => TipoInicioServico.Manual,
+                    "Disabled" => TipoInicioServico.Desabilitado,
+                    _          => TipoInicioServico.Outro,
+                },
+            });
+        }
+        return servicos;
+    }
+
+    private static IReadOnlyList<ProcessoSistema> ColetarProcessos()
+    {
+        try
+        {
+            return Process.GetProcesses()
+                .OrderByDescending(p => { try { return p.WorkingSet64; } catch { return 0L; } })
+                .Take(150)
+                .Select(p => new ProcessoSistema
+                {
+                    Nome      = p.ProcessName,
+                    Pid       = p.Id,
+                    MemoriaKb = p.WorkingSet64 / 1024,
+                })
+                .ToList();
+        }
+        catch
+        {
+            return Array.Empty<ProcessoSistema>();
+        }
     }
 
     // ---- Infraestrutura CIM/PowerShell ----------------------------------------------------
@@ -3695,6 +5085,17 @@ public sealed class LeitorWindows : ILeitorPlataforma
             return valor;
         }
 
+        return null;
+    }
+
+    private static long? NumeroLong(JsonElement? elemento, string propriedade)
+    {
+        if (elemento is not { } e || e.ValueKind != JsonValueKind.Object) return null;
+        if (!e.TryGetProperty(propriedade, out var prop)) return null;
+        if (prop.ValueKind == JsonValueKind.Number && prop.TryGetInt64(out var v)) return v;
+        if (prop.ValueKind == JsonValueKind.String &&
+            long.TryParse(prop.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var s))
+            return s;
         return null;
     }
 
@@ -3836,6 +5237,98 @@ internal static class NormalizadorData
         return DateTimeOffset.TryParseExact(
             texto, formatos, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out data);
     }
+}
+````
+
+### `src/HardwareOptimizer.Agent/Drivers/ColetorHwid.cs`
+
+````csharp
+using System.Management;
+using System.Runtime.Versioning;
+using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+
+namespace HardwareOptimizer.Agent.Drivers;
+
+/// <summary>
+/// Coleta HardwareID de dispositivos via WMI (Win32_PnPEntity).
+/// Filtra apenas as categorias relevantes para drivers do usuário final.
+/// Operação somente leitura.
+/// </summary>
+[SupportedOSPlatform("windows")]
+public sealed class ColetorHwid : IColetorHwid
+{
+    private static readonly HashSet<string> _categoriasRelevantes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Display",          // GPU
+        "Net",              // Adaptadores de rede
+        "AudioEndpoint",    // Áudio
+        "Media",            // Controladores de mídia/codecs
+        "USB",              // Controladores USB
+        "DiskDrive",        // Controladores de armazenamento
+        "HDC",              // IDE/SATA controllers
+    };
+
+    private readonly ILogger<ColetorHwid> _log;
+
+    public ColetorHwid(ILogger<ColetorHwid> log)
+    {
+        _log = log;
+    }
+
+    public IReadOnlyList<InfoDriver> Coletar()
+    {
+        if (!OperatingSystem.IsWindows()) return Array.Empty<InfoDriver>();
+
+        var resultado = new List<InfoDriver>();
+
+        try
+        {
+            using var searcher = new ManagementObjectSearcher(
+                "SELECT DeviceID, Name, Manufacturer, DriverVersion, ClassGuid, PNPClass FROM Win32_PnPSignedDriver");
+
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                var pnpClass = obj["PNPClass"]?.ToString() ?? string.Empty;
+                if (!_categoriasRelevantes.Any(c =>
+                    pnpClass.Contains(c, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                var hwid = obj["DeviceID"]?.ToString() ?? string.Empty;
+                if (string.IsNullOrEmpty(hwid)) continue;
+
+                resultado.Add(new InfoDriver
+                {
+                    HardwareId = hwid,
+                    Descricao = obj["Name"]?.ToString() ?? hwid,
+                    Fabricante = obj["Manufacturer"]?.ToString(),
+                    VersaoAtual = obj["DriverVersion"]?.ToString(),
+                    Status = StatusDriver.Desconhecido,
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao coletar HWIDs via WMI.");
+        }
+
+        _log.LogInformation("HWID: {Qtd} dispositivos relevantes encontrados.", resultado.Count);
+        return resultado;
+    }
+}
+````
+
+### `src/HardwareOptimizer.Agent/Drivers/IColetorHwid.cs`
+
+````csharp
+using HardwareOptimizer.Core.Contracts;
+
+namespace HardwareOptimizer.Agent.Drivers;
+
+/// <summary>Coleta informações de drivers instalados no sistema.</summary>
+public interface IColetorHwid
+{
+    IReadOnlyList<InfoDriver> Coletar();
 }
 ````
 
@@ -5338,6 +6831,267 @@ public interface IExecutorProcesso
 }
 ````
 
+### `src/HardwareOptimizer.Agent/Security/ListaNegraProgramas.cs`
+
+````csharp
+using HardwareOptimizer.Core.Contracts;
+
+namespace HardwareOptimizer.Agent.Security;
+
+/// <summary>
+/// Define quais programas instalados são seguros para exibir e desinstalar via UI.
+/// Runtimes, drivers e componentes do sistema nunca são exibidos ao usuário.
+/// </summary>
+public static class ListaNegraProgramas
+{
+    // Padrões no nome que indicam componente do sistema (outras apps dependem destes)
+    private static readonly string[] _padroesNomePerigoso =
+    [
+        // ── Runtimes C++ (dependências silenciosas de outros programas) ───────
+        "Microsoft Visual C++",
+        "Visual C++ ",
+        "VC_redist",
+        "Microsoft C Runtime",
+
+        // ── Runtimes .NET (dependências silenciosas de outros programas) ──────
+        "Microsoft .NET",
+        ".NET Framework",
+        ".NET Runtime",
+        ".NET Desktop Runtime",
+        ".NET Core",
+        "ASP.NET Core",
+        "Microsoft ASP.NET",
+
+        // ── DirectX (remover quebra jogos e multimídia) ───────────────────────
+        "DirectX",
+        "Microsoft DirectX",
+        "DirectX End-User Runtime",
+
+        // ── SDKs de desenvolvimento ───────────────────────────────────────────
+        "Windows SDK",
+        "Windows Software Development Kit",
+        "Windows Driver Kit",
+        "Microsoft Windows SDK",
+        "Microsoft Build Tools",
+        "Visual Studio Build Tools",
+        "Visual Studio Shared",
+        "Microsoft Web Deploy",
+
+        // ── Atualizações e patches do Windows ────────────────────────────────
+        "Update for Windows",
+        "Update for Microsoft",
+        "Security Update for",
+        "Hotfix for",
+        "Cumulative Update",
+        "Windows Update",
+        "Microsoft Update",
+
+        // ── Drivers e componentes OEM de hardware ────────────────────────────
+        "Intel(R) Management Engine",
+        "Intel Management Engine",
+        "Intel Chipset Device Software",
+        "Intel Serial IO",
+        "Intel Dynamic Platform",
+        "Intel Platform Trust Technology",
+        "AMD Chipset",
+        "AMD GPIO",
+        "AMD Software: Adrenalin",     // driver GPU (não remover)
+        "NVIDIA FrameView SDK",
+        "NVIDIA HD Audio Driver",
+        "Realtek Card Reader",
+        "Realtek Ethernet",
+        "Realtek Wi-Fi Driver",
+        "Qualcomm Atheros",
+        "Broadcom Network",
+
+        // ── Componentes XML / MSXML ───────────────────────────────────────────
+        "MSXML",
+        "Microsoft XML",
+        "Microsoft Primary Interoperability",
+
+        // ── Outros componentes críticos do Windows ────────────────────────────
+        "Windows App Runtime",
+        "Windows Desktop Runtime",
+        "Microsoft Edge WebView2",      // runtime usado por muitos apps
+        "Microsoft Windows Desktop Runtime",
+        "Windows Malicious Software Removal Tool",
+    ];
+
+    // Para publisher = Microsoft Corporation: somente estes prefixos são SEGUROS para exibir
+    private static readonly string[] _produtosMicrosoftSeguros =
+    [
+        "Microsoft Edge",              // navegador
+        "Microsoft Office",            // suite Office
+        "Microsoft 365",               // Office 365
+        "Microsoft Teams",
+        "Skype",
+        "Microsoft Whiteboard",
+        "Microsoft To Do",
+        "Microsoft Sticky Notes",
+        "Microsoft News",
+        "Microsoft Solitaire Collection",
+        "Microsoft Mahjong",
+        "Microsoft Minesweeper",
+        "Microsoft PC Manager",
+        "Microsoft Power BI Desktop",
+        "Microsoft Azure",
+        "Microsoft SQL Server Management Studio",
+        "Microsoft Visual Studio Code",
+        "Microsoft Visual Studio 20",  // IDE (não redistributable)
+        "Microsoft Remote Desktop",
+        "Microsoft OneDrive",          // cliente de nuvem (seguro remover)
+    ];
+
+    /// <summary>
+    /// Retorna <c>true</c> se o programa pode ser exibido e desinstalado com segurança.
+    /// </summary>
+    public static bool EhSeguro(ProgramaInstalado programa)
+    {
+        var nome       = programa.Nome?.Trim() ?? "";
+        var fabricante = programa.Fabricante?.Trim() ?? "";
+
+        // Sem string de desinstalação → não há o que fazer, não exibir
+        if (string.IsNullOrWhiteSpace(programa.UninstallString) &&
+            string.IsNullOrWhiteSpace(programa.QuietUninstallString))
+            return false;
+
+        // Verifica padrões de nome perigosos (independente do fabricante)
+        foreach (var padrao in _padroesNomePerigoso)
+        {
+            if (nome.Contains(padrao, StringComparison.OrdinalIgnoreCase))
+                return false;
+        }
+
+        // Para produtos Microsoft: somente exibir os conhecidos como seguros
+        if (fabricante.Contains("Microsoft", StringComparison.OrdinalIgnoreCase))
+        {
+            foreach (var seguro in _produtosMicrosoftSeguros)
+            {
+                if (nome.StartsWith(seguro, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            // Qualquer outro produto Microsoft = componente do sistema → ocultar
+            return false;
+        }
+
+        return true;
+    }
+}
+````
+
+### `src/HardwareOptimizer.Agent/Security/ListaNegraServicos.cs`
+
+````csharp
+using HardwareOptimizer.Core.Contracts;
+
+namespace HardwareOptimizer.Agent.Security;
+
+/// <summary>
+/// Define quais serviços Windows são seguros para exibir e gerenciar via UI.
+/// Serviços críticos do SO e de segurança nunca são exibidos ao usuário.
+/// </summary>
+public static class ListaNegraServicos
+{
+    // Serviços que, se parados, travam ou corrompem o Windows imediatamente
+    private static readonly HashSet<string> _criticos = new(StringComparer.OrdinalIgnoreCase)
+    {
+        // ── Subsistema Win32 central (parar = crash/BSOD imediato) ──────────
+        "csrss",            // Client/Server Runtime Subsystem
+        "smss",             // Session Manager Subsystem
+        "wininit",          // Windows Startup Application
+        "winlogon",         // Windows Logon Application
+        "services",         // Service Control Manager
+        "lsass",            // Local Security Authority Subsystem (TELA AZUL se parar)
+        "lsm",              // Local Session Manager
+
+        // ── Autenticação e identidade ────────────────────────────────────────
+        "samss",            // Security Account Manager
+        "netlogon",         // Net Logon
+        "kerberos",         // Kerberos Key Distribution Center
+        "seclogon",         // Secondary Logon
+        "vaultsvc",         // Credential Manager
+
+        // ── RPC / DCOM (quase todos os serviços dependem destes) ────────────
+        "rpcss",            // Remote Procedure Call
+        "rpcepmap",         // RPC Endpoint Mapper
+        "rpceptmapper",     // alias
+        "dcomlaunch",       // DCOM Server Process Launcher
+
+        // ── Gerenciamento de energia e hardware ──────────────────────────────
+        "power",            // Power Manager
+        "plugplay",         // Plug and Play
+        "acpi",             // ACPI Driver
+
+        // ── Infraestrutura central do SO ─────────────────────────────────────
+        "winmgmt",          // Windows Management Instrumentation (WMI)
+        "eventlog",         // Windows Event Log
+        "schedule",         // Task Scheduler
+        "cryptsvc",         // Cryptographic Services (necessário para HTTPS e Windows Update)
+        "trustedinstaller", // Windows Modules Installer
+        "tiledatamodelsvc", // Tile Data Model Server
+
+        // ── Segurança e Firewall ─────────────────────────────────────────────
+        "mpssvc",           // Windows Defender Firewall
+        "windefend",        // Windows Defender Antivirus
+        "wscsvc",           // Security Center
+        "mpsdrv",           // Windows Defender Firewall Driver
+        "sens",             // System Event Notification Service
+        "samsrv",           // SAM Server
+
+        // ── Pilha de rede central (parar = sem internet/rede) ────────────────
+        "nsi",              // Network Store Interface
+        "dnscache",         // DNS Client
+        "dhcp",             // DHCP Client
+        "tcpip",            // TCP/IP Protocol Driver
+        "netbt",            // NetBIOS over TCP/IP
+        "afd",              // Ancillary Function Driver (Winsock)
+        "tdx",              // NetIO Legacy TDI Support
+        "ndis",             // NDIS System Driver
+        "ndu",              // Windows Network Data Usage Monitor
+        "lanmanworkstation",// Workstation
+        "mup",              // Multiple UNC Provider Driver
+        "nfsd",             // Network File System Driver
+        "srv2",             // SMB 2.x Driver
+
+        // ── Gerenciamento de volumes e armazenamento ─────────────────────────
+        "disk",             // Disk Driver
+        "volmgr",           // Volume Manager Driver
+        "volsnap",          // Volume Shadow Copy Driver
+        "vss",              // Volume Shadow Copy
+        "partmgr",          // Partition Manager
+        "storahci",         // AHCI Storage Driver
+        "stornvme",         // NVMe Storage Driver
+        "classpnp",         // SCSI Class System Driver
+
+        // ── Display e sessão de desktop ──────────────────────────────────────
+        "dwm",              // Desktop Window Manager (parar = tela preta)
+        "uxsms",            // Desktop Window Manager Session Manager
+        "sessionenv",       // Remote Desktop Configuration
+        "umrdpservice",     // Remote Desktop User Mode Port Redirector
+
+        // ── Base de filtro (necessário para Firewall e segurança de rede) ────
+        "bfe",              // Base Filtering Engine
+
+        // ── System Restore (proteção do sistema) ─────────────────────────────
+        "srservice",        // System Restore Service
+    };
+
+    // Modos de inicialização WMI que indicam drivers de kernel — NUNCA mostrar
+    private static readonly HashSet<string> _modosCriticos = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Boot",   // Driver carregado no boot pelo bootloader
+        "System", // Driver carregado durante inicialização do kernel
+    };
+
+    /// <summary>
+    /// Retorna <c>true</c> se o serviço pode ser exibido e gerenciado com segurança.
+    /// </summary>
+    public static bool EhSeguro(ServicoWindows svc) =>
+        !_criticos.Contains(svc.Nome) &&
+        !_modosCriticos.Contains(svc.ModoInicio ?? "");
+}
+````
+
 ### `src/HardwareOptimizer.Agent/Sensors/FonteSensoresLhm.cs`
 
 ````csharp
@@ -5364,6 +7118,8 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
     private readonly Computer _computer;
     private readonly ILogger _log;
     private bool _aberto;
+    private int _tentativasGpuSemDados;
+    private const int MaxTentativasGpu = 2;
 
     public FonteSensoresLhm(ILogger? logger = null)
     {
@@ -5375,7 +7131,7 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
             IsMemoryEnabled = true,
             IsMotherboardEnabled = true,
             IsControllerEnabled = true,
-            IsStorageEnabled = false,
+            IsStorageEnabled = true,
             IsNetworkEnabled = false,
         };
     }
@@ -5389,6 +7145,19 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
             {
                 _computer.Open();
                 _aberto = true;
+            }
+
+            // Tenta redescobrir GPU no máximo MaxTentativasGpu vezes (não a cada tick).
+            // Re-init a cada 500ms corromperia o estado interno do LHM.
+            var temGpu = _computer.Hardware.Any(h =>
+                h.HardwareType is HardwareType.GpuAmd or HardwareType.GpuNvidia or HardwareType.GpuIntel);
+
+            if (!temGpu && _tentativasGpuSemDados < MaxTentativasGpu)
+            {
+                _tentativasGpuSemDados++;
+                _log.LogDebug("GPU não detectada pelo LHM (tentativa {N}/{Max}) — reinicializando.", _tentativasGpuSemDados, MaxTentativasGpu);
+                try { _computer.Close(); } catch { /* ignora */ }
+                _computer.Open();
             }
 
             foreach (var hardware in _computer.Hardware)
@@ -5415,6 +7184,16 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
             ColetarHardware(sub, destino);
         }
 
+        var prefixo = hardware.HardwareType switch
+        {
+            HardwareType.Cpu => "[CPU]",
+            HardwareType.GpuAmd or HardwareType.GpuNvidia or HardwareType.GpuIntel => "[GPU]",
+            HardwareType.Memory => "[RAM]",
+            HardwareType.Storage => "[STORAGE]",
+            HardwareType.Motherboard or HardwareType.SuperIO => "[MB]",
+            _ => "[HW]",
+        };
+
         foreach (var sensor in hardware.Sensors)
         {
             if (sensor.Value is not { } valor || MapearTipo(sensor.SensorType) is not { } tipo)
@@ -5424,7 +7203,7 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
 
             destino.Add(new Sensor
             {
-                Nome = $"{hardware.Name} / {sensor.Name}",
+                Nome = $"{prefixo} {hardware.Name} / {sensor.Name}",
                 Tipo = tipo,
                 Valor = Math.Round((double)valor, 2),
                 Unidade = UnidadeDe(tipo),
@@ -5439,6 +7218,9 @@ public sealed class FonteSensoresLhm : IFonteSensoresLhm, IDisposable
         SensorType.Voltage => TipoSensor.Voltagem,
         SensorType.Fan => TipoSensor.Fan,
         SensorType.Power => TipoSensor.Potencia,
+        SensorType.Load => TipoSensor.Carga,
+        SensorType.Data => TipoSensor.Outro,
+        SensorType.Throughput => TipoSensor.Outro,
         _ => null,
     };
 
@@ -5515,6 +7297,156 @@ public interface ILeitorSensores
 }
 ````
 
+### `src/HardwareOptimizer.Agent/Sensors/LeitorSensoresAdl.cs`
+
+````csharp
+using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
+using HardwareOptimizer.Core.Common;
+using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+
+namespace HardwareOptimizer.Agent.Sensors;
+
+/// <summary>
+/// Lê temperatura da GPU AMD via ADL2 (atiadlxx.dll) sem necessidade de elevação.
+/// Usado quando o LibreHardwareMonitor não consegue inicializar ADL pelo próprio processo.
+/// </summary>
+[SupportedOSPlatform("windows")]
+public sealed class LeitorSensoresAdl : ILeitorSensores, IDisposable
+{
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate IntPtr AllocCallbackDelegate(int size);
+
+    [DllImport("atiadlxx.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern int ADL2_Main_Control_Create(
+        AllocCallbackDelegate callback, int enumConnectedAdapters, out IntPtr context);
+
+    [DllImport("atiadlxx.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern int ADL2_Main_Control_Destroy(IntPtr context);
+
+    [DllImport("atiadlxx.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern int ADL2_Adapter_NumberOfAdapters_Get(IntPtr context, ref int numAdapters);
+
+    [DllImport("atiadlxx.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern int ADL2_OverdriveN_Temperature_Get(
+        IntPtr context, int adapterIndex, int temperatureType, ref int temperature);
+
+    private const int AdlOk = 0;
+    private const int AdlTempGpu = 1;
+
+    private readonly ILogger _log;
+    // Mantém referência forte ao delegate para evitar GC durante chamadas ADL.
+    private readonly AllocCallbackDelegate _allocCallback = size => Marshal.AllocHGlobal(size);
+    private IntPtr _context = IntPtr.Zero;
+    private bool _inicializado;
+    private bool _adlIndisponivel;
+
+    public LeitorSensoresAdl(ILogger? logger = null) => _log = logger ?? NullLogger.Instance;
+
+    public SistemaOperacionalTipo Tipo => SistemaOperacionalTipo.Windows;
+
+    public Task<LeituraSensores> LerAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (_adlIndisponivel)
+            return Task.FromResult(new LeituraSensores());
+
+        var sensores = new List<Sensor>();
+        try
+        {
+            if (!_inicializado)
+                TentarInicializar();
+
+            if (!_inicializado || _context == IntPtr.Zero)
+                return Task.FromResult(new LeituraSensores());
+
+            int numAdapters = 0;
+            if (ADL2_Adapter_NumberOfAdapters_Get(_context, ref numAdapters) != AdlOk || numAdapters <= 0)
+                return Task.FromResult(new LeituraSensores());
+
+            for (int i = 0; i < numAdapters; i++)
+            {
+                int rawTemp = 0;
+                if (ADL2_OverdriveN_Temperature_Get(_context, i, AdlTempGpu, ref rawTemp) != AdlOk)
+                    continue;
+
+                if (rawTemp <= 0)
+                    continue;
+
+                // ADL retorna temperatura em milligraus Celsius (80000 = 80°C) para RDNA2/3.
+                // Versões mais antigas retornam graus diretamente. Detecta pelo valor.
+                double celsius = rawTemp >= 1000 ? rawTemp / 1000.0 : (double)rawTemp;
+
+                if (celsius is > 0 and < 150)
+                {
+                    sensores.Add(new Sensor
+                    {
+                        Nome = "[GPU] AMD / GPU Temperature",
+                        Tipo = TipoSensor.Temperatura,
+                        Valor = Math.Round(celsius, 1),
+                        Unidade = "°C",
+                    });
+                    _log.LogDebug("ADL2: GPU temp = {Temp}°C (adapter {Idx}, raw={Raw})", celsius, i, rawTemp);
+                    break;
+                }
+            }
+        }
+        catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException or BadImageFormatException)
+        {
+            _log.LogDebug("ADL2 não disponível neste sistema: {Msg}", ex.Message);
+            _adlIndisponivel = true;
+        }
+        catch (Exception ex) when (ex is SEHException or AccessViolationException)
+        {
+            _log.LogWarning("ADL2 retornou exceção nativa — desabilitando leitor ADL. {Msg}", ex.Message);
+            _adlIndisponivel = true;
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Erro ao ler temperatura GPU via ADL2.");
+        }
+
+        return Task.FromResult(new LeituraSensores { Sensores = sensores });
+    }
+
+    private void TentarInicializar()
+    {
+        try
+        {
+            int result = ADL2_Main_Control_Create(_allocCallback, 1, out _context);
+            _inicializado = result == AdlOk && _context != IntPtr.Zero;
+            if (_inicializado)
+                _log.LogDebug("ADL2 inicializado (context=0x{Ctx:X}).", _context);
+            else
+                _log.LogDebug("ADL2_Main_Control_Create retornou {Result} — GPU não detectada via ADL.", result);
+        }
+        catch (Exception ex) when (ex is DllNotFoundException or BadImageFormatException or EntryPointNotFoundException)
+        {
+            _log.LogDebug("atiadlxx.dll não encontrada: {Msg}", ex.Message);
+            _adlIndisponivel = true;
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao inicializar ADL2.");
+            _adlIndisponivel = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_inicializado && _context != IntPtr.Zero)
+        {
+            try { ADL2_Main_Control_Destroy(_context); } catch { /* ignora */ }
+            _context = IntPtr.Zero;
+            _inicializado = false;
+        }
+    }
+}
+````
+
 ### `src/HardwareOptimizer.Agent/Sensors/LeitorSensoresComposto.cs`
 
 ````csharp
@@ -5552,19 +7484,28 @@ public sealed class LeitorSensoresComposto : ILeitorSensores
 
     public async Task<LeituraSensores> LerAsync(CancellationToken cancellationToken = default)
     {
+        // Mescla todos os leitores: LHM fornece GPU/Storage (quando com admin),
+        // WMI fornece CPU thermal zones + clock + disco (sem admin).
+        // Deduplicação por nome — o primeiro leitor que emite um sensor ganha.
+        var todos = new List<Sensor>();
+        var nomesVistos = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
         foreach (var leitor in _leitores)
         {
             var leitura = await leitor.LerAsync(cancellationToken).ConfigureAwait(false);
-            if (leitura.Sensores.Count > 0)
-            {
-                return leitura;
-            }
+            _log.LogDebug("Leitor {Leitor}: {Qtd} sensor(es).", leitor.GetType().Name, leitura.Sensores.Count);
 
-            _log.LogDebug("Leitor {Leitor} sem dados; tentando o próximo.", leitor.GetType().Name);
+            foreach (var s in leitura.Sensores)
+            {
+                if (nomesVistos.Add(s.Nome))
+                    todos.Add(s);
+            }
         }
 
-        _log.LogWarning("Nenhum leitor de sensores retornou dados.");
-        return new LeituraSensores();
+        if (todos.Count == 0)
+            _log.LogWarning("Nenhum leitor de sensores retornou dados.");
+
+        return new LeituraSensores { Sensores = todos };
     }
 }
 ````
@@ -5589,6 +7530,12 @@ public sealed class LeitorSensoresLhm : ILeitorSensores
 {
     private readonly IFonteSensoresLhm _fonte;
     private readonly ILogger _log;
+    // LHM não é thread-safe: semáforo garante acesso exclusivo; cache de 2s
+    // evita chamadas simultâneas quando o timer de 500ms se adianta ao WMI.
+    private readonly SemaphoreSlim _lock = new(1, 1);
+    private LeituraSensores? _cache;
+    private DateTime _cacheExpira = DateTime.MinValue;
+    private static readonly TimeSpan _intervaloCache = TimeSpan.FromSeconds(2);
 
     public LeitorSensoresLhm(IFonteSensoresLhm fonte, ILogger? logger = null)
     {
@@ -5602,27 +7549,44 @@ public sealed class LeitorSensoresLhm : ILeitorSensores
     public Task<LeituraSensores> LerAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        _log.LogDebug("Lendo sensores via LibreHardwareMonitor.");
 
-        // Descarta valores não finitos (NaN/Infinito) e leituras indisponíveis:
-        // temperatura/clock em 0 indicam sensor não lido (típico da CPU sem o
-        // driver/elevação — leituras de MSR exigem Ring0). Tensão, fan e potência
-        // em 0 são válidos e permanecem.
-        var validos = _fonte.Ler()
-            .Where(s => double.IsFinite(s.Valor) && !LeituraIndisponivel(s))
-            .ToList();
+        if (_cache is not null && DateTime.UtcNow < _cacheExpira)
+            return Task.FromResult(_cache);
 
-        if (validos.Count == 0)
+        if (!_lock.Wait(0))
+            return Task.FromResult(_cache ?? new LeituraSensores());
+
+        if (_cache is not null && DateTime.UtcNow < _cacheExpira)
         {
-            _log.LogWarning(
-                "LibreHardwareMonitor não retornou sensores (driver ausente ou sem elevação?).");
-        }
-        else
-        {
-            _log.LogDebug("LibreHardwareMonitor: {Qtd} sensor(es) válido(s).", validos.Count);
+            _lock.Release();
+            return Task.FromResult(_cache);
         }
 
-        return Task.FromResult(new LeituraSensores { Sensores = validos });
+        try
+        {
+            _log.LogDebug("Lendo sensores via LibreHardwareMonitor.");
+
+            // Descarta valores não finitos (NaN/Infinito) e leituras indisponíveis:
+            // temperatura/clock em 0 indicam sensor não lido (típico da CPU sem o
+            // driver/elevação — leituras de MSR exigem Ring0). Tensão, fan e potência
+            // em 0 são válidos e permanecem.
+            var validos = _fonte.Ler()
+                .Where(s => double.IsFinite(s.Valor) && !LeituraIndisponivel(s))
+                .ToList();
+
+            if (validos.Count == 0)
+                _log.LogWarning("LibreHardwareMonitor não retornou sensores (driver ausente ou sem elevação?).");
+            else
+                _log.LogDebug("LibreHardwareMonitor: {Qtd} sensor(es) válido(s).", validos.Count);
+
+            _cache = new LeituraSensores { Sensores = validos };
+            _cacheExpira = DateTime.UtcNow + _intervaloCache;
+            return Task.FromResult(_cache);
+        }
+        finally
+        {
+            _lock.Release();
+        }
     }
 
     // Temperatura/clock ≤ 0 = sensor indisponível (não lido). Outros tipos podem
@@ -5848,16 +7812,43 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace HardwareOptimizer.Agent.Sensors;
 
 /// <summary>
-/// Leitor de sensores para Windows. Lê a temperatura via WMI
-/// (MSAcpi_ThermalZoneTemperature) por PowerShell, em modo somente leitura. Para
-/// dados ricos (clock, voltagem, fan, consumo por componente), a implementação
-/// de produção usa LibreHardwareMonitorLib (driver de kernel assinado; atentar a
-/// Secure Boot). Defensivo: falhas resultam em leitura vazia, nunca em exceção.
+/// Leitor de sensores via WMI (sem necessidade de elevação). Fornece temperatura
+/// de zona térmica da CPU, clock atual do processador e throughput de disco.
+/// Complementa o LibreHardwareMonitor no <see cref="LeitorSensoresComposto"/>.
 /// </summary>
 [SupportedOSPlatform("windows")]
 public sealed class LeitorSensoresWindows : ILeitorSensores
 {
     private readonly ILogger _log;
+    // WMI spawna PowerShell (~3-5s): semáforo garante uma única execução por vez;
+    // cache de 8s evita chamadas desnecessárias no timer de 500ms.
+    private readonly SemaphoreSlim _wmiLock = new(1, 1);
+    private LeituraSensores? _cache;
+    private DateTime _cacheExpira = DateTime.MinValue;
+    private static readonly TimeSpan _intervaloWmi = TimeSpan.FromSeconds(8);
+
+    private const string ScriptWmi = @"
+$out = @{}
+try {
+    $tz = Get-CimInstance -Namespace root/wmi -ClassName MSAcpi_ThermalZoneTemperature -ErrorAction SilentlyContinue
+    if ($tz) { $out.thermalZones = @($tz | Select-Object CurrentTemperature) }
+} catch {}
+try {
+    $cpu = Get-CimInstance Win32_Processor -ErrorAction SilentlyContinue
+    if ($cpu) { $out.cpuClock = @($cpu | Select-Object CurrentClockSpeed, LoadPercentage) }
+} catch {}
+try {
+    $disk = Get-CimInstance Win32_PerfFormattedData_PerfDisk_PhysicalDisk -Filter ""Name='_Total'"" -ErrorAction SilentlyContinue
+    if ($disk) { $out.disk = @($disk | Select-Object DiskReadBytesPersec,DiskWriteBytesPersec) }
+} catch {}
+try {
+    $gpuSamples = (Get-Counter '\GPU Engine(*)\Utilization Percentage' -ErrorAction SilentlyContinue).CounterSamples
+    if ($gpuSamples) {
+        $total = ($gpuSamples | Measure-Object CookedValue -Sum).Sum
+        $out.gpuUtil = [math]::Round($total, 1)
+    }
+} catch {}
+$out | ConvertTo-Json -Depth 3 -Compress";
 
     public LeitorSensoresWindows(ILogger? logger = null) => _log = logger ?? NullLogger.Instance;
 
@@ -5866,112 +7857,140 @@ public sealed class LeitorSensoresWindows : ILeitorSensores
     public Task<LeituraSensores> LerAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        _log.LogDebug("Lendo temperatura via WMI (MSAcpi_ThermalZoneTemperature).");
 
-        var sensores = new List<Sensor>();
-        var indice = 1;
-        foreach (var decimosKelvin in LerTemperaturas())
+        if (_cache is not null && DateTime.UtcNow < _cacheExpira)
+            return Task.FromResult(_cache);
+
+        // Não bloqueia: se WMI já está rodando em outra thread, devolve o cache atual
+        // (pode ser null na primeira vez — nesse caso LHM cobre os outros sensores).
+        if (!_wmiLock.Wait(0))
+            return Task.FromResult(_cache ?? new LeituraSensores());
+
+        // Re-verifica depois de adquirir o lock
+        if (_cache is not null && DateTime.UtcNow < _cacheExpira)
         {
-            var celsius = Math.Round((decimosKelvin / 10.0) - 273.15, 1);
-            sensores.Add(new Sensor
-            {
-                Nome = $"Zona térmica {indice++}",
-                Tipo = TipoSensor.Temperatura,
-                Valor = celsius,
-                Unidade = "°C",
-            });
+            _wmiLock.Release();
+            return Task.FromResult(_cache);
         }
 
-        if (sensores.Count == 0)
-        {
-            _log.LogWarning("Nenhuma zona térmica WMI legível (use LibreHardwareMonitor para dados completos).");
-        }
-
-        return Task.FromResult(new LeituraSensores { Sensores = sensores });
-    }
-
-    private IEnumerable<double> LerTemperaturas()
-    {
-        var saida = ExecutarPowerShell(
-            "Get-CimInstance -Namespace root/wmi -ClassName MSAcpi_ThermalZoneTemperature "
-            + "| Select-Object CurrentTemperature | ConvertTo-Json -Compress");
-        if (string.IsNullOrWhiteSpace(saida))
-        {
-            yield break;
-        }
-
-        JsonDocument? doc = null;
         try
         {
-            doc = JsonDocument.Parse(saida);
+            var sensores = ExecutarConsultasWmi();
+            _log.LogDebug("Leitor WMI: {Qtd} sensor(es) lidos.", sensores.Count);
+            _cache = new LeituraSensores { Sensores = sensores };
+            _cacheExpira = DateTime.UtcNow + _intervaloWmi;
+            return Task.FromResult(_cache);
         }
-        catch (JsonException)
+        finally
         {
-            yield break;
+            _wmiLock.Release();
         }
+    }
+
+    private List<Sensor> ExecutarConsultasWmi()
+    {
+        var sensores = new List<Sensor>();
+        var json = ExecutarPowerShell(ScriptWmi);
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            _log.LogWarning("Leitor WMI: resposta vazia do PowerShell.");
+            return sensores;
+        }
+
+        JsonDocument? doc;
+        try { doc = JsonDocument.Parse(json); }
+        catch (JsonException ex) { _log.LogWarning(ex, "Leitor WMI: JSON inválido."); return sensores; }
 
         using (doc)
         {
-            if (doc.RootElement.ValueKind == JsonValueKind.Array)
+            var root = doc.RootElement;
+
+            // Temperatura da CPU via zona térmica ACPI
+            if (root.TryGetProperty("thermalZones", out var zones) && zones.ValueKind == JsonValueKind.Array)
             {
-                foreach (var item in doc.RootElement.EnumerateArray())
+                int idx = 1;
+                foreach (var zone in zones.EnumerateArray())
                 {
-                    if (ExtrairTemperatura(item) is { } valor)
+                    if (zone.TryGetProperty("CurrentTemperature", out var ct) && ct.TryGetDouble(out var raw))
                     {
-                        yield return valor;
+                        var celsius = Math.Round(raw / 10.0 - 273.15, 1);
+                        if (celsius > 0 && celsius < 150)
+                        {
+                            sensores.Add(new Sensor
+                            {
+                                Nome = $"[CPU] Thermal Zone {idx} / Temperature",
+                                Tipo = TipoSensor.Temperatura,
+                                Valor = celsius,
+                                Unidade = "°C",
+                            });
+                        }
                     }
+                    idx++;
                 }
             }
-            else if (ExtrairTemperatura(doc.RootElement) is { } unica)
+
+            // Clock atual e carga do processador
+            if (root.TryGetProperty("cpuClock", out var clocks) && clocks.ValueKind == JsonValueKind.Array)
             {
-                yield return unica;
+                foreach (var cpu in clocks.EnumerateArray())
+                {
+                    if (cpu.TryGetProperty("CurrentClockSpeed", out var cs) && cs.TryGetDouble(out var mhz) && mhz > 0)
+                        sensores.Add(new Sensor { Nome = "[CPU] Processor / Clock", Tipo = TipoSensor.Clock, Valor = mhz, Unidade = "MHz" });
+
+                    if (cpu.TryGetProperty("LoadPercentage", out var lp) && lp.TryGetDouble(out var load))
+                        sensores.Add(new Sensor { Nome = "[CPU] Processor / Load", Tipo = TipoSensor.Carga, Valor = load, Unidade = "%" });
+
+                    break;
+                }
             }
+
+            // Throughput de disco (agregado _Total)
+            if (root.TryGetProperty("disk", out var disks) && disks.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var d in disks.EnumerateArray())
+                {
+                    if (d.TryGetProperty("DiskReadBytesPersec", out var rb) && rb.TryGetDouble(out var rBytes))
+                        sensores.Add(new Sensor { Nome = "[STORAGE] _Total / Read Rate", Tipo = TipoSensor.Outro, Valor = Math.Round(rBytes / 1_048_576.0, 2), Unidade = "MB/s" });
+
+                    if (d.TryGetProperty("DiskWriteBytesPersec", out var wb) && wb.TryGetDouble(out var wBytes))
+                        sensores.Add(new Sensor { Nome = "[STORAGE] _Total / Write Rate", Tipo = TipoSensor.Outro, Valor = Math.Round(wBytes / 1_048_576.0, 2), Unidade = "MB/s" });
+
+                    break;
+                }
+            }
+
+            // Utilização GPU via Windows Performance Counters (fallback quando LHM/ADL não disponível)
+            if (root.TryGetProperty("gpuUtil", out var gpuUtilEl) && gpuUtilEl.TryGetDouble(out var gpuUtil) && gpuUtil >= 0)
+                sensores.Add(new Sensor { Nome = "[GPU] Adapter / Load", Tipo = TipoSensor.Carga, Valor = Math.Round(gpuUtil, 1), Unidade = "%" });
         }
+        return sensores;
     }
 
-    private static double? ExtrairTemperatura(JsonElement item) =>
-        item.ValueKind == JsonValueKind.Object
-        && item.TryGetProperty("CurrentTemperature", out var prop)
-        && prop.ValueKind == JsonValueKind.Number
-        && prop.TryGetDouble(out var valor)
-            ? valor
-            : null;
-
-    private string? ExecutarPowerShell(string comando)
+    private string? ExecutarPowerShell(string script)
     {
         try
         {
+            // Usa -EncodedCommand (UTF-16LE base64) para evitar problemas de escaping
+            // em scripts com aspas internas.
+            var encoded = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(script));
             var psi = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
-                Arguments = $"-NoProfile -NonInteractive -Command \"{comando}\"",
+                Arguments = $"-NoProfile -NonInteractive -EncodedCommand {encoded}",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
 
-            using var processo = Process.Start(psi);
-            if (processo is null)
-            {
-                return null;
-            }
-
-            var saida = processo.StandardOutput.ReadToEnd();
-            return processo.WaitForExit(20_000) ? saida.Trim() : null;
+            using var proc = Process.Start(psi);
+            if (proc is null) return null;
+            var saida = proc.StandardOutput.ReadToEnd();
+            return proc.WaitForExit(25_000) ? saida.Trim() : null;
         }
-        catch (Win32Exception)
-        {
-            return null;
-        }
-        catch (InvalidOperationException)
-        {
-            return null;
-        }
-        catch (IOException)
-        {
-            return null;
-        }
+        catch (Win32Exception) { return null; }
+        catch (InvalidOperationException) { return null; }
+        catch (IOException) { return null; }
     }
 }
 ````
@@ -6023,16 +8042,590 @@ public sealed class ServicoSensores
             return new LeitorSensoresLinux(logger: fabrica.CreateLogger<LeitorSensoresLinux>());
         }
 
-        // Produção no Windows: LibreHardwareMonitor (rico) com fallback para WMI
-        // (temperatura, sem elevação) quando o driver não está disponível.
+        // Produção no Windows: LHM (rico, requer elevação para CPU MSRs e ADL GPU) +
+        // ADL direto (temperatura AMD GPU sem admin) + WMI (CPU clock/load e disco).
         var lhm = new LeitorSensoresLhm(
             new FonteSensoresLhm(fabrica.CreateLogger<FonteSensoresLhm>()),
             fabrica.CreateLogger<LeitorSensoresLhm>());
+        var adl = new LeitorSensoresAdl(fabrica.CreateLogger<LeitorSensoresAdl>());
         var wmi = new LeitorSensoresWindows(fabrica.CreateLogger<LeitorSensoresWindows>());
 
         return new LeitorSensoresComposto(
-            new ILeitorSensores[] { lhm, wmi },
+            new ILeitorSensores[] { lhm, adl, wmi },
             fabrica.CreateLogger<LeitorSensoresComposto>());
+    }
+}
+````
+
+### `src/HardwareOptimizer.Agent/Services/ColetorServicos.cs`
+
+````csharp
+using System.Management;
+using System.Runtime.Versioning;
+using HardwareOptimizer.Agent.Security;
+using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+
+namespace HardwareOptimizer.Agent.Services;
+
+/// <summary>
+/// Enumera todos os serviços Windows via WMI (Win32_Service).
+/// Usa Task.Run para não bloquear a thread de chamada.
+/// </summary>
+[SupportedOSPlatform("windows")]
+public sealed class ColetorServicos
+{
+    private readonly ILogger<ColetorServicos> _log;
+
+    public ColetorServicos(ILogger<ColetorServicos> log) => _log = log;
+
+    public Task<IReadOnlyList<ServicoWindows>> ColetarAsync(CancellationToken ct = default) =>
+        Task.Run(() => Coletar(), ct);
+
+    private IReadOnlyList<ServicoWindows> Coletar()
+    {
+        var lista = new List<ServicoWindows>();
+
+        try
+        {
+            const string query = "SELECT Name, DisplayName, ProcessId, State, StartName, StartMode FROM Win32_Service";
+            using var searcher = new ManagementObjectSearcher(query);
+            using var results  = searcher.Get();
+
+            foreach (ManagementObject obj in results)
+            {
+                var nome = obj["Name"]?.ToString();
+                if (string.IsNullOrWhiteSpace(nome)) continue;
+
+                lista.Add(new ServicoWindows
+                {
+                    Nome      = nome,
+                    Descricao = obj["DisplayName"]?.ToString() ?? nome,
+                    Pid       = Convert.ToInt32(obj["ProcessId"] ?? 0),
+                    Status    = obj["State"]?.ToString() ?? "Unknown",
+                    Grupo     = SimplificarGrupo(obj["StartName"]?.ToString()),
+                    ModoInicio = obj["StartMode"]?.ToString(),
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Falha ao enumerar serviços via WMI.");
+        }
+
+        return lista
+            .Where(ListaNegraServicos.EhSeguro)
+            .OrderBy(s => s.Nome, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static string? SimplificarGrupo(string? startName) => startName switch
+    {
+        "LocalSystem"                  => "LocalSystem",
+        "NT AUTHORITY\\NetworkService" => "NetworkService",
+        "NT AUTHORITY\\LocalService"   => "LocalService",
+        null or "" => null,
+        _ => startName,
+    };
+}
+````
+
+### `src/HardwareOptimizer.Agent/Smart/ILeitorSmart.cs`
+
+````csharp
+namespace HardwareOptimizer.Agent.Smart;
+
+public interface ILeitorSmart
+{
+    IReadOnlyList<DadosSmartBrutos> LerDados();
+}
+````
+
+### `src/HardwareOptimizer.Agent/Smart/LeitorSmart.cs`
+
+````csharp
+using System.Management;
+using System.Runtime.Versioning;
+using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+
+namespace HardwareOptimizer.Agent.Smart;
+
+/// <summary>
+/// Lê dados S.M.A.R.T. dos discos via WMI (somente leitura, sem gravação).
+/// Requer Windows; retorna lista vazia em outras plataformas.
+/// </summary>
+[SupportedOSPlatform("windows")]
+public sealed class LeitorSmart : ILeitorSmart
+{
+    private readonly ILogger<LeitorSmart> _log;
+
+    public LeitorSmart(ILogger<LeitorSmart> log)
+    {
+        _log = log;
+    }
+
+    public IReadOnlyList<DadosSmartBrutos> LerDados()
+    {
+        if (!OperatingSystem.IsWindows()) return Array.Empty<DadosSmartBrutos>();
+
+        var resultado = new List<DadosSmartBrutos>();
+
+        try
+        {
+            // Win32_DiskDrive: modelo e serial
+            using var diskSearcher = new ManagementObjectSearcher(
+                "SELECT * FROM Win32_DiskDrive");
+            foreach (ManagementObject disk in diskSearcher.Get())
+            {
+                var modelo = disk["Model"]?.ToString() ?? "Disco desconhecido";
+                var serial = disk["SerialNumber"]?.ToString() ?? string.Empty;
+
+                resultado.Add(LerAtributosSmart(modelo, serial));
+            }
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Não foi possível ler dados S.M.A.R.T. via WMI.");
+        }
+
+        return resultado;
+    }
+
+    private DadosSmartBrutos LerAtributosSmart(string modelo, string serial)
+    {
+        long tbwEscritoGb = 0;
+        int horasUso = 0;
+        bool temErros = false;
+        int setoresPendentes = 0;
+
+        try
+        {
+            // MSStorageDriver_ATAPISmartData contém os atributos SMART brutos
+            using var searcher = new ManagementObjectSearcher(
+                "root\\WMI",
+                $"SELECT * FROM MSStorageDriver_ATAPISmartData WHERE InstanceName LIKE '%{EscaparSerial(serial)}%'");
+
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                var dados = (byte[]?)obj["VendorSpecific"];
+                if (dados is null || dados.Length < 362) continue;
+
+                for (int i = 2; i < dados.Length - 12; i += 12)
+                {
+                    byte atribId = dados[i];
+                    long rawLow = BitConverter.ToInt32(dados, i + 5);
+                    long rawHigh = BitConverter.ToInt16(dados, i + 9);
+                    long raw = (rawHigh << 32) | (rawLow & 0xFFFFFFFFL);
+
+                    switch (atribId)
+                    {
+                        case 0xF1: // Total Host Writes
+                            tbwEscritoGb = raw / (1024 * 1024 * 2); // sectores → GB
+                            break;
+                        case 0x09: // Power-On Hours
+                            horasUso = (int)(raw & 0xFFFF);
+                            break;
+                        case 0xBB: // Uncorrectable Error Count
+                            temErros = raw > 0;
+                            break;
+                        case 0xC5: // Current Pending Sector Count
+                            setoresPendentes = (int)raw;
+                            break;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _log.LogDebug(ex, "SMART WMI não disponível para '{Modelo}'.", modelo);
+        }
+
+        return new DadosSmartBrutos(modelo, serial, tbwEscritoGb, horasUso, temErros, setoresPendentes);
+    }
+
+    private static string EscaparSerial(string serial) =>
+        serial.Replace("\\", "\\\\").Replace("'", "\\'").Trim();
+}
+
+public sealed record DadosSmartBrutos(
+    string Modelo,
+    string Serial,
+    long TbwEscritoGb,
+    int HorasUso,
+    bool TemErrosNaoCorrigiveis,
+    int SetoresPendentes);
+````
+
+### `src/HardwareOptimizer.Agent/Startup/GerenciadorInicializacao.cs`
+
+````csharp
+using System.Runtime.Versioning;
+using HardwareOptimizer.Core.Common;
+using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
+
+namespace HardwareOptimizer.Agent.Startup;
+
+/// <summary>
+/// Aplica e reverte alterações de startup usando o mecanismo padrão do Windows:
+/// a chave StartupApproved para entradas de registro, e renomeação para pastas.
+/// A entrada permanece em Run — apenas o flag habilitado/desabilitado muda.
+/// </summary>
+[SupportedOSPlatform("windows")]
+public sealed class GerenciadorInicializacao
+{
+    // Formato do valor binário em StartupApproved: 12 bytes, byte[0] = status.
+    // 2 = habilitado, 3 = desabilitado. Bytes restantes = zeros (timestamp reservado).
+    private const byte StatusHabilitado = 2;
+    private const byte StatusDesabilitado = 3;
+    private const int TamanhoApprovedBytes = 12;
+
+    private readonly ILogger<GerenciadorInicializacao> _log;
+
+    public GerenciadorInicializacao(ILogger<GerenciadorInicializacao> log)
+    {
+        _log = log;
+    }
+
+    public Resultado Desativar(InicializacaoEntrada entrada)
+    {
+        try
+        {
+            return entrada.Origem switch
+            {
+                OrigemInicializacao.RegistroUsuario or OrigemInicializacao.RegistroMaquina =>
+                    AlterarStatusRegistro(entrada, StatusDesabilitado),
+                OrigemInicializacao.PastaStartup =>
+                    DesativarArquivoStartup(entrada),
+                _ => Resultado.Falhar("Origem de inicialização desconhecida."),
+            };
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Falha ao desativar entrada '{Nome}'.", entrada.Nome);
+            return Resultado.Falhar(ex.Message);
+        }
+    }
+
+    public Resultado Ativar(InicializacaoEntrada entrada, string valorOriginal)
+    {
+        try
+        {
+            return entrada.Origem switch
+            {
+                OrigemInicializacao.RegistroUsuario or OrigemInicializacao.RegistroMaquina =>
+                    AlterarStatusRegistro(entrada, StatusHabilitado),
+                OrigemInicializacao.PastaStartup =>
+                    AtivarArquivoStartup(entrada),
+                _ => Resultado.Falhar("Origem desconhecida."),
+            };
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Falha ao ativar entrada '{Nome}'.", entrada.Nome);
+            return Resultado.Falhar(ex.Message);
+        }
+    }
+
+    private Resultado AlterarStatusRegistro(InicializacaoEntrada entrada, byte status)
+    {
+        var raiz = entrada.Origem == OrigemInicializacao.RegistroUsuario
+            ? Registry.CurrentUser
+            : Registry.LocalMachine;
+
+        const string subcaminhoApproved =
+            @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run";
+
+        using var chaveApproved = raiz.CreateSubKey(subcaminhoApproved, writable: true);
+        if (chaveApproved is null)
+            return Resultado.Falhar("Não foi possível acessar a chave StartupApproved.");
+
+        var marcador = new byte[TamanhoApprovedBytes];
+        marcador[0] = status;
+        chaveApproved.SetValue(entrada.Nome, marcador, RegistryValueKind.Binary);
+
+        var acao = status == StatusDesabilitado ? "desativada" : "reativada";
+        _log.LogInformation("Entrada '{Nome}' {Acao} via StartupApproved.", entrada.Nome, acao);
+        return Resultado.Ok();
+    }
+
+    private Resultado DesativarArquivoStartup(InicializacaoEntrada entrada)
+    {
+        if (!File.Exists(entrada.Caminho))
+            return Resultado.Falhar($"Arquivo não encontrado: {entrada.Caminho}");
+
+        var destino = entrada.Caminho + ".disabled";
+        File.Move(entrada.Caminho, destino, overwrite: true);
+        _log.LogInformation("Startup '{Nome}' desativado (renomeado).", entrada.Nome);
+        return Resultado.Ok();
+    }
+
+    private Resultado AtivarArquivoStartup(InicializacaoEntrada entrada)
+    {
+        var origem = entrada.Caminho.EndsWith(".disabled", StringComparison.OrdinalIgnoreCase)
+            ? entrada.Caminho
+            : entrada.Caminho + ".disabled";
+
+        if (!File.Exists(origem))
+            return Resultado.Falhar($"Backup não encontrado: {origem}");
+
+        var destino = origem.Replace(".disabled", string.Empty, StringComparison.OrdinalIgnoreCase);
+        File.Move(origem, destino, overwrite: true);
+        _log.LogInformation("Startup '{Nome}' reativado.", entrada.Nome);
+        return Resultado.Ok();
+    }
+}
+````
+
+### `src/HardwareOptimizer.Agent/Startup/VerificadorInicializacao.cs`
+
+````csharp
+using System.Diagnostics;
+using System.Runtime.Versioning;
+using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
+
+namespace HardwareOptimizer.Agent.Startup;
+
+/// <summary>
+/// Varre as entradas de inicialização automática do Windows nos registros
+/// HKCU/HKLM\Run (32 e 64 bits) e nas pastas de Startup. Operação somente leitura.
+/// O status Ativo é determinado pela chave StartupApproved, que é o mecanismo
+/// padrão do Gerenciador de Tarefas do Windows para habilitar/desabilitar entradas.
+/// </summary>
+[SupportedOSPlatform("windows")]
+public sealed class VerificadorInicializacao
+{
+    private static readonly Dictionary<string, ImpactoInicializacao> _impactoConhecido =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "spotify", ImpactoInicializacao.Medio },
+            { "discord", ImpactoInicializacao.Medio },
+            { "steam", ImpactoInicializacao.Alto },
+            { "onedrive", ImpactoInicializacao.Alto },
+            { "teams", ImpactoInicializacao.Alto },
+            { "skype", ImpactoInicializacao.Medio },
+            { "slack", ImpactoInicializacao.Medio },
+            { "zoom", ImpactoInicializacao.Medio },
+            { "dropbox", ImpactoInicializacao.Medio },
+            { "googledrive", ImpactoInicializacao.Medio },
+            { "googleupdate", ImpactoInicializacao.Baixo },
+            { "epicgames", ImpactoInicializacao.Alto },
+            { "origin", ImpactoInicializacao.Alto },
+            { "ea", ImpactoInicializacao.Alto },
+            { "uplay", ImpactoInicializacao.Alto },
+            { "battle", ImpactoInicializacao.Alto },
+            { "razer", ImpactoInicializacao.Baixo },
+            { "corsair", ImpactoInicializacao.Baixo },
+            { "logitech", ImpactoInicializacao.Baixo },
+            { "whatsapp", ImpactoInicializacao.Baixo },
+            { "telegram", ImpactoInicializacao.Baixo },
+            { "linkedin", ImpactoInicializacao.Baixo },
+        };
+
+    private readonly ILogger<VerificadorInicializacao> _log;
+
+    public VerificadorInicializacao(ILogger<VerificadorInicializacao> log)
+    {
+        _log = log;
+    }
+
+    public IReadOnlyList<InicializacaoEntrada> Varrer()
+    {
+        var entradas = new List<InicializacaoEntrada>();
+
+        // Lê o status habilitado/desabilitado de cada entrada via StartupApproved.
+        // Este é o mecanismo padrão do Gerenciador de Tarefas — byte[0]=2 é habilitado,
+        // byte[0]=3 é desabilitado. Sem entrada em StartupApproved = habilitado por padrão.
+        var approvedHkcu = LerStartupApproved(
+            Registry.CurrentUser,
+            @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run");
+        var approvedHklm = LerStartupApproved(
+            Registry.LocalMachine,
+            @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run");
+        var approvedStartupFolder = LerStartupApproved(
+            Registry.CurrentUser,
+            @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder");
+
+        VarrerChaveRegistro(entradas,
+            Registry.CurrentUser,
+            @"Software\Microsoft\Windows\CurrentVersion\Run",
+            OrigemInicializacao.RegistroUsuario,
+            approvedHkcu);
+
+        VarrerChaveRegistro(entradas,
+            Registry.LocalMachine,
+            @"Software\Microsoft\Windows\CurrentVersion\Run",
+            OrigemInicializacao.RegistroMaquina,
+            approvedHklm);
+
+        // Apps 32-bit registram em WOW6432Node quando instalados em sistema 64-bit.
+        // Abre explicitamente a visão 32-bit do registro para capturá-los.
+        try
+        {
+            using var hklm32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            VarrerChaveRegistro(entradas,
+                hklm32,
+                @"Software\Microsoft\Windows\CurrentVersion\Run",
+                OrigemInicializacao.RegistroMaquina,
+                approvedHklm);
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao varrer registro 32-bit.");
+        }
+
+        VarrerPastaStartup(entradas,
+            Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+            OrigemInicializacao.PastaStartup,
+            approvedStartupFolder);
+
+        VarrerPastaStartup(entradas,
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup),
+            OrigemInicializacao.PastaStartup,
+            approvedStartupFolder);
+
+        // Deduplica por nome (32-bit e 64-bit podem registrar a mesma entrada).
+        var deduplicadas = entradas
+            .GroupBy(e => e.Nome, StringComparer.OrdinalIgnoreCase)
+            .Select(g => g.First())
+            .OrderBy(e => e.Nome)
+            .ToList();
+
+        _log.LogInformation("Startup scan: {Qtd} entradas encontradas.", deduplicadas.Count);
+        return deduplicadas;
+    }
+
+    // Lê a chave StartupApproved e retorna dicionário nome → ativo(true=habilitado).
+    private static Dictionary<string, bool> LerStartupApproved(RegistryKey raiz, string subcaminho)
+    {
+        var resultado = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            using var chave = raiz.OpenSubKey(subcaminho, writable: false);
+            if (chave is null) return resultado;
+
+            foreach (var nome in chave.GetValueNames())
+            {
+                if (chave.GetValue(nome) is byte[] dados && dados.Length >= 4)
+                {
+                    // Primeiros 4 bytes formam um inteiro: 2=habilitado, 3=desabilitado.
+                    resultado[nome] = dados[0] != 3;
+                }
+            }
+        }
+        catch { /* ignora — chave pode não existir */ }
+        return resultado;
+    }
+
+    private void VarrerChaveRegistro(
+        List<InicializacaoEntrada> destino,
+        RegistryKey raiz,
+        string subcaminho,
+        OrigemInicializacao origem,
+        Dictionary<string, bool> startupApproved)
+    {
+        try
+        {
+            using var chave = raiz.OpenSubKey(subcaminho, writable: false);
+            if (chave is null) return;
+
+            foreach (var nome in chave.GetValueNames())
+            {
+                var caminho = chave.GetValue(nome)?.ToString() ?? string.Empty;
+
+                // Se existe em StartupApproved, usa esse status; senão assume habilitado.
+                var ativo = !startupApproved.TryGetValue(nome, out var aprovado) || aprovado;
+
+                destino.Add(new InicializacaoEntrada
+                {
+                    Nome          = nome,
+                    Caminho       = caminho,
+                    Impacto       = ClassificarImpacto(nome, caminho),
+                    Origem        = origem,
+                    Ativo         = ativo,
+                    Fabricante    = LerFabricante(caminho),
+                    ChaveRollback = $"{raiz.Name}\\{subcaminho}\\{nome}",
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao varrer chave {Chave}.", subcaminho);
+        }
+    }
+
+    private void VarrerPastaStartup(
+        List<InicializacaoEntrada> destino,
+        string pasta,
+        OrigemInicializacao origem,
+        Dictionary<string, bool> startupApproved)
+    {
+        if (!Directory.Exists(pasta)) return;
+
+        try
+        {
+            foreach (var arquivo in Directory.EnumerateFiles(pasta, "*.lnk"))
+            {
+                var nome = Path.GetFileNameWithoutExtension(arquivo);
+                var renomeado = arquivo.EndsWith(".disabled", StringComparison.OrdinalIgnoreCase);
+                var ativo = !renomeado &&
+                    (!startupApproved.TryGetValue(nome, out var aprovado) || aprovado);
+
+                destino.Add(new InicializacaoEntrada
+                {
+                    Nome = nome,
+                    Caminho = arquivo,
+                    Impacto = ClassificarImpacto(nome, arquivo),
+                    Origem = origem,
+                    Ativo = ativo,
+                    ChaveRollback = arquivo,
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "Falha ao varrer pasta {Pasta}.", pasta);
+        }
+    }
+
+    private static string? LerFabricante(string caminho)
+    {
+        try
+        {
+            var exe = ExtrairExePath(caminho);
+            if (exe is null || !File.Exists(exe)) return null;
+            var company = FileVersionInfo.GetVersionInfo(exe).CompanyName?.Trim();
+            return string.IsNullOrWhiteSpace(company) ? null : company;
+        }
+        catch { return null; }
+    }
+
+    private static string? ExtrairExePath(string cmd)
+    {
+        cmd = cmd.Trim();
+        if (cmd.StartsWith('"'))
+        {
+            var end = cmd.IndexOf('"', 1);
+            return end > 0 ? cmd[1..end] : null;
+        }
+        var sp = cmd.IndexOf(' ');
+        return sp > 0 ? cmd[..sp] : cmd;
+    }
+
+    private static ImpactoInicializacao ClassificarImpacto(string nome, string caminho)
+    {
+        var chave = new[] { nome, caminho }
+            .SelectMany(s => s.Split(new[] { ' ', '\\', '/', '.', '-', '_' }))
+            .FirstOrDefault(token =>
+                _impactoConhecido.ContainsKey(token) && token.Length > 2);
+
+        return chave is not null && _impactoConhecido.TryGetValue(chave, out var impacto)
+            ? impacto
+            : ImpactoInicializacao.Desconhecido;
     }
 }
 ````
@@ -6642,13 +9235,43 @@ public sealed class ClienteLlmAnthropic : IClienteLlm
         };
 
         var resposta = await _client.Messages.Create(parametros).ConfigureAwait(false);
+        return ExtrairTexto(resposta);
+    }
 
+    public async Task<string> ResponderConversaAsync(
+        string promptSistema,
+        IReadOnlyList<(string Role, string Conteudo)> historico,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(promptSistema);
+        ArgumentNullException.ThrowIfNull(historico);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var mensagens = historico
+            .Select(m => new MessageParam
+            {
+                Role = m.Role == "assistant" ? Role.Assistant : Role.User,
+                Content = m.Conteudo,
+            })
+            .ToList();
+
+        var parametros = new MessageCreateParams
+        {
+            Model = Modelo,
+            MaxTokens = _maxTokens,
+            System = promptSistema,
+            Messages = mensagens,
+        };
+
+        var resposta = await _client.Messages.Create(parametros).ConfigureAwait(false);
+        return ExtrairTexto(resposta);
+    }
+
+    private static string ExtrairTexto(Message resposta)
+    {
         var sb = new StringBuilder();
         foreach (var bloco in resposta.Content.Select(b => b.Value).OfType<TextBlock>())
-        {
             sb.Append(bloco.Text);
-        }
-
         return sb.ToString();
     }
 }
@@ -6774,6 +9397,15 @@ public interface IClienteLlm
 
     Task<string> ResponderAsync(
         string promptSistema, string promptUsuario, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Responde mantendo histórico de conversa. Cada entrada é (role, conteúdo)
+    /// onde role é "user" ou "assistant". A última mensagem deve ser do usuário.
+    /// </summary>
+    Task<string> ResponderConversaAsync(
+        string promptSistema,
+        IReadOnlyList<(string Role, string Conteudo)> historico,
+        CancellationToken cancellationToken = default);
 }
 ````
 
@@ -7582,6 +10214,9 @@ public sealed record ResultadoConferencia
     <ProjectReference Include="..\HardwareOptimizer.Core\HardwareOptimizer.Core.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Agent\HardwareOptimizer.Agent.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Cerebro\HardwareOptimizer.Cerebro.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.LifeCounter\HardwareOptimizer.Features.LifeCounter.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Upgrade\HardwareOptimizer.Features.Upgrade.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Licensing\HardwareOptimizer.Features.Licensing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -7762,6 +10397,16 @@ public sealed record ParametroResumoDto
     };
 }
 
+/// <summary>Status da licença retornado pelo método <c>obterstatuslicenca</c>.</summary>
+public sealed record StatusLicencaDto
+{
+    public required string Tipo { get; init; }
+    public required bool ModuloUpgrade { get; init; }
+    public required bool ContadorVidaUtil { get; init; }
+    public required bool GerenciadorDrivers { get; init; }
+    public required bool GuiaBiosIa { get; init; }
+}
+
 /// <summary>Opções de serialização compartilhadas pelo protocolo IPC.</summary>
 public static class ProtocoloIpc
 {
@@ -7777,19 +10422,32 @@ public static class ProtocoloIpc
 ### `src/HardwareOptimizer.Ipc/RoteadorIpc.cs`
 
 ````csharp
+using System.Diagnostics;
+using System.Net.Http;
+using System.Runtime.Versioning;
+using System.Text;
 using System.Text.Json;
 using HardwareOptimizer.Agent.Backup;
 using HardwareOptimizer.Agent.Collector;
+using HardwareOptimizer.Agent.Drivers;
+using HardwareOptimizer.Agent.Security;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Execution.Windows;
 using HardwareOptimizer.Agent.Sensors;
+using HardwareOptimizer.Agent.Services;
+using HardwareOptimizer.Agent.Smart;
+using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Cerebro;
+using HardwareOptimizer.Cerebro.Visao;
 using HardwareOptimizer.Core.Catalog;
 using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Core.Privacy;
 using HardwareOptimizer.Core.Profiles;
 using HardwareOptimizer.Core.Reporting;
+using HardwareOptimizer.Features.Licensing;
+using HardwareOptimizer.Features.LifeCounter;
+using HardwareOptimizer.Features.Upgrade.Agente;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -7807,19 +10465,22 @@ public sealed class RoteadorIpc : IRoteadorIpc
     private readonly ServicoSensores _sensores;
     private readonly ICerebro _cerebro;
     private readonly ILogger _log;
+    private readonly IServicoLicenca? _licenca;
 
     public RoteadorIpc(
         CatalogoAcoes? catalogo = null,
         IColetorInventario? coletor = null,
         ServicoSensores? sensores = null,
         ICerebro? cerebro = null,
-        ILogger? logger = null)
+        ILogger? logger = null,
+        IServicoLicenca? licenca = null)
     {
         _catalogo = catalogo ?? CatalogoPadrao.Criar();
         _coletor = coletor ?? new ColetorInventario();
         _sensores = sensores ?? new ServicoSensores();
         _cerebro = cerebro ?? new CerebroLocal();
         _log = logger ?? NullLogger.Instance;
+        _licenca = licenca;
     }
 
     public async Task<RespostaIpc> TratarAsync(RequisicaoIpc requisicao, CancellationToken cancellationToken = default)
@@ -7837,7 +10498,48 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "catalogo" => RespostaIpc.Ok(requisicao.Id, ListarCatalogo()),
                 "proposta" => RespostaIpc.Ok(requisicao.Id, await ProporAsync(cancellationToken).ConfigureAwait(false)),
                 "relatorio" => RespostaIpc.Ok(requisicao.Id, await RelatorioAsync(cancellationToken).ConfigureAwait(false)),
-                "aprovar" => await AprovarAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "aprovar" or "aplicar" => await AprovarAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "obterentradasstartup" => OperatingSystem.IsWindows()
+                    ? ObterEntradasStartupWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "desativarstartup" => OperatingSystem.IsWindows()
+                    ? await ToggleStartupAsync(requisicao, ativar: false, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "obtersaudediscos" => OperatingSystem.IsWindows()
+                    ? ObterSaudeDiscosWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "obterdrivers" => OperatingSystem.IsWindows()
+                    ? ObterDriversWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "desinstalarprogramas" => OperatingSystem.IsWindows()
+                    ? await DesinstalarProgramasAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "ativarstartup" => OperatingSystem.IsWindows()
+                    ? await ToggleStartupAsync(requisicao, ativar: true, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "obterservicos" => OperatingSystem.IsWindows()
+                    ? await ObterServicosAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "iniciarservico" => OperatingSystem.IsWindows()
+                    ? await ToggleServicoAsync(requisicao, iniciar: true, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "pararservico" => OperatingSystem.IsWindows()
+                    ? await ToggleServicoAsync(requisicao, iniciar: false, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "alterarmododeinicio" => OperatingSystem.IsWindows()
+                    ? await AlterarModoInicioAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "chat_upgrade" => await ChatUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "analise_upgrade" => await AnaliseInicialUpgradeAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "chat_bios" => await ChatBiosAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "exportarbackupdrivers" => OperatingSystem.IsWindows()
+                    ? await ExportarBackupDriversAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "instalardriver" => OperatingSystem.IsWindows()
+                    ? await InstalarDriverAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "analisarbiosfoto" => await AnalisarBiosFotoAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "obterstatuslicenca" => ObterStatusLicenca(requisicao),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
         }
@@ -7846,6 +10548,144 @@ public sealed class RoteadorIpc : IRoteadorIpc
             _log.LogError(ex, "IPC: falha no método '{Metodo}'.", requisicao.Metodo);
             return RespostaIpc.Falha(requisicao.Id, ex.Message);
         }
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> ObterServicosAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var coletor = new ColetorServicos(NullLogger<ColetorServicos>.Instance);
+        var servicos = await coletor.ColetarAsync(ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, servicos);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> ToggleServicoAsync(RequisicaoIpc req, bool iniciar, CancellationToken ct)
+    {
+        var nome = req.Parametros is { } p
+            && p.TryGetProperty("nome", out var n)
+            && n.ValueKind == JsonValueKind.String
+                ? n.GetString() : null;
+
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+
+        // Trava de segurança: bloqueia operação em serviços críticos do SO
+        var svcDummy = new ServicoWindows { Nome = nome, Descricao = nome, Status = "Unknown" };
+        if (!ListaNegraServicos.EhSeguro(svcDummy))
+            return RespostaIpc.Falha(req.Id, $"Operação bloqueada: '{nome}' é um serviço crítico do sistema.");
+
+        var nomePs = nome.Replace("'", "''");
+        var comando = iniciar
+            ? $"Start-Service -Name '{nomePs}' -ErrorAction Stop"
+            : $"Stop-Service  -Name '{nomePs}' -Force -ErrorAction Stop";
+
+        var script  = $"try {{ {comando} }} catch {{ Write-Error $_; exit 1 }}; exit 0";
+        var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+
+        var psi = new ProcessStartInfo
+        {
+            FileName        = "powershell.exe",
+            Arguments       = $"-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -EncodedCommand {encoded}",
+            UseShellExecute = true,
+            Verb            = "runas",
+            WindowStyle     = ProcessWindowStyle.Hidden,
+        };
+
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+            return proc.ExitCode == 0
+                ? RespostaIpc.Ok(req.Id, true)
+                : RespostaIpc.Falha(req.Id, $"Falha ao {(iniciar ? "iniciar" : "parar")} '{nome}' (código {proc.ExitCode}).");
+        }
+        catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+        {
+            return RespostaIpc.Falha(req.Id, "Operação cancelada (UAC negado).");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> AlterarModoInicioAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p)
+            return RespostaIpc.Falha(req.Id, "Parâmetros obrigatórios.");
+
+        var nome = p.TryGetProperty("nome", out var n) && n.ValueKind == JsonValueKind.String
+            ? n.GetString() : null;
+        var modo = p.TryGetProperty("modo", out var m) && m.ValueKind == JsonValueKind.String
+            ? m.GetString() : null;
+
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+        if (string.IsNullOrEmpty(modo))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'modo' obrigatório.");
+
+        // Trava de segurança: bloqueia alteração em serviços críticos do SO
+        var svcDummy = new ServicoWindows { Nome = nome, Descricao = nome, Status = "Unknown" };
+        if (!ListaNegraServicos.EhSeguro(svcDummy))
+            return RespostaIpc.Falha(req.Id, $"Operação bloqueada: '{nome}' é um serviço crítico do sistema.");
+
+        // Mapear PT-BR → PowerShell Set-Service -StartupType value
+        var startupType = modo switch
+        {
+            "Automático"                       => "Automatic",
+            "Automático (Atraso na Inicialização)" => "AutomaticDelayedStart",
+            "Manual"                           => "Manual",
+            "Desativado"                       => "Disabled",
+            _ => null,
+        };
+
+        if (startupType is null)
+            return RespostaIpc.Falha(req.Id, $"Modo de início desconhecido: '{modo}'.");
+
+        var nomePs = nome.Replace("'", "''");
+        var script  = $"try {{ Set-Service -Name '{nomePs}' -StartupType {startupType} -ErrorAction Stop }} catch {{ Write-Error $_; exit 1 }}; exit 0";
+        var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+
+        var psi = new ProcessStartInfo
+        {
+            FileName        = "powershell.exe",
+            Arguments       = $"-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -EncodedCommand {encoded}",
+            UseShellExecute = true,
+            Verb            = "runas",
+            WindowStyle     = ProcessWindowStyle.Hidden,
+        };
+
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+            return proc.ExitCode == 0
+                ? RespostaIpc.Ok(req.Id, true)
+                : RespostaIpc.Falha(req.Id, $"Falha ao alterar modo de início de '{nome}' (código {proc.ExitCode}).");
+        }
+        catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+        {
+            return RespostaIpc.Falha(req.Id, "Operação cancelada (UAC negado).");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
+    }
+
+    private RespostaIpc ObterStatusLicenca(RequisicaoIpc req)
+    {
+        var tipo = _licenca?.TipoAtual ?? TipoLicenca.Gratuita;
+        var dto = new StatusLicencaDto
+        {
+            Tipo               = tipo.ToString(),
+            ModuloUpgrade      = _licenca?.TemAcesso(FuncionalidadePremium.ModuloUpgrade)      ?? false,
+            ContadorVidaUtil   = _licenca?.TemAcesso(FuncionalidadePremium.ContadorVidaUtil)   ?? false,
+            GerenciadorDrivers = _licenca?.TemAcesso(FuncionalidadePremium.GerenciadorDrivers) ?? false,
+            GuiaBiosIa         = _licenca?.TemAcesso(FuncionalidadePremium.GuiaBiosIa)         ?? false,
+        };
+        return RespostaIpc.Ok(req.Id, dto);
     }
 
     private IReadOnlyList<AcaoResumoDto> ListarCatalogo() =>
@@ -7931,6 +10771,435 @@ public sealed class RoteadorIpc : IRoteadorIpc
         && p.TryGetProperty("nomePerfil", out var n) && n.ValueKind == JsonValueKind.String
             ? n.GetString()!
             : "perfil-ipc";
+
+    [SupportedOSPlatform("windows")]
+    private RespostaIpc ObterSaudeDiscosWindows(RequisicaoIpc req)
+    {
+        var leitor = new LeitorSmart(NullLogger<LeitorSmart>.Instance);
+        var calc = new CalculadoraVidaUtil(leitor, NullLogger<CalculadoraVidaUtil>.Instance);
+        var resultado = calc.Calcular();
+        return RespostaIpc.Ok(req.Id, resultado);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private RespostaIpc ObterDriversWindows(RequisicaoIpc req)
+    {
+        var coletor = new ColetorHwid(NullLogger<ColetorHwid>.Instance);
+        var drivers = coletor.Coletar();
+        return RespostaIpc.Ok(req.Id, drivers);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private RespostaIpc ObterEntradasStartupWindows(RequisicaoIpc req)
+    {
+        var verificador = new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance);
+        var entradas = verificador.Varrer();
+        return RespostaIpc.Ok(req.Id, entradas);
+    }
+
+    private async Task<RespostaIpc> ChatUpgradeAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var mensagem = req.Parametros is { } p
+            && p.TryGetProperty("mensagem", out var m) && m.ValueKind == JsonValueKind.String
+            ? m.GetString() : null;
+
+        if (string.IsNullOrWhiteSpace(mensagem))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'mensagem' obrigatório.");
+
+        var historico = LerHistoricoChat(req.Parametros);
+        var inventario = await _coletor.ColetarAsync(ct).ConfigureAwait(false);
+        var agente = new AgenteUpgrade(ObterClienteLlm(), _log);
+        var resposta = await agente.ResponderAsync(inventario, mensagem, historico, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, resposta);
+    }
+
+    private async Task<RespostaIpc> AnaliseInicialUpgradeAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var inventario = await _coletor.ColetarAsync(ct).ConfigureAwait(false);
+        var agente = new AgenteUpgrade(ObterClienteLlm(), _log);
+        var resposta = await agente.AnalisarInicialAsync(inventario, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, resposta);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> ExportarBackupDriversAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var pasta = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "OtimizeBuilder", "DriverBackups",
+            DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+
+        Directory.CreateDirectory(pasta);
+
+        var psi = new ProcessStartInfo
+        {
+            FileName               = "pnputil.exe",
+            Arguments              = $"/export-driver * \"{pasta}\"",
+            UseShellExecute        = false,
+            CreateNoWindow         = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError  = true,
+        };
+
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            await proc.StandardOutput.ReadToEndAsync(ct).ConfigureAwait(false);
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+
+            return proc.ExitCode == 0
+                ? RespostaIpc.Ok(req.Id, pasta)
+                : RespostaIpc.Falha(req.Id, $"pnputil saiu com código {proc.ExitCode}.");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> InstalarDriverAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p
+            || !p.TryGetProperty("urlDownload", out var u)
+            || u.ValueKind != JsonValueKind.String
+            || string.IsNullOrWhiteSpace(u.GetString()))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'urlDownload' obrigatório.");
+
+        var url = u.GetString()!;
+
+        string ext;
+        try { ext = Path.GetExtension(new Uri(url).LocalPath).ToLowerInvariant(); }
+        catch { ext = Path.GetExtension(url).ToLowerInvariant(); }
+
+        var pastaTemp = Path.Combine(Path.GetTempPath(), "OtimizeBuilder", "Drivers", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(pastaTemp);
+
+        string nomeArq;
+        try { nomeArq = Path.GetFileName(new Uri(url).LocalPath); }
+        catch { nomeArq = string.Empty; }
+        if (string.IsNullOrEmpty(nomeArq)) nomeArq = $"driver{ext}";
+
+        var destino = Path.Combine(pastaTemp, nomeArq);
+
+        try
+        {
+            using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
+            var bytes = await http.GetByteArrayAsync(url, ct).ConfigureAwait(false);
+            await File.WriteAllBytesAsync(destino, bytes, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, $"Falha no download: {ex.Message}");
+        }
+
+        return ext switch
+        {
+            ".inf" or ".cab" => await InstalarComPnputilAsync(req, destino, ct).ConfigureAwait(false),
+            ".exe"           => IniciarInstalador(req, destino),
+            _                => RespostaIpc.Falha(req.Id, $"Formato '{ext}' não suportado para instalação silenciosa."),
+        };
+    }
+
+    private static async Task<RespostaIpc> InstalarComPnputilAsync(RequisicaoIpc req, string caminho, CancellationToken ct)
+    {
+        var psi = new ProcessStartInfo
+        {
+            FileName               = "pnputil.exe",
+            Arguments              = $"/add-driver \"{caminho}\" /install",
+            UseShellExecute        = false,
+            CreateNoWindow         = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError  = true,
+        };
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            var stdout = await proc.StandardOutput.ReadToEndAsync(ct).ConfigureAwait(false);
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+            return proc.ExitCode == 0
+                ? RespostaIpc.Ok(req.Id, stdout.Trim())
+                : RespostaIpc.Falha(req.Id, $"pnputil saiu com código {proc.ExitCode}.");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
+    }
+
+    private static RespostaIpc IniciarInstalador(RequisicaoIpc req, string caminho)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = caminho, UseShellExecute = true });
+            return RespostaIpc.Ok(req.Id, "Instalador iniciado.");
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
+    }
+
+    private async Task<RespostaIpc> AnalisarBiosFotoAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p)
+            return RespostaIpc.Falha(req.Id, "Parâmetros obrigatórios.");
+
+        var b64 = p.TryGetProperty("imagemBase64", out var b) && b.ValueKind == JsonValueKind.String
+            ? b.GetString() : null;
+        var mt = p.TryGetProperty("mediaType", out var m) && m.ValueKind == JsonValueKind.String
+            ? m.GetString() ?? "image/png" : "image/png";
+
+        if (string.IsNullOrWhiteSpace(b64))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'imagemBase64' obrigatório.");
+
+        var imagem = new ImagemEntrada { Base64 = b64, MediaType = mt };
+        var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
+        var modelo = Environment.GetEnvironmentVariable("CLAUDE_MODEL") ?? "claude-sonnet-4-6";
+        var cliente = new ClienteVisaoAnthropic(modelo, apiKey);
+        var modulo = new ModuloVisao(cliente, _log);
+
+        try
+        {
+            var leitura = await modulo.InterpretarAsync(imagem, CasoUsoVisao.LerVersaoBios, ct).ConfigureAwait(false);
+            return RespostaIpc.Ok(req.Id, FormatarLeituraBios(leitura));
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, $"Erro na análise da imagem: {ex.Message}");
+        }
+    }
+
+    private static string FormatarLeituraBios(LeituraVisual leitura)
+    {
+        if (leitura.TipoTela == TipoTela.Desconhecida || leitura.Confianca == NivelConfianca.Baixa)
+            return leitura.ProximoPasso
+                ?? "Não foi possível identificar a tela de BIOS. Envie uma foto mais nítida.";
+
+        var sb = new StringBuilder();
+        sb.AppendLine("Imagem identificada: BIOS/UEFI");
+
+        if (leitura.Campo("fabricante") is { Length: > 0 } fab)
+            sb.AppendLine($"Fabricante: {fab}");
+        if (leitura.Campo("modelo") is { Length: > 0 } mod)
+            sb.AppendLine($"Modelo: {mod}");
+        if (leitura.Campo("versao") is { Length: > 0 } ver)
+            sb.AppendLine($"Versão BIOS: {ver}");
+
+        if (leitura.ProximoPasso is { Length: > 0 } prox)
+        {
+            sb.AppendLine();
+            sb.Append($"→ {prox}");
+        }
+
+        return sb.ToString().TrimEnd();
+    }
+
+    private async Task<RespostaIpc> ChatBiosAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var pergunta = req.Parametros is { } p
+            && p.TryGetProperty("pergunta", out var q) && q.ValueKind == JsonValueKind.String
+            ? q.GetString() : null;
+
+        if (string.IsNullOrWhiteSpace(pergunta))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'pergunta' obrigatório.");
+
+        var inventario = await _coletor.ColetarAsync(ct).ConfigureAwait(false);
+
+        var ram = inventario.Memoria.FirstOrDefault();
+        var velocidadeRam = ram?.VelocidadeMhz > 0 ? $"{ram.VelocidadeMhz} MHz" : "desconhecida";
+        var tipoRam = ram?.VelocidadeMhz >= 4800 ? "DDR5" : "DDR4";
+
+        var systemPrompt = $"""
+            Você é um especialista técnico em BIOS de placas-mãe para Windows.
+
+            Configuração do sistema do usuário:
+            - Placa-mãe: {inventario.Placa.Fabricante} {inventario.Placa.Modelo}
+            - CPU: {inventario.Cpu.Nome}
+            - RAM: {inventario.Memoria.Count}x módulo(s) {tipoRam} @ {velocidadeRam}
+            - BIOS versão: {inventario.Placa.VersaoBios ?? "desconhecida"}
+
+            Responda em português, de forma direta e técnica.
+            Indique o caminho de menu específico para o fabricante quando relevante
+            (ex: ASUS → AI Tweaker › X.M.P., MSI → OC › XMP).
+            Máximo 200 palavras.
+            """;
+
+        var cliente = ObterClienteLlm();
+        var resposta = await cliente.ResponderAsync(systemPrompt, pergunta, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, resposta);
+    }
+
+    private IClienteLlm ObterClienteLlm()
+    {
+        var apiKey = Environment.GetEnvironmentVariable("ANTHROPIC_API_KEY");
+        var modelo = Environment.GetEnvironmentVariable("CLAUDE_MODEL") ?? "claude-sonnet-4-6";
+        return new ClienteLlmAnthropic(modelo, apiKey);
+    }
+
+    private static IReadOnlyList<MensagemChat> LerHistoricoChat(JsonElement? parametros)
+    {
+        var lista = new List<MensagemChat>();
+        if (parametros is not { } p || p.ValueKind != JsonValueKind.Object
+            || !p.TryGetProperty("historico", out var arr) || arr.ValueKind != JsonValueKind.Array)
+            return lista;
+
+        foreach (var item in arr.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object) continue;
+            var role = item.TryGetProperty("role", out var r) ? r.GetString() : null;
+            var conteudo = item.TryGetProperty("conteudo", out var c) ? c.GetString() : null;
+            if (role is not null && conteudo is not null)
+                lista.Add(new MensagemChat { Role = role, Conteudo = conteudo });
+        }
+
+        return lista;
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> DesinstalarProgramasAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p
+            || !p.TryGetProperty("programas", out var arr)
+            || arr.ValueKind != JsonValueKind.Array)
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'programas' obrigatório.");
+
+        int iniciados = 0;
+        var erros = new List<string>();
+
+        foreach (var item in arr.EnumerateArray())
+        {
+            ct.ThrowIfCancellationRequested();
+
+            string? cmdStr = null;
+            if (item.TryGetProperty("quietUninstallString", out var q)
+                && q.ValueKind == JsonValueKind.String
+                && q.GetString() is { Length: > 0 } qs)
+                cmdStr = qs;
+            else if (item.TryGetProperty("uninstallString", out var u)
+                && u.ValueKind == JsonValueKind.String)
+                cmdStr = u.GetString();
+
+            if (string.IsNullOrWhiteSpace(cmdStr)) continue;
+
+            var nome = item.TryGetProperty("nome", out var n) && n.ValueKind == JsonValueKind.String
+                ? n.GetString() ?? "?" : "?";
+            try
+            {
+                Process.Start(ParseUninstallCommand(cmdStr));
+                iniciados++;
+                await Task.Delay(600, ct).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                erros.Add($"{nome}: {ex.Message}");
+            }
+        }
+
+        return erros.Count == 0
+            ? RespostaIpc.Ok(req.Id, iniciados)
+            : RespostaIpc.Falha(req.Id, $"Iniciados: {iniciados}. Falhas: {string.Join("; ", erros)}");
+    }
+
+    private static ProcessStartInfo ParseUninstallCommand(string cmd)
+    {
+        cmd = cmd.Trim();
+
+        if (cmd.StartsWith("MsiExec", StringComparison.OrdinalIgnoreCase))
+        {
+            var spIdx = cmd.IndexOf(' ');
+            var args = spIdx > 0 ? cmd[(spIdx + 1)..].Trim() : "";
+            args = args.Replace("/I{", "/X{", StringComparison.OrdinalIgnoreCase);
+            return new ProcessStartInfo { FileName = "msiexec.exe", Arguments = args, UseShellExecute = true };
+        }
+
+        if (cmd.StartsWith('"'))
+        {
+            var end = cmd.IndexOf('"', 1);
+            if (end > 0)
+            {
+                var exe = cmd[1..end];
+                var args = cmd.Length > end + 1 ? cmd[(end + 1)..].Trim() : "";
+                return new ProcessStartInfo { FileName = exe, Arguments = args, UseShellExecute = true };
+            }
+        }
+
+        var sp = cmd.IndexOf(' ');
+        return sp > 0
+            ? new ProcessStartInfo { FileName = cmd[..sp], Arguments = cmd[(sp + 1)..], UseShellExecute = true }
+            : new ProcessStartInfo { FileName = cmd, UseShellExecute = true };
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> ToggleStartupAsync(RequisicaoIpc req, bool ativar, CancellationToken ct)
+    {
+        var nome = req.Parametros is { } p
+            && p.TryGetProperty("nome", out var n)
+            && n.ValueKind == JsonValueKind.String
+                ? n.GetString() : null;
+
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+
+        // Localiza a entrada para saber hive (HKCU/HKLM) e se é pasta de startup.
+        var entrada = new VerificadorInicializacao(NullLogger<VerificadorInicializacao>.Instance)
+            .Varrer()
+            .FirstOrDefault(e => string.Equals(e.Nome, nome, StringComparison.OrdinalIgnoreCase));
+
+        if (entrada is null)
+            return RespostaIpc.Falha(req.Id, $"Entrada '{nome}' não encontrada no registro.");
+
+        // Entradas de pasta de startup: renomear arquivo (sem script de registro).
+        if (entrada.Origem == OrigemInicializacao.PastaStartup)
+        {
+            var gerenciador = new GerenciadorInicializacao(NullLogger<GerenciadorInicializacao>.Instance);
+            var r = ativar ? gerenciador.Ativar(entrada, "") : gerenciador.Desativar(entrada);
+            return r.Sucesso ? RespostaIpc.Ok(req.Id, true) : RespostaIpc.Falha(req.Id, r.MensagemErro);
+        }
+
+        // Entradas de registro: usa PowerShell com -EncodedCommand para garantir execução nativa.
+        var hive = entrada.Origem == OrigemInicializacao.RegistroUsuario ? "HKCU" : "HKLM";
+        var statusByte = ativar ? 2 : 3;
+        var nomePs = nome.Replace("'", "''"); // escapa aspas simples para PS
+
+        var script = $@"
+$hive = '{hive}:'
+$path = Join-Path $hive 'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run'
+if (-not (Test-Path $path)) {{ New-Item -Path $path -Force | Out-Null }}
+$bytes = [byte[]]@({statusByte},0,0,0,0,0,0,0,0,0,0,0)
+Set-ItemProperty -Path $path -Name '{nomePs}' -Value $bytes -Type Binary -Force
+Write-Output 'OK'
+";
+        var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+
+        var psi = new ProcessStartInfo
+        {
+            FileName        = "powershell.exe",
+            Arguments       = $"-NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand {encoded}",
+            UseShellExecute = false,
+            CreateNoWindow  = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError  = true,
+        };
+
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            var stdout = await proc.StandardOutput.ReadToEndAsync(ct).ConfigureAwait(false);
+            var stderr = await proc.StandardError.ReadToEndAsync(ct).ConfigureAwait(false);
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+
+            return proc.ExitCode == 0 && stdout.Contains("OK")
+                ? RespostaIpc.Ok(req.Id, true)
+                : RespostaIpc.Falha(req.Id, string.IsNullOrWhiteSpace(stderr)
+                    ? $"Script saiu com código {proc.ExitCode}."
+                    : stderr.Trim());
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Falha(req.Id, ex.Message);
+        }
+    }
 }
 ````
 
@@ -8033,6 +11302,7 @@ public sealed class ServidorNamedPipe
     <!-- O compilador de XAML do Avalonia gera código que pode emitir avisos;
          não tratamos avisos como erro NESTE projeto (o restante da solução trata). -->
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -8043,6 +11313,8 @@ public sealed class ServidorNamedPipe
 
   <ItemGroup>
     <ProjectReference Include="..\HardwareOptimizer.Ipc\HardwareOptimizer.Ipc.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Licensing\HardwareOptimizer.Features.Licensing.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Upgrade\HardwareOptimizer.Features.Upgrade.csproj" />
   </ItemGroup>
 
 </Project>
@@ -8054,7 +11326,7 @@ public sealed class ServidorNamedPipe
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="HardwareOptimizer.App.App"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Dark">
   <Application.Styles>
     <FluentTheme />
   </Application.Styles>
@@ -8064,12 +11336,15 @@ public sealed class ServidorNamedPipe
 ### `src/HardwareOptimizer.App/App.axaml.cs`
 
 ````csharp
+using System.Runtime.Versioning;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using HardwareOptimizer.App.ViewModels;
 using HardwareOptimizer.App.Views;
+using HardwareOptimizer.Features.Licensing;
 using HardwareOptimizer.Ipc;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.App;
 
@@ -8077,20 +11352,748 @@ public partial class App : Application
 {
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
+    [SupportedOSPlatform("windows")]
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // App em processo: a UI fala com o agente pelo roteador local
-            // (a mesma API exposta por named pipe quando UI e agente são separados).
             var roteador = new RoteadorIpc();
-            desktop.MainWindow = new MainWindow
+            var licenca = new ServicoLicencaLocal(
+                NullLogger<ServicoLicencaLocal>.Instance);
+
+            desktop.MainWindow = new ShellWindow
             {
-                DataContext = new MainWindowViewModel(roteador),
+                DataContext = new ShellViewModel(roteador, licenca),
             };
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/Controls/AnelScanControl.cs`
+
+````csharp
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
+using Avalonia.Threading;
+
+namespace HardwareOptimizer.App.Controls;
+
+/// <summary>
+/// Segmented ring that fills clockwise as Progresso goes from 0→1.
+/// When Escaneando=true, the leading-edge segment pulses green.
+/// Inspired by Driver Booster's tachometer-style scan ring.
+/// </summary>
+public class AnelScanControl : Control
+{
+    public static readonly StyledProperty<double> ProgressoProperty =
+        AvaloniaProperty.Register<AnelScanControl, double>(nameof(Progresso));
+
+    public static readonly StyledProperty<bool> EscaneandoProperty =
+        AvaloniaProperty.Register<AnelScanControl, bool>(nameof(Escaneando));
+
+    public double Progresso
+    {
+        get => GetValue(ProgressoProperty);
+        set => SetValue(ProgressoProperty, value);
+    }
+
+    public bool Escaneando
+    {
+        get => GetValue(EscaneandoProperty);
+        set => SetValue(EscaneandoProperty, value);
+    }
+
+    static AnelScanControl()
+    {
+        AffectsRender<AnelScanControl>(ProgressoProperty, EscaneandoProperty);
+    }
+
+    private DispatcherTimer? _timer;
+    private bool _pulso;
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.Property == EscaneandoProperty)
+        {
+            if (Escaneando)
+            {
+                _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(280) };
+                _timer.Tick += (_, _) => { _pulso = !_pulso; InvalidateVisual(); };
+                _timer.Start();
+            }
+            else
+            {
+                _timer?.Stop();
+                _timer = null;
+                _pulso = false;
+                InvalidateVisual();
+            }
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _timer?.Stop();
+        _timer = null;
+    }
+
+    public override void Render(DrawingContext ctx)
+    {
+        var b = Bounds;
+        if (b.Width < 20) return;
+
+        double cx = b.Width / 2;
+        double cy = b.Height / 2;
+        double outerR = Math.Min(cx, cy) - 4;
+        double innerR = outerR - 22;
+
+        const int N = 20;
+        const double gapDeg = 6.0;
+        double segDeg = (360.0 / N) - gapDeg;
+
+        int litCount = Math.Clamp((int)Math.Round(Progresso * N), 0, N);
+
+        for (int i = 0; i < N; i++)
+        {
+            double startDeg = -90.0 + i * (360.0 / N);
+
+            Color col = (i < litCount)              ? Color.Parse("#00C870")
+                      : (i == litCount && Escaneando && _pulso) ? Color.Parse("#55FF99")
+                      :                               Color.Parse("#1C1C1C");
+
+            DrawSeg(ctx, new Point(cx, cy), innerR, outerR, startDeg, startDeg + segDeg,
+                new SolidColorBrush(col));
+        }
+
+        // Fill inside of ring with background colour so the button beneath is visible
+        ctx.DrawEllipse(new SolidColorBrush(Color.Parse("#050505")), null,
+            new Point(cx, cy), innerR - 2, innerR - 2);
+    }
+
+    private static void DrawSeg(DrawingContext ctx, Point c,
+        double ri, double ro, double startDeg, double endDeg, IBrush fill)
+    {
+        double s = startDeg * Math.PI / 180.0;
+        double e = endDeg * Math.PI / 180.0;
+        bool large = (endDeg - startDeg) > 180;
+
+        var p1 = new Point(c.X + ro * Math.Cos(s), c.Y + ro * Math.Sin(s));
+        var p2 = new Point(c.X + ro * Math.Cos(e), c.Y + ro * Math.Sin(e));
+        var p3 = new Point(c.X + ri * Math.Cos(e), c.Y + ri * Math.Sin(e));
+        var p4 = new Point(c.X + ri * Math.Cos(s), c.Y + ri * Math.Sin(s));
+
+        var geo = new StreamGeometry();
+        using (var gc = geo.Open())
+        {
+            gc.BeginFigure(p1, isFilled: true);
+            gc.ArcTo(p2, new Size(ro, ro), 0, large, SweepDirection.Clockwise);
+            gc.LineTo(p3);
+            gc.ArcTo(p4, new Size(ri, ri), 0, large, SweepDirection.CounterClockwise);
+            gc.EndFigure(true);
+        }
+        ctx.DrawGeometry(fill, null, geo);
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/Controls/DiagramaGabinete.cs`
+
+````csharp
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
+
+namespace HardwareOptimizer.App.Controls;
+
+/// <summary>
+/// Custom control that renders an isometric ATX mid-tower PC case with detected
+/// hardware components appearing inside the tempered glass panel.
+/// Uses a basic painter's-algorithm render: grid → east face → components → glass → top.
+/// </summary>
+public class DiagramaGabinete : Control
+{
+    // ── Bindable properties ────────────────────────────────────────────────
+
+    public static readonly StyledProperty<bool> TemCpuProperty =
+        AvaloniaProperty.Register<DiagramaGabinete, bool>(nameof(TemCpu));
+
+    public static readonly StyledProperty<bool> TemGpuProperty =
+        AvaloniaProperty.Register<DiagramaGabinete, bool>(nameof(TemGpu));
+
+    public static readonly StyledProperty<bool> TemRamProperty =
+        AvaloniaProperty.Register<DiagramaGabinete, bool>(nameof(TemRam));
+
+    public static readonly StyledProperty<bool> TemPlacaProperty =
+        AvaloniaProperty.Register<DiagramaGabinete, bool>(nameof(TemPlaca));
+
+    public static readonly StyledProperty<string> ComponenteLimitanteProperty =
+        AvaloniaProperty.Register<DiagramaGabinete, string>(nameof(ComponenteLimitante), string.Empty);
+
+    public bool TemCpu
+    {
+        get => GetValue(TemCpuProperty);
+        set => SetValue(TemCpuProperty, value);
+    }
+
+    public bool TemGpu
+    {
+        get => GetValue(TemGpuProperty);
+        set => SetValue(TemGpuProperty, value);
+    }
+
+    public bool TemRam
+    {
+        get => GetValue(TemRamProperty);
+        set => SetValue(TemRamProperty, value);
+    }
+
+    public bool TemPlaca
+    {
+        get => GetValue(TemPlacaProperty);
+        set => SetValue(TemPlacaProperty, value);
+    }
+
+    public string ComponenteLimitante
+    {
+        get => GetValue(ComponenteLimitanteProperty);
+        set => SetValue(ComponenteLimitanteProperty, value);
+    }
+
+    static DiagramaGabinete()
+    {
+        AffectsRender<DiagramaGabinete>(
+            TemCpuProperty, TemGpuProperty, TemRamProperty,
+            TemPlacaProperty, ComponenteLimitanteProperty);
+    }
+
+    // ── Case constants (grid units) ────────────────────────────────────────
+    // ATX mid-tower proportions
+    private const double CW = 2.5;   // width  (east-west, x axis)
+    private const double CD = 1.5;   // depth  (north-south, y axis)
+    private const double CH = 5.0;   // height (z axis)
+
+    // ── Isometric state (set per Render call) ──────────────────────────────
+    private double _tw; // tile width  (screen px per 1 grid unit in x or y)
+    private double _th; // tile height (= _tw / 2, 2:1 ratio)
+    private Point _orig;
+
+    // Standard isometric projection: viewer is to the South-East looking NW-up.
+    //   screen_x = orig.X + (x - y) * tw/2
+    //   screen_y = orig.Y + (x + y) * th/2 - z * th
+    private Point Iso(double x, double y, double z) =>
+        new(_orig.X + (x - y) * _tw * 0.5,
+            _orig.Y + (x + y) * _th * 0.5 - z * _th);
+
+    // ── Render ─────────────────────────────────────────────────────────────
+
+    public override void Render(DrawingContext ctx)
+    {
+        var b = Bounds;
+        if (b.Width < 10 || b.Height < 10) return;
+
+        // Scale so case fills ~65% of the smaller dimension
+        _tw = Math.Min(b.Width, b.Height) / 5.2;
+        _th = _tw * 0.5;
+
+        // Origin: front-left-bottom corner of case sits near center-bottom
+        // Shift left so the case (which extends right in x) is visually centered
+        _orig = new Point(b.Width * 0.46, b.Height * 0.82);
+
+        // 1. Background
+        ctx.FillRectangle(new SolidColorBrush(Color.Parse("#080808")), new Rect(b.Size));
+
+        // 2. Floor grid
+        DrawGrid(ctx);
+
+        // 3. Case east face (right side panel) — drawn before glass
+        DrawEastFace(ctx);
+
+        // 4. Internal components — drawn before the glass so they show through it
+        DrawComponents(ctx);
+
+        // 5. Glass panel (south face, semi-transparent) — overlays components
+        DrawGlassPanel(ctx);
+
+        // 6. Top cap
+        DrawTopFace(ctx);
+
+        // 7. Edge highlights
+        DrawEdges(ctx);
+    }
+
+    // ── Grid ───────────────────────────────────────────────────────────────
+
+    private void DrawGrid(DrawingContext ctx)
+    {
+        var pen = new Pen(new SolidColorBrush(Color.Parse("#141F14")), 0.6);
+        const int R = 9;
+        for (int i = -R; i <= R; i++)
+        {
+            ctx.DrawLine(pen, Iso(i, -R, 0), Iso(i, R, 0));  // constant-x lines
+            ctx.DrawLine(pen, Iso(-R, i, 0), Iso(R, i, 0));  // constant-y lines
+        }
+    }
+
+    // ── Case shell ─────────────────────────────────────────────────────────
+
+    private static readonly Pen BorderPen =
+        new(new SolidColorBrush(Color.Parse("#303030")), 1.0);
+
+    private void DrawEastFace(DrawingContext ctx)
+    {
+        double hw = CW / 2, hd = CD / 2;
+        Face(ctx, [
+            Iso(hw, -hd, CH), Iso(hw, hd, CH),
+            Iso(hw,  hd,  0), Iso(hw, -hd,  0),
+        ], new SolidColorBrush(Color.Parse("#1A1A1A")), BorderPen);
+    }
+
+    private void DrawGlassPanel(DrawingContext ctx)
+    {
+        double hw = CW / 2, hd = CD / 2;
+
+        // Subtle green-tinted glass — transparent enough to see components
+        var glassBrush = new LinearGradientBrush
+        {
+            StartPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+            EndPoint   = new RelativePoint(0, 0, RelativeUnit.Relative),
+            GradientStops =
+            [
+                new GradientStop(Color.FromArgb(52, 5, 30, 12), 0.0),
+                new GradientStop(Color.FromArgb(38, 5, 20,  8), 1.0),
+            ],
+        };
+        var glassPen = new Pen(new SolidColorBrush(Color.Parse("#283828")), 1.0);
+
+        Face(ctx, [
+            Iso(-hw, -hd, CH), Iso(hw, -hd, CH),
+            Iso(hw,  -hd,  0), Iso(-hw, -hd,  0),
+        ], glassBrush, glassPen);
+    }
+
+    private void DrawTopFace(DrawingContext ctx)
+    {
+        double hw = CW / 2, hd = CD / 2;
+        Face(ctx, [
+            Iso(-hw, -hd, CH), Iso(hw, -hd, CH),
+            Iso(hw,   hd, CH), Iso(-hw,  hd, CH),
+        ], new SolidColorBrush(Color.Parse("#212121")), BorderPen);
+    }
+
+    private void DrawEdges(DrawingContext ctx)
+    {
+        double hw = CW / 2, hd = CD / 2;
+        var edgePen = new Pen(new SolidColorBrush(Color.Parse("#404040")), 1.5);
+
+        // Front-left vertical edge
+        ctx.DrawLine(edgePen, Iso(-hw, -hd, 0), Iso(-hw, -hd, CH));
+        // Front-right vertical edge
+        ctx.DrawLine(edgePen, Iso(hw, -hd, 0), Iso(hw, -hd, CH));
+        // Top front horizontal edge
+        ctx.DrawLine(edgePen, Iso(-hw, -hd, CH), Iso(hw, -hd, CH));
+        // Base front edge
+        ctx.DrawLine(new Pen(new SolidColorBrush(Color.Parse("#333333")), 1.0),
+            Iso(-hw, -hd, 0), Iso(hw, -hd, 0));
+    }
+
+    // ── Components (drawn on the glass panel face, z-depth = -CD/2 + 0.1) ─
+
+    private void DrawComponents(DrawingContext ctx)
+    {
+        // y-position just inside the glass panel
+        double gy = -CD / 2 + 0.12;
+
+        DrawPsu(ctx, gy);
+
+        if (TemPlaca)   DrawMotherboard(ctx, gy);
+        if (TemCpu)     DrawCpu(ctx, gy);
+        if (TemRam)     DrawRam(ctx, gy);
+        if (TemGpu)     DrawGpu(ctx, gy);
+    }
+
+    private void DrawPsu(DrawingContext ctx, double gy)
+    {
+        // Always show PSU base block
+        var fill = new SolidColorBrush(Color.Parse("#1E1E1E"));
+        var pen  = new Pen(new SolidColorBrush(Color.Parse("#2A2A2A")), 0.7);
+        Face(ctx, [
+            Iso(-0.92, gy, 0.05), Iso(0.62, gy, 0.05),
+            Iso( 0.62, gy, 0.92), Iso(-0.92, gy, 0.92),
+        ], fill, pen);
+        // PSU fan grill circle (approximated as darker rect)
+        var grill = new SolidColorBrush(Color.FromArgb(60, 0, 0, 0));
+        Face(ctx, [
+            Iso(-0.72, gy, 0.15), Iso(-0.18, gy, 0.15),
+            Iso(-0.18, gy, 0.80), Iso(-0.72, gy, 0.80),
+        ], grill, null);
+    }
+
+    private void DrawMotherboard(DrawingContext ctx, double gy)
+    {
+        var fill = new SolidColorBrush(Color.FromArgb(200, 12, 48, 22));
+        var pen  = new Pen(new SolidColorBrush(Color.FromArgb(170, 0, 160, 60)), 0.7);
+        Face(ctx, [
+            Iso(-0.90, gy, 1.05), Iso(0.72, gy, 1.05),
+            Iso( 0.72, gy, 4.30), Iso(-0.90, gy, 4.30),
+        ], fill, pen);
+    }
+
+    private void DrawCpu(DrawingContext ctx, double gy)
+    {
+        bool bot  = ComponenteLimitante.Equals("CPU", StringComparison.OrdinalIgnoreCase);
+        var col   = bot ? Color.Parse("#FF4500") : Color.Parse("#0090FF");
+        var fill  = new SolidColorBrush(Color.FromArgb(240, col.R, col.G, col.B));
+        var pen   = new Pen(new SolidColorBrush(col), 0.9);
+
+        // Cooler (larger square, drawn first so chip sits on top)
+        var cooler = new SolidColorBrush(Color.FromArgb(150, 35, 110, 160));
+        Face(ctx, [
+            Iso(-0.78, gy, 2.72), Iso(0.06, gy, 2.72),
+            Iso( 0.06, gy, 3.78), Iso(-0.78, gy, 3.78),
+        ], cooler, null);
+
+        // CPU IHS (integrated heat spreader)
+        Face(ctx, [
+            Iso(-0.64, gy, 2.92), Iso(-0.12, gy, 2.92),
+            Iso(-0.12, gy, 3.56), Iso(-0.64, gy, 3.56),
+        ], fill, pen);
+    }
+
+    private void DrawRam(DrawingContext ctx, double gy)
+    {
+        var stick = new SolidColorBrush(Color.FromArgb(220, 0, 205, 95));
+        var glow  = new SolidColorBrush(Color.FromArgb(130, 0, 255, 120));
+
+        // Two DDR sticks side by side
+        Point[][] sticks =
+        [
+            [Iso(0.08, gy, 2.82), Iso(0.30, gy, 2.82), Iso(0.30, gy, 4.15), Iso(0.08, gy, 4.15)],
+            [Iso(0.34, gy, 2.82), Iso(0.56, gy, 2.82), Iso(0.56, gy, 4.15), Iso(0.34, gy, 4.15)],
+        ];
+
+        foreach (var pts in sticks)
+        {
+            Face(ctx, pts, stick, null);
+            // RGB stripe just above the top of each stick (screen Y decreases upward)
+            var glow0 = new Point(pts[3].X, pts[3].Y - 3);
+            var glow1 = new Point(pts[2].X, pts[2].Y - 3);
+            Face(ctx, [glow0, glow1, pts[2], pts[3]], glow, null);
+        }
+    }
+
+    private void DrawGpu(DrawingContext ctx, double gy)
+    {
+        bool bot  = ComponenteLimitante.Equals("GPU", StringComparison.OrdinalIgnoreCase);
+        var col   = bot ? Color.Parse("#FF4500") : Color.Parse("#8833EE");
+        var fill  = new SolidColorBrush(Color.FromArgb(230, col.R, col.G, col.B));
+        var pen   = new Pen(new SolidColorBrush(col), 1.0);
+        var dark  = new SolidColorBrush(Color.FromArgb(80, 0, 0, 0));
+
+        // Main PCB bar
+        Face(ctx, [
+            Iso(-0.88, gy, 1.78), Iso(0.88, gy, 1.78),
+            Iso( 0.88, gy, 2.38), Iso(-0.88, gy, 2.38),
+        ], fill, pen);
+
+        // Three fan cut-outs
+        double[][] fans = [[-0.82, -0.32], [-0.28, 0.22], [0.26, 0.76]];
+        foreach (var fan in fans)
+        {
+            Face(ctx, [
+                Iso(fan[0], gy, 1.82), Iso(fan[1], gy, 1.82),
+                Iso(fan[1], gy, 2.34), Iso(fan[0], gy, 2.34),
+            ], dark, null);
+        }
+    }
+
+    // ── Helper ─────────────────────────────────────────────────────────────
+
+    private static void Face(DrawingContext ctx, Point[] pts, IBrush? fill, IPen? pen)
+    {
+        var geo = new StreamGeometry();
+        {
+            using var gctx = geo.Open();
+            gctx.BeginFigure(pts[0], isFilled: true);
+            for (int i = 1; i < pts.Length; i++) gctx.LineTo(pts[i]);
+            gctx.EndFigure(true);
+        }
+        ctx.DrawGeometry(fill, pen, geo);
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/Controls/RealtimeChartControl.cs`
+
+````csharp
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
+
+namespace HardwareOptimizer.App.Controls;
+
+/// <summary>
+/// Controle Canvas de linha em tempo real. Mantém uma janela deslizante de 60 amostras
+/// e redesenha sem dependência de bibliotecas externas de charting.
+/// </summary>
+public sealed class RealtimeChartControl : Control
+{
+    public static readonly StyledProperty<string> LabelProperty =
+        AvaloniaProperty.Register<RealtimeChartControl, string>(nameof(Label), string.Empty);
+
+    public static readonly StyledProperty<Color> LinhaCorProperty =
+        AvaloniaProperty.Register<RealtimeChartControl, Color>(nameof(LinhaCor), Colors.Cyan);
+
+    public static readonly StyledProperty<double> MaximoProperty =
+        AvaloniaProperty.Register<RealtimeChartControl, double>(nameof(Maximo), 100.0);
+
+    public static readonly StyledProperty<double> MinimoProperty =
+        AvaloniaProperty.Register<RealtimeChartControl, double>(nameof(Minimo), 0.0);
+
+    private const int CapacidadeMaxima = 60;
+    private readonly Queue<double> _valores = new(CapacidadeMaxima + 1);
+
+    static RealtimeChartControl()
+    {
+        AffectsRender<RealtimeChartControl>(LabelProperty, LinhaCorProperty, MaximoProperty, MinimoProperty);
+    }
+
+    public string Label
+    {
+        get => GetValue(LabelProperty);
+        set => SetValue(LabelProperty, value);
+    }
+
+    public Color LinhaCor
+    {
+        get => GetValue(LinhaCorProperty);
+        set => SetValue(LinhaCorProperty, value);
+    }
+
+    public double Maximo
+    {
+        get => GetValue(MaximoProperty);
+        set => SetValue(MaximoProperty, value);
+    }
+
+    public double Minimo
+    {
+        get => GetValue(MinimoProperty);
+        set => SetValue(MinimoProperty, value);
+    }
+
+    public void AdicionarValor(double valor)
+    {
+        if (_valores.Count >= CapacidadeMaxima)
+            _valores.Dequeue();
+        _valores.Enqueue(valor);
+        InvalidateVisual();
+    }
+
+    public override void Render(DrawingContext context)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        if (w <= 0 || h <= 0) return;
+
+        var fundo = new SolidColorBrush(Color.Parse("#0A0A0A"));
+        var grade = new SolidColorBrush(Color.Parse("#1A1A1A"));
+        var linhaPen = new Pen(new SolidColorBrush(LinhaCor), 1.5);
+        var gradePen = new Pen(grade, 1);
+        var textBrush = new SolidColorBrush(Color.Parse("#888888"));
+
+        context.DrawRectangle(fundo, null, new Rect(0, 0, w, h));
+
+        // Linhas de grade horizontais a cada 25%
+        for (int i = 1; i < 4; i++)
+        {
+            double y = h * i / 4.0;
+            context.DrawLine(gradePen, new Point(0, y), new Point(w, y));
+        }
+
+        var pontos = _valores.ToArray();
+        if (pontos.Length < 2) return;
+
+        double amplitude = Maximo - Minimo;
+        if (amplitude <= 0) amplitude = 1;
+        double passoX = w / (CapacidadeMaxima - 1.0);
+
+        var geometria = new StreamGeometry();
+        using (var ctx = geometria.Open())
+        {
+            for (int i = 0; i < pontos.Length; i++)
+            {
+                double xOffset = (CapacidadeMaxima - pontos.Length + i) * passoX;
+                double valorNorm = Math.Clamp((pontos[i] - Minimo) / amplitude, 0, 1);
+                double y = h - valorNorm * h;
+
+                if (i == 0)
+                    ctx.BeginFigure(new Point(xOffset, y), false);
+                else
+                    ctx.LineTo(new Point(xOffset, y));
+            }
+        }
+
+        context.DrawGeometry(null, linhaPen, geometria);
+
+        // Valor atual no canto superior direito
+        if (pontos.Length > 0)
+        {
+            var ft = new FormattedText(
+                $"{Label}: {pontos[^1]:F0}",
+                System.Globalization.CultureInfo.InvariantCulture,
+                FlowDirection.LeftToRight,
+                Typeface.Default,
+                11,
+                textBrush);
+            context.DrawText(ft, new Point(4, 4));
+        }
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/Controls/SensorCard.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="HardwareOptimizer.App.Controls.SensorCard">
+
+  <Border CornerRadius="10" MinWidth="170" ClipToBounds="True">
+    <Border.Background>
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#0C0C1E" Offset="0" />
+        <GradientStop Color="#09091A" Offset="1" />
+      </LinearGradientBrush>
+    </Border.Background>
+
+    <Grid ColumnDefinitions="3,*">
+
+      <!-- Barra de acento lateral (colorida via code-behind) -->
+      <Rectangle x:Name="AccentRect"
+                 Grid.Column="0"
+                 Fill="#00FF88" />
+
+      <!-- Conteúdo -->
+      <Border Grid.Column="1" Padding="16,16,16,14">
+      <StackPanel Spacing="4">
+
+        <TextBlock x:Name="TituloText"
+                   FontSize="10" FontWeight="Bold"
+                   Foreground="#36365A" LetterSpacing="2" />
+
+        <TextBlock x:Name="ValorText"
+                   FontSize="32" FontWeight="Black"
+                   Foreground="#00FF88" />
+
+        <Rectangle Height="1" Margin="0,2,0,2">
+          <Rectangle.Fill>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+              <GradientStop Color="#1A1A30" Offset="0" />
+              <GradientStop Color="Transparent" Offset="1" />
+            </LinearGradientBrush>
+          </Rectangle.Fill>
+        </Rectangle>
+
+        <TextBlock x:Name="SubtituloText"
+                   FontSize="11" Foreground="#30304E" />
+
+      </StackPanel>
+      </Border>
+    </Grid>
+  </Border>
+
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Controls/SensorCard.axaml.cs`
+
+````csharp
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
+
+namespace HardwareOptimizer.App.Controls;
+
+public partial class SensorCard : UserControl
+{
+    public static readonly StyledProperty<string> TituloProperty =
+        AvaloniaProperty.Register<SensorCard, string>(nameof(Titulo), string.Empty);
+
+    public static readonly StyledProperty<string> ValorProperty =
+        AvaloniaProperty.Register<SensorCard, string>(nameof(Valor), "--");
+
+    public static readonly StyledProperty<string> SubtituloProperty =
+        AvaloniaProperty.Register<SensorCard, string>(nameof(Subtitulo), string.Empty);
+
+    /// <summary>Nível 0=estável(verde) 1=alerta(amarelo) 2=crítico(vermelho).</summary>
+    public static readonly StyledProperty<int> NivelAlertaProperty =
+        AvaloniaProperty.Register<SensorCard, int>(nameof(NivelAlerta), 0);
+
+    private static readonly IBrush CorEstavel = new SolidColorBrush(Color.Parse("#00FF88"));
+    private static readonly IBrush CorAlerta  = new SolidColorBrush(Color.Parse("#FFCC00"));
+    private static readonly IBrush CorCritico = new SolidColorBrush(Color.Parse("#FF3A5C"));
+
+    public SensorCard()
+    {
+        InitializeComponent();
+        NivelAlertaProperty.Changed.AddClassHandler<SensorCard>((s, _) => s.AtualizarCor());
+        ValorProperty.Changed.AddClassHandler<SensorCard>((s, e) =>
+        {
+            if (s.ValorText != null)
+                s.ValorText.Text = e.NewValue as string ?? "--";
+        });
+        TituloProperty.Changed.AddClassHandler<SensorCard>((s, e) =>
+        {
+            if (s.TituloText != null)
+                s.TituloText.Text = e.NewValue as string ?? string.Empty;
+        });
+        SubtituloProperty.Changed.AddClassHandler<SensorCard>((s, e) =>
+        {
+            if (s.SubtituloText != null)
+                s.SubtituloText.Text = e.NewValue as string ?? string.Empty;
+        });
+    }
+
+    public string Titulo
+    {
+        get => GetValue(TituloProperty);
+        set => SetValue(TituloProperty, value);
+    }
+
+    public string Valor
+    {
+        get => GetValue(ValorProperty);
+        set => SetValue(ValorProperty, value);
+    }
+
+    public string Subtitulo
+    {
+        get => GetValue(SubtituloProperty);
+        set => SetValue(SubtituloProperty, value);
+    }
+
+    public int NivelAlerta
+    {
+        get => GetValue(NivelAlertaProperty);
+        set => SetValue(NivelAlertaProperty, value);
+    }
+
+    private void AtualizarCor()
+    {
+        var cor = NivelAlerta switch
+        {
+            1 => CorAlerta,
+            2 => CorCritico,
+            _ => CorEstavel,
+        };
+        if (ValorText  is not null) ValorText.Foreground = cor;
+        if (AccentRect is not null) AccentRect.Fill       = cor;
     }
 }
 ````
@@ -8113,6 +12116,1214 @@ internal static class Program
         AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .LogToTrace();
+}
+````
+
+### `src/HardwareOptimizer.App/Services/ListenerAlertasServico.cs`
+
+````csharp
+using System.IO.Pipes;
+using System.Text.Json;
+
+namespace HardwareOptimizer.App.Services;
+
+public sealed class ListenerAlertasServico : IDisposable
+{
+    private const string PipeAlertas = "otimize-alertas";
+    private readonly Action<string> _callback;
+    private readonly CancellationTokenSource _cts = new();
+
+    public ListenerAlertasServico(Action<string> callback)
+    {
+        _callback = callback;
+        Task.Run(() => LoopAsync(_cts.Token));
+    }
+
+    private async Task LoopAsync(CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
+        {
+            try
+            {
+                await using var pipe = new NamedPipeServerStream(
+                    PipeAlertas, PipeDirection.In, 1,
+                    PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
+
+                await pipe.WaitForConnectionAsync(ct);
+
+                using var reader = new StreamReader(pipe);
+                var linha = await reader.ReadLineAsync(ct);
+                if (linha is not null)
+                {
+                    var payload = JsonSerializer.Deserialize<AlertaPayload>(linha,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (payload?.Mensagem is not null)
+                        _callback(payload.Mensagem);
+                }
+            }
+            catch (OperationCanceledException) { break; }
+            catch { /* App descarta se o pipe falhar ou o serviço não estiver rodando. */ }
+        }
+    }
+
+    public void Dispose() => _cts.Cancel();
+
+    private sealed record AlertaPayload(string? Mensagem);
+}
+````
+
+### `src/HardwareOptimizer.App/ViewModels/BiosGuideViewModel.cs`
+
+````csharp
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.Core.Bios;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class BiosGuideViewModel : ObservableObject
+{
+    private readonly GeradorGuiaXmpExpo _gerador = new();
+    private readonly IRoteadorIpc? _agente;
+
+    public BiosGuideViewModel(IRoteadorIpc? agente = null)
+    {
+        _agente = agente;
+        PassosXmp = new ObservableCollection<PassoGuiaViewModel>();
+    }
+
+    // ── Info da placa ─────────────────────────────────────────────────────────
+    [ObservableProperty] private string _fabricantePlaca = "–";
+    [ObservableProperty] private string _modeloPlaca = "–";
+    [ObservableProperty] private string _teclaSetup = "–";
+    [ObservableProperty] private string _avisoXmp = string.Empty;
+    [ObservableProperty] private int _passoAtual;
+
+    public string PassoAtualInstrucao =>
+        PassoAtual > 0 && PassoAtual <= PassosXmp.Count
+            ? PassosXmp[PassoAtual - 1].Instrucao
+            : string.Empty;
+
+    public bool TemPassos => PassosXmp.Count > 0;
+
+    public ObservableCollection<PassoGuiaViewModel> PassosXmp { get; }
+
+    // ── Chat IA ───────────────────────────────────────────────────────────────
+    [ObservableProperty] private string _pergunta = string.Empty;
+    [ObservableProperty] private string _respostaIa = string.Empty;
+    [ObservableProperty] private bool _perguntando;
+
+    public bool TemResposta => !string.IsNullOrEmpty(RespostaIa);
+    public bool ChatDisponivel => _agente is not null;
+
+    partial void OnRespostaIaChanged(string value) => OnPropertyChanged(nameof(TemResposta));
+
+    // ── Análise de foto ───────────────────────────────────────────────────────
+    [ObservableProperty] private bool _analisandoFoto;
+    [ObservableProperty] private string _resultadoFoto = string.Empty;
+
+    public bool TemResultadoFoto => !string.IsNullOrEmpty(ResultadoFoto);
+
+    partial void OnResultadoFotoChanged(string value) => OnPropertyChanged(nameof(TemResultadoFoto));
+
+    // ── Navegação stepper ─────────────────────────────────────────────────────
+    public void Popular(Inventario inv)
+    {
+        var id = IdentificacaoBios.DeInventario(inv);
+        FabricantePlaca = id.Fabricante;
+        ModeloPlaca = id.Modelo;
+
+        var tipoRam = inv.Memoria.FirstOrDefault()?.VelocidadeMhz >= 4800 ? "DDR5" : "DDR4";
+        var guia = _gerador.Gerar(id, tipoRam);
+
+        TeclaSetup = guia.TeclaSetup;
+        AvisoXmp = guia.Aviso;
+
+        PassosXmp.Clear();
+        for (int i = 0; i < guia.Passos.Count; i++)
+            PassosXmp.Add(new PassoGuiaViewModel(i + 1, guia.Passos[i]));
+
+        PassoAtual = PassosXmp.Count > 0 ? 1 : 0;
+        OnPropertyChanged(nameof(PassoAtualInstrucao));
+        OnPropertyChanged(nameof(TemPassos));
+    }
+
+    [RelayCommand]
+    private void ProximoPasso()
+    {
+        if (PassoAtual < PassosXmp.Count)
+        {
+            PassoAtual++;
+            OnPropertyChanged(nameof(PassoAtualInstrucao));
+        }
+    }
+
+    [RelayCommand]
+    private void PassoAnterior()
+    {
+        if (PassoAtual > 1)
+        {
+            PassoAtual--;
+            OnPropertyChanged(nameof(PassoAtualInstrucao));
+        }
+    }
+
+    public async Task AnalisarFotoAsync(string caminhoArquivo)
+    {
+        if (string.IsNullOrEmpty(caminhoArquivo) || _agente is null || AnalisandoFoto) return;
+
+        AnalisandoFoto = true;
+        ResultadoFoto = string.Empty;
+
+        try
+        {
+            var bytes = await File.ReadAllBytesAsync(caminhoArquivo).ConfigureAwait(false);
+            var base64 = Convert.ToBase64String(bytes);
+            var mediaType = Path.GetExtension(caminhoArquivo).ToLowerInvariant() switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".webp"           => "image/webp",
+                ".gif"            => "image/gif",
+                _                 => "image/png",
+            };
+
+            var payload = JsonSerializer.SerializeToElement(new { imagemBase64 = base64, mediaType });
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "analisarbiosfoto", Parametros = payload });
+
+            ResultadoFoto = resp.Sucesso && resp.Resultado is string s
+                ? s
+                : "Não foi possível interpretar a imagem. Tente uma foto mais nítida.";
+        }
+        catch (Exception ex)
+        {
+            ResultadoFoto = $"Erro ao processar imagem: {ex.Message}";
+        }
+        finally
+        {
+            AnalisandoFoto = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task PerguntarAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Pergunta) || Perguntando || _agente is null) return;
+
+        Perguntando = true;
+        RespostaIa = string.Empty;
+
+        try
+        {
+            var payload = JsonSerializer.SerializeToElement(new { pergunta = Pergunta.Trim() });
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "chat_bios", Parametros = payload });
+
+            RespostaIa = resp.Sucesso && resp.Resultado is string s
+                ? s
+                : "Não foi possível obter resposta da IA.";
+        }
+        finally
+        {
+            Perguntando = false;
+        }
+    }
+}
+
+public sealed record PassoGuiaViewModel(int Numero, string Instrucao);
+````
+
+### `src/HardwareOptimizer.App/ViewModels/ConfiguracoesViewModel.cs`
+
+````csharp
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.Features.Licensing;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class ConfiguracoesViewModel : ObservableObject
+{
+    private readonly IServicoLicenca _licenca;
+    private readonly Action _onLicencaAlterada;
+
+    public ConfiguracoesViewModel(IServicoLicenca licenca, Action onLicencaAlterada)
+    {
+        _licenca = licenca;
+        _onLicencaAlterada = onLicencaAlterada;
+        AtualizarStatus();
+    }
+
+    [ObservableProperty] private string _chaveAtivacao = string.Empty;
+    [ObservableProperty] private string _statusLicenca = string.Empty;
+    [ObservableProperty] private string _mensagemAtivacao = string.Empty;
+    [ObservableProperty] private bool _ocupado;
+    [ObservableProperty] private bool _ePremium;
+
+    public string VersaoApp => "v1.0.0-beta";
+
+    private void AtualizarStatus()
+    {
+        EPremium = _licenca.TipoAtual == TipoLicenca.Premium;
+        StatusLicenca = EPremium ? "Premium — todos os módulos desbloqueados" : "Gratuita — módulos Premium bloqueados";
+    }
+
+    [RelayCommand(CanExecute = nameof(PodeAtivar))]
+    private async Task AtivarAsync()
+    {
+        Ocupado = true;
+        MensagemAtivacao = string.Empty;
+        try
+        {
+            var resultado = await _licenca.AtivarAsync(ChaveAtivacao.Trim());
+            if (resultado.Sucesso)
+            {
+                AtualizarStatus();
+                _onLicencaAlterada();
+                MensagemAtivacao = "Licença Premium ativada com sucesso.";
+                ChaveAtivacao = string.Empty;
+            }
+            else
+            {
+                MensagemAtivacao = resultado.Erro ?? "Falha na ativação.";
+            }
+        }
+        finally
+        {
+            Ocupado = false;
+        }
+    }
+
+    private bool PodeAtivar() => !Ocupado && !string.IsNullOrWhiteSpace(ChaveAtivacao);
+
+    [RelayCommand]
+    private async Task DesativarAsync()
+    {
+        Ocupado = true;
+        MensagemAtivacao = string.Empty;
+        try
+        {
+            await _licenca.DesativarAsync();
+            AtualizarStatus();
+            _onLicencaAlterada();
+            MensagemAtivacao = "Licença revertida para versão Gratuita.";
+        }
+        finally
+        {
+            Ocupado = false;
+        }
+    }
+
+    partial void OnChaveAtivacaoChanged(string value) => AtivarCommand.NotifyCanExecuteChanged();
+    partial void OnOcupadoChanged(bool value) => AtivarCommand.NotifyCanExecuteChanged();
+}
+````
+
+### `src/HardwareOptimizer.App/ViewModels/DashboardViewModel.cs`
+
+````csharp
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class DashboardViewModel : ObservableObject
+{
+    private readonly IRoteadorIpc _agente;
+
+    public DashboardViewModel(IRoteadorIpc agente)
+    {
+        _agente = agente;
+    }
+
+    // CPU
+    [ObservableProperty] private string _cpuTemp = "--";
+    [ObservableProperty] private string _cpuClock = "--";
+    [ObservableProperty] private string _cpuUso = "--";
+    [ObservableProperty] private int _cpuNivelAlerta;
+    [ObservableProperty] private string _cpuChartLabel = "CPU Temp";
+
+    // GPU
+    [ObservableProperty] private string _gpuTemp = "--";
+    [ObservableProperty] private string _gpuClock = "--";
+    [ObservableProperty] private string _gpuVram = "--";
+    [ObservableProperty] private int _gpuNivelAlerta;
+    [ObservableProperty] private string _gpuChartLabel = "GPU Temp";
+
+    // RAM
+    [ObservableProperty] private string _ramUso = "--";
+    [ObservableProperty] private string _ramPorcentagem = "--";
+    [ObservableProperty] private int _ramNivelAlerta;
+
+    // Storage
+    [ObservableProperty] private string _storageRead = "--";
+    [ObservableProperty] private string _storageWrite = "--";
+    [ObservableProperty] private int _storageNivelAlerta;
+
+    // Histórico para gráficos (alimentado pelo ShellViewModel via callback)
+    public ObservableCollection<double> HistCpuTemp { get; } = new();
+    public ObservableCollection<double> HistGpuTemp { get; } = new();
+    public ObservableCollection<double> HistCpuClock { get; } = new();
+    public ObservableCollection<double> HistGpuClock { get; } = new();
+
+    /// <summary>Chamado pelo ShellViewModel a cada leitura de sensores.</summary>
+    public void AtualizarSensores(LeituraSensores leitura)
+    {
+        // Temperatura: pega o valor máximo (sensor mais quente = mais conservador)
+        var cpuTempVal  = ExtrairMax(leitura, TipoSensor.Temperatura, "[CPU]");
+        var gpuTempVal  = ExtrairMax(leitura, TipoSensor.Temperatura, "[GPU]");
+        var cpuCargaVal = ExtrairMax(leitura, TipoSensor.Carga, "[CPU]");
+        var gpuCargaVal = ExtrairMax(leitura, TipoSensor.Carga, "[GPU]");
+
+        // Clock: pega o valor máximo (core mais rápido = mais representativo)
+        var cpuClockVal = ExtrairMax(leitura, TipoSensor.Clock, "[CPU]");
+        var gpuClockVal = ExtrairMax(leitura, TipoSensor.Clock, "[GPU]");
+
+        // RAM: GB usados (Data) + % via Load
+        var ramUsadoVal = ExtrairSensor(leitura, TipoSensor.Outro, "Memory Used");
+        var ramPctVal   = ExtrairSensor(leitura, TipoSensor.Carga, "[RAM]");
+
+        // Storage: throughput Read Rate / Write Rate
+        var storageReadVal  = ExtrairSensor(leitura, TipoSensor.Outro, "Read Rate");
+        var storageWriteVal = ExtrairSensor(leitura, TipoSensor.Outro, "Write Rate");
+
+        if (cpuTempVal.HasValue)
+        {
+            CpuTemp = $"{cpuTempVal.Value:F0}°C";
+            CpuNivelAlerta = cpuTempVal.Value switch { > 85 => 2, > 70 => 1, _ => 0 };
+            CpuChartLabel = "CPU Temp";
+            AdicionarHistorico(HistCpuTemp, cpuTempVal.Value);
+        }
+        else if (cpuCargaVal.HasValue)
+        {
+            // Fallback: CPU temp não disponível sem admin — usa uso % do processador
+            CpuTemp = $"{cpuCargaVal.Value:F0}%";
+            CpuNivelAlerta = cpuCargaVal.Value switch { > 90 => 2, > 70 => 1, _ => 0 };
+            CpuChartLabel = "CPU Load";
+            AdicionarHistorico(HistCpuTemp, cpuCargaVal.Value);
+        }
+
+        if (gpuTempVal.HasValue)
+        {
+            GpuTemp = $"{gpuTempVal.Value:F0}°C";
+            GpuNivelAlerta = gpuTempVal.Value switch { > 85 => 2, > 75 => 1, _ => 0 };
+            GpuChartLabel = "GPU Temp";
+            AdicionarHistorico(HistGpuTemp, gpuTempVal.Value);
+        }
+        else if (gpuCargaVal.HasValue)
+        {
+            // Fallback: GPU temp não disponível sem admin — usa utilização % via perf counters
+            GpuTemp = $"{gpuCargaVal.Value:F0}%";
+            GpuNivelAlerta = gpuCargaVal.Value switch { > 90 => 2, > 70 => 1, _ => 0 };
+            GpuChartLabel = "GPU Load";
+            AdicionarHistorico(HistGpuTemp, gpuCargaVal.Value);
+        }
+
+        if (cpuClockVal.HasValue)
+        {
+            CpuClock = $"{cpuClockVal.Value:F0} MHz";
+            AdicionarHistorico(HistCpuClock, cpuClockVal.Value);
+        }
+
+        if (gpuClockVal.HasValue)
+        {
+            GpuClock = $"{gpuClockVal.Value:F0} MHz";
+            AdicionarHistorico(HistGpuClock, gpuClockVal.Value);
+        }
+
+        if (ramUsadoVal.HasValue)
+            RamUso = $"{ramUsadoVal.Value:F1} GB";
+
+        if (ramPctVal.HasValue)
+        {
+            RamPorcentagem = $"{ramPctVal.Value:F0}%";
+            RamNivelAlerta = ramPctVal.Value switch { > 90 => 2, > 75 => 1, _ => 0 };
+        }
+
+        if (storageReadVal.HasValue)  StorageRead  = $"{storageReadVal.Value:F1} MB/s";
+        if (storageWriteVal.HasValue) StorageWrite = $"{storageWriteVal.Value:F1} MB/s";
+    }
+
+    private static double? ExtrairSensor(LeituraSensores leitura, TipoSensor tipo, string fragmento)
+    {
+        return leitura.Sensores
+            .Where(s => s.Tipo == tipo &&
+                        s.Nome.Contains(fragmento, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(s => s.Nome)
+            .FirstOrDefault()?.Valor;
+    }
+
+    private static double? ExtrairMax(LeituraSensores leitura, TipoSensor tipo, string fragmento)
+    {
+        var valores = leitura.Sensores
+            .Where(s => s.Tipo == tipo &&
+                        s.Nome.Contains(fragmento, StringComparison.OrdinalIgnoreCase))
+            .Select(s => s.Valor)
+            .ToList();
+        return valores.Count > 0 ? valores.Max() : null;
+    }
+
+    private static void AdicionarHistorico(ObservableCollection<double> hist, double valor)
+    {
+        while (hist.Count >= 60)
+            hist.RemoveAt(0);
+        hist.Add(valor);
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/ViewModels/DriversViewModel.cs`
+
+````csharp
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using Avalonia.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class DriversViewModel : ObservableObject
+{
+    private readonly IRoteadorIpc? _agente;
+    private IReadOnlyList<InfoDriver> _todosDrivers = [];
+
+    public DriversViewModel(IRoteadorIpc? agente = null)
+    {
+        _agente = agente;
+        Drivers = new ObservableCollection<InfoDriverViewModel>();
+    }
+
+    [ObservableProperty] private string _statusText = "Execute o SCAN para listar os drivers instalados.";
+    [ObservableProperty] private string _ultimoScan = string.Empty;
+    [ObservableProperty] private bool _temResultados;
+    [ObservableProperty] private string _filtroTexto = string.Empty;
+    [ObservableProperty] private string _backupStatus = string.Empty;
+    [ObservableProperty] private bool _exportando;
+    [ObservableProperty] private bool _instalando;
+    [ObservableProperty] private string _statusInstalacao = string.Empty;
+
+    public bool PodeExportarBackup => _agente is not null;
+
+    partial void OnFiltroTextoChanged(string value) => AplicarFiltro();
+
+    public ObservableCollection<InfoDriverViewModel> Drivers { get; }
+
+    public void Popular(IReadOnlyList<InfoDriver> drivers)
+    {
+        _todosDrivers = drivers.OrderBy(x => x.Descricao).ToList();
+        AplicarFiltro();
+        UltimoScan = $"Último scan: {DateTime.Now:HH:mm  dd/MM/yyyy}";
+    }
+
+    private void AplicarFiltro()
+    {
+        Drivers.Clear();
+
+        var fonte = string.IsNullOrWhiteSpace(FiltroTexto)
+            ? _todosDrivers
+            : _todosDrivers.Where(d =>
+                d.Descricao.Contains(FiltroTexto, StringComparison.OrdinalIgnoreCase) ||
+                (d.Fabricante?.Contains(FiltroTexto, StringComparison.OrdinalIgnoreCase) ?? false));
+
+        foreach (var d in fonte)
+            Drivers.Add(new InfoDriverViewModel(d));
+
+        TemResultados = Drivers.Count > 0;
+        StatusText = _todosDrivers.Count == 0
+            ? "Nenhum dispositivo detectado."
+            : $"{Drivers.Count} de {_todosDrivers.Count} dispositivo(s).";
+    }
+
+    [RelayCommand]
+    private async Task InstalarDriverAsync(InfoDriverViewModel? driver)
+    {
+        if (driver?.UrlDownload is null || _agente is null || Instalando) return;
+
+        Instalando = true;
+        StatusInstalacao = $"Baixando {driver.Descricao}…";
+        try
+        {
+            var payload = JsonSerializer.SerializeToElement(new
+            {
+                urlDownload = driver.UrlDownload,
+                descricao   = driver.Descricao,
+            });
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "instalardriver", Parametros = payload });
+
+            StatusInstalacao = resp.Sucesso
+                ? "✓ Driver instalado com sucesso."
+                : $"Falha: {resp.Erro}";
+        }
+        finally
+        {
+            Instalando = false;
+        }
+    }
+
+    [RelayCommand]
+    private void AbrirDownload(InfoDriverViewModel? driver)
+    {
+        if (driver?.UrlDownload is null) return;
+        System.Diagnostics.Process.Start(
+            new System.Diagnostics.ProcessStartInfo(driver.UrlDownload) { UseShellExecute = true });
+    }
+
+    [RelayCommand]
+    private async Task ExportarBackupAsync()
+    {
+        if (_agente is null || Exportando) return;
+
+        Exportando = true;
+        BackupStatus = "Exportando drivers via pnputil…";
+        try
+        {
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "exportarbackupdrivers" });
+
+            BackupStatus = resp.Sucesso
+                ? $"Backup salvo em: {resp.Resultado}"
+                : "Falha: " + resp.Erro;
+        }
+        finally
+        {
+            Exportando = false;
+        }
+    }
+}
+
+public sealed class InfoDriverViewModel
+{
+    public InfoDriverViewModel(InfoDriver d)
+    {
+        HardwareId = d.HardwareId;
+        Descricao = d.Descricao;
+        Fabricante = string.IsNullOrWhiteSpace(d.Fabricante) ? "—" : d.Fabricante;
+        VersaoAtual = string.IsNullOrWhiteSpace(d.VersaoAtual) ? "—" : d.VersaoAtual;
+
+        (StatusTexto, CorStatus, CorFundo) = d.Status switch
+        {
+            StatusDriver.Atualizado            => ("ATUALIZADO",  new SolidColorBrush(Color.Parse("#00FF88")), new SolidColorBrush(Color.Parse("#00FF8815"))),
+            StatusDriver.AtualizacaoDisponivel => ("ATUALIZAÇÃO", new SolidColorBrush(Color.Parse("#FFCC00")), new SolidColorBrush(Color.Parse("#FFCC0015"))),
+            _                                  => ("—",           new SolidColorBrush(Color.Parse("#484865")), new SolidColorBrush(Color.Parse("#48486510"))),
+        };
+
+        CertificadoWhql = d.CertificadoWhql;
+
+        UrlDownload = d.UrlDownload;
+        TemDownload = d.Status == StatusDriver.AtualizacaoDisponivel
+                      && !string.IsNullOrEmpty(d.UrlDownload);
+
+        var hwid = d.HardwareId;
+        HwidCurto = hwid.Length > 50 ? hwid[..47] + "…" : hwid;
+    }
+
+    public string  HardwareId     { get; }
+    public string  Descricao      { get; }
+    public string  Fabricante     { get; }
+    public string  VersaoAtual    { get; }
+    public string  StatusTexto    { get; }
+    public IBrush  CorStatus      { get; }
+    public IBrush  CorFundo       { get; }
+    public bool    CertificadoWhql { get; }
+    public string? UrlDownload    { get; }
+    public bool    TemDownload    { get; }
+    public string  HwidCurto     { get; }
+}
+````
+
+### `src/HardwareOptimizer.App/ViewModels/HomeViewModel.cs`
+
+````csharp
+using Avalonia.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class HomeViewModel : ObservableObject
+{
+    private readonly IRoteadorIpc _agente;
+    private readonly Action _navegarParaDashboard;
+
+    private readonly Action<Inventario>? _onScanCompleto;
+
+    public HomeViewModel(IRoteadorIpc agente, Action navegarParaDashboard, Action<Inventario>? onScanCompleto = null)
+    {
+        _agente = agente;
+        _navegarParaDashboard = navegarParaDashboard;
+        _onScanCompleto = onScanCompleto;
+    }
+
+    // ── Scan state ─────────────────────────────────────────────────────────
+
+    [ObservableProperty] private bool _escaneando;
+    [ObservableProperty] private bool _scanConcluido;
+    [ObservableProperty] private double _progressoScan;
+
+    // ── Scan button text ───────────────────────────────────────────────────
+
+    [ObservableProperty] private string _textoBotaoScan    = "SCAN";
+    [ObservableProperty] private string _subtextoBotaoScan = "detectar hardware";
+
+    // ── Status labels ──────────────────────────────────────────────────────
+
+    [ObservableProperty] private string _statusText      = "Pronto para escanear";
+    [ObservableProperty] private string _ultimoScanLabel = "Último scan: nunca";
+
+    // ── Left card (component count) ────────────────────────────────────────
+
+    [ObservableProperty] private string _contadorDispositivos = "--";
+    [ObservableProperty] private IBrush _corContador = new SolidColorBrush(Color.Parse("#3A3A3A"));
+
+    // ── Right card (BIOS) ──────────────────────────────────────────────────
+
+    [ObservableProperty] private string _iconeBios  = "--";
+    [ObservableProperty] private string _statusBios = "aguardando";
+    [ObservableProperty] private IBrush _corBios    = new SolidColorBrush(Color.Parse("#3A3A3A"));
+
+    // ── Fases do scan (limite superior de progresso → rótulo exibido) ──────
+
+    private static readonly (double Ate, string Fase, string Status)[] _fases =
+    [
+        (0.14, "hardware básico",     "Lendo CPU, memória e placa-mãe..."),
+        (0.28, "S.M.A.R.T. discos",  "Verificando saúde dos discos..."),
+        (0.44, "drivers",             "Identificando dispositivos e drivers..."),
+        (0.58, "startup & serviços",  "Mapeando inicialização do Windows..."),
+        (0.72, "programas",           "Listando programas instalados..."),
+        (0.88, "arq. temporários",    "Analisando pastas temporárias..."),
+    ];
+
+    // ── Commands ───────────────────────────────────────────────────────────
+
+    [RelayCommand]
+    private async Task ScanAsync()
+    {
+        if (Escaneando) return;
+
+        Escaneando        = true;
+        ProgressoScan     = 0;
+        TextoBotaoScan    = "0%";
+        SubtextoBotaoScan = _fases[0].Fase;
+        StatusText        = _fases[0].Status;
+
+        using var cts = new CancellationTokenSource();
+        _ = AvançarProgressoAsync(cts.Token);
+
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "coletar" });
+            cts.Cancel();
+
+            if (resp.Sucesso && resp.Resultado is Inventario inv)
+            {
+                AplicarResultados(inv);
+                _onScanCompleto?.Invoke(inv);
+            }
+            else
+            {
+                StatusText        = "Falha ao detectar hardware";
+                TextoBotaoScan    = "SCAN";
+                SubtextoBotaoScan = "tentar novamente";
+            }
+        }
+        finally
+        {
+            Escaneando = false;
+        }
+    }
+
+    [RelayCommand]
+    private void IrParaDashboard() => _navegarParaDashboard();
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+
+    private void AplicarResultados(Inventario inv)
+    {
+        // Sum detected components: 1 CPU + GPUs + RAM sticks + 1 Mobo
+        int total = 1 + inv.Gpu.Count + inv.Memoria.Count + 1;
+        ContadorDispositivos = total.ToString();
+        CorContador = new SolidColorBrush(Color.Parse("#00C870"));
+
+        var bios = inv.Placa.VersaoBios;
+        if (!string.IsNullOrWhiteSpace(bios))
+        {
+            IconeBios  = "✓";
+            StatusBios = $"v{bios}";
+            CorBios    = new SolidColorBrush(Color.Parse("#00FF88"));
+        }
+        else
+        {
+            IconeBios  = "?";
+            StatusBios = "não detectado";
+            CorBios    = new SolidColorBrush(Color.Parse("#FF8C00"));
+        }
+
+        ProgressoScan     = 1.0;
+        TextoBotaoScan    = "100%";
+        SubtextoBotaoScan = "concluído";
+        UltimoScanLabel   = $"Último scan: {DateTime.Now:HH:mm  dd/MM/yyyy}";
+        StatusText        = "Hardware detectado com sucesso";
+        ScanConcluido     = true;
+    }
+
+    private async Task AvançarProgressoAsync(CancellationToken ct)
+    {
+        // Preenche 0 → 88 % em ~15 s (passo de 0.01 a cada 170 ms).
+        // O salto final para 100 % acontece em AplicarResultados().
+        try
+        {
+            while (!ct.IsCancellationRequested && ProgressoScan < 0.88)
+            {
+                await Task.Delay(170, ct);
+                if (ct.IsCancellationRequested) break;
+                ProgressoScan = Math.Min(0.88, ProgressoScan + 0.01);
+
+                int pct = (int)(ProgressoScan * 100);
+                TextoBotaoScan = $"{pct}%";
+
+                var fase = _fases.FirstOrDefault(f => ProgressoScan <= f.Ate);
+                if (fase != default)
+                {
+                    SubtextoBotaoScan = fase.Fase;
+                    StatusText        = fase.Status;
+                }
+            }
+        }
+        catch (OperationCanceledException) { }
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/ViewModels/IaCopilotoViewModel.cs`
+
+````csharp
+using System.Collections.ObjectModel;
+using System.Text;
+using System.Text.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.Cerebro;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class IaCopilotoViewModel : ObservableObject
+{
+    private readonly IRoteadorIpc _agente;
+
+    public IaCopilotoViewModel(IRoteadorIpc agente)
+    {
+        _agente = agente;
+        Mensagens = new ObservableCollection<MensagemChatViewModel>();
+        Mensagens.CollectionChanged += (_, _) => OnPropertyChanged(nameof(MensagensVazio));
+    }
+
+    [ObservableProperty] private bool _ocupado;
+    [ObservableProperty] private string _inputUsuario = string.Empty;
+    [ObservableProperty] private bool _temAlertaPendente;
+
+    public bool MensagensVazio => Mensagens.Count == 0;
+
+    public ObservableCollection<MensagemChatViewModel> Mensagens { get; }
+
+    /// <summary>Alerta enviado pelo Windows Service. Inserido no topo do chat.</summary>
+    public void ReceberAlerta(string mensagem)
+    {
+        Mensagens.Insert(0, new MensagemChatViewModel(
+            "Sistema", mensagem, DateTimeOffset.Now, EhAlerta: true));
+        TemAlertaPendente = true;
+    }
+
+    public void MarcarComoLido() => TemAlertaPendente = false;
+
+    [RelayCommand]
+    private async Task EnviarAsync()
+    {
+        if (string.IsNullOrWhiteSpace(InputUsuario)) return;
+
+        var texto = InputUsuario.Trim();
+        InputUsuario = string.Empty;
+        Mensagens.Add(new MensagemChatViewModel("Você", texto, DateTimeOffset.Now));
+
+        Ocupado = true;
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo = "proposta",
+                Parametros = JsonSerializer.SerializeToElement(new { pergunta = texto }),
+            });
+
+            var resposta = resp.Sucesso
+                ? FormatarResposta(resp.Resultado)
+                : "Erro: " + resp.Erro;
+
+            Mensagens.Add(new MensagemChatViewModel("IA Copiloto", resposta, DateTimeOffset.Now));
+        }
+        finally { Ocupado = false; }
+    }
+
+    private static string FormatarResposta(object? resultado)
+    {
+        if (resultado is MatrizDecisao matriz)
+        {
+            if (matriz.Itens.Count == 0)
+                return "Nenhuma otimização identificada para o hardware atual.";
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"Encontrei {matriz.Itens.Count} otimização(ões) para o seu PC:\n");
+
+            foreach (var item in matriz.Itens.OrderBy(i => i.Prioridade))
+            {
+                var risco = item.Risco switch
+                {
+                    HardwareOptimizer.Core.Common.NivelRisco.MuitoBaixo => "Muito Baixo",
+                    HardwareOptimizer.Core.Common.NivelRisco.Baixo => "Baixo",
+                    HardwareOptimizer.Core.Common.NivelRisco.Medio => "Médio",
+                    HardwareOptimizer.Core.Common.NivelRisco.Alto => "Alto",
+                    _ => "Nenhum",
+                };
+                sb.AppendLine($"• [{item.Categoria}] {item.AcaoId}");
+                sb.AppendLine($"  Risco: {risco}  |  Prioridade: {item.Prioridade}");
+                sb.AppendLine($"  {item.Justificativa}");
+                if (!string.IsNullOrEmpty(item.GanhoEsperado))
+                    sb.AppendLine($"  Ganho esperado: {item.GanhoEsperado}");
+                sb.AppendLine();
+            }
+
+            if (matriz.Avisos.Count > 0)
+            {
+                sb.AppendLine("⚠ Avisos:");
+                foreach (var aviso in matriz.Avisos)
+                    sb.AppendLine($"  • {aviso}");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        return resultado?.ToString() ?? "Sem resposta.";
+    }
+}
+
+public sealed record MensagemChatViewModel(
+    string Autor,
+    string Texto,
+    DateTimeOffset Hora,
+    bool EhAlerta = false)
+{
+    public bool   EhUsuario => Autor == "Você";
+    public string CorAutor  => EhAlerta ? "#FF8C00" : EhUsuario ? "#484865" : "#00C8FF";
+}
+````
+
+### `src/HardwareOptimizer.App/ViewModels/InfoSistemaViewModel.cs`
+
+````csharp
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HardwareOptimizer.Core.Contracts;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class InfoSistemaViewModel : ObservableObject
+{
+    // Sistema Operacional
+    [ObservableProperty] private string _nomeOs = "–";
+    [ObservableProperty] private string _versaoOs = "–";
+    [ObservableProperty] private string _arquiteturaOs = "–";
+
+    // CPU
+    [ObservableProperty] private string _nomeCpu = "–";
+    [ObservableProperty] private string _fabricanteCpu = "–";
+    [ObservableProperty] private string _soqueteCpu = "–";
+    [ObservableProperty] private string _nucleosCpu = "–";
+    [ObservableProperty] private string _clockBaseCpu = "–";
+    [ObservableProperty] private string _clockAtualCpu = "–";
+    [ObservableProperty] private string _cacheL2Cpu = "–";
+    [ObservableProperty] private string _cacheL3Cpu = "–";
+    [ObservableProperty] private string _tempIdleCpu = "–";
+
+    // RAM — resumo
+    [ObservableProperty] private string _resumoRam = "–";
+    public ObservableCollection<SlotRamVm> SlotsRam { get; } = [];
+
+    // GPU
+    [ObservableProperty] private string _nomeGpu = "–";
+    [ObservableProperty] private string _vramGpu = "–";
+    [ObservableProperty] private string _resolucaoGpu = "–";
+    [ObservableProperty] private string _taxaGpu = "–";
+    [ObservableProperty] private string _driverGpu = "–";
+    [ObservableProperty] private string _dataDriverGpu = "–";
+    [ObservableProperty] private string _linkWidthAtual = "–";
+    [ObservableProperty] private string _linkWidthMax = "x16";
+    [ObservableProperty] private string _linkSpeedAtual = "–";
+    [ObservableProperty] private string _linkSpeedMax = "–";
+    [ObservableProperty] private string _tempIdleGpu = "–";
+
+    // Placa-mãe
+    [ObservableProperty] private string _fabricante = "–";
+    [ObservableProperty] private string _modelo = "–";
+    [ObservableProperty] private string _busSpecs = "–";
+    [ObservableProperty] private string _chipset = "–";
+    [ObservableProperty] private string _secureBoot = "–";
+
+    // BIOS
+    [ObservableProperty] private string _fabricanteBios = "–";
+    [ObservableProperty] private string _versaoBios = "–";
+    [ObservableProperty] private string _dataBios = "–";
+    [ObservableProperty] private string _modoBios = "–";
+
+    // Armazenamento
+    public ObservableCollection<DadosDiscoVm> DiscosSistema { get; } = [];
+    [ObservableProperty] private bool _temDiscos;
+
+    // Rede
+    public ObservableCollection<InterfaceRedeVm> InterfacesRede { get; } = [];
+    [ObservableProperty] private bool _temRede;
+
+    // S.M.A.R.T.
+    public ObservableCollection<SaudeDiscoVm> SaudeDiscosSmart { get; } = [];
+    [ObservableProperty] private bool _temSaudeDiscos;
+
+    [ObservableProperty] private bool _comDados;
+
+    public void Popular(Inventario inv)
+    {
+        // Sistema Operacional
+        NomeOs        = inv.SistemaOperacional.Nome ?? "Windows";
+        VersaoOs      = inv.SistemaOperacional.Versao ?? "–";
+        ArquiteturaOs = inv.SistemaOperacional.Arquitetura ?? "–";
+
+        // CPU
+        var cpu = inv.Cpu;
+        NomeCpu       = cpu.Nome;
+        FabricanteCpu = cpu.Fabricante ?? "–";
+        SoqueteCpu    = cpu.Soquete ?? "–";
+        NucleosCpu    = (cpu.Nucleos.HasValue && cpu.Threads.HasValue)
+            ? $"{cpu.Nucleos} núcleos  /  {cpu.Threads} threads"
+            : cpu.Nucleos.HasValue ? $"{cpu.Nucleos} núcleos" : "–";
+        ClockBaseCpu  = cpu.ClockBaseMhz.HasValue  ? FormatarClock(cpu.ClockBaseMhz.Value)  : "–";
+        ClockAtualCpu = cpu.ClockAtualMhz.HasValue ? FormatarClock(cpu.ClockAtualMhz.Value) : "–";
+        CacheL2Cpu    = cpu.L2CacheKb.HasValue     ? FormatarCache(cpu.L2CacheKb.Value)     : "–";
+        CacheL3Cpu    = cpu.L3CacheKb.HasValue     ? FormatarCache(cpu.L3CacheKb.Value)     : "–";
+        TempIdleCpu   = cpu.TempIdleC.HasValue     ? $"{cpu.TempIdleC:F1} °C"               : "–";
+
+        // RAM
+        SlotsRam.Clear();
+        if (inv.Memoria.Count > 0)
+        {
+            var totalGb = inv.Memoria.Sum(m => m.TamanhoGb ?? 0);
+            var tipo    = inv.Memoria.FirstOrDefault(m => m.Tipo != null)?.Tipo ?? "DDR";
+            var vel     = inv.Memoria.FirstOrDefault(m => m.VelocidadeConfiguradaMhz > 0)?.VelocidadeConfiguradaMhz
+                       ?? inv.Memoria.FirstOrDefault(m => m.VelocidadeMhz > 0)?.VelocidadeMhz;
+            var canais  = inv.Memoria.Count >= 2 ? "Dual-Channel" : "Single-Channel";
+            ResumoRam   = vel.HasValue ? $"{totalGb} GB {tipo}-{vel}  ·  {canais}" : $"{totalGb} GB {tipo}  ·  {canais}";
+
+            foreach (var m in inv.Memoria)
+                SlotsRam.Add(new SlotRamVm(m));
+        }
+
+        // GPU
+        if (inv.Gpu.Count > 0)
+        {
+            var gpu = inv.Gpu[0];
+            NomeGpu        = gpu.Nome;
+            VramGpu        = gpu.VramMb.HasValue ? FormatarVram(gpu.VramMb.Value) : "–";
+            ResolucaoGpu   = gpu.Resolucao ?? "–";
+            TaxaGpu        = gpu.TaxaAtualizacaoHz.HasValue ? $"{gpu.TaxaAtualizacaoHz} Hz" : "–";
+            DriverGpu      = gpu.VersaoDriver ?? "–";
+            DataDriverGpu  = gpu.DataDriver ?? "–";
+            LinkWidthAtual = gpu.LinkWidthAtual ?? "–";
+            LinkWidthMax   = gpu.LinkWidthMax ?? "x16";
+            LinkSpeedAtual = gpu.LinkSpeedAtual ?? "–";
+            LinkSpeedMax   = gpu.LinkSpeedMax ?? DerivarSpeedMaxDoChipset(inv.Placa.BusSpecs);
+            TempIdleGpu    = gpu.TempIdleC.HasValue ? $"{gpu.TempIdleC:F1} °C" : "–";
+        }
+
+        // Placa-mãe
+        Fabricante  = inv.Placa.Fabricante;
+        Modelo      = inv.Placa.Modelo;
+        BusSpecs    = inv.Placa.BusSpecs ?? "–";
+        Chipset     = inv.Placa.Chipset ?? "–";
+        SecureBoot  = inv.Placa.SecureBoot.HasValue
+            ? (inv.Placa.SecureBoot.Value ? "Ativado" : "Desativado")
+            : "–";
+
+        // BIOS
+        VersaoBios     = inv.Placa.VersaoBios ?? "–";
+        DataBios       = inv.Placa.DataBios ?? "–";
+        ModoBios       = inv.Placa.Modo ?? "–";
+        FabricanteBios = InferirFabricanteBios(inv.Placa.Fabricante);
+
+        // Armazenamento
+        DiscosSistema.Clear();
+        if (inv.Metricas?.Discos != null)
+        {
+            foreach (var d in inv.Metricas.Discos)
+                DiscosSistema.Add(new DadosDiscoVm(d));
+        }
+        TemDiscos = DiscosSistema.Count > 0;
+
+        // Rede
+        InterfacesRede.Clear();
+        foreach (var r in inv.Rede)
+            InterfacesRede.Add(new InterfaceRedeVm(r));
+        TemRede = InterfacesRede.Count > 0;
+
+        // S.M.A.R.T.
+        SaudeDiscosSmart.Clear();
+        foreach (var s in inv.SaudeDiscos)
+            SaudeDiscosSmart.Add(new SaudeDiscoVm(s));
+        TemSaudeDiscos = SaudeDiscosSmart.Count > 0;
+
+        ComDados = true;
+    }
+
+    private static string FormatarClock(int mhz) =>
+        mhz >= 1000 ? $"{mhz / 1000.0:F2} GHz" : $"{mhz} MHz";
+
+    private static string FormatarCache(int kb) =>
+        kb >= 1024 ? $"{kb / 1024} MB" : $"{kb} KB";
+
+    private static string FormatarVram(int mb) =>
+        mb >= 1024 ? $"{mb / 1024} GB" : $"{mb} MB";
+
+    private static string InferirFabricanteBios(string fabricante)
+    {
+        if (fabricante.Contains("ASUS",     StringComparison.OrdinalIgnoreCase) ||
+            fabricante.Contains("Gigabyte", StringComparison.OrdinalIgnoreCase) ||
+            fabricante.Contains("ASRock",   StringComparison.OrdinalIgnoreCase) ||
+            fabricante.Contains("MSI",      StringComparison.OrdinalIgnoreCase))
+            return "American Megatrends Inc.";
+        return "–";
+    }
+
+    private static string DerivarSpeedMaxDoChipset(string? busSpecs)
+    {
+        if (busSpecs == null) return "–";
+        if (busSpecs.Contains("5.0")) return "32.0 GT/s";
+        if (busSpecs.Contains("4.0")) return "16.0 GT/s";
+        if (busSpecs.Contains("3.0")) return "8.0 GT/s";
+        return "–";
+    }
+}
+
+public sealed class SlotRamVm
+{
+    public SlotRamVm(ModuloMemoria m)
+    {
+        Slot       = m.Slot ?? "–";
+        Tamanho    = m.TamanhoGb.HasValue ? $"{m.TamanhoGb} GB" : "–";
+        TipoVel    = FormatarTipoVel(m);
+        Fabricante = m.Fabricante ?? "–";
+        Modelo     = m.Modelo?.Trim() ?? "–";
+        FormFactor = m.FormFactor ?? "–";
+        Tensao     = m.Tensao ?? "–";
+    }
+
+    public string Slot       { get; }
+    public string Tamanho    { get; }
+    public string TipoVel    { get; }
+    public string Fabricante { get; }
+    public string Modelo     { get; }
+    public string FormFactor { get; }
+    public string Tensao     { get; }
+
+    private static string FormatarTipoVel(ModuloMemoria m)
+    {
+        var tipo = m.Tipo ?? "DDR";
+        var vel  = m.VelocidadeConfiguradaMhz ?? m.VelocidadeMhz;
+        return vel.HasValue ? $"{tipo}-{vel}" : tipo;
+    }
+}
+
+public sealed class DadosDiscoVm
+{
+    public DadosDiscoVm(MetricaDisco d)
+    {
+        Letra      = d.Letra;
+        Total      = $"{d.TotalGb} GB";
+        Usado      = $"{d.UsadoGb} GB";
+        Livre      = $"{d.LivreGb} GB";
+        UsoPercent = $"{d.UsoPercent}%";
+        CorUso     = d.UsoPercent >= 90 ? "#CC3333"
+                   : d.UsoPercent >= 75 ? "#FFAA00"
+                   : "#00C870";
+    }
+
+    public string Letra      { get; }
+    public string Total      { get; }
+    public string Usado      { get; }
+    public string Livre      { get; }
+    public string UsoPercent { get; }
+    public string CorUso     { get; }
+}
+
+public sealed class InterfaceRedeVm
+{
+    public InterfaceRedeVm(InterfaceRede r)
+    {
+        Nome = r.Nome;
+        Tipo = r.Tipo ?? "–";
+        Mac  = r.EnderecoMac ?? "–";
+    }
+
+    public string Nome { get; }
+    public string Tipo { get; }
+    public string Mac  { get; }
+}
+
+public sealed class SaudeDiscoVm
+{
+    public SaudeDiscoVm(SaudeDisco s)
+    {
+        Modelo        = s.Modelo;
+        Letra         = s.Letra;
+        VidaRestante  = $"{s.PorcentagemVidaRestante:F0}%";
+        HorasUso      = s.HorasUso > 0 ? $"{s.HorasUso:N0} h" : "–";
+        TbwEscrito    = s.TbwEscritoGb > 0 ? $"{s.TbwEscritoGb} GB" : "–";
+        Status        = s.Nivel switch
+        {
+            NivelSaudeDisco.Bom     => "Bom",
+            NivelSaudeDisco.Atencao => "Atenção",
+            NivelSaudeDisco.Critico => "Crítico",
+            _ => "–"
+        };
+        CorStatus     = s.Nivel switch
+        {
+            NivelSaudeDisco.Bom     => "#00C870",
+            NivelSaudeDisco.Atencao => "#FFAA00",
+            NivelSaudeDisco.Critico => "#CC3333",
+            _ => "#555555"
+        };
+        Erros    = s.TemErrosNaoCorrigiveis ? "Sim" : "Não";
+        CorErros = s.TemErrosNaoCorrigiveis ? "#CC3333" : "#555555";
+        Setores  = s.SetoresComProblema > 0 ? s.SetoresComProblema.ToString() : "–";
+    }
+
+    public string Modelo       { get; }
+    public string Letra        { get; }
+    public string VidaRestante { get; }
+    public string HorasUso     { get; }
+    public string TbwEscrito   { get; }
+    public string Status       { get; }
+    public string CorStatus    { get; }
+    public string Erros        { get; }
+    public string CorErros     { get; }
+    public string Setores      { get; }
 }
 ````
 
@@ -8283,6 +13494,2912 @@ public partial class MainWindowViewModel : ObservableObject
 }
 ````
 
+### `src/HardwareOptimizer.App/ViewModels/OtimizadorWindowsViewModel.cs`
+
+````csharp
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao, Servicos }
+
+public partial class OtimizadorWindowsViewModel : ObservableObject
+{
+    private readonly IRoteadorIpc _agente;
+    private List<ProgramaInstaladoViewModel> _todosProgramas = [];
+
+    private List<ServicoViewModel> _todosServicos = [];
+    private bool _servicosCarregados;
+
+    public OtimizadorWindowsViewModel(IRoteadorIpc agente)
+    {
+        _agente = agente;
+        EntradasStartup = [];
+        ProgramasFiltrados = [];
+        ServicosFiltrados = [];
+        EfeitosVisuais =
+        [
+            new("Animações ao minimizar e maximizar janelas"),
+            new("Animações na barra de tarefas e área de notificação"),
+            new("Transparência e vidro (Aero / DWM compositing)"),
+            new("Sombras sob janelas e cursor do mouse"),
+            new("Mostrar conteúdo das janelas ao arrastar"),
+            new("Efeito Peek — pré-visualização na área de trabalho"),
+            new("Fade e deslizamento de menus e dicas de ferramenta"),
+            new("Miniaturas de janelas na barra de tarefas (Aero Snap)"),
+            new("Suavização de bordas de fontes de tela (ClearType sub-pixel)"),
+        ];
+    }
+
+    // ── Submenu ────────────────────────────────────────────────────────────
+
+    [ObservableProperty] private SubPaginaOtimizador _subPagina = SubPaginaOtimizador.EfeitosVisuais;
+
+    partial void OnSubPaginaChanged(SubPaginaOtimizador value)
+    {
+        OnPropertyChanged(nameof(MostrarEfeitosVisuais));
+        OnPropertyChanged(nameof(MostrarProgramas));
+        OnPropertyChanged(nameof(MostrarInicializacao));
+        OnPropertyChanged(nameof(MostrarServicos));
+        OnPropertyChanged(nameof(AbaEfeitosAtiva));
+        OnPropertyChanged(nameof(AbaProgramasAtiva));
+        OnPropertyChanged(nameof(AbaInicializacaoAtiva));
+        OnPropertyChanged(nameof(AbaServicosAtiva));
+
+        if (value == SubPaginaOtimizador.Servicos && !_servicosCarregados)
+            _ = CarregarServicosAsync();
+    }
+
+    public bool MostrarEfeitosVisuais => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
+    public bool MostrarProgramas      => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
+    public bool MostrarInicializacao  => SubPagina == SubPaginaOtimizador.Inicializacao;
+    public bool MostrarServicos       => SubPagina == SubPaginaOtimizador.Servicos;
+    public bool AbaEfeitosAtiva       => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
+    public bool AbaProgramasAtiva     => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
+    public bool AbaInicializacaoAtiva => SubPagina == SubPaginaOtimizador.Inicializacao;
+    public bool AbaServicosAtiva      => SubPagina == SubPaginaOtimizador.Servicos;
+
+    [RelayCommand] private void IrParaEfeitosVisuais() => SubPagina = SubPaginaOtimizador.EfeitosVisuais;
+    [RelayCommand] private void IrParaProgramas()      => SubPagina = SubPaginaOtimizador.ProgramasInstalados;
+    [RelayCommand] private void IrParaInicializacao()  => SubPagina = SubPaginaOtimizador.Inicializacao;
+    [RelayCommand] private void IrParaServicos()       => SubPagina = SubPaginaOtimizador.Servicos;
+
+    // ── Estado geral ───────────────────────────────────────────────────────
+
+    [ObservableProperty] private bool   _ocupado;
+    [ObservableProperty] private string _statusOtimizador       = "Pronto.";
+    [ObservableProperty] private bool   _efeitosVisuaisDesativados;
+
+    // ── Efeitos Visuais ────────────────────────────────────────────────────
+
+    public ObservableCollection<EfeitoVisualViewModel> EfeitosVisuais { get; }
+
+    [RelayCommand]
+    private void SelecionarTudo() { foreach (var e in EfeitosVisuais) e.Selecionado = true; }
+
+    [RelayCommand]
+    private void LimparSelecao() { foreach (var e in EfeitosVisuais) e.Selecionado = false; }
+
+    [RelayCommand]
+    private async Task AplicarEfeitosSelecionadosAsync()
+    {
+        var selecionados = EfeitosVisuais.Where(e => e.Selecionado).ToList();
+        if (selecionados.Count == 0)
+        {
+            StatusOtimizador = "Nenhum efeito selecionado.";
+            return;
+        }
+
+        Ocupado = true;
+        StatusOtimizador = $"Desativando {selecionados.Count} efeito(s)…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "aplicar",
+                Parametros = JsonSerializer.SerializeToElement(
+                    new { acoes = new[] { "SO_EFEITOS_VISUAIS_DESEMPENHO" } }),
+            });
+            EfeitosVisuaisDesativados = resp.Sucesso;
+            StatusOtimizador = resp.Sucesso
+                ? $"{selecionados.Count} efeito(s) desativado(s) com sucesso."
+                : "Falha: " + resp.Erro;
+        }
+        finally { Ocupado = false; }
+    }
+
+    // ── Programas Instalados ───────────────────────────────────────────────
+
+    [ObservableProperty] private string _filtroProgramas     = "";
+    [ObservableProperty] private string _totalProgramasLabel = "—";
+    [ObservableProperty] private string _desinstalarLabel    = "Desinstalar selecionados";
+
+    public ObservableCollection<ProgramaInstaladoViewModel> ProgramasFiltrados { get; }
+
+    partial void OnFiltroProgramasChanged(string value) => AplicarFiltro();
+
+    public void PopularProgramas(IReadOnlyList<ProgramaInstalado> lista)
+    {
+        foreach (var p in _todosProgramas)
+            p.PropertyChanged -= OnProgramaPropertyChanged;
+
+        _todosProgramas = lista
+            .OrderBy(p => p.Nome, StringComparer.OrdinalIgnoreCase)
+            .Select(p => new ProgramaInstaladoViewModel(p))
+            .ToList();
+
+        foreach (var p in _todosProgramas)
+            p.PropertyChanged += OnProgramaPropertyChanged;
+
+        AplicarFiltro();
+    }
+
+    private void AplicarFiltro()
+    {
+        var filtro = FiltroProgramas.Trim();
+        var resultado = string.IsNullOrEmpty(filtro)
+            ? _todosProgramas
+            : _todosProgramas.Where(p =>
+                p.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
+                p.Fabricante.Contains(filtro, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        ProgramasFiltrados.Clear();
+        foreach (var p in resultado) ProgramasFiltrados.Add(p);
+
+        int n = resultado.Count;
+        TotalProgramasLabel = n == 0
+            ? "Nenhum programa encontrado"
+            : $"{n} programa{(n != 1 ? "s" : "")} encontrado{(n != 1 ? "s" : "")}";
+
+        AtualizarDesinstalarLabel();
+    }
+
+    private void OnProgramaPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ProgramaInstaladoViewModel.Selecionado))
+            AtualizarDesinstalarLabel();
+    }
+
+    private void AtualizarDesinstalarLabel()
+    {
+        int n = _todosProgramas.Count(p => p.Selecionado);
+        DesinstalarLabel = n == 0
+            ? "Desinstalar selecionados"
+            : $"Desinstalar {n} selecionado{(n != 1 ? "s" : "")}";
+    }
+
+    [RelayCommand]
+    private async Task DesinstalarSelecionadosAsync()
+    {
+        var selecionados = _todosProgramas.Where(p => p.Selecionado).ToList();
+        if (selecionados.Count == 0)
+        {
+            StatusOtimizador = "Nenhum programa selecionado.";
+            return;
+        }
+
+        Ocupado = true;
+        StatusOtimizador = $"Iniciando desinstalação de {selecionados.Count} programa(s)…";
+        try
+        {
+            var payload = selecionados.Select(p => new
+            {
+                nome                 = p.Nome,
+                uninstallString      = p.UninstallString,
+                quietUninstallString = p.QuietUninstallString,
+            });
+
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "DesinstalarProgramas",
+                Parametros = JsonSerializer.SerializeToElement(new { programas = payload }),
+            });
+
+            StatusOtimizador = resp.Sucesso
+                ? $"{selecionados.Count} desinstalador(es) iniciado(s). Conclua cada janela aberta."
+                : "Falha: " + resp.Erro;
+        }
+        finally { Ocupado = false; }
+    }
+
+    // ── Inicialização do Windows ───────────────────────────────────────────
+
+    public ObservableCollection<InicializacaoEntradaViewModel> EntradasStartup { get; }
+
+    public void Popular(IReadOnlyList<InicializacaoEntrada> entradas)
+    {
+        EntradasStartup.Clear();
+
+        var ordenadas = entradas.OrderBy(e => e.Impacto switch
+        {
+            ImpactoInicializacao.Alto       => 0,
+            ImpactoInicializacao.Medio      => 1,
+            ImpactoInicializacao.Baixo      => 2,
+            ImpactoInicializacao.Desconhecido => 3,
+            _ => 4,
+        }).ThenBy(e => e.Nome, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var e in ordenadas)
+            EntradasStartup.Add(new InicializacaoEntradaViewModel(e, ToggleEntradaAsync));
+    }
+
+    private async Task ToggleEntradaAsync(InicializacaoEntradaViewModel entrada)
+    {
+        Ocupado = true;
+        try
+        {
+            var metodo = entrada.Ativo ? "DesativarStartup" : "AtivarStartup";
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = metodo,
+                Parametros = JsonSerializer.SerializeToElement(new { nome = entrada.Nome }),
+            });
+
+            if (resp.Sucesso)
+                entrada.Ativo = !entrada.Ativo;
+            else
+                StatusOtimizador = "Falha: " + resp.Erro;
+        }
+        finally { Ocupado = false; }
+    }
+
+    // ── Serviços Windows ───────────────────────────────────────────────────
+
+    [ObservableProperty] private string _filtroServicos      = "";
+    [ObservableProperty] private string _totalServicosLabel  = "—";
+    [ObservableProperty] private bool   _carregandoServicos;
+
+    public ObservableCollection<ServicoViewModel> ServicosFiltrados { get; }
+
+    partial void OnFiltroServicosChanged(string value) => AplicarFiltroServicos();
+
+    [RelayCommand]
+    private async Task CarregarServicosAsync()
+    {
+        CarregandoServicos = true;
+        StatusOtimizador   = "Carregando serviços…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "obterservicos" });
+            if (!resp.Sucesso) { StatusOtimizador = "Falha: " + resp.Erro; return; }
+
+            if (resp.Resultado is not IReadOnlyList<ServicoWindows> lista) return;
+            _todosServicos = lista
+                .Select(s => new ServicoViewModel(s, ToggleServicoAsync, AlterarModoServicoAsync))
+                .ToList();
+            _servicosCarregados = true;
+            AplicarFiltroServicos();
+            StatusOtimizador = "Pronto.";
+        }
+        finally { CarregandoServicos = false; }
+    }
+
+    private void AplicarFiltroServicos()
+    {
+        var filtro = FiltroServicos.Trim();
+        var resultado = string.IsNullOrEmpty(filtro)
+            ? _todosServicos
+            : _todosServicos.Where(s =>
+                s.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
+                s.Descricao.Contains(filtro, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        ServicosFiltrados.Clear();
+        foreach (var s in resultado) ServicosFiltrados.Add(s);
+
+        int n = resultado.Count;
+        TotalServicosLabel = n == 0
+            ? "Nenhum serviço encontrado"
+            : $"{n} serviço{(n != 1 ? "s" : "")} encontrado{(n != 1 ? "s" : "")}";
+    }
+
+    private async Task ToggleServicoAsync(ServicoViewModel svc)
+    {
+        Ocupado = true;
+        var iniciar = svc.Status != "Running";
+        StatusOtimizador = $"{(iniciar ? "Iniciando" : "Parando")} '{svc.Nome}'…";
+        try
+        {
+            var metodo = iniciar ? "iniciarservico" : "pararservico";
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = metodo,
+                Parametros = JsonSerializer.SerializeToElement(new { nome = svc.Nome }),
+            });
+
+            if (resp.Sucesso)
+            {
+                svc.Status = iniciar ? "Running" : "Stopped";
+                StatusOtimizador = $"'{svc.Nome}' {(iniciar ? "iniciado" : "parado")} com sucesso.";
+            }
+            else
+            {
+                StatusOtimizador = "Falha: " + resp.Erro;
+            }
+        }
+        finally { Ocupado = false; }
+    }
+
+    private async Task AlterarModoServicoAsync(ServicoViewModel svc, string novoModo)
+    {
+        Ocupado = true;
+        StatusOtimizador = $"Alterando modo de início de '{svc.Nome}' para '{novoModo}'…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "alterarmododeinicio",
+                Parametros = JsonSerializer.SerializeToElement(new { nome = svc.Nome, modo = novoModo }),
+            });
+
+            StatusOtimizador = resp.Sucesso
+                ? $"'{svc.Nome}': tipo de início alterado para '{novoModo}'."
+                : "Falha: " + resp.Erro;
+        }
+        finally { Ocupado = false; }
+    }
+}
+
+// ── ViewModels auxiliares ──────────────────────────────────────────────────
+
+public partial class EfeitoVisualViewModel : ObservableObject
+{
+    public string Nome { get; }
+    [ObservableProperty] private bool _selecionado = true;
+    public EfeitoVisualViewModel(string nome) => Nome = nome;
+}
+
+public partial class ProgramaInstaladoViewModel : ObservableObject
+{
+    public string  Nome                 { get; }
+    public string  Fabricante           { get; }
+    public string  Versao               { get; }
+    public string  Tamanho              { get; }
+    public string  Data                 { get; }
+    public bool    Bloatware            { get; }
+    public string? UninstallString      { get; }
+    public string? QuietUninstallString { get; }
+
+    [ObservableProperty] private bool _selecionado;
+
+    public ProgramaInstaladoViewModel(ProgramaInstalado p)
+    {
+        Nome                 = p.Nome;
+        Fabricante           = p.Fabricante ?? "—";
+        Versao               = p.Versao ?? "—";
+        Bloatware            = p.Bloatware;
+        UninstallString      = p.UninstallString;
+        QuietUninstallString = p.QuietUninstallString;
+
+        Tamanho = p.TamanhoMb is > 0
+            ? p.TamanhoMb >= 1024
+                ? $"{p.TamanhoMb / 1024.0:F1} GB"
+                : $"{p.TamanhoMb} MB"
+            : "";
+
+        Data = p.DataInstalacao is { Length: 8 } d
+            ? $"{d[6..8]}/{d[4..6]}/{d[0..4]}"
+            : "";
+    }
+}
+
+public partial class ServicoViewModel : ObservableObject
+{
+    private readonly ServicoWindows _modelo;
+    private readonly Func<ServicoViewModel, string, Task> _alterarModoCallback;
+    private bool _inicializado;
+
+    public static readonly IReadOnlyList<string> ModoInicioOpcoes =
+        ["Automático", "Automático (Atraso na Inicialização)", "Manual", "Desativado"];
+
+    public ServicoViewModel(
+        ServicoWindows modelo,
+        Func<ServicoViewModel, Task> toggle,
+        Func<ServicoViewModel, string, Task> alterarModo)
+    {
+        _modelo = modelo;
+        _alterarModoCallback = alterarModo;
+        _status = modelo.Status;
+        _modoInicioSelecionado = ConverterModoInicio(modelo.ModoInicio);
+        ToggleCommand = new AsyncRelayCommand(() => toggle(this));
+        _inicializado = true;
+    }
+
+    public IAsyncRelayCommand ToggleCommand { get; }
+
+    public string  Nome     => _modelo.Nome;
+    public string  Descricao => _modelo.Descricao;
+    public int     Pid      => _modelo.Pid;
+
+    [ObservableProperty] private string _status;
+    [ObservableProperty] private string _modoInicioSelecionado;
+
+    partial void OnStatusChanged(string value)
+    {
+        OnPropertyChanged(nameof(TextoStatus));
+        OnPropertyChanged(nameof(CorStatus));
+        OnPropertyChanged(nameof(TextoBotao));
+        OnPropertyChanged(nameof(CorBotaoFundo));
+        OnPropertyChanged(nameof(CorBotaoTexto));
+        OnPropertyChanged(nameof(PidTexto));
+        OnPropertyChanged(nameof(Rodando));
+    }
+
+    partial void OnModoInicioSelecionadoChanged(string value)
+    {
+        if (_inicializado)
+            _ = _alterarModoCallback(this, value);
+    }
+
+    public bool   Rodando      => Status == "Running";
+    public string TextoStatus  => Status == "Running" ? "Em execução" : Status == "Stopped" ? "Parado" : Status;
+    public string CorStatus    => Status == "Running" ? "#00C870" : "#555555";
+    public string TextoBotao   => Status == "Running" ? "PARAR" : "INICIAR";
+    public string CorBotaoFundo => Status == "Running" ? "#2A0808" : "#082A12";
+    public string CorBotaoTexto => Status == "Running" ? "#CC3333" : "#00C870";
+    public string PidTexto     => Pid > 0 ? Pid.ToString() : "—";
+
+    private static string ConverterModoInicio(string? wmiMode) => wmiMode switch
+    {
+        "Auto"     => "Automático",
+        "Manual"   => "Manual",
+        "Disabled" => "Desativado",
+        _          => "Manual",
+    };
+}
+
+public partial class InicializacaoEntradaViewModel : ObservableObject
+{
+    private readonly InicializacaoEntrada _modelo;
+
+    public InicializacaoEntradaViewModel(InicializacaoEntrada modelo, Func<InicializacaoEntradaViewModel, Task> toggle)
+    {
+        _modelo = modelo;
+        Ativo   = modelo.Ativo;
+        ToggleCommand = new AsyncRelayCommand(() => toggle(this));
+    }
+
+    public IAsyncRelayCommand ToggleCommand { get; }
+
+    public string  Nome      => _modelo.Nome;
+    public string  Caminho   => _modelo.Caminho;
+    public string  Fabricante => _modelo.Fabricante ?? "—";
+
+    public string Origem => _modelo.Origem switch
+    {
+        OrigemInicializacao.RegistroUsuario => "Usuário",
+        OrigemInicializacao.RegistroMaquina => "Sistema",
+        OrigemInicializacao.PastaStartup    => "Pasta Startup",
+        _ => _modelo.Origem.ToString(),
+    };
+
+    public string TextoImpacto => _modelo.Impacto switch
+    {
+        ImpactoInicializacao.Alto  => "Alto",
+        ImpactoInicializacao.Medio => "Médio",
+        ImpactoInicializacao.Baixo => "Baixo",
+        _ => "Nenhum",
+    };
+
+    public string CorImpacto => _modelo.Impacto switch
+    {
+        ImpactoInicializacao.Alto  => "#FF4444",
+        ImpactoInicializacao.Medio => "#FFCC00",
+        ImpactoInicializacao.Baixo => "#00FF88",
+        _ => "#555555",
+    };
+
+    [ObservableProperty] private bool _ativo;
+
+    partial void OnAtivoChanged(bool value)
+    {
+        OnPropertyChanged(nameof(TextoStatus));
+        OnPropertyChanged(nameof(CorStatus));
+        OnPropertyChanged(nameof(CorBotaoFundo));
+        OnPropertyChanged(nameof(CorBotaoTexto));
+    }
+
+    public string TextoStatus   => Ativo ? "Habilitado"   : "Desabilitado";
+    public string CorStatus     => Ativo ? "#00C870"      : "#555555";
+    public string CorBotaoFundo => Ativo ? "#2A0808"      : "#082A12";
+    public string CorBotaoTexto => Ativo ? "#CC3333"      : "#00C870";
+}
+````
+
+### `src/HardwareOptimizer.App/ViewModels/ShellViewModel.cs`
+
+````csharp
+using System.Text.Json;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.App.Services;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Features.Licensing;
+using HardwareOptimizer.Ipc;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class ShellViewModel : ObservableObject, IDisposable
+{
+    private readonly IRoteadorIpc _agente;
+    private readonly IServicoLicenca _licenca;
+    private readonly DispatcherTimer _timerSensores;
+    private readonly ListenerAlertasServico _listenerAlertas;
+
+    public ShellViewModel(IRoteadorIpc agente, IServicoLicenca licenca)
+    {
+        _agente = agente;
+        _licenca = licenca;
+
+        Dashboard = new DashboardViewModel(agente);
+        OtimizadorWindows = new OtimizadorWindowsViewModel(agente);
+        IaCopiloto = new IaCopilotoViewModel(agente);
+        InfoSistema = new InfoSistemaViewModel();
+        Upgrade = new UpgradeViewModel(agente);
+        VidaUtil = new VidaUtilViewModel();
+        Drivers = new DriversViewModel(agente);
+        BiosGuide = new BiosGuideViewModel(agente);
+        Configuracoes = new ConfiguracoesViewModel(licenca, OnLicencaAlterada);
+        Home = new HomeViewModel(agente, () => PaginaAtual = Dashboard, inv =>
+        {
+            InfoSistema.Popular(inv);
+            OtimizadorWindows.Popular(inv.EntradasStartup);
+            OtimizadorWindows.PopularProgramas(inv.ProgramasInstalados);
+            VidaUtil.Popular(inv.SaudeDiscos);
+            Drivers.Popular(inv.Drivers);
+            BiosGuide.Popular(inv);
+            ScanConcluido = true;
+        });
+
+        _ehPremium = licenca.TipoAtual == TipoLicenca.Premium;
+
+        _timerSensores = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(500),
+        };
+        _timerSensores.Tick += async (_, _) => await TickSensoresAsync();
+        _timerSensores.Start();
+
+        _listenerAlertas = new ListenerAlertasServico(msg =>
+            Dispatcher.UIThread.Post(() => ReceberAlertaServico(msg)));
+
+        PaginaAtual = Home;
+    }
+
+    public HomeViewModel Home { get; }
+    public DashboardViewModel Dashboard { get; }
+    public OtimizadorWindowsViewModel OtimizadorWindows { get; }
+    public IaCopilotoViewModel IaCopiloto { get; }
+    public InfoSistemaViewModel InfoSistema { get; }
+    public UpgradeViewModel Upgrade { get; }
+    public VidaUtilViewModel VidaUtil { get; }
+    public DriversViewModel Drivers { get; }
+    public BiosGuideViewModel BiosGuide { get; }
+    public ConfiguracoesViewModel Configuracoes { get; }
+
+    [ObservableProperty] private ObservableObject _paginaAtual = null!;
+    [ObservableProperty] private bool _temAlertaIa;
+    [ObservableProperty] private bool _ehPremium;
+    [ObservableProperty] private bool _scanConcluido;
+
+    // Propriedades para binding de estado ativo na sidebar
+    public bool PaginaEhDashboard    => PaginaAtual == Dashboard;
+    public bool PaginaEhOtimizador   => PaginaAtual == OtimizadorWindows;
+    public bool PaginaEhInfoSistema  => PaginaAtual == InfoSistema;
+    public bool PaginaEhIaCopiloto   => PaginaAtual == IaCopiloto;
+    public bool PaginaEhConfiguracoes => PaginaAtual == Configuracoes;
+    public bool PaginaEhUpgrade      => PaginaAtual == Upgrade;
+    public bool PaginaEhVidaUtil     => PaginaAtual == VidaUtil;
+    public bool PaginaEhDrivers      => PaginaAtual == Drivers;
+    public bool PaginaEhBiosGuide    => PaginaAtual == BiosGuide;
+
+    partial void OnPaginaAtualChanged(ObservableObject value)
+    {
+        OnPropertyChanged(nameof(PaginaEhDashboard));
+        OnPropertyChanged(nameof(PaginaEhOtimizador));
+        OnPropertyChanged(nameof(PaginaEhInfoSistema));
+        OnPropertyChanged(nameof(PaginaEhIaCopiloto));
+        OnPropertyChanged(nameof(PaginaEhConfiguracoes));
+        OnPropertyChanged(nameof(PaginaEhUpgrade));
+        OnPropertyChanged(nameof(PaginaEhVidaUtil));
+        OnPropertyChanged(nameof(PaginaEhDrivers));
+        OnPropertyChanged(nameof(PaginaEhBiosGuide));
+    }
+
+    [RelayCommand] private void IrParaHome() => PaginaAtual = Home;
+
+    [RelayCommand] private void IrParaDashboard() => PaginaAtual = Dashboard;
+
+    [RelayCommand] private void IrParaOtimizador() => PaginaAtual = OtimizadorWindows;
+
+    [RelayCommand]
+    private void IrParaInfoSistema() => PaginaAtual = InfoSistema;
+
+    [RelayCommand]
+    private void IrParaIaCopiloto()
+    {
+        PaginaAtual = IaCopiloto;
+        if (TemAlertaIa)
+        {
+            TemAlertaIa = false;
+            IaCopiloto.MarcarComoLido();
+        }
+    }
+
+    [RelayCommand]
+    private void IrParaUpgrade()
+    {
+        if (!_licenca.TemAcesso(FuncionalidadePremium.ModuloUpgrade)) return;
+        PaginaAtual = Upgrade;
+        Dispatcher.UIThread.Post(async () => await Upgrade.AtivarAsync(),
+            Avalonia.Threading.DispatcherPriority.Background);
+    }
+
+    [RelayCommand]
+    private void IrParaVidaUtil()
+    {
+        if (!_licenca.TemAcesso(FuncionalidadePremium.ContadorVidaUtil)) return;
+        PaginaAtual = VidaUtil;
+    }
+
+    [RelayCommand]
+    private void IrParaDrivers()
+    {
+        if (!_licenca.TemAcesso(FuncionalidadePremium.GerenciadorDrivers)) return;
+        PaginaAtual = Drivers;
+    }
+
+    [RelayCommand]
+    private void IrParaBiosGuide()
+    {
+        if (!_licenca.TemAcesso(FuncionalidadePremium.GuiaBiosIa)) return;
+        PaginaAtual = BiosGuide;
+    }
+
+    [RelayCommand]
+    private void IrParaConfiguracoes() => PaginaAtual = Configuracoes;
+
+    public void ReceberAlertaServico(string mensagem)
+    {
+        IaCopiloto.ReceberAlerta(mensagem);
+        if (PaginaAtual != IaCopiloto)
+            TemAlertaIa = true;
+    }
+
+    private void OnLicencaAlterada()
+    {
+        EhPremium = _licenca.TipoAtual == TipoLicenca.Premium;
+    }
+
+    private async Task TickSensoresAsync()
+    {
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "sensores" });
+            if (resp.Sucesso && resp.Resultado is LeituraSensores leitura)
+                Dashboard.AtualizarSensores(leitura);
+        }
+        catch
+        {
+            // Sensor tick falha silenciosamente; a UI mostra "--" quando sem dados.
+        }
+    }
+
+    public void Dispose()
+    {
+        _timerSensores.Stop();
+        _listenerAlertas.Dispose();
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/ViewModels/UpgradeViewModel.cs`
+
+````csharp
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Features.Upgrade;
+using HardwareOptimizer.Ipc;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class UpgradeViewModel : ObservableObject
+{
+    private readonly IRoteadorIpc _agente;
+    private readonly CalculadoraGargalo _calc = new();
+
+    public UpgradeViewModel(IRoteadorIpc agente) => _agente = agente;
+
+    // ── State ──────────────────────────────────────────────────────────────
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TextoBotao))]
+    private bool _carregando;
+
+    [ObservableProperty] private bool _carregado;
+
+    public string TextoBotao => Carregando ? "Detectando..." : "  Detectar Hardware  ";
+
+    // ── Parts list ─────────────────────────────────────────────────────────
+
+    [ObservableProperty] private string _nomeCpu        = "–";
+    [ObservableProperty] private string _infosCpu       = "";
+    [ObservableProperty] private string _nomeGpu        = "–";
+    [ObservableProperty] private string _infosGpu       = "";
+    [ObservableProperty] private string _nomeRam        = "–";
+    [ObservableProperty] private string _fabricanteRam  = "";
+    [ObservableProperty] private string _infosRam       = "";
+    [ObservableProperty] private string _nomePlacaMae   = "–";
+    [ObservableProperty] private string _infosPlaca     = "";
+    [ObservableProperty] private string _nomeOs         = "–";
+
+    // ── Bottleneck ─────────────────────────────────────────────────────────
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsGargalo))]
+    private string _componenteLimitante = "";
+
+    [ObservableProperty] private string _gargaloLabel      = "";
+    [ObservableProperty] private string _gargaloDescricao  = "";
+
+    public bool IsGargalo =>
+        ComponenteLimitante.Equals("CPU", StringComparison.OrdinalIgnoreCase) ||
+        ComponenteLimitante.Equals("GPU", StringComparison.OrdinalIgnoreCase);
+
+    // ── Diagram visibility ─────────────────────────────────────────────────
+
+    [ObservableProperty] private bool _temCpu;
+    [ObservableProperty] private bool _temGpu;
+    [ObservableProperty] private bool _temRam;
+    [ObservableProperty] private bool _temPlaca;
+
+    // ── Chat ────────────────────────────────────────────────────────────────
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PodeEnviar))]
+    private string _mensagemInput = "";
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PodeEnviar))]
+    private bool _chatCarregando;
+
+    [ObservableProperty] private bool _chatVisivel;
+
+    public bool PodeEnviar => !ChatCarregando && !string.IsNullOrWhiteSpace(MensagemInput);
+
+    public ObservableCollection<ChatMensagemVm> Mensagens { get; } = [];
+
+    // ── Commands ────────────────────────────────────────────────────────────
+
+    public async Task AtivarAsync()
+    {
+        if (!Carregado) await CarregarAsync();
+    }
+
+    [RelayCommand]
+    private async Task CarregarAsync()
+    {
+        if (Carregando) return;
+        Carregando = true;
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "coletar" });
+            if (!resp.Sucesso || resp.Resultado is not Inventario inv) return;
+
+            PopularCpu(inv);
+            PopularGpu(inv);
+            PopularRam(inv);
+            PopularPlaca(inv);
+
+            NomeOs = inv.SistemaOperacional.Nome ?? inv.SistemaOperacional.Tipo.ToString();
+
+            AnalisarGargalo(inv);
+
+            Carregado = true;
+            ChatVisivel = true;
+
+            // Dispara análise automática da IA após detectar hardware
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(600);
+                await AnalisarInicialAsync();
+            });
+        }
+        finally
+        {
+            Carregando = false;
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(PodeEnviar))]
+    private async Task EnviarMensagemAsync()
+    {
+        var texto = MensagemInput.Trim();
+        if (string.IsNullOrWhiteSpace(texto)) return;
+
+        MensagemInput = "";
+        AdicionarMensagem("user", texto);
+
+        ChatCarregando = true;
+        try
+        {
+            var historico = Mensagens
+                .Select(m => new { role = m.IsUser ? "user" : "assistant", conteudo = m.Texto })
+                .ToList();
+
+            // Remove a última mensagem do usuário do histórico (ela é a atual)
+            var historicoSemAtual = historico.Take(historico.Count - 1).ToList();
+
+            var parametros = JsonDocument.Parse(JsonSerializer.Serialize(new
+            {
+                mensagem = texto,
+                historico = historicoSemAtual,
+            })).RootElement;
+
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo = "chat_upgrade",
+                Parametros = parametros,
+            });
+
+            var resposta = resp.Sucesso && resp.Resultado is string s ? s
+                : resp.Sucesso ? resp.Resultado?.ToString() ?? "–"
+                : $"Erro: {resp.Erro}";
+
+            AdicionarMensagem("assistant", resposta);
+        }
+        finally
+        {
+            ChatCarregando = false;
+        }
+    }
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+
+    private async Task AnalisarInicialAsync()
+    {
+        ChatCarregando = true;
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "analise_upgrade" });
+            var texto = resp.Sucesso && resp.Resultado is string s ? s
+                : resp.Sucesso ? resp.Resultado?.ToString() ?? "–"
+                : null;
+
+            if (!string.IsNullOrWhiteSpace(texto))
+                AdicionarMensagem("assistant", texto);
+        }
+        catch
+        {
+            // análise automática falha silenciosamente
+        }
+        finally
+        {
+            ChatCarregando = false;
+        }
+    }
+
+    private void AdicionarMensagem(string role, string texto) =>
+        Mensagens.Add(new ChatMensagemVm(role, texto));
+
+    private void PopularCpu(Inventario inv)
+    {
+        NomeCpu  = inv.Cpu.Nome;
+        InfosCpu = inv.Cpu.Nucleos.HasValue
+            ? $"{inv.Cpu.Nucleos} núcleos · {inv.Cpu.Threads} threads"
+            : "";
+        TemCpu = true;
+    }
+
+    private void PopularGpu(Inventario inv)
+    {
+        if (inv.Gpu.Count == 0) return;
+        var gpu   = inv.Gpu[0];
+        NomeGpu   = gpu.Nome;
+        InfosGpu  = gpu.VersaoDriver is { } drv ? $"Driver {drv}" : "";
+        TemGpu    = true;
+    }
+
+    private void PopularRam(Inventario inv)
+    {
+        if (inv.Memoria.Count == 0) return;
+
+        var totalGb  = inv.Memoria.Sum(m => m.TamanhoGb ?? 0);
+        if (totalGb == 0) return;
+
+        var freqMhz  = inv.Memoria.FirstOrDefault()?.VelocidadeMhz;
+        var qtd      = inv.Memoria.Count;
+        var perStick = qtd > 0 ? totalGb / qtd : 0;
+
+        var tipo = inv.Memoria.FirstOrDefault(m => m.Tipo != null)?.Tipo
+                   ?? (freqMhz >= 4800 ? "DDR5" : "DDR4");
+
+        NomeRam = freqMhz > 0
+            ? $"{totalGb} GB {tipo}-{freqMhz}  ({qtd}×{perStick} GB)"
+            : $"{totalGb} GB {tipo}  ({qtd}×{perStick} GB)";
+
+        var fabricantes = inv.Memoria
+            .Select(m => m.Fabricante)
+            .Where(f => !string.IsNullOrWhiteSpace(f))
+            .Distinct()
+            .ToList();
+
+        var modelos = inv.Memoria
+            .Select(m => m.Modelo?.Trim())
+            .Where(m => !string.IsNullOrWhiteSpace(m))
+            .Distinct()
+            .Take(2)
+            .ToList();
+
+        FabricanteRam = fabricantes.Count > 0 ? string.Join(" / ", fabricantes!) : "";
+
+        var slots = inv.Memoria
+            .Select(m => m.Slot)
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .ToList();
+
+        var partes = new List<string>();
+        if (modelos.Count > 0) partes.Add(string.Join(", ", modelos!));
+        if (slots.Count > 0)   partes.Add(string.Join(", ", slots!));
+        InfosRam = partes.Count > 0 ? string.Join("  ·  ", partes) : "";
+
+        TemRam = true;
+    }
+
+    private void PopularPlaca(Inventario inv)
+    {
+        NomePlacaMae = $"{inv.Placa.Fabricante} {inv.Placa.Modelo}";
+        InfosPlaca   = inv.Placa.VersaoBios is { } bios ? $"BIOS {bios}" : "";
+        TemPlaca     = true;
+    }
+
+    private void AnalisarGargalo(Inventario inv)
+    {
+        var g = _calc.Calcular(inv);
+        ComponenteLimitante = g.ComponenteLimitante;
+        GargaloDescricao    = g.Descricao;
+        GargaloLabel = g.ComponenteLimitante switch
+        {
+            "CPU" => $"⚠  Gargalo: CPU  (+{g.GanhoEstimadoPercent:F0}% estimado)",
+            "GPU" => $"⚠  Gargalo: GPU  (+{g.GanhoEstimadoPercent:F0}% estimado)",
+            _     => "✓  Setup Balanceado",
+        };
+    }
+}
+
+/// <summary>Item de mensagem no chat de upgrade.</summary>
+public sealed class ChatMensagemVm
+{
+    public ChatMensagemVm(string role, string texto)
+    {
+        Role = role;
+        Texto = texto;
+        IsUser = role == "user";
+    }
+
+    public string Role { get; }
+    public string Texto { get; }
+    public bool IsUser { get; }
+    public bool IsAssistant => !IsUser;
+}
+````
+
+### `src/HardwareOptimizer.App/ViewModels/VidaUtilViewModel.cs`
+
+````csharp
+using System.Collections.ObjectModel;
+using Avalonia.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
+using HardwareOptimizer.Core.Contracts;
+
+namespace HardwareOptimizer.App.ViewModels;
+
+public partial class VidaUtilViewModel : ObservableObject
+{
+    public VidaUtilViewModel()
+    {
+        Discos = new ObservableCollection<SaudeDiscoViewModel>();
+    }
+
+    [ObservableProperty] private string _statusText = "Execute o SCAN para ler os dados S.M.A.R.T.";
+    [ObservableProperty] private string _ultimoScan = string.Empty;
+    [ObservableProperty] private bool _temResultados;
+
+    public ObservableCollection<SaudeDiscoViewModel> Discos { get; }
+
+    public void Popular(IReadOnlyList<SaudeDisco> discos)
+    {
+        Discos.Clear();
+        foreach (var d in discos)
+            Discos.Add(new SaudeDiscoViewModel(d));
+
+        TemResultados = Discos.Count > 0;
+        StatusText = Discos.Count > 0
+            ? $"{Discos.Count} disco(s) verificado(s)."
+            : "Nenhum disco S.M.A.R.T. encontrado neste sistema.";
+        UltimoScan = $"Último scan: {DateTime.Now:HH:mm  dd/MM/yyyy}";
+    }
+}
+
+public sealed class SaudeDiscoViewModel
+{
+    public SaudeDiscoViewModel(SaudeDisco d)
+    {
+        Modelo = d.Modelo.Length > 45 ? d.Modelo[..42] + "…" : d.Modelo;
+
+        HorasUso = d.HorasUso > 0
+            ? $"{d.HorasUso:N0} h de uso  ({d.HorasUso / 8760.0:F1} anos)"
+            : "Tempo de uso não disponível";
+
+        TbwTexto = d.TbwFabricanteGb > 0
+            ? $"{d.TbwEscritoGb:N0} GB escritos  /  {d.TbwFabricanteGb:N0} GB máx (fabricante)"
+            : d.TbwEscritoGb > 0
+                ? $"{d.TbwEscritoGb:N0} GB escritos  /  máx. desconhecido"
+                : "TBW não disponível neste disco";
+
+        Porcentagem = d.PorcentagemVidaRestante;
+        PorcentagemTexto = $"{d.PorcentagemVidaRestante:F0}%";
+
+        (NivelTexto, CorNivel, CorFundo) = d.Nivel switch
+        {
+            NivelSaudeDisco.Bom      => ("BOM",     new SolidColorBrush(Color.Parse("#00FF88")), new SolidColorBrush(Color.Parse("#00FF8820"))),
+            NivelSaudeDisco.Atencao  => ("ATENÇÃO", new SolidColorBrush(Color.Parse("#FFCC00")), new SolidColorBrush(Color.Parse("#FFCC0020"))),
+            _                        => ("CRÍTICO", new SolidColorBrush(Color.Parse("#FF3333")), new SolidColorBrush(Color.Parse("#FF333320"))),
+        };
+
+        TemErros = d.TemErrosNaoCorrigiveis || d.SetoresComProblema > 0;
+        AvisoErro = d.TemErrosNaoCorrigiveis
+            ? "⚠  Erros não corrigíveis detectados — faça backup imediatamente"
+            : d.SetoresComProblema > 0
+                ? $"⚠  {d.SetoresComProblema} setor(es) com problema detectado(s)"
+                : string.Empty;
+    }
+
+    public string Modelo           { get; }
+    public string HorasUso         { get; }
+    public string TbwTexto         { get; }
+    public double Porcentagem      { get; }
+    public string PorcentagemTexto { get; }
+    public string NivelTexto       { get; }
+    public IBrush CorNivel         { get; }
+    public IBrush CorFundo         { get; }
+    public bool   TemErros         { get; }
+    public string AvisoErro        { get; }
+}
+````
+
+### `src/HardwareOptimizer.App/Views/BiosGuideView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.BiosGuideView"
+             x:DataType="vm:BiosGuideViewModel">
+
+  <Grid RowDefinitions="Auto,*">
+
+    <!-- ── Cabeçalho ── -->
+    <StackPanel Grid.Row="0" Margin="24,20,24,0" Spacing="3">
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                VerticalAlignment="Center" />
+        <TextBlock Text="GUIA BIOS IA" FontSize="13" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="3"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+      <TextBlock Text="Instruções XMP / EXPO passo a passo para sua placa-mãe"
+                 Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+    </StackPanel>
+
+    <!-- ── Conteúdo ── -->
+    <ScrollViewer Grid.Row="1" Margin="0,12,0,0">
+      <StackPanel Margin="24,0,24,24" Spacing="12">
+
+        <!-- Info da placa -->
+        <Border Background="#0C0C1E" CornerRadius="8"
+                BorderBrush="#1E1E3C" BorderThickness="1"
+                Padding="16,12">
+          <Grid ColumnDefinitions="*,*,*">
+
+            <StackPanel Grid.Column="0" Spacing="3">
+              <TextBlock Text="FABRICANTE" FontSize="10" FontWeight="Bold"
+                         Foreground="#282840" LetterSpacing="1" />
+              <TextBlock Text="{Binding FabricantePlaca}"
+                         Foreground="#E0E0F2" FontSize="14" FontWeight="SemiBold" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Spacing="3">
+              <TextBlock Text="MODELO" FontSize="10" FontWeight="Bold"
+                         Foreground="#282840" LetterSpacing="1" />
+              <TextBlock Text="{Binding ModeloPlaca}"
+                         Foreground="#E0E0F2" FontSize="14" FontWeight="SemiBold"
+                         TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Spacing="3">
+              <TextBlock Text="TECLA SETUP" FontSize="10" FontWeight="Bold"
+                         Foreground="#282840" LetterSpacing="1" />
+              <TextBlock Text="{Binding TeclaSetup}"
+                         Foreground="#00FF88" FontSize="14" FontWeight="Bold" />
+            </StackPanel>
+
+          </Grid>
+        </Border>
+
+        <!-- Aviso XMP -->
+        <Border Background="#FF8C0015" CornerRadius="8" Padding="14,10"
+                BorderBrush="#FF8C0040" BorderThickness="1"
+                IsVisible="{Binding AvisoXmp, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="⚠" Foreground="#FF8C00" FontSize="13"
+                       VerticalAlignment="Top" Margin="0,1,0,0" />
+            <TextBlock Text="{Binding AvisoXmp}" Foreground="#FF8C00"
+                       FontSize="12" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+
+        <!-- Stepper (visível quando há passos) -->
+        <Border CornerRadius="10"
+                BorderBrush="#1E1E3C" BorderThickness="1"
+                Padding="20"
+                IsVisible="{Binding TemPassos}">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="16">
+
+            <TextBlock Text="PASSOS XMP / EXPO" FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+
+            <!-- Indicador de progresso -->
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="{Binding PassoAtual, StringFormat='Passo {0}'}"
+                         Foreground="#00C8FF" FontSize="12" FontWeight="Bold"
+                         VerticalAlignment="Center" />
+              <TextBlock Text="{Binding PassosXmp.Count, StringFormat='de {0}'}"
+                         Foreground="#484865" FontSize="12"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Card do passo atual -->
+            <Border CornerRadius="8" Padding="18,14"
+                    BorderBrush="#1E1E3C" BorderThickness="1">
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                  <GradientStop Color="#0F0F22" Offset="0" />
+                  <GradientStop Color="#0C0C1E" Offset="1" />
+                </LinearGradientBrush>
+              </Border.Background>
+              <StackPanel Spacing="10">
+                <Border Background="#00C8FF18" CornerRadius="4" Padding="10,5"
+                        HorizontalAlignment="Left">
+                  <TextBlock Text="{Binding PassoAtual, StringFormat='Passo {0}'}"
+                             Foreground="#00C8FF" FontSize="11" FontWeight="Bold" />
+                </Border>
+                <TextBlock Text="{Binding PassoAtualInstrucao}"
+                           Foreground="#E0E0F2" FontSize="13"
+                           TextWrapping="Wrap" LineHeight="20" />
+              </StackPanel>
+            </Border>
+
+            <!-- Navegação -->
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <Button Content="← Anterior"
+                      Command="{Binding PassoAnteriorCommand}"
+                      Background="#0C0C1E" Foreground="#484865"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
+                      Padding="14,8" CornerRadius="6" FontSize="12" />
+              <Button Content="Próximo →"
+                      Command="{Binding ProximoPassoCommand}"
+                      Background="#00C8FF18" Foreground="#00C8FF"
+                      BorderBrush="#00C8FF40" BorderThickness="1"
+                      Padding="14,8" CornerRadius="6" FontSize="12" FontWeight="SemiBold" />
+            </StackPanel>
+
+          </StackPanel>
+        </Border>
+
+        <!-- Estado vazio -->
+        <StackPanel HorizontalAlignment="Center" Spacing="12" Margin="0,40"
+                    IsVisible="{Binding !TemPassos}">
+          <TextBlock Text="⚙" FontSize="40" HorizontalAlignment="Center"
+                     Foreground="#282840" />
+          <TextBlock Text="Guia XMP / EXPO não disponível para esta configuração."
+                     Foreground="#484865" FontSize="12"
+                     HorizontalAlignment="Center" TextAlignment="Center"
+                     TextWrapping="Wrap" MaxWidth="380" />
+        </StackPanel>
+
+        <!-- ── Chat IA ── -->
+        <Border CornerRadius="10"
+                BorderBrush="#1E1E3C" BorderThickness="1"
+                Padding="20"
+                IsVisible="{Binding ChatDisponivel}">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="12">
+
+            <!-- Título foto -->
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Border Width="3" Height="12" Background="#00C8FF" CornerRadius="1"
+                      VerticalAlignment="Center" />
+              <TextBlock Text="ANALISAR FOTO DO BIOS" FontSize="10" FontWeight="Bold"
+                         Foreground="#282840" LetterSpacing="2"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Botão carregar foto -->
+            <Button Click="OnCarregarFotoClick"
+                    IsEnabled="{Binding !AnalisandoFoto}"
+                    Background="#09091A" Foreground="#484865"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    Padding="14,8" CornerRadius="6"
+                    FontSize="12" HorizontalAlignment="Left" Cursor="Hand">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="📷" FontSize="12" VerticalAlignment="Center" />
+                <TextBlock Text="Carregar foto do BIOS" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <!-- Aguardando análise de foto -->
+            <TextBlock Text="Analisando imagem…"
+                       Foreground="#484865" FontSize="12"
+                       HorizontalAlignment="Center"
+                       IsVisible="{Binding AnalisandoFoto}" />
+
+            <!-- Resultado foto -->
+            <Border CornerRadius="8" Padding="14,12"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    IsVisible="{Binding TemResultadoFoto}">
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                  <GradientStop Color="#0F0F22" Offset="0" />
+                  <GradientStop Color="#0C0C1E" Offset="1" />
+                </LinearGradientBrush>
+              </Border.Background>
+              <TextBlock Text="{Binding ResultadoFoto}"
+                         Foreground="#E0E0F2" FontSize="12"
+                         TextWrapping="Wrap" LineHeight="20" />
+            </Border>
+
+            <!-- Separador -->
+            <Border Background="#1E1E3C" Height="1" />
+
+            <!-- Título chat -->
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Border Width="3" Height="12" Background="#00C8FF" CornerRadius="1"
+                      VerticalAlignment="Center" />
+              <TextBlock Text="PERGUNTAR À IA" FontSize="10" FontWeight="Bold"
+                         Foreground="#282840" LetterSpacing="2"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Input -->
+            <TextBox Text="{Binding Pergunta}"
+                     PlaceholderText="Ex: Como desativo CSM no BIOS ASUS Z790?"
+                     IsEnabled="{Binding !Perguntando}"
+                     Background="#0C0C1E" Foreground="#E0E0F2"
+                     BorderBrush="#1E1E3C" BorderThickness="1"
+                     CaretBrush="#00C8FF"
+                     Padding="12,10" FontSize="12" CornerRadius="6" />
+
+            <!-- Botão enviar -->
+            <Button Command="{Binding PerguntarCommand}"
+                    IsEnabled="{Binding !Perguntando}"
+                    Background="#00C8FF18" Foreground="#00C8FF"
+                    BorderBrush="#00C8FF40" BorderThickness="1"
+                    Padding="16,8" CornerRadius="6"
+                    FontSize="12" FontWeight="SemiBold"
+                    HorizontalAlignment="Left" Cursor="Hand">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="✦" FontSize="11" VerticalAlignment="Center" />
+                <TextBlock Text="Perguntar" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <!-- Aguardando IA -->
+            <TextBlock Text="Consultando IA…"
+                       Foreground="#484865" FontSize="12"
+                       HorizontalAlignment="Center"
+                       IsVisible="{Binding Perguntando}" />
+
+            <!-- Resposta -->
+            <Border CornerRadius="8" Padding="14,12"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    IsVisible="{Binding TemResposta}">
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                  <GradientStop Color="#0F0F22" Offset="0" />
+                  <GradientStop Color="#0C0C1E" Offset="1" />
+                </LinearGradientBrush>
+              </Border.Background>
+              <TextBlock Text="{Binding RespostaIa}"
+                         Foreground="#E0E0F2" FontSize="12"
+                         TextWrapping="Wrap" LineHeight="20" />
+            </Border>
+
+          </StackPanel>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+
+  </Grid>
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/BiosGuideView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
+using HardwareOptimizer.App.ViewModels;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class BiosGuideView : UserControl
+{
+    public BiosGuideView() => InitializeComponent();
+
+    private async void OnCarregarFotoClick(object? sender, RoutedEventArgs e)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null) return;
+
+        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Selecionar foto do BIOS",
+            AllowMultiple = false,
+            FileTypeFilter = new[]
+            {
+                new FilePickerFileType("Imagens") { Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.webp" } },
+            },
+        });
+
+        if (files.Count == 0) return;
+        var path = files[0].TryGetLocalPath();
+        if (path is null) return;
+
+        if (DataContext is BiosGuideViewModel vm)
+            await vm.AnalisarFotoAsync(path);
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/Views/ConfiguracoesView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.ConfiguracoesView"
+             x:DataType="vm:ConfiguracoesViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="24,20,24,24" Spacing="20" MaxWidth="560">
+
+      <!-- Cabeçalho -->
+      <StackPanel Spacing="3">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                  VerticalAlignment="Center" />
+          <TextBlock Text="CONFIGURAÇÕES" FontSize="13" FontWeight="Bold"
+                     Foreground="#484865" LetterSpacing="3"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="Licença, preferências e informações do aplicativo"
+                   Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+      </StackPanel>
+
+      <!-- Card: Status da licença -->
+      <Border CornerRadius="10" BorderBrush="#1E1E3C" BorderThickness="1" Padding="20">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#0C0C1E" Offset="0" />
+            <GradientStop Color="#09091A" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <StackPanel Spacing="14">
+
+          <TextBlock Text="LICENÇA" FontSize="10" FontWeight="Bold"
+                     Foreground="#282840" LetterSpacing="2" />
+
+          <!-- Status Premium -->
+          <Border CornerRadius="6" Padding="14,10"
+                  Background="#00C8FF18" BorderBrush="#00C8FF40" BorderThickness="1"
+                  IsVisible="{Binding EPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="✓" Foreground="#00C8FF" FontSize="14"
+                         VerticalAlignment="Center" FontWeight="Bold" />
+              <TextBlock Text="Premium — todos os módulos desbloqueados"
+                         Foreground="#E0E0F2" FontSize="13" FontWeight="SemiBold"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+          </Border>
+
+          <!-- Status Gratuito -->
+          <Border CornerRadius="6" Padding="14,10"
+                  Background="#09091A" BorderBrush="#1E1E3C" BorderThickness="1"
+                  IsVisible="{Binding !EPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="○" Foreground="#282840" FontSize="14"
+                         VerticalAlignment="Center" />
+              <TextBlock Text="Gratuita — módulos Premium bloqueados"
+                         Foreground="#484865" FontSize="13"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+          </Border>
+
+          <Button Content="Revogar licença Premium"
+                  Command="{Binding DesativarCommand}"
+                  IsVisible="{Binding EPremium}"
+                  Background="Transparent"
+                  BorderBrush="#1E1E3C" BorderThickness="1"
+                  Foreground="#484865" Padding="12,6"
+                  CornerRadius="6" FontSize="12"
+                  HorizontalAlignment="Left" />
+
+        </StackPanel>
+      </Border>
+
+      <!-- Card: Ativação -->
+      <Border CornerRadius="10" BorderBrush="#1E1E3C" BorderThickness="1" Padding="20">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#0C0C1E" Offset="0" />
+            <GradientStop Color="#09091A" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <StackPanel Spacing="16">
+
+          <TextBlock Text="ATIVAR LICENÇA" FontSize="10" FontWeight="Bold"
+                     Foreground="#282840" LetterSpacing="2" />
+
+          <TextBlock Text="Insira sua chave de ativação para desbloquear todos os módulos Premium."
+                     Foreground="#484865" FontSize="12" TextWrapping="Wrap" />
+
+          <TextBox Text="{Binding ChaveAtivacao}"
+                   PlaceholderText="XXXX-XXXX-XXXX-XXXX"
+                   FontFamily="Consolas,monospace"
+                   FontSize="14"
+                   Background="#09091A"
+                   BorderBrush="#1E1E3C"
+                   BorderThickness="1"
+                   Foreground="#E0E0F2"
+                   CaretBrush="#00C8FF"
+                   Padding="12,10"
+                   CornerRadius="6" />
+
+          <Button Content="  Ativar  "
+                  Command="{Binding AtivarCommand}"
+                  Background="#00C8FF18" Foreground="#00C8FF"
+                  BorderBrush="#00C8FF40" BorderThickness="1"
+                  FontWeight="SemiBold"
+                  FontSize="13"
+                  Padding="20,10"
+                  CornerRadius="6"
+                  HorizontalAlignment="Left"
+                  Cursor="Hand" />
+
+          <!-- Feedback -->
+          <TextBlock Text="{Binding MensagemAtivacao}"
+                     IsVisible="{Binding MensagemAtivacao, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                     Foreground="#00C8FF"
+                     FontSize="12"
+                     TextWrapping="Wrap" />
+
+        </StackPanel>
+      </Border>
+
+      <!-- Card: Sobre -->
+      <Border CornerRadius="10" BorderBrush="#1E1E3C" BorderThickness="1" Padding="20">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#0C0C1E" Offset="0" />
+            <GradientStop Color="#09091A" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <StackPanel Spacing="8">
+          <TextBlock Text="SOBRE" FontSize="10" FontWeight="Bold"
+                     Foreground="#282840" LetterSpacing="2" />
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="Otimize Builder" Foreground="#E0E0F2"
+                       FontSize="13" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding VersaoApp}" Foreground="#484865" FontSize="13" />
+          </StackPanel>
+          <TextBlock Text=".NET 8 · Avalonia 12 · LibreHardwareMonitor 0.9.6"
+                     Foreground="#282840" FontSize="11" />
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/ConfiguracoesView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class ConfiguracoesView : UserControl
+{
+    public ConfiguracoesView() => InitializeComponent();
+}
+````
+
+### `src/HardwareOptimizer.App/Views/DashboardView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             xmlns:ctrl="using:HardwareOptimizer.App.Controls"
+             x:Class="HardwareOptimizer.App.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+  <ScrollViewer>
+    <StackPanel Margin="24,20,24,24" Spacing="24">
+
+      <!-- Cabeçalho -->
+      <Grid ColumnDefinitions="3,14,*">
+        <Border Grid.Column="0" Background="#00C8FF" CornerRadius="2" />
+        <TextBlock Grid.Column="2" Text="DASHBOARD" FontSize="12" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="4"
+                   VerticalAlignment="Center" />
+      </Grid>
+
+      <!-- Cards de sensores em grid 4 colunas -->
+      <Grid ColumnDefinitions="*,12,*,12,*,12,*">
+
+        <ctrl:SensorCard Grid.Column="0"
+                         Titulo="CPU"
+                         Valor="{Binding CpuTemp}"
+                         Subtitulo="{Binding CpuClock}"
+                         NivelAlerta="{Binding CpuNivelAlerta}" />
+
+        <ctrl:SensorCard Grid.Column="2"
+                         Titulo="GPU"
+                         Valor="{Binding GpuTemp}"
+                         Subtitulo="{Binding GpuClock}"
+                         NivelAlerta="{Binding GpuNivelAlerta}" />
+
+        <ctrl:SensorCard Grid.Column="4"
+                         Titulo="RAM"
+                         Valor="{Binding RamUso}"
+                         Subtitulo="{Binding RamPorcentagem}"
+                         NivelAlerta="{Binding RamNivelAlerta}" />
+
+        <ctrl:SensorCard Grid.Column="6"
+                         Titulo="STORAGE"
+                         Valor="{Binding StorageRead}"
+                         Subtitulo="{Binding StorageWrite}"
+                         NivelAlerta="{Binding StorageNivelAlerta}" />
+
+      </Grid>
+
+      <!-- Seção TEMPERATURA -->
+      <Grid ColumnDefinitions="3,14,*">
+        <Border Grid.Column="0" Background="#00C8FF" CornerRadius="2" />
+        <TextBlock Grid.Column="2" Text="TEMPERATURA  ·  tempo real" FontSize="11" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="2"
+                   VerticalAlignment="Center" />
+      </Grid>
+
+      <Grid ColumnDefinitions="*,12,*">
+        <Border Grid.Column="0" CornerRadius="10" Height="170" ClipToBounds="True">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#080814" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <ctrl:RealtimeChartControl x:Name="ChartCpuTemp"
+                                     Label="{Binding CpuChartLabel}"
+                                     LinhaCor="#00C8FF"
+                                     Maximo="100" Minimo="0"
+                                     Margin="10" />
+        </Border>
+
+        <Border Grid.Column="2" CornerRadius="10" Height="170" ClipToBounds="True">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#080814" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <ctrl:RealtimeChartControl x:Name="ChartGpuTemp"
+                                     Label="{Binding GpuChartLabel}"
+                                     LinhaCor="#FF6B35"
+                                     Maximo="100" Minimo="0"
+                                     Margin="10" />
+        </Border>
+      </Grid>
+
+      <!-- Seção CLOCK -->
+      <Grid ColumnDefinitions="3,14,*">
+        <Border Grid.Column="0" Background="#00C8FF" CornerRadius="2" />
+        <TextBlock Grid.Column="2" Text="CLOCK  ·  tempo real" FontSize="11" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="2"
+                   VerticalAlignment="Center" />
+      </Grid>
+
+      <Grid ColumnDefinitions="*,12,*">
+        <Border Grid.Column="0" CornerRadius="10" Height="170" ClipToBounds="True">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#080814" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <ctrl:RealtimeChartControl x:Name="ChartCpuClock"
+                                     Label="CPU MHz"
+                                     LinhaCor="#A0FF50"
+                                     Maximo="6000" Minimo="800"
+                                     Margin="10" />
+        </Border>
+
+        <Border Grid.Column="2" CornerRadius="10" Height="170" ClipToBounds="True">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#080814" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <ctrl:RealtimeChartControl x:Name="ChartGpuClock"
+                                     Label="GPU MHz"
+                                     LinhaCor="#FF50A0"
+                                     Maximo="3000" Minimo="100"
+                                     Margin="10" />
+        </Border>
+      </Grid>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/DashboardView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+using HardwareOptimizer.App.ViewModels;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class DashboardView : UserControl
+{
+    public DashboardView()
+    {
+        InitializeComponent();
+        DataContextChanged += (_, _) => BindCharts();
+    }
+
+    private void BindCharts()
+    {
+        if (DataContext is not DashboardViewModel vm) return;
+
+        vm.HistCpuTemp.CollectionChanged += (_, _) =>
+        {
+            if (vm.HistCpuTemp.Count > 0)
+                ChartCpuTemp.AdicionarValor(vm.HistCpuTemp[^1]);
+        };
+        vm.HistGpuTemp.CollectionChanged += (_, _) =>
+        {
+            if (vm.HistGpuTemp.Count > 0)
+                ChartGpuTemp.AdicionarValor(vm.HistGpuTemp[^1]);
+        };
+        vm.HistCpuClock.CollectionChanged += (_, _) =>
+        {
+            if (vm.HistCpuClock.Count > 0)
+                ChartCpuClock.AdicionarValor(vm.HistCpuClock[^1]);
+        };
+        vm.HistGpuClock.CollectionChanged += (_, _) =>
+        {
+            if (vm.HistGpuClock.Count > 0)
+                ChartGpuClock.AdicionarValor(vm.HistGpuClock[^1]);
+        };
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/Views/DriversView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.DriversView"
+             x:DataType="vm:DriversViewModel">
+
+  <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+    <!-- ── Cabeçalho ── -->
+    <StackPanel Grid.Row="0" Margin="24,20,24,0" Spacing="3">
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                VerticalAlignment="Center" />
+        <TextBlock Text="DRIVERS" FontSize="13" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="3"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+      <TextBlock Text="Dispositivos detectados via WMI — Display, Rede, Áudio, USB, Armazenamento"
+                 Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+    </StackPanel>
+
+    <!-- ── Filtro ── -->
+    <Border Grid.Row="1" Margin="24,12,24,0"
+            Background="#0C0C1E" CornerRadius="8"
+            BorderBrush="#1E1E3C" BorderThickness="1"
+            IsVisible="{Binding TemResultados}">
+      <TextBox Text="{Binding FiltroTexto}"
+               PlaceholderText="Filtrar por dispositivo ou fabricante…"
+               Background="Transparent"
+               BorderThickness="0"
+               Foreground="#E0E0F2"
+               CaretBrush="#00C8FF"
+               Padding="14,10"
+               FontSize="12" />
+    </Border>
+
+    <!-- ── Conteúdo ── -->
+    <ScrollViewer Grid.Row="2" Margin="0,12,0,0">
+      <StackPanel Margin="24,0,24,24" Spacing="8">
+
+        <!-- Estado vazio / aguardando scan -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="14" Margin="0,60"
+                    IsVisible="{Binding !TemResultados}">
+          <TextBlock Text="≡" FontSize="44" HorizontalAlignment="Center"
+                     Foreground="#1A1A2E" />
+          <TextBlock Text="{Binding StatusText}"
+                     Foreground="#484865" FontSize="13"
+                     HorizontalAlignment="Center" TextAlignment="Center"
+                     TextWrapping="Wrap" MaxWidth="400" />
+        </StackPanel>
+
+        <!-- Cabeçalho da tabela -->
+        <Grid ColumnDefinitions="*,140,130,90"
+              Margin="4,0" IsVisible="{Binding TemResultados}">
+          <TextBlock Grid.Column="0" Text="DISPOSITIVO" FontSize="10" FontWeight="Bold"
+                     Foreground="#282840" LetterSpacing="1" />
+          <TextBlock Grid.Column="1" Text="FABRICANTE" FontSize="10" FontWeight="Bold"
+                     Foreground="#282840" LetterSpacing="1" />
+          <TextBlock Grid.Column="2" Text="VERSÃO ATUAL" FontSize="10" FontWeight="Bold"
+                     Foreground="#282840" LetterSpacing="1" />
+          <TextBlock Grid.Column="3" Text="STATUS" FontSize="10" FontWeight="Bold"
+                     Foreground="#282840" LetterSpacing="1"
+                     HorizontalAlignment="Right" />
+        </Grid>
+
+        <!-- Lista de drivers -->
+        <ItemsControl ItemsSource="{Binding Drivers}"
+                      IsVisible="{Binding TemResultados}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:InfoDriverViewModel">
+
+              <Border CornerRadius="8"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
+                      Padding="14,10" Margin="0,0,0,2">
+                <Border.Background>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#0C0C1E" Offset="0" />
+                    <GradientStop Color="#09091A" Offset="1" />
+                  </LinearGradientBrush>
+                </Border.Background>
+
+                <Grid ColumnDefinitions="*,140,130,90">
+
+                  <!-- Dispositivo + HWID -->
+                  <StackPanel Grid.Column="0" Spacing="2"
+                              VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Descricao}"
+                               Foreground="#E0E0F2" FontSize="13"
+                               FontWeight="SemiBold"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding HwidCurto}"
+                               Foreground="#282840" FontSize="10"
+                               FontFamily="Consolas,Courier New,monospace"
+                               TextTrimming="CharacterEllipsis" />
+                  </StackPanel>
+
+                  <!-- Fabricante -->
+                  <TextBlock Grid.Column="1"
+                             Text="{Binding Fabricante}"
+                             Foreground="#484865" FontSize="12"
+                             VerticalAlignment="Center"
+                             TextTrimming="CharacterEllipsis" />
+
+                  <!-- Versão atual -->
+                  <TextBlock Grid.Column="2"
+                             Text="{Binding VersaoAtual}"
+                             Foreground="#484865" FontSize="11"
+                             FontFamily="Consolas,Courier New,monospace"
+                             VerticalAlignment="Center" />
+
+                  <!-- Status badge + botão download -->
+                  <StackPanel Grid.Column="3" Spacing="4"
+                              HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Border Background="{Binding CorFundo}"
+                            CornerRadius="4" Padding="8,3"
+                            HorizontalAlignment="Right">
+                      <TextBlock Text="{Binding StatusTexto}"
+                                 Foreground="{Binding CorStatus}"
+                                 FontSize="10" FontWeight="Bold"
+                                 LetterSpacing="0.5" />
+                    </Border>
+                    <Button Content="↓ baixar"
+                            IsVisible="{Binding TemDownload}"
+                            Command="{Binding $parent[ItemsControl].DataContext.AbrirDownloadCommand}"
+                            CommandParameter="{Binding}"
+                            Background="#00C8FF18" Foreground="#00C8FF"
+                            BorderBrush="#00C8FF40" BorderThickness="1"
+                            Padding="6,2" CornerRadius="4"
+                            FontSize="10" FontWeight="SemiBold"
+                            HorizontalAlignment="Right"
+                            Cursor="Hand" />
+                    <Button Content="⬆ instalar"
+                            IsVisible="{Binding TemDownload}"
+                            Command="{Binding $parent[ItemsControl].DataContext.InstalarDriverCommand}"
+                            CommandParameter="{Binding}"
+                            Background="#09091A" Foreground="#484865"
+                            BorderBrush="#1E1E3C" BorderThickness="1"
+                            Padding="6,2" CornerRadius="4"
+                            FontSize="10" FontWeight="SemiBold"
+                            HorizontalAlignment="Right"
+                            Cursor="Hand" />
+                  </StackPanel>
+
+                </Grid>
+              </Border>
+
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Nota WHQL -->
+        <Border CornerRadius="8" Padding="14,10"
+                IsVisible="{Binding TemResultados}"
+                BorderBrush="#1E1E3C" BorderThickness="1">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <TextBlock TextWrapping="Wrap" Foreground="#282840" FontSize="11">
+            <Run Text="◎  " Foreground="#282840" />
+            <Run Text="Verificação WHQL via catálogo local. Para drivers mais recentes, acesse o site do fabricante." />
+          </TextBlock>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- ── Rodapé ── -->
+    <Border Grid.Row="3" BorderBrush="#13132A" BorderThickness="0,1,0,0"
+            IsVisible="{Binding TemResultados}">
+      <Grid ColumnDefinitions="*,Auto" Margin="24,10,24,12">
+
+        <!-- Status + último scan + instalação -->
+        <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+          <TextBlock Text="{Binding StatusText}"
+                     Foreground="#484865" FontSize="11"
+                     VerticalAlignment="Center" />
+          <TextBlock Text="{Binding UltimoScan}"
+                     Foreground="#282840" FontSize="11"
+                     VerticalAlignment="Center" />
+          <TextBlock Text="{Binding StatusInstalacao}"
+                     Foreground="#484865" FontSize="11"
+                     VerticalAlignment="Center"
+                     IsVisible="{Binding StatusInstalacao, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        </StackPanel>
+
+        <!-- Backup -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding PodeExportarBackup}">
+          <TextBlock Text="{Binding BackupStatus}"
+                     Foreground="#282840" FontSize="11"
+                     VerticalAlignment="Center" MaxWidth="300"
+                     TextTrimming="CharacterEllipsis"
+                     IsVisible="{Binding BackupStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          <Button Command="{Binding ExportarBackupCommand}"
+                  IsEnabled="{Binding !Exportando}"
+                  Background="#00C8FF18" Foreground="#00C8FF"
+                  BorderBrush="#00C8FF40" BorderThickness="1"
+                  Padding="12,5" CornerRadius="5"
+                  FontSize="11" FontWeight="SemiBold"
+                  Cursor="Hand">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="↑" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Backup drivers" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+
+      </Grid>
+    </Border>
+
+  </Grid>
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/DriversView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class DriversView : UserControl
+{
+    public DriversView() => InitializeComponent();
+}
+````
+
+### `src/HardwareOptimizer.App/Views/HomeView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             xmlns:ctrl="using:HardwareOptimizer.App.Controls"
+             x:Class="HardwareOptimizer.App.Views.HomeView"
+             x:DataType="vm:HomeViewModel">
+
+  <UserControl.Styles>
+    <Style Selector="Button.scan /template/ ContentPresenter">
+      <Setter Property="Background" Value="#08081A" />
+      <Setter Property="CornerRadius" Value="85" />
+    </Style>
+    <Style Selector="Button.scan:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#0D0D22" />
+      <Setter Property="CornerRadius" Value="85" />
+    </Style>
+    <Style Selector="Button.scan:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="#121230" />
+      <Setter Property="CornerRadius" Value="85" />
+    </Style>
+    <Style Selector="Button.acao">
+      <Setter Property="Background"      Value="#0C0C1E" />
+      <Setter Property="Foreground"      Value="#6060A0" />
+      <Setter Property="BorderBrush"     Value="#1C1C38" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius"    Value="8" />
+      <Setter Property="Padding"         Value="28,11" />
+      <Setter Property="FontSize"        Value="13" />
+    </Style>
+    <Style Selector="Button.acao:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#12122A" />
+    </Style>
+    <Style Selector="Button.acao:pointerover">
+      <Setter Property="Foreground" Value="#9090C0" />
+    </Style>
+  </UserControl.Styles>
+
+  <!-- Fundo com gradiente radial tecnológico -->
+  <Grid RowDefinitions="Auto,*,Auto,Auto">
+    <Grid.Background>
+      <RadialGradientBrush Center="50%,46%" GradientOrigin="50%,46%"
+                           RadiusX="48%" RadiusY="48%">
+        <GradientStop Color="#060618" Offset="0" />
+        <GradientStop Color="#030308" Offset="1" />
+      </RadialGradientBrush>
+    </Grid.Background>
+
+    <!-- Cabeçalho -->
+    <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,44,0,0" Spacing="8">
+      <TextBlock Text="OTIMIZE BUILDER" FontSize="10" FontWeight="Bold"
+                 Foreground="#1E1E38" LetterSpacing="6"
+                 HorizontalAlignment="Center" />
+      <TextBlock Text="{Binding StatusText}" FontSize="14"
+                 Foreground="#3C3C62"
+                 HorizontalAlignment="Center" />
+    </StackPanel>
+
+    <!-- Área central -->
+    <Grid Grid.Row="1"
+          HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="156" />
+        <ColumnDefinition Width="40" />
+        <ColumnDefinition Width="248" />
+        <ColumnDefinition Width="40" />
+        <ColumnDefinition Width="156" />
+      </Grid.ColumnDefinitions>
+
+      <!-- Card esquerdo: componentes detectados -->
+      <Border Grid.Column="0"
+              CornerRadius="14"
+              BorderThickness="1"
+              Padding="14,24"
+              VerticalAlignment="Center">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#0C0C1E" Offset="0" />
+            <GradientStop Color="#08080F" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <Border.BorderBrush>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#1E1E3C" Offset="0" />
+            <GradientStop Color="#12122A" Offset="1" />
+          </LinearGradientBrush>
+        </Border.BorderBrush>
+        <StackPanel HorizontalAlignment="Center" Spacing="6">
+          <TextBlock Text="{Binding ContadorDispositivos}"
+                     FontSize="54" FontWeight="Black"
+                     Foreground="{Binding CorContador}"
+                     HorizontalAlignment="Center" />
+          <Rectangle Height="1" Width="60">
+            <Rectangle.Fill>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="Transparent" Offset="0" />
+                <GradientStop Color="#22223A"     Offset="0.5" />
+                <GradientStop Color="Transparent" Offset="1" />
+              </LinearGradientBrush>
+            </Rectangle.Fill>
+          </Rectangle>
+          <TextBlock Text="Componentes" Foreground="#3A3A60" FontSize="11"
+                     HorizontalAlignment="Center" />
+          <TextBlock Text="Hardware" Foreground="#22223A" FontSize="10"
+                     HorizontalAlignment="Center" />
+        </StackPanel>
+      </Border>
+
+      <!-- Área do anel de scan -->
+      <Grid Grid.Column="2" Width="248" Height="248">
+
+        <!-- Anéis de radar decorativos -->
+        <Ellipse Width="248" Height="248" Stroke="#0D0D22" StrokeThickness="1" />
+        <Ellipse Width="210" Height="210" Stroke="#10102A" StrokeThickness="1" />
+
+        <!-- Controle do anel animado -->
+        <ctrl:AnelScanControl
+            Progresso="{Binding ProgressoScan}"
+            Escaneando="{Binding Escaneando}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch" />
+
+        <!-- Botão central -->
+        <Button Classes="scan"
+                Command="{Binding ScanCommand}"
+                Width="172" Height="172"
+                CornerRadius="86"
+                BorderThickness="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6">
+            <TextBlock Text="{Binding TextoBotaoScan}"
+                       FontSize="30" FontWeight="Black"
+                       Foreground="#E0E0F2"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding SubtextoBotaoScan}"
+                       FontSize="11" LetterSpacing="1"
+                       Foreground="#00C8FF"
+                       HorizontalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </Grid>
+
+      <!-- Card direito: BIOS -->
+      <Border Grid.Column="4"
+              CornerRadius="14"
+              BorderThickness="1"
+              Padding="14,24"
+              VerticalAlignment="Center">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#0C0C1E" Offset="0" />
+            <GradientStop Color="#08080F" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+        <Border.BorderBrush>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#1E1E3C" Offset="0" />
+            <GradientStop Color="#12122A" Offset="1" />
+          </LinearGradientBrush>
+        </Border.BorderBrush>
+        <StackPanel HorizontalAlignment="Center" Spacing="6">
+          <TextBlock Text="{Binding IconeBios}"
+                     FontSize="54" FontWeight="Black"
+                     Foreground="{Binding CorBios}"
+                     HorizontalAlignment="Center" />
+          <Rectangle Height="1" Width="60">
+            <Rectangle.Fill>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="Transparent" Offset="0" />
+                <GradientStop Color="#22223A"     Offset="0.5" />
+                <GradientStop Color="Transparent" Offset="1" />
+              </LinearGradientBrush>
+            </Rectangle.Fill>
+          </Rectangle>
+          <TextBlock Text="BIOS" Foreground="#3A3A60" FontSize="11"
+                     HorizontalAlignment="Center" />
+          <TextBlock Text="{Binding StatusBios}" Foreground="#22223A" FontSize="10"
+                     HorizontalAlignment="Center" />
+        </StackPanel>
+      </Border>
+
+    </Grid>
+
+    <!-- Último scan -->
+    <TextBlock Grid.Row="2"
+               Text="{Binding UltimoScanLabel}"
+               Foreground="#18183A" FontSize="11"
+               HorizontalAlignment="Center"
+               Margin="0,20,0,0" />
+
+    <!-- Botões pós-scan -->
+    <StackPanel Grid.Row="3"
+                IsVisible="{Binding ScanConcluido}"
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                Spacing="12"
+                Margin="0,18,0,44">
+      <Button Classes="acao"
+              Command="{Binding IrParaDashboardCommand}"
+              Content="Ver Dashboard" />
+    </StackPanel>
+
+  </Grid>
+
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/HomeView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class HomeView : UserControl
+{
+    public HomeView()
+    {
+        InitializeComponent();
+    }
+}
+````
+
+### `src/HardwareOptimizer.App/Views/IaCopilotoView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.IaCopilotoView"
+             x:DataType="vm:IaCopilotoViewModel">
+
+  <Grid RowDefinitions="Auto,*,Auto">
+
+    <!-- ── Cabeçalho ── -->
+    <Border Grid.Row="0" BorderBrush="#13132A" BorderThickness="0,0,0,1"
+            Padding="24,16,24,14">
+      <StackPanel Spacing="3">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                  VerticalAlignment="Center" />
+          <TextBlock Text="IA COPILOTO" FontSize="13" FontWeight="Bold"
+                     Foreground="#484865" LetterSpacing="3"
+                     VerticalAlignment="Center" />
+          <Border Width="7" Height="7" CornerRadius="4"
+                  Background="#00C8FF" VerticalAlignment="Center"
+                  Opacity="0.8" />
+        </StackPanel>
+        <TextBlock Text="Assistente de inteligência artificial para análise de hardware"
+                   Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+      </StackPanel>
+    </Border>
+
+    <!-- ── Histórico de mensagens ── -->
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Margin="20,12,20,12" Spacing="6">
+
+        <!-- Estado vazio -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="12" Margin="0,60"
+                    IsVisible="{Binding MensagensVazio}">
+          <TextBlock Text="○" FontSize="44" HorizontalAlignment="Center"
+                     Foreground="#1A1A2E" />
+          <TextBlock Text="Faça uma pergunta sobre o seu hardware."
+                     Foreground="#484865" FontSize="13"
+                     HorizontalAlignment="Center" TextAlignment="Center" />
+          <TextBlock Text="Ex: Como posso melhorar a temperatura da CPU?"
+                     Foreground="#282840" FontSize="11"
+                     HorizontalAlignment="Center" TextAlignment="Center" />
+        </StackPanel>
+
+        <!-- Lista de mensagens -->
+        <ItemsControl ItemsSource="{Binding Mensagens}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:MensagemChatViewModel">
+              <Panel>
+
+              <!-- Alerta do sistema -->
+              <Border IsVisible="{Binding EhAlerta}"
+                      CornerRadius="8" Padding="14,10" Margin="0,0,0,2"
+                      Background="#1A0800" BorderBrush="#FF8C0040" BorderThickness="1">
+                <StackPanel Spacing="6">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="⚠" Foreground="#FF8C00" FontSize="11"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Autor}"
+                               Foreground="#FF8C00" FontSize="11" FontWeight="Bold"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Hora, StringFormat={}{0:HH:mm}}"
+                               Foreground="#282840" FontSize="10"
+                               VerticalAlignment="Center" />
+                  </StackPanel>
+                  <TextBlock Text="{Binding Texto}"
+                             Foreground="#FF8C00" FontSize="12"
+                             TextWrapping="Wrap" LineHeight="18" Opacity="0.85" />
+                </StackPanel>
+              </Border>
+
+              <!-- Mensagem normal -->
+              <Border IsVisible="{Binding !EhAlerta}"
+                      CornerRadius="8"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
+                      Padding="14,10" Margin="0,0,0,2">
+                <Border.Background>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#0C0C1E" Offset="0" />
+                    <GradientStop Color="#09091A" Offset="1" />
+                  </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel Spacing="6">
+                  <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Border Grid.Column="0" Width="3" Height="14" CornerRadius="2"
+                            Background="{Binding CorAutor}"
+                            Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Autor}"
+                               Foreground="{Binding CorAutor}"
+                               FontSize="11" FontWeight="Bold"
+                               VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding Hora, StringFormat={}{0:HH:mm}}"
+                               Foreground="#282840" FontSize="10"
+                               VerticalAlignment="Center" />
+                  </Grid>
+                  <TextBlock Text="{Binding Texto}"
+                             Foreground="#E0E0F2" FontSize="12"
+                             TextWrapping="Wrap" LineHeight="19" />
+                </StackPanel>
+              </Border>
+
+              </Panel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- ── Área de input ── -->
+    <Border Grid.Row="2" BorderBrush="#13132A" BorderThickness="0,1,0,0"
+            Padding="20,12,20,16">
+      <StackPanel Spacing="8">
+
+        <!-- Indicador de carregamento -->
+        <StackPanel Orientation="Horizontal" Spacing="8"
+                    IsVisible="{Binding Ocupado}">
+          <Border Width="6" Height="6" CornerRadius="3"
+                  Background="#00C8FF" VerticalAlignment="Center" />
+          <TextBlock Text="IA processando…"
+                     Foreground="#484865" FontSize="11"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+
+        <!-- Campo de entrada + botão -->
+        <Grid ColumnDefinitions="*,Auto">
+          <Border Grid.Column="0"
+                  Background="#09091A"
+                  BorderBrush="#1E1E3C" BorderThickness="1"
+                  CornerRadius="8">
+            <TextBox Text="{Binding InputUsuario}"
+                     PlaceholderText="Pergunte algo sobre o seu PC…"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Foreground="#E0E0F2"
+                     CaretBrush="#00C8FF"
+                     FontSize="12"
+                     Padding="12,10"
+                     AcceptsReturn="False">
+              <TextBox.KeyBindings>
+                <KeyBinding Gesture="Return" Command="{Binding EnviarCommand}" />
+              </TextBox.KeyBindings>
+            </TextBox>
+          </Border>
+
+          <Button Grid.Column="1"
+                  Command="{Binding EnviarCommand}"
+                  IsEnabled="{Binding !Ocupado}"
+                  Background="#00C8FF18" Foreground="#00C8FF"
+                  BorderBrush="#00C8FF40" BorderThickness="1"
+                  CornerRadius="8" Padding="18,10"
+                  Margin="8,0,0,0" FontSize="15" FontWeight="Bold"
+                  Content="→"
+                  VerticalAlignment="Stretch"
+                  Cursor="Hand" />
+        </Grid>
+
+      </StackPanel>
+    </Border>
+
+  </Grid>
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/IaCopilotoView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class IaCopilotoView : UserControl
+{
+    public IaCopilotoView() => InitializeComponent();
+}
+````
+
+### `src/HardwareOptimizer.App/Views/InfoSistemaView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.InfoSistemaView"
+             x:DataType="vm:InfoSistemaViewModel">
+
+  <Grid RowDefinitions="Auto,*">
+
+    <!-- ── Cabeçalho ── -->
+    <StackPanel Grid.Row="0" Margin="24,20,24,0" Spacing="3">
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                VerticalAlignment="Center" />
+        <TextBlock Text="INFORMAÇÕES DO SISTEMA" FontSize="13" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="3"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+      <TextBlock Text="Inventário detalhado de hardware e sistema operacional"
+                 Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+    </StackPanel>
+
+    <!-- ── Estado vazio ── -->
+    <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Spacing="12" IsVisible="{Binding !ComDados}">
+      <TextBlock Text="○" FontSize="44" HorizontalAlignment="Center"
+                 Foreground="#1A1A2E" />
+      <TextBlock Text="Execute o SCAN NOW na tela inicial"
+                 Foreground="#484865" FontSize="13"
+                 HorizontalAlignment="Center" />
+      <TextBlock Text="para carregar as informações do sistema"
+                 Foreground="#282840" FontSize="11"
+                 HorizontalAlignment="Center" />
+    </StackPanel>
+
+    <!-- ── Conteúdo ── -->
+    <ScrollViewer Grid.Row="1" IsVisible="{Binding ComDados}">
+      <StackPanel Margin="24,16,24,24" Spacing="12">
+
+        <!-- ═══ SISTEMA OPERACIONAL ═══ -->
+        <Border CornerRadius="10" Padding="20" BorderBrush="#1E1E3C" BorderThickness="1">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="10">
+
+            <TextBlock Text="SISTEMA OPERACIONAL" FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Nome" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding NomeOs}"
+                         Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
+                         TextWrapping="Wrap" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,180,120,*">
+              <TextBlock Text="Versão" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding VersaoOs}"
+                         Foreground="#484865" FontSize="12" />
+              <TextBlock Grid.Column="2" Text="Arquitetura" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding ArquiteturaOs}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+          </StackPanel>
+        </Border>
+
+        <!-- ═══ PROCESSADOR ═══ -->
+        <Border CornerRadius="10" Padding="20" BorderBrush="#1E1E3C" BorderThickness="1">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="10">
+
+            <TextBlock Text="PROCESSADOR" FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Nome" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding NomeCpu}"
+                         Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
+                         TextWrapping="Wrap" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,180,120,*">
+              <TextBlock Text="Fabricante" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding FabricanteCpu}"
+                         Foreground="#484865" FontSize="12" />
+              <TextBlock Grid.Column="2" Text="Soquete" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding SoqueteCpu}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Núcleos / Threads" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding NucleosCpu}"
+                         Foreground="#00C8FF" FontSize="12" FontWeight="SemiBold" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,80,140,*">
+              <TextBlock Text="Clock Base" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding ClockBaseCpu}"
+                         Foreground="#00C8FF" FontSize="12" FontWeight="SemiBold" />
+              <TextBlock Grid.Column="2" Text="Clock Atual" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding ClockAtualCpu}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,80,140,*">
+              <TextBlock Text="Cache L2" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding CacheL2Cpu}"
+                         Foreground="#484865" FontSize="12" />
+              <TextBlock Grid.Column="2" Text="Cache L3" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding CacheL3Cpu}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Temp. Idle" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding TempIdleCpu}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+          </StackPanel>
+        </Border>
+
+        <!-- ═══ PLACA-MÃE ═══ -->
+        <Border CornerRadius="10" Padding="20" BorderBrush="#1E1E3C" BorderThickness="1">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="10">
+
+            <TextBlock Text="PLACA-MÃE" FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Fabricante" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding Fabricante}"
+                         Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Modelo" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding Modelo}"
+                         Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,180,120,*">
+              <TextBlock Text="Chipset" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding Chipset}"
+                         Foreground="#484865" FontSize="12" />
+              <TextBlock Grid.Column="2" Text="Bus Specs" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding BusSpecs}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Secure Boot" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding SecureBoot}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+          </StackPanel>
+        </Border>
+
+        <!-- ═══ BIOS ═══ -->
+        <Border CornerRadius="10" Padding="20" BorderBrush="#1E1E3C" BorderThickness="1">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="10">
+
+            <TextBlock Text="BIOS" FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Fabricante" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding FabricanteBios}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,180,120,*">
+              <TextBlock Text="Versão" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding VersaoBios}"
+                         Foreground="#00C8FF" FontSize="12" FontWeight="SemiBold" />
+              <TextBlock Grid.Column="2" Text="Data" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding DataBios}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Modo" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding ModoBios}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+          </StackPanel>
+        </Border>
+
+        <!-- ═══ MEMÓRIA RAM ═══ -->
+        <Border CornerRadius="10" Padding="20" BorderBrush="#1E1E3C" BorderThickness="1">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="10">
+
+            <TextBlock Text="MEMÓRIA RAM" FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Total" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding ResumoRam}"
+                         Foreground="#00C8FF" FontSize="12" FontWeight="SemiBold" />
+            </Grid>
+
+            <!-- Cabeçalho da tabela por slot -->
+            <Grid ColumnDefinitions="80,60,90,100,140,60,50"
+                  Margin="0,6,0,2">
+              <TextBlock Text="Slot"       Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="1" Text="Tam."       Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="2" Text="Tipo/Vel."  Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="3" Text="Fabricante" Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="4" Text="Modelo"     Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="5" Text="Form"       Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="6" Text="Tensão"     Foreground="#282840" FontSize="10" LetterSpacing="1" />
+            </Grid>
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <ItemsControl ItemsSource="{Binding SlotsRam}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:SlotRamVm">
+                  <Grid ColumnDefinitions="80,60,90,100,140,60,50" Margin="0,4,0,0">
+                    <TextBlock Text="{Binding Slot}"       Foreground="#484865" FontSize="11" />
+                    <TextBlock Grid.Column="1" Text="{Binding Tamanho}"    Foreground="#E0E0F2" FontSize="11" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="2" Text="{Binding TipoVel}"    Foreground="#00C8FF" FontSize="11" />
+                    <TextBlock Grid.Column="3" Text="{Binding Fabricante}" Foreground="#484865" FontSize="11" />
+                    <TextBlock Grid.Column="4" Text="{Binding Modelo}"     Foreground="#484865" FontSize="11"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="5" Text="{Binding FormFactor}" Foreground="#282840" FontSize="11" />
+                    <TextBlock Grid.Column="6" Text="{Binding Tensao}"     Foreground="#282840" FontSize="11" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+          </StackPanel>
+        </Border>
+
+        <!-- ═══ PLACA DE VÍDEO ═══ -->
+        <Border CornerRadius="10" Padding="20" BorderBrush="#1E1E3C" BorderThickness="1">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="10">
+
+            <TextBlock Text="PLACA DE VÍDEO" FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Nome" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding NomeGpu}"
+                         Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
+                         TextWrapping="Wrap" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,80,140,*">
+              <TextBlock Text="VRAM" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding VramGpu}"
+                         Foreground="#00C8FF" FontSize="12" FontWeight="SemiBold" />
+              <TextBlock Grid.Column="2" Text="Bus" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="PCI-Express"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,80,140,*">
+              <TextBlock Text="Resolução" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding ResolucaoGpu}"
+                         Foreground="#484865" FontSize="12" />
+              <TextBlock Grid.Column="2" Text="Taxa" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding TaxaGpu}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,180,120,*">
+              <TextBlock Text="Driver" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding DriverGpu}"
+                         Foreground="#484865" FontSize="12" />
+              <TextBlock Grid.Column="2" Text="Data do Driver" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding DataDriverGpu}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,*">
+              <TextBlock Text="Temp. Idle" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding TempIdleGpu}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Rectangle Height="1" Fill="#1E1E3C" Margin="0,4,0,0" />
+
+            <Grid ColumnDefinitions="160,80,140,*">
+              <TextBlock Text="Current Link Width" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding LinkWidthAtual}"
+                         Foreground="#00C8FF" FontSize="12" FontWeight="SemiBold" />
+              <TextBlock Grid.Column="2" Text="Max. Supported" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding LinkWidthMax}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+            <Grid ColumnDefinitions="160,80,140,*">
+              <TextBlock Text="Current Link Speed" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="{Binding LinkSpeedAtual}"
+                         Foreground="#00C8FF" FontSize="12" FontWeight="SemiBold" />
+              <TextBlock Grid.Column="2" Text="Max. Supported" Foreground="#282840" FontSize="12"
+                         VerticalAlignment="Center" />
+              <TextBlock Grid.Column="3" Text="{Binding LinkSpeedMax}"
+                         Foreground="#484865" FontSize="12" />
+            </Grid>
+
+          </StackPanel>
+        </Border>
+
+        <!-- ═══ ARMAZENAMENTO ═══ -->
+        <Border CornerRadius="10" Padding="20" BorderBrush="#1E1E3C" BorderThickness="1"
+                IsVisible="{Binding TemDiscos}">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="10">
+
+            <TextBlock Text="ARMAZENAMENTO" FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <!-- Cabeçalho -->
+            <Grid ColumnDefinitions="60,100,100,100,70" Margin="0,4,0,2">
+              <TextBlock Text="Drive"   Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="1" Text="Total"  Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="2" Text="Usado"  Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="3" Text="Livre"  Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="4" Text="Uso %"  Foreground="#282840" FontSize="10" LetterSpacing="1" />
+            </Grid>
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <ItemsControl ItemsSource="{Binding DiscosSistema}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:DadosDiscoVm">
+                  <Grid ColumnDefinitions="60,100,100,100,70" Margin="0,4,0,0">
+                    <TextBlock Text="{Binding Letra}"      Foreground="#E0E0F2" FontSize="11" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="1" Text="{Binding Total}"      Foreground="#484865" FontSize="11" />
+                    <TextBlock Grid.Column="2" Text="{Binding Usado}"      Foreground="#484865" FontSize="11" />
+                    <TextBlock Grid.Column="3" Text="{Binding Livre}"      Foreground="#484865" FontSize="11" />
+                    <TextBlock Grid.Column="4" Text="{Binding UsoPercent}"
+                               Foreground="{Binding CorUso}" FontSize="11" FontWeight="SemiBold" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+          </StackPanel>
+        </Border>
+
+        <!-- ═══ SAÚDE DOS DISCOS (S.M.A.R.T.) ═══ -->
+        <Border CornerRadius="10" Padding="20" BorderBrush="#1E1E3C" BorderThickness="1"
+                IsVisible="{Binding TemSaudeDiscos}">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="10">
+
+            <TextBlock Text="SAÚDE DOS DISCOS  ·  S.M.A.R.T." FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <!-- Cabeçalho -->
+            <Grid ColumnDefinitions="2*,50,70,80,80,70,60,60" Margin="0,4,0,2">
+              <TextBlock Text="Modelo"         Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="1" Text="Drive"          Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="2" Text="Status"         Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="3" Text="Vida rest."     Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="4" Text="Horas uso"      Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="5" Text="TBW escrito"    Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="6" Text="Erros"          Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="7" Text="Setores"        Foreground="#282840" FontSize="10" LetterSpacing="1" />
+            </Grid>
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <ItemsControl ItemsSource="{Binding SaudeDiscosSmart}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:SaudeDiscoVm">
+                  <Grid ColumnDefinitions="2*,50,70,80,80,70,60,60" Margin="0,5,0,0">
+                    <TextBlock Text="{Binding Modelo}"       Foreground="#484865" FontSize="11"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="1" Text="{Binding Letra}"        Foreground="#E0E0F2" FontSize="11" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="2" Text="{Binding Status}"       Foreground="{Binding CorStatus}" FontSize="11" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="3" Text="{Binding VidaRestante}" Foreground="#484865" FontSize="11" />
+                    <TextBlock Grid.Column="4" Text="{Binding HorasUso}"     Foreground="#484865" FontSize="11" />
+                    <TextBlock Grid.Column="5" Text="{Binding TbwEscrito}"   Foreground="#484865" FontSize="11" />
+                    <TextBlock Grid.Column="6" Text="{Binding Erros}"        Foreground="{Binding CorErros}" FontSize="11" />
+                    <TextBlock Grid.Column="7" Text="{Binding Setores}"      Foreground="#282840" FontSize="11" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+          </StackPanel>
+        </Border>
+
+        <!-- ═══ REDE ═══ -->
+        <Border CornerRadius="10" Padding="20" BorderBrush="#1E1E3C" BorderThickness="1"
+                IsVisible="{Binding TemRede}">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <StackPanel Spacing="10">
+
+            <TextBlock Text="INTERFACES DE REDE" FontSize="10" FontWeight="Bold"
+                       Foreground="#282840" LetterSpacing="2" />
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <!-- Cabeçalho -->
+            <Grid ColumnDefinitions="2*,120,*" Margin="0,4,0,2">
+              <TextBlock Text="Nome"        Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="1" Text="Tipo"        Foreground="#282840" FontSize="10" LetterSpacing="1" />
+              <TextBlock Grid.Column="2" Text="MAC"         Foreground="#282840" FontSize="10" LetterSpacing="1" />
+            </Grid>
+            <Rectangle Height="1" Fill="#1E1E3C" />
+
+            <ItemsControl ItemsSource="{Binding InterfacesRede}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:InterfaceRedeVm">
+                  <Grid ColumnDefinitions="2*,120,*" Margin="0,4,0,0">
+                    <TextBlock Text="{Binding Nome}" Foreground="#484865" FontSize="11"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="1" Text="{Binding Tipo}" Foreground="#484865" FontSize="11" />
+                    <TextBlock Grid.Column="2" Text="{Binding Mac}"  Foreground="#282840" FontSize="11" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+          </StackPanel>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+
+  </Grid>
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/InfoSistemaView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class InfoSistemaView : UserControl
+{
+    public InfoSistemaView() => InitializeComponent();
+}
+````
+
 ### `src/HardwareOptimizer.App/Views/MainWindow.axaml`
 
 ````xml
@@ -8352,6 +16469,1474 @@ namespace HardwareOptimizer.App.Views;
 public partial class MainWindow : Window
 {
     public MainWindow() => InitializeComponent();
+}
+````
+
+### `src/HardwareOptimizer.App/Views/OtimizadorWindowsView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.OtimizadorWindowsView"
+             x:DataType="vm:OtimizadorWindowsViewModel">
+
+  <UserControl.Styles>
+
+    <!-- Abas do submenu -->
+    <Style Selector="Button.aba">
+      <Setter Property="Background"      Value="Transparent" />
+      <Setter Property="Foreground"      Value="#282840" />
+      <Setter Property="FontSize"        Value="13" />
+      <Setter Property="FontWeight"      Value="SemiBold" />
+      <Setter Property="Padding"         Value="0,10,0,8" />
+      <Setter Property="BorderThickness" Value="0,0,0,2" />
+      <Setter Property="BorderBrush"     Value="Transparent" />
+      <Setter Property="CornerRadius"    Value="0" />
+    </Style>
+    <Style Selector="Button.aba:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#484865" />
+    </Style>
+    <Style Selector="Button.aba-ativa">
+      <Setter Property="Foreground"  Value="#E0E0F2" />
+      <Setter Property="BorderBrush" Value="#00C8FF" />
+    </Style>
+
+    <!-- Botões de seleção rápida -->
+    <Style Selector="Button.sel-rapida">
+      <Setter Property="Background"      Value="#09091A" />
+      <Setter Property="Foreground"      Value="#484865" />
+      <Setter Property="FontSize"        Value="11" />
+      <Setter Property="CornerRadius"    Value="4" />
+      <Setter Property="Padding"         Value="10,4" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button.sel-rapida:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#0F0F1E" />
+    </Style>
+
+    <!-- Checkboxes dos efeitos visuais -->
+    <Style Selector="CheckBox.efeito">
+      <Setter Property="Foreground" Value="#484865" />
+      <Setter Property="FontSize"   Value="12" />
+    </Style>
+    <Style Selector="CheckBox.efeito:checked /template/ Border#NormalRectangle">
+      <Setter Property="Background"  Value="#00C870" />
+      <Setter Property="BorderBrush" Value="#00C870" />
+    </Style>
+    <Style Selector="CheckBox.efeito:checked">
+      <Setter Property="Foreground" Value="#E0E0F2" />
+    </Style>
+    <Style Selector="CheckBox.efeito:unchecked">
+      <Setter Property="Foreground" Value="#282840" />
+    </Style>
+
+    <!-- Checkboxes dos programas -->
+    <Style Selector="CheckBox.programa">
+      <Setter Property="Foreground" Value="Transparent" />
+      <Setter Property="Width"      Value="20" />
+      <Setter Property="Height"     Value="20" />
+    </Style>
+    <Style Selector="CheckBox.programa /template/ Border#NormalRectangle">
+      <Setter Property="BorderBrush" Value="#1E1E3C" />
+      <Setter Property="Background"  Value="Transparent" />
+    </Style>
+    <Style Selector="CheckBox.programa:checked /template/ Border#NormalRectangle">
+      <Setter Property="Background"  Value="#FF4444" />
+      <Setter Property="BorderBrush" Value="#FF4444" />
+    </Style>
+
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="Auto,*">
+
+    <!-- ── Cabeçalho fixo + abas ────────────────────────────────────────── -->
+    <StackPanel Grid.Row="0" Margin="20,20,20,0" Spacing="0">
+
+      <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,16">
+        <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                VerticalAlignment="Center" />
+        <TextBlock Text="OTIMIZADOR WINDOWS" FontSize="13" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="3"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+
+      <!-- Abas do submenu -->
+      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*">
+        <Button Grid.Column="0"
+                Classes="aba"
+                Classes.aba-ativa="{Binding AbaEfeitosAtiva}"
+                Command="{Binding IrParaEfeitosVisuaisCommand}"
+                Content="Exibições Gráficas"
+                Margin="0,0,24,0" />
+        <Button Grid.Column="1"
+                Classes="aba"
+                Classes.aba-ativa="{Binding AbaProgramasAtiva}"
+                Command="{Binding IrParaProgramasCommand}"
+                Content="Programas Instalados"
+                Margin="0,0,24,0" />
+        <Button Grid.Column="2"
+                Classes="aba"
+                Classes.aba-ativa="{Binding AbaInicializacaoAtiva}"
+                Command="{Binding IrParaInicializacaoCommand}"
+                Content="Inicialização"
+                Margin="0,0,24,0" />
+        <Button Grid.Column="3"
+                Classes="aba"
+                Classes.aba-ativa="{Binding AbaServicosAtiva}"
+                Command="{Binding IrParaServicosCommand}"
+                Content="Serviços" />
+      </Grid>
+
+      <!-- Linha separadora -->
+      <Border Height="1" Background="#1E1E3C" />
+
+    </StackPanel>
+
+    <!-- ── Conteúdo rolável ──────────────────────────────────────────────── -->
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Margin="20,16,20,24" Spacing="16">
+
+        <!-- ════ ABA: EXIBIÇÕES GRÁFICAS ════════════════════════════════════ -->
+        <StackPanel IsVisible="{Binding MostrarEfeitosVisuais}" Spacing="16">
+
+          <Border CornerRadius="8" Padding="16" BorderBrush="#1E1E3C" BorderThickness="1">
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Color="#0C0C1E" Offset="0" />
+                <GradientStop Color="#09091A" Offset="1" />
+              </LinearGradientBrush>
+            </Border.Background>
+            <StackPanel Spacing="10">
+
+              <!-- Cabeçalho do card + badge -->
+              <Grid ColumnDefinitions="*,Auto">
+                <StackPanel>
+                  <TextBlock Text="Efeitos Visuais" Foreground="#E0E0F2" FontWeight="SemiBold" />
+                  <TextBlock Foreground="#282840" FontSize="11" Margin="0,2,0,0"
+                             Text="VisualFXSetting → Melhor Desempenho (registro HKCU)" />
+                </StackPanel>
+                <Border Grid.Column="1" Background="#09091A" CornerRadius="4"
+                        Padding="8,4" VerticalAlignment="Center"
+                        BorderBrush="#00C87040" BorderThickness="1"
+                        IsVisible="{Binding EfeitosVisuaisDesativados}">
+                  <TextBlock Text="✓ aplicado" Foreground="#00C870" FontSize="11" />
+                </Border>
+              </Grid>
+
+              <!-- Seleção rápida -->
+              <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2,0,0">
+                <TextBlock Text="SELECIONAR:" Foreground="#282840" FontSize="10"
+                           FontWeight="Bold" LetterSpacing="2" VerticalAlignment="Center" />
+                <Button Classes="sel-rapida" Content="Tudo"   Command="{Binding SelecionarTudoCommand}" />
+                <Button Classes="sel-rapida" Content="Nenhum" Command="{Binding LimparSelecaoCommand}" />
+              </StackPanel>
+
+              <!-- Lista de efeitos com checkboxes -->
+              <ItemsControl ItemsSource="{Binding EfeitosVisuais}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:EfeitoVisualViewModel">
+                    <Border Background="#06060F" CornerRadius="5" Padding="12,9" Margin="0,2">
+                      <CheckBox Classes="efeito"
+                                IsChecked="{Binding Selecionado}"
+                                Content="{Binding Nome}" />
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <!-- Botão de confirmação -->
+              <Button Content="Confirmar e desativar selecionados"
+                      Command="{Binding AplicarEfeitosSelecionadosCommand}"
+                      IsEnabled="{Binding !Ocupado}"
+                      Background="#00C87018" Foreground="#00C870"
+                      BorderBrush="#00C87040" BorderThickness="1"
+                      CornerRadius="6" Padding="14,10"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Center"
+                      FontWeight="SemiBold"
+                      Margin="0,6,0,0" />
+
+            </StackPanel>
+          </Border>
+
+          <!-- Status -->
+          <TextBlock Text="{Binding StatusOtimizador}" Foreground="#484865" FontSize="12" />
+
+        </StackPanel>
+
+        <!-- ════ ABA: PROGRAMAS INSTALADOS ═══════════════════════════════════ -->
+        <StackPanel IsVisible="{Binding MostrarProgramas}" Spacing="12">
+
+          <!-- Caixa de busca -->
+          <Border Background="#09091A" CornerRadius="8" Padding="12,10"
+                  BorderBrush="#1E1E3C" BorderThickness="1">
+            <Grid ColumnDefinitions="Auto,*">
+              <TextBlock Grid.Column="0" Text="⌕" FontSize="16"
+                         Foreground="#282840" VerticalAlignment="Center"
+                         Margin="0,0,8,0" />
+              <TextBox Grid.Column="1"
+                       Text="{Binding FiltroProgramas}"
+                       PlaceholderText="Buscar programa ou fabricante…"
+                       Background="Transparent"
+                       BorderThickness="0"
+                       Foreground="#E0E0F2"
+                       FontSize="13"
+                       VerticalAlignment="Center"
+                       CaretBrush="#00C8FF" />
+            </Grid>
+          </Border>
+
+          <!-- Contador de resultados -->
+          <TextBlock Text="{Binding TotalProgramasLabel}"
+                     Foreground="#484865" FontSize="11"
+                     Margin="4,0" />
+
+          <!-- Lista de programas -->
+          <ItemsControl ItemsSource="{Binding ProgramasFiltrados}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ProgramaInstaladoViewModel">
+                <Border Background="#06060F" CornerRadius="6"
+                        Padding="10,8" Margin="0,2"
+                        BorderBrush="#1E1E3C" BorderThickness="1">
+                  <Grid ColumnDefinitions="Auto,*,Auto">
+
+                    <!-- Checkbox de seleção -->
+                    <CheckBox Grid.Column="0"
+                              Classes="programa"
+                              IsChecked="{Binding Selecionado}"
+                              VerticalAlignment="Center"
+                              Margin="0,0,10,0" />
+
+                    <!-- Informações do programa -->
+                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                      <!-- Nome + badge bloatware -->
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding Nome}"
+                                   Foreground="#E0E0F2" FontWeight="SemiBold"
+                                   FontSize="13" />
+                        <Border Background="#3A1800" CornerRadius="3"
+                                Padding="5,1"
+                                IsVisible="{Binding Bloatware}">
+                          <TextBlock Text="bloatware" Foreground="#FF8C00"
+                                     FontSize="10" FontWeight="Bold" />
+                        </Border>
+                      </StackPanel>
+                      <!-- Fabricante + versão -->
+                      <TextBlock Foreground="#282840" FontSize="11">
+                        <Run Text="{Binding Fabricante}" />
+                        <Run Text=" · v" />
+                        <Run Text="{Binding Versao}" />
+                      </TextBlock>
+                    </StackPanel>
+
+                    <!-- Tamanho + data -->
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Right"
+                                VerticalAlignment="Center" Spacing="2">
+                      <TextBlock Text="{Binding Tamanho}"
+                                 Foreground="#484865" FontSize="11"
+                                 HorizontalAlignment="Right" />
+                      <TextBlock Text="{Binding Data}"
+                                 Foreground="#282840" FontSize="10"
+                                 HorizontalAlignment="Right" />
+                    </StackPanel>
+
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Botão de desinstalar -->
+          <Button Content="{Binding DesinstalarLabel}"
+                  Command="{Binding DesinstalarSelecionadosCommand}"
+                  IsEnabled="{Binding !Ocupado}"
+                  Background="#1A0000" Foreground="#FF4444"
+                  BorderBrush="#FF444440" BorderThickness="1"
+                  CornerRadius="6" Padding="14,10"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  FontWeight="SemiBold"
+                  Margin="0,4,0,0" />
+
+          <!-- Status -->
+          <TextBlock Text="{Binding StatusOtimizador}"
+                     Foreground="#484865" FontSize="12"
+                     Margin="4,0" />
+
+        </StackPanel>
+
+        <!-- ════ ABA: INICIALIZAÇÃO ══════════════════════════════════════════ -->
+        <StackPanel IsVisible="{Binding MostrarInicializacao}" Spacing="0">
+
+          <!-- Cabeçalho de colunas (estilo Task Manager) -->
+          <Border Background="#06060F" CornerRadius="6" Padding="14,7" Margin="0,0,0,2">
+            <Grid ColumnDefinitions="3*,2*,120,80,90">
+              <TextBlock Grid.Column="0" Text="NOME"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+              <TextBlock Grid.Column="1" Text="FORNECEDOR"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+              <TextBlock Grid.Column="2" Text="STATUS"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+              <TextBlock Grid.Column="3" Text="IMPACTO"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+            </Grid>
+          </Border>
+
+          <!-- Lista de entradas -->
+          <ItemsControl ItemsSource="{Binding EntradasStartup}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:InicializacaoEntradaViewModel">
+                <Border Background="#06060F" CornerRadius="5" Padding="14,9" Margin="0,1">
+                  <Grid ColumnDefinitions="3*,2*,120,80,90">
+
+                    <!-- Nome + caminho -->
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                      <TextBlock Text="{Binding Nome}"
+                                 Foreground="#E0E0F2" FontWeight="SemiBold"
+                                 FontSize="12" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{Binding Caminho}"
+                                 Foreground="#282840" FontSize="10"
+                                 TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+
+                    <!-- Fornecedor -->
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Fabricante}"
+                               Foreground="#282840" FontSize="12"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Margin="8,0,4,0" />
+
+                    <!-- Status -->
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding TextoStatus}"
+                               Foreground="{Binding CorStatus}"
+                               FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+
+                    <!-- Impacto -->
+                    <TextBlock Grid.Column="3"
+                               Text="{Binding TextoImpacto}"
+                               Foreground="{Binding CorImpacto}"
+                               FontSize="12"
+                               VerticalAlignment="Center" />
+
+                    <!-- Botão DESATIVAR (quando habilitado) -->
+                    <Button Grid.Column="4"
+                            IsVisible="{Binding Ativo}"
+                            Command="{Binding ToggleCommand}"
+                            Content="DESATIVAR"
+                            Background="{Binding CorBotaoFundo}"
+                            Foreground="{Binding CorBotaoTexto}"
+                            FontSize="10" FontWeight="Bold"
+                            CornerRadius="4" Padding="0,6"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            VerticalAlignment="Center" />
+
+                    <!-- Botão ATIVAR (quando desabilitado) -->
+                    <Button Grid.Column="4"
+                            IsVisible="{Binding !Ativo}"
+                            Command="{Binding ToggleCommand}"
+                            Content="ATIVAR"
+                            Background="{Binding CorBotaoFundo}"
+                            Foreground="{Binding CorBotaoTexto}"
+                            FontSize="10" FontWeight="Bold"
+                            CornerRadius="4" Padding="0,6"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            VerticalAlignment="Center" />
+
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Status de operação -->
+          <TextBlock Text="{Binding StatusOtimizador}"
+                     Foreground="#484865" FontSize="12"
+                     Margin="4,8,0,0" />
+
+        </StackPanel>
+
+        <!-- ════ ABA: SERVIÇOS ══════════════════════════════════════════════ -->
+        <StackPanel IsVisible="{Binding MostrarServicos}" Spacing="12">
+
+          <!-- Barra de busca + botão atualizar -->
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <Border Grid.Column="0" Background="#09091A" CornerRadius="8" Padding="12,10"
+                    BorderBrush="#1E1E3C" BorderThickness="1">
+              <Grid ColumnDefinitions="Auto,*">
+                <TextBlock Grid.Column="0" Text="⌕" FontSize="16"
+                           Foreground="#282840" VerticalAlignment="Center"
+                           Margin="0,0,8,0" />
+                <TextBox Grid.Column="1"
+                         Text="{Binding FiltroServicos}"
+                         PlaceholderText="Buscar serviço…"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Foreground="#E0E0F2"
+                         FontSize="13"
+                         VerticalAlignment="Center"
+                         CaretBrush="#00C8FF" />
+              </Grid>
+            </Border>
+            <Button Grid.Column="1"
+                    Command="{Binding CarregarServicosCommand}"
+                    IsEnabled="{Binding !CarregandoServicos}"
+                    Background="#09091A" Foreground="#484865"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    CornerRadius="8" Padding="14,10"
+                    FontSize="12" Content="↺ Atualizar" />
+          </Grid>
+
+          <!-- Contador -->
+          <TextBlock Text="{Binding TotalServicosLabel}"
+                     Foreground="#484865" FontSize="11"
+                     Margin="4,0" />
+
+          <!-- Indicador de carregamento -->
+          <TextBlock Text="Carregando serviços…"
+                     IsVisible="{Binding CarregandoServicos}"
+                     Foreground="#484865" FontSize="13"
+                     HorizontalAlignment="Center"
+                     Margin="0,20" />
+
+          <!-- Cabeçalho de colunas -->
+          <Border Background="#06060F" CornerRadius="6" Padding="14,7" Margin="0,0,0,2"
+                  IsVisible="{Binding !CarregandoServicos}">
+            <Grid ColumnDefinitions="2*,2*,50,100,160,90">
+              <TextBlock Grid.Column="0" Text="NOME"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+              <TextBlock Grid.Column="1" Text="DESCRIÇÃO"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+              <TextBlock Grid.Column="2" Text="PID"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+              <TextBlock Grid.Column="3" Text="STATUS"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+              <TextBlock Grid.Column="4" Text="TIPO DE INÍCIO"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+            </Grid>
+          </Border>
+
+          <!-- Lista de serviços -->
+          <ItemsControl ItemsSource="{Binding ServicosFiltrados}"
+                        IsVisible="{Binding !CarregandoServicos}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ServicoViewModel">
+                <Border Background="#06060F" CornerRadius="5" Padding="14,6" Margin="0,1">
+                  <Grid ColumnDefinitions="2*,2*,50,100,160,90">
+
+                    <!-- Nome do serviço -->
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Nome}"
+                               Foreground="#E0E0F2" FontWeight="SemiBold"
+                               FontSize="12" VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis" />
+
+                    <!-- Descrição -->
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Descricao}"
+                               Foreground="#282840" FontSize="11"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Margin="8,0,4,0" />
+
+                    <!-- PID -->
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding PidTexto}"
+                               Foreground="#484865" FontSize="11"
+                               VerticalAlignment="Center" />
+
+                    <!-- Status -->
+                    <TextBlock Grid.Column="3"
+                               Text="{Binding TextoStatus}"
+                               Foreground="{Binding CorStatus}"
+                               FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+
+                    <!-- Tipo de Início (ComboBox) -->
+                    <ComboBox Grid.Column="4"
+                              ItemsSource="{x:Static vm:ServicoViewModel.ModoInicioOpcoes}"
+                              SelectedItem="{Binding ModoInicioSelecionado}"
+                              Background="#09091A"
+                              Foreground="#484865"
+                              BorderBrush="#1E1E3C"
+                              BorderThickness="1"
+                              FontSize="11"
+                              Padding="6,4"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Stretch"
+                              Margin="4,0,4,0" />
+
+                    <!-- Botão PARAR / INICIAR -->
+                    <Button Grid.Column="5"
+                            Command="{Binding ToggleCommand}"
+                            Content="{Binding TextoBotao}"
+                            Background="{Binding CorBotaoFundo}"
+                            Foreground="{Binding CorBotaoTexto}"
+                            FontSize="10" FontWeight="Bold"
+                            CornerRadius="4" Padding="0,6"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            VerticalAlignment="Center" />
+
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Status de operação -->
+          <TextBlock Text="{Binding StatusOtimizador}"
+                     Foreground="#484865" FontSize="12"
+                     Margin="4,4,0,0" />
+
+        </StackPanel>
+
+      </StackPanel>
+    </ScrollViewer>
+
+  </Grid>
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/OtimizadorWindowsView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class OtimizadorWindowsView : UserControl
+{
+    public OtimizadorWindowsView() => InitializeComponent();
+}
+````
+
+### `src/HardwareOptimizer.App/Views/ShellWindow.axaml`
+
+````xml
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+        xmlns:views="using:HardwareOptimizer.App.Views"
+        x:Class="HardwareOptimizer.App.Views.ShellWindow"
+        x:DataType="vm:ShellViewModel"
+        Width="1140" Height="730"
+        MinWidth="960" MinHeight="600"
+        Background="#030308"
+        Title="Otimize Builder">
+
+  <Window.Styles>
+
+    <!-- ── Botão de navegação base ────────────────────────────────────────── -->
+    <Style Selector="Button.nav">
+      <Setter Property="Background"              Value="Transparent" />
+      <Setter Property="Foreground"              Value="#484865" />
+      <Setter Property="BorderThickness"         Value="0" />
+      <Setter Property="HorizontalAlignment"     Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding"                 Value="18,11" />
+      <Setter Property="FontSize"                Value="13" />
+      <Setter Property="CornerRadius"            Value="0,8,8,0" />
+    </Style>
+    <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#0C0C1E" />
+    </Style>
+    <Style Selector="Button.nav:pointerover">
+      <Setter Property="Foreground" Value="#8080AA" />
+    </Style>
+
+    <!-- ativo: barra de acento ciano à esquerda via LinearGradientBrush -->
+    <Style Selector="Button.nav.ativo /template/ ContentPresenter">
+      <Setter Property="Background">
+        <Setter.Value>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+            <GradientStop Color="#00C8FF" Offset="0.000" />
+            <GradientStop Color="#00C8FF" Offset="0.018" />
+            <GradientStop Color="#111128" Offset="0.019" />
+            <GradientStop Color="#111128" Offset="1.000" />
+          </LinearGradientBrush>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style Selector="Button.nav.ativo">
+      <Setter Property="Foreground" Value="#E0E0F2" />
+    </Style>
+
+    <!-- ── Botão premium desbloqueado ────────────────────────────────────── -->
+    <Style Selector="Button.nav-premium">
+      <Setter Property="Background"              Value="Transparent" />
+      <Setter Property="Foreground"              Value="#484865" />
+      <Setter Property="BorderThickness"         Value="0" />
+      <Setter Property="HorizontalAlignment"     Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding"                 Value="18,11" />
+      <Setter Property="FontSize"                Value="13" />
+      <Setter Property="CornerRadius"            Value="0,8,8,0" />
+    </Style>
+    <Style Selector="Button.nav-premium:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#0C0C1E" />
+    </Style>
+    <Style Selector="Button.nav-premium:pointerover">
+      <Setter Property="Foreground" Value="#8080AA" />
+    </Style>
+    <Style Selector="Button.nav-premium.ativo /template/ ContentPresenter">
+      <Setter Property="Background">
+        <Setter.Value>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+            <GradientStop Color="#D4A017" Offset="0.000" />
+            <GradientStop Color="#D4A017" Offset="0.018" />
+            <GradientStop Color="#111128" Offset="0.019" />
+            <GradientStop Color="#111128" Offset="1.000" />
+          </LinearGradientBrush>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style Selector="Button.nav-premium.ativo">
+      <Setter Property="Foreground" Value="#E0E0F2" />
+    </Style>
+
+    <!-- ── Botão premium bloqueado ───────────────────────────────────────── -->
+    <Style Selector="Button.nav-locked">
+      <Setter Property="Background"              Value="Transparent" />
+      <Setter Property="Foreground"              Value="#282840" />
+      <Setter Property="BorderThickness"         Value="0" />
+      <Setter Property="HorizontalAlignment"     Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding"                 Value="18,11" />
+      <Setter Property="FontSize"                Value="13" />
+      <Setter Property="CornerRadius"            Value="0,8,8,0" />
+      <Setter Property="IsHitTestVisible"        Value="False" />
+    </Style>
+
+  </Window.Styles>
+
+  <Grid ColumnDefinitions="Auto,*">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <Border Grid.Column="0" Width="220"
+            BorderBrush="#13132A" BorderThickness="0,0,1,0"
+            IsVisible="{Binding ScanConcluido}">
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+          <GradientStop Color="#07070F" Offset="0" />
+          <GradientStop Color="#06060D" Offset="1" />
+        </LinearGradientBrush>
+      </Border.Background>
+
+      <DockPanel>
+
+        <!-- ── Logo ── -->
+        <Button DockPanel.Dock="Top"
+                Command="{Binding IrParaHomeCommand}"
+                Background="Transparent" BorderThickness="0"
+                Padding="20,24,20,16"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Left">
+          <StackPanel Spacing="0">
+            <StackPanel Orientation="Horizontal" Spacing="0">
+              <TextBlock Text="OTIMIZE" FontSize="20" FontWeight="Black"
+                         Foreground="#E0E0F2" />
+              <TextBlock Text=" BUILDER" FontSize="20" FontWeight="Black"
+                         Foreground="#00C8FF" />
+            </StackPanel>
+            <Border Height="2" Margin="0,6,0,0" CornerRadius="1">
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                  <GradientStop Color="#00C8FF" Offset="0" />
+                  <GradientStop Color="#00C8FF" Offset="0.45" />
+                  <GradientStop Color="Transparent" Offset="1" />
+                </LinearGradientBrush>
+              </Border.Background>
+            </Border>
+          </StackPanel>
+        </Button>
+
+        <!-- ── Rodapé (configurações + versão) ── -->
+        <StackPanel DockPanel.Dock="Bottom" Margin="8,0,8,12" Spacing="2">
+          <Rectangle Height="1" Margin="10,6,10,4">
+            <Rectangle.Fill>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="Transparent"  Offset="0" />
+                <GradientStop Color="#18182C" Offset="0.3" />
+                <GradientStop Color="#18182C" Offset="0.7" />
+                <GradientStop Color="Transparent"  Offset="1" />
+              </LinearGradientBrush>
+            </Rectangle.Fill>
+          </Rectangle>
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhConfiguracoes}"
+                  Command="{Binding IrParaConfiguracoesCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="◌" FontSize="14" VerticalAlignment="Center" />
+              <TextBlock Text="Configurações" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <TextBlock Text="v1.0.0-beta"
+                     Foreground="#22223A" FontSize="10"
+                     Margin="20,4,0,0" />
+        </StackPanel>
+
+        <!-- ── Seção Premium ── -->
+        <StackPanel DockPanel.Dock="Bottom" Margin="8,0,8,0" Spacing="2">
+
+          <Grid Margin="12,8,12,6" ColumnDefinitions="Auto,*">
+            <Border Grid.Column="0"
+                    Background="#1A1000" CornerRadius="3"
+                    Padding="6,2">
+              <TextBlock Text="PRO" FontSize="9" FontWeight="Black"
+                         Foreground="#D4A017" LetterSpacing="2" />
+            </Border>
+            <Rectangle Grid.Column="1" Height="1" Margin="8,0,0,0" VerticalAlignment="Center">
+              <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                  <GradientStop Color="#2A1E00" Offset="0" />
+                  <GradientStop Color="Transparent" Offset="1" />
+                </LinearGradientBrush>
+              </Rectangle.Fill>
+            </Rectangle>
+          </Grid>
+
+          <!-- UPGRADE -->
+          <Button Classes="nav-premium"
+                  Classes.ativo="{Binding PaginaEhUpgrade}"
+                  Command="{Binding IrParaUpgradeCommand}"
+                  IsVisible="{Binding EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="▲" FontSize="11" VerticalAlignment="Center" />
+              <TextBlock Text="UPGRADE" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
+              <TextBlock Text="UPGRADE" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- Vida Útil -->
+          <Button Classes="nav-premium"
+                  Classes.ativo="{Binding PaginaEhVidaUtil}"
+                  Command="{Binding IrParaVidaUtilCommand}"
+                  IsVisible="{Binding EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="◆" FontSize="11" VerticalAlignment="Center" />
+              <TextBlock Text="Vida Útil" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
+              <TextBlock Text="Vida Útil" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- Drivers -->
+          <Button Classes="nav-premium"
+                  Classes.ativo="{Binding PaginaEhDrivers}"
+                  Command="{Binding IrParaDriversCommand}"
+                  IsVisible="{Binding EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="≡" FontSize="14" VerticalAlignment="Center" />
+              <TextBlock Text="Drivers" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
+              <TextBlock Text="Drivers" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- Guia BIOS IA -->
+          <Button Classes="nav-premium"
+                  Classes.ativo="{Binding PaginaEhBiosGuide}"
+                  Command="{Binding IrParaBiosGuideCommand}"
+                  IsVisible="{Binding EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="▸" FontSize="13" VerticalAlignment="Center" />
+              <TextBlock Text="Guia BIOS IA" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
+              <TextBlock Text="Guia BIOS IA" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- CTA: Ativar Premium (visível somente no plano gratuito) -->
+          <Button Margin="12,6,12,0"
+                  Command="{Binding IrParaConfiguracoesCommand}"
+                  IsVisible="{Binding !EhPremium}"
+                  Background="#1A1000" Foreground="#D4A017"
+                  BorderBrush="#2A1E00" BorderThickness="1"
+                  CornerRadius="6" Padding="12,8"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  FontSize="11" FontWeight="SemiBold"
+                  Cursor="Hand">
+            <TextBlock Text="⭐  Ativar Premium"
+                       HorizontalAlignment="Center" />
+          </Button>
+
+        </StackPanel>
+
+        <!-- ── Navegação principal ── -->
+        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="8,10,8,0">
+
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhDashboard}"
+                  Command="{Binding IrParaDashboardCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="■" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Dashboard" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhOtimizador}"
+                  Command="{Binding IrParaOtimizadorCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="⚡" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Otimizador Windows" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhInfoSistema}"
+                  Command="{Binding IrParaInfoSistemaCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="◉" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Info Sistema" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
+          <!-- IA Copiloto com badge -->
+          <Button Classes="nav"
+                  Classes.ativo="{Binding PaginaEhIaCopiloto}"
+                  Command="{Binding IrParaIaCopilotoCommand}">
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock Text="○" FontSize="13" VerticalAlignment="Center" />
+                <TextBlock Text="IA Copiloto" VerticalAlignment="Center" />
+              </StackPanel>
+              <Border Grid.Column="1" Background="#3D0000" CornerRadius="8"
+                      Padding="5,1" Margin="0,0,2,0"
+                      IsVisible="{Binding TemAlertaIa}">
+                <TextBlock Text="!" Foreground="#FF3A5C" FontSize="10"
+                           FontWeight="Black" />
+              </Border>
+            </Grid>
+          </Button>
+
+        </StackPanel>
+
+      </DockPanel>
+    </Border>
+
+    <!-- ═══ ÁREA DE CONTEÚDO ═══ -->
+    <ContentControl Grid.Column="1"
+                    Content="{Binding PaginaAtual}"
+                    Background="#030308">
+      <ContentControl.DataTemplates>
+
+        <DataTemplate DataType="vm:HomeViewModel">
+          <views:HomeView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:DashboardViewModel">
+          <views:DashboardView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:OtimizadorWindowsViewModel">
+          <views:OtimizadorWindowsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:IaCopilotoViewModel">
+          <views:IaCopilotoView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:InfoSistemaViewModel">
+          <views:InfoSistemaView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:UpgradeViewModel">
+          <views:UpgradeView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:VidaUtilViewModel">
+          <views:VidaUtilView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:DriversViewModel">
+          <views:DriversView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:BiosGuideViewModel">
+          <views:BiosGuideView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:ConfiguracoesViewModel">
+          <views:ConfiguracoesView />
+        </DataTemplate>
+
+      </ContentControl.DataTemplates>
+    </ContentControl>
+
+  </Grid>
+</Window>
+````
+
+### `src/HardwareOptimizer.App/Views/ShellWindow.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class ShellWindow : Window
+{
+    public ShellWindow() => InitializeComponent();
+}
+````
+
+### `src/HardwareOptimizer.App/Views/UpgradeView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             xmlns:controls="using:HardwareOptimizer.App.Controls"
+             x:Class="HardwareOptimizer.App.Views.UpgradeView"
+             x:DataType="vm:UpgradeViewModel">
+
+  <!-- Three-panel layout: diagram (left) | parts list (center) | IA chat (right) -->
+  <Grid ColumnDefinitions="3*,2*,2.2*">
+
+    <!-- ═══════════════ LEFT — Isometric PC Diagram ═══════════════ -->
+    <Grid Grid.Column="0" RowDefinitions="Auto,*,Auto">
+
+      <!-- Header -->
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="20,16,16,12">
+        <StackPanel Spacing="3">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Border Width="3" Height="14" Background="#00C8FF" CornerRadius="2"
+                    VerticalAlignment="Center" />
+            <TextBlock Text="UPGRADE" FontSize="13" FontWeight="Bold"
+                       Foreground="#484865" LetterSpacing="3"
+                       VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Text="{Binding NomePlacaMae}"
+                     Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+        </StackPanel>
+
+        <Button Grid.Column="1"
+                Content="{Binding TextoBotao}"
+                Command="{Binding CarregarCommand}"
+                IsEnabled="{Binding !Carregando}"
+                Background="#00C8FF18" Foreground="#00C8FF"
+                BorderBrush="#00C8FF40" BorderThickness="1"
+                Padding="14,8" CornerRadius="6" FontSize="11"
+                VerticalAlignment="Center"
+                Cursor="Hand" />
+      </Grid>
+
+      <!-- Isometric diagram -->
+      <controls:DiagramaGabinete
+          Grid.Row="1"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          TemCpu="{Binding TemCpu}"
+          TemGpu="{Binding TemGpu}"
+          TemRam="{Binding TemRam}"
+          TemPlaca="{Binding TemPlaca}"
+          ComponenteLimitante="{Binding ComponenteLimitante}" />
+
+      <!-- Bottleneck badge — balanced -->
+      <Border Grid.Row="1"
+              VerticalAlignment="Bottom" HorizontalAlignment="Center"
+              Margin="0,0,0,20"
+              Background="#09091A" CornerRadius="20" Padding="16,7"
+              BorderBrush="#1E1E3C" BorderThickness="1"
+              IsVisible="{Binding Carregado}">
+        <TextBlock Text="{Binding GargaloLabel}"
+                   FontSize="12" FontWeight="SemiBold"
+                   Foreground="#00C870"
+                   IsVisible="{Binding !IsGargalo}" />
+      </Border>
+
+      <Border Grid.Row="1"
+              VerticalAlignment="Bottom" HorizontalAlignment="Center"
+              Margin="0,0,0,20"
+              Background="#1A0800" CornerRadius="20" Padding="16,7"
+              BorderBrush="#FF8C0040" BorderThickness="1"
+              IsVisible="{Binding IsGargalo}">
+        <TextBlock Text="{Binding GargaloLabel}"
+                   FontSize="12" FontWeight="SemiBold"
+                   Foreground="#FF8C00" />
+      </Border>
+
+      <!-- Hint -->
+      <StackPanel Grid.Row="2" HorizontalAlignment="Center" Spacing="6"
+                  Margin="0,0,0,20"
+                  IsVisible="{Binding !Carregado}">
+        <TextBlock Text="Clique em  Detectar Hardware  para escanear os componentes"
+                   Foreground="#282840" FontSize="11"
+                   HorizontalAlignment="Center" />
+      </StackPanel>
+
+    </Grid>
+
+    <!-- ═══════════════ CENTER — Parts List ═══════════════ -->
+    <Border Grid.Column="1"
+            Background="#06060F"
+            BorderBrush="#1E1E3C" BorderThickness="1,0,0,0">
+      <ScrollViewer>
+        <StackPanel Margin="20,18,20,24" Spacing="0">
+
+          <TextBlock Text="PEÇAS DETECTADAS" FontSize="10" FontWeight="Bold"
+                     Foreground="#282840" LetterSpacing="2"
+                     Margin="0,0,0,18" />
+
+          <!-- CPU -->
+          <StackPanel Spacing="3" Margin="0,0,0,14">
+            <TextBlock Text="CPU" FontSize="9" Foreground="#282840" LetterSpacing="1"
+                       FontWeight="Bold" />
+            <TextBlock Text="{Binding NomeCpu}"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="{Binding InfosCpu}"
+                       Foreground="#484865" FontSize="10"
+                       IsVisible="{Binding InfosCpu,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+
+          <Rectangle Height="1" Fill="#1E1E3C" Margin="0,0,0,14" />
+
+          <!-- GPU -->
+          <StackPanel Spacing="3" Margin="0,0,0,14">
+            <TextBlock Text="GPU" FontSize="9" Foreground="#282840" LetterSpacing="1"
+                       FontWeight="Bold" />
+            <TextBlock Text="{Binding NomeGpu}"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="{Binding InfosGpu}"
+                       Foreground="#484865" FontSize="10"
+                       IsVisible="{Binding InfosGpu,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+
+          <Rectangle Height="1" Fill="#1E1E3C" Margin="0,0,0,14" />
+
+          <!-- RAM -->
+          <StackPanel Spacing="3" Margin="0,0,0,14">
+            <TextBlock Text="MEMÓRIA RAM" FontSize="9" Foreground="#282840" LetterSpacing="1"
+                       FontWeight="Bold" />
+            <TextBlock Text="{Binding NomeRam}"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="{Binding FabricanteRam}"
+                       Foreground="#484865" FontSize="10"
+                       IsVisible="{Binding FabricanteRam,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <TextBlock Text="{Binding InfosRam}"
+                       Foreground="#282840" FontSize="10"
+                       TextWrapping="Wrap"
+                       IsVisible="{Binding InfosRam,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+
+          <Rectangle Height="1" Fill="#1E1E3C" Margin="0,0,0,14" />
+
+          <!-- Motherboard -->
+          <StackPanel Spacing="3" Margin="0,0,0,14">
+            <TextBlock Text="PLACA-MÃE" FontSize="9" Foreground="#282840" LetterSpacing="1"
+                       FontWeight="Bold" />
+            <TextBlock Text="{Binding NomePlacaMae}"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+            <TextBlock Text="{Binding InfosPlaca}"
+                       Foreground="#484865" FontSize="10"
+                       IsVisible="{Binding InfosPlaca,
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+
+          <Rectangle Height="1" Fill="#1E1E3C" Margin="0,0,0,14" />
+
+          <!-- OS -->
+          <StackPanel Spacing="3" Margin="0,0,0,24">
+            <TextBlock Text="SISTEMA OPERACIONAL" FontSize="9" Foreground="#282840"
+                       LetterSpacing="1" FontWeight="Bold" />
+            <TextBlock Text="{Binding NomeOs}"
+                       Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
+                       TextWrapping="Wrap" />
+          </StackPanel>
+
+          <!-- Bottleneck Analysis -->
+          <Border CornerRadius="8" Padding="14,12"
+                  BorderBrush="#1E1E3C" BorderThickness="1"
+                  IsVisible="{Binding Carregado}">
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Color="#0C0C1E" Offset="0" />
+                <GradientStop Color="#09091A" Offset="1" />
+              </LinearGradientBrush>
+            </Border.Background>
+            <StackPanel Spacing="10">
+
+              <TextBlock Text="ANÁLISE DE GARGALO" FontSize="9" FontWeight="Bold"
+                         Foreground="#282840" LetterSpacing="2" />
+
+              <Border CornerRadius="6" Padding="10,8"
+                      Background="#00C87018" BorderBrush="#00C87040" BorderThickness="1"
+                      IsVisible="{Binding !IsGargalo}">
+                <StackPanel Spacing="4">
+                  <TextBlock Text="{Binding GargaloLabel}"
+                             Foreground="#00C870" FontSize="12" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding GargaloDescricao}"
+                             Foreground="#484865" FontSize="10" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+
+              <Border CornerRadius="6" Padding="10,8"
+                      Background="#1A0800" BorderBrush="#FF8C0040" BorderThickness="1"
+                      IsVisible="{Binding IsGargalo}">
+                <StackPanel Spacing="4">
+                  <TextBlock Text="{Binding GargaloLabel}"
+                             Foreground="#FF8C00" FontSize="12" FontWeight="SemiBold" />
+                  <TextBlock Text="{Binding GargaloDescricao}"
+                             Foreground="#484865" FontSize="10" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+
+            </StackPanel>
+          </Border>
+
+          <!-- Empty state -->
+          <StackPanel HorizontalAlignment="Center" Spacing="8" Margin="0,40,0,0"
+                      IsVisible="{Binding !Carregado}">
+            <TextBlock Text="–" FontSize="24" HorizontalAlignment="Center"
+                       Foreground="#282840" />
+            <TextBlock Text="Aguardando detecção"
+                       Foreground="#282840" FontSize="11"
+                       HorizontalAlignment="Center" />
+          </StackPanel>
+
+        </StackPanel>
+      </ScrollViewer>
+    </Border>
+
+    <!-- ═══════════════ RIGHT — IA Upgrade Chat ═══════════════ -->
+    <Border Grid.Column="2"
+            Background="#030308"
+            BorderBrush="#1E1E3C" BorderThickness="1,0,0,0">
+      <Grid RowDefinitions="Auto,*,Auto,Auto">
+
+        <!-- Chat header -->
+        <Border Grid.Row="0" Padding="16,14,16,12"
+                BorderBrush="#1E1E3C" BorderThickness="0,0,0,1">
+          <StackPanel Spacing="2">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Border Width="7" Height="7" CornerRadius="4"
+                      Background="#00C8FF" VerticalAlignment="Center" />
+              <TextBlock Text="IA UPGRADE" FontSize="10" FontWeight="Bold"
+                         Foreground="#484865" LetterSpacing="2" />
+            </StackPanel>
+            <TextBlock Text="Sugere upgrades e verifica compatibilidade"
+                       Foreground="#282840" FontSize="9" />
+          </StackPanel>
+        </Border>
+
+        <!-- Mensagens -->
+        <ScrollViewer Grid.Row="1" Name="ChatScroll">
+          <ItemsControl ItemsSource="{Binding Mensagens}" Margin="0,8,0,8">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ChatMensagemVm">
+                <Panel Margin="0,2,0,2">
+
+                  <!-- Bubble usuário (direita) -->
+                  <Border IsVisible="{Binding IsUser}"
+                          Background="#00C8FF18" CornerRadius="8,8,2,8"
+                          BorderBrush="#00C8FF30" BorderThickness="1"
+                          Padding="11,8" HorizontalAlignment="Right"
+                          Margin="40,0,12,0" MaxWidth="240">
+                    <TextBlock Text="{Binding Texto}"
+                               Foreground="#E0E0F2" FontSize="11"
+                               TextWrapping="Wrap" />
+                  </Border>
+
+                  <!-- Bubble assistente (esquerda) -->
+                  <Border IsVisible="{Binding IsAssistant}"
+                          CornerRadius="8,8,8,2"
+                          BorderBrush="#1E1E3C" BorderThickness="1"
+                          Padding="11,8" HorizontalAlignment="Left"
+                          Margin="12,0,40,0" MaxWidth="260">
+                    <Border.Background>
+                      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                        <GradientStop Color="#0C0C1E" Offset="0" />
+                        <GradientStop Color="#09091A" Offset="1" />
+                      </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock Text="{Binding Texto}"
+                               Foreground="#E0E0F2" FontSize="11"
+                               TextWrapping="Wrap" />
+                  </Border>
+
+                </Panel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Indicador de carregando -->
+        <Border Grid.Row="2" Padding="16,6"
+                IsVisible="{Binding ChatCarregando}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <Border Width="5" Height="5" CornerRadius="3"
+                    Background="#00C8FF" VerticalAlignment="Center" />
+            <TextBlock Text="Claude está analisando..."
+                       Foreground="#484865" FontSize="10"
+                       VerticalAlignment="Center" />
+          </StackPanel>
+        </Border>
+
+        <!-- Input -->
+        <Border Grid.Row="3" Padding="12,10,12,14"
+                BorderBrush="#1E1E3C" BorderThickness="0,1,0,0"
+                IsVisible="{Binding ChatVisivel}">
+          <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
+            <Border Grid.Column="0"
+                    Background="#09091A"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    CornerRadius="8">
+              <TextBox Text="{Binding MensagemInput}"
+                       PlaceholderText="Ex: Quero trocar minha GPU por uma RTX 5080..."
+                       Background="Transparent"
+                       BorderThickness="0"
+                       Foreground="#E0E0F2"
+                       CaretBrush="#00C8FF"
+                       FontSize="11"
+                       Padding="10,8"
+                       TextWrapping="Wrap"
+                       AcceptsReturn="False"
+                       MaxLength="500">
+                <TextBox.KeyBindings>
+                  <KeyBinding Gesture="Return" Command="{Binding EnviarMensagemCommand}" />
+                </TextBox.KeyBindings>
+              </TextBox>
+            </Border>
+
+            <Button Grid.Column="1"
+                    Command="{Binding EnviarMensagemCommand}"
+                    IsEnabled="{Binding PodeEnviar}"
+                    Background="#00C8FF18" Foreground="#00C8FF"
+                    BorderBrush="#00C8FF40" BorderThickness="1"
+                    CornerRadius="8" Padding="12,8"
+                    Margin="8,0,0,0" FontSize="14" FontWeight="Bold"
+                    Content="→"
+                    VerticalAlignment="Stretch"
+                    Cursor="Hand" />
+          </Grid>
+        </Border>
+
+        <!-- Placeholder antes de detectar -->
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="8"
+                    IsVisible="{Binding !ChatVisivel}">
+          <TextBlock Text="○" FontSize="32" HorizontalAlignment="Center"
+                     Foreground="#282840" />
+          <TextBlock Text="Detecte o hardware" Foreground="#484865" FontSize="12"
+                     HorizontalAlignment="Center" />
+          <TextBlock Text="para ativar o assistente de upgrade"
+                     Foreground="#282840" FontSize="10"
+                     HorizontalAlignment="Center" />
+        </StackPanel>
+
+      </Grid>
+    </Border>
+
+  </Grid>
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/UpgradeView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class UpgradeView : UserControl
+{
+    public UpgradeView() => InitializeComponent();
+}
+````
+
+### `src/HardwareOptimizer.App/Views/VidaUtilView.axaml`
+
+````xml
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.VidaUtilView"
+             x:DataType="vm:VidaUtilViewModel">
+
+  <Grid RowDefinitions="Auto,*,Auto">
+
+    <!-- ── Cabeçalho ── -->
+    <StackPanel Grid.Row="0" Margin="24,20,24,0" Spacing="3">
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                VerticalAlignment="Center" />
+        <TextBlock Text="VIDA ÚTIL" FontSize="13" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="3"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+      <TextBlock Text="S.M.A.R.T. — Saúde e estimativa de vida dos discos"
+                 Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+    </StackPanel>
+
+    <!-- ── Conteúdo principal ── -->
+    <ScrollViewer Grid.Row="1" Margin="0,16,0,0">
+      <StackPanel Margin="24,0,24,24" Spacing="10">
+
+        <!-- Estado vazio -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="14" Margin="0,60"
+                    IsVisible="{Binding !TemResultados}">
+          <TextBlock Text="◆" FontSize="44" HorizontalAlignment="Center"
+                     Foreground="#1A1A2E" />
+          <TextBlock Text="{Binding StatusText}"
+                     Foreground="#484865" FontSize="13"
+                     HorizontalAlignment="Center" TextAlignment="Center"
+                     TextWrapping="Wrap" MaxWidth="400" />
+        </StackPanel>
+
+        <!-- Lista de discos -->
+        <ItemsControl ItemsSource="{Binding Discos}"
+                      IsVisible="{Binding TemResultados}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:SaudeDiscoViewModel">
+
+              <Border CornerRadius="12"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
+                      Padding="20,16" Margin="0,0,0,8">
+                <Border.Background>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#0C0C1E" Offset="0" />
+                    <GradientStop Color="#09091A" Offset="1" />
+                  </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel Spacing="12">
+
+                  <!-- Modelo + badge de nível -->
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding Modelo}"
+                               Foreground="#E0E0F2" FontSize="14"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                    <Border Grid.Column="1"
+                            Background="{Binding CorFundo}"
+                            CornerRadius="5" Padding="10,4">
+                      <TextBlock Text="{Binding NivelTexto}"
+                                 Foreground="{Binding CorNivel}"
+                                 FontSize="11" FontWeight="Bold"
+                                 LetterSpacing="1" />
+                    </Border>
+                  </Grid>
+
+                  <!-- Barra de vida útil -->
+                  <Grid ColumnDefinitions="*,60">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                      <TextBlock Text="Vida útil restante"
+                                 Foreground="#282840" FontSize="11" />
+                      <ProgressBar Value="{Binding Porcentagem}" Maximum="100"
+                                   Foreground="{Binding CorNivel}"
+                                   Background="#09091A"
+                                   Height="10" CornerRadius="5" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding PorcentagemTexto}"
+                               Foreground="{Binding CorNivel}"
+                               FontSize="22" FontWeight="Black"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center" />
+                  </Grid>
+
+                  <!-- Detalhes: TBW e horas de uso -->
+                  <Grid ColumnDefinitions="*,*">
+                    <StackPanel Grid.Column="0" Spacing="3">
+                      <TextBlock Text="ESCRITA ACUMULADA" FontSize="10"
+                                 Foreground="#282840" LetterSpacing="1" FontWeight="Bold" />
+                      <TextBlock Text="{Binding TbwTexto}"
+                                 Foreground="#484865" FontSize="11"
+                                 TextWrapping="Wrap" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="3">
+                      <TextBlock Text="TEMPO DE USO" FontSize="10"
+                                 Foreground="#282840" LetterSpacing="1" FontWeight="Bold" />
+                      <TextBlock Text="{Binding HorasUso}"
+                                 Foreground="#484865" FontSize="11" />
+                    </StackPanel>
+                  </Grid>
+
+                  <!-- Aviso de erro -->
+                  <Border CornerRadius="6" Padding="12,8"
+                          Background="#CC000018" BorderBrush="#CC000040" BorderThickness="1"
+                          IsVisible="{Binding TemErros}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <TextBlock Text="⚠" Foreground="#FF4444" FontSize="12"
+                                 VerticalAlignment="Top" Margin="0,1,0,0" />
+                      <TextBlock Text="{Binding AvisoErro}"
+                                 Foreground="#FF4444" FontSize="12"
+                                 TextWrapping="Wrap" />
+                    </StackPanel>
+                  </Border>
+
+                </StackPanel>
+              </Border>
+
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- ── Rodapé ── -->
+    <Border Grid.Row="2" BorderBrush="#13132A" BorderThickness="0,1,0,0"
+            IsVisible="{Binding TemResultados}">
+      <StackPanel Orientation="Horizontal" Spacing="16" Margin="24,10,24,12">
+        <TextBlock Text="{Binding StatusText}"
+                   Foreground="#484865" FontSize="11"
+                   VerticalAlignment="Center" />
+        <TextBlock Text="{Binding UltimoScan}"
+                   Foreground="#282840" FontSize="11"
+                   VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+  </Grid>
+</UserControl>
+````
+
+### `src/HardwareOptimizer.App/Views/VidaUtilView.axaml.cs`
+
+````csharp
+using Avalonia.Controls;
+
+namespace HardwareOptimizer.App.Views;
+
+public partial class VidaUtilView : UserControl
+{
+    public VidaUtilView() => InitializeComponent();
 }
 ````
 
@@ -9882,6 +19467,112 @@ public sealed class GeradorGuiaBiosTests
 }
 ````
 
+### `tests/HardwareOptimizer.Core.Tests/GeradorGuiaXmpExpoTests.cs`
+
+````csharp
+using HardwareOptimizer.Core.Bios;
+using Xunit;
+
+namespace HardwareOptimizer.Core.Tests;
+
+public sealed class GeradorGuiaXmpExpoTests
+{
+    private readonly GeradorGuiaXmpExpo _gerador = new();
+
+    private static IdentificacaoBios Bios(string fabricante) => new()
+    {
+        FabricanteBruto = fabricante,
+        Fabricante = fabricante,
+        Modelo = "Test Model",
+        ChaveBusca = fabricante.ToLowerInvariant() + "-test-model",
+    };
+
+    [Fact]
+    public void ASUS_ddr4_usa_docp_e_del()
+    {
+        var guia = _gerador.Gerar(Bios("ASUS"), "DDR4");
+
+        Assert.Equal("ASUS", guia.Fabricante);
+        Assert.Contains("Del", guia.TeclaSetup, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(guia.Passos, p => p.Contains("D.O.C.P.", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ASUS_ddr5_usa_expo()
+    {
+        var guia = _gerador.Gerar(Bios("ASUS"), "DDR5");
+
+        // Passo 3 deve localizar a opção "EXPO" (não "D.O.C.P." que é para DDR4)
+        Assert.Contains(guia.Passos, p => p.Contains("EXPO", StringComparison.Ordinal));
+        // Não deve haver passo que diga para configurar "D.O.C.P." como perfil principal
+        Assert.DoesNotContain(guia.Passos, p =>
+            p.Contains("Localize a opção 'D.O.C.P.'", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void MSI_ddr4_usa_xmp()
+    {
+        var guia = _gerador.Gerar(Bios("MSI"), "DDR4");
+
+        Assert.Contains(guia.Passos, p => p.Contains("XMP", StringComparison.Ordinal));
+        Assert.Contains("Del", guia.TeclaSetup, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void MSI_ddr5_usa_expo()
+    {
+        var guia = _gerador.Gerar(Bios("MSI"), "DDR5");
+
+        Assert.Contains(guia.Passos, p => p.Contains("EXPO", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Gigabyte_ddr4_usa_xmp_ponto()
+    {
+        var guia = _gerador.Gerar(Bios("Gigabyte"), "DDR4");
+
+        Assert.Contains(guia.Passos, p => p.Contains("X.M.P.", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Gigabyte_ddr5_usa_expo()
+    {
+        var guia = _gerador.Gerar(Bios("Gigabyte"), "DDR5");
+
+        Assert.Contains(guia.Passos, p => p.Contains("EXPO", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ASRock_retorna_exatamente_5_passos()
+    {
+        var guia = _gerador.Gerar(Bios("ASRock"), "DDR4");
+
+        Assert.Equal(5, guia.Passos.Count);
+        Assert.Contains("F2", guia.TeclaSetup, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Fabricante_desconhecido_retorna_guia_generico_nao_vazio()
+    {
+        var guia = _gerador.Gerar(Bios("Biostar"), null);
+
+        Assert.NotEmpty(guia.Passos);
+        Assert.NotEmpty(guia.Aviso);
+        Assert.Equal("DDR4/DDR5", guia.TipoRam);
+    }
+
+    [Fact]
+    public void Aviso_nao_e_vazio_para_todos_fabricantes()
+    {
+        foreach (var fab in new[] { "ASUS", "MSI", "Gigabyte", "ASRock", "Desconhecido" })
+        {
+            var guia = _gerador.Gerar(Bios(fab), "DDR4");
+            Assert.NotEmpty(guia.Aviso);
+        }
+    }
+}
+````
+
 ### `tests/HardwareOptimizer.Core.Tests/GeradorRelatorioTests.cs`
 
 ````csharp
@@ -11091,6 +20782,147 @@ public sealed class FluxoCompletoTests : IDisposable
 global using Xunit;
 ````
 
+### `tests/HardwareOptimizer.Agent.Tests/ListaNegraSegurancaTests.cs`
+
+````csharp
+using HardwareOptimizer.Agent.Security;
+using HardwareOptimizer.Core.Contracts;
+
+namespace HardwareOptimizer.Agent.Tests;
+
+public sealed class ListaNegraSegurancaTests
+{
+    // ── Serviços: críticos devem ser bloqueados ───────────────────────────
+
+    [Theory]
+    [InlineData("lsass")]
+    [InlineData("LSASS")]           // case-insensitive
+    [InlineData("csrss")]
+    [InlineData("winlogon")]
+    [InlineData("services")]
+    [InlineData("smss")]
+    [InlineData("wininit")]
+    [InlineData("rpcss")]
+    [InlineData("dcomlaunch")]
+    [InlineData("winmgmt")]
+    [InlineData("eventlog")]
+    [InlineData("mpssvc")]
+    [InlineData("windefend")]
+    [InlineData("wscsvc")]
+    [InlineData("power")]
+    [InlineData("plugplay")]
+    [InlineData("dnscache")]
+    [InlineData("dhcp")]
+    [InlineData("nsi")]
+    [InlineData("cryptsvc")]
+    [InlineData("disk")]
+    [InlineData("volmgr")]
+    [InlineData("dwm")]
+    [InlineData("bfe")]
+    [InlineData("schedule")]
+    [InlineData("netlogon")]
+    public void Servico_critico_nao_seguro(string nome)
+    {
+        var svc = Svc(nome, "Manual");
+        Assert.False(ListaNegraServicos.EhSeguro(svc));
+    }
+
+    [Theory]
+    [InlineData("Boot")]
+    [InlineData("System")]
+    [InlineData("BOOT")]
+    [InlineData("SYSTEM")]
+    public void Servico_com_modo_critico_nao_seguro(string modoInicio)
+    {
+        var svc = Svc("meuservico", modoInicio);
+        Assert.False(ListaNegraServicos.EhSeguro(svc));
+    }
+
+    [Theory]
+    [InlineData("Spooler",   "Auto")]
+    [InlineData("wuauserv",  "Auto")]
+    [InlineData("SysMain",   "Auto")]
+    [InlineData("WSearch",   "Auto")]
+    [InlineData("Themes",    "Auto")]
+    [InlineData("AudioSrv",  "Auto")]
+    [InlineData("Audiosrv",  "Manual")]
+    [InlineData("AppXSvc",   "Manual")]
+    [InlineData("DiagTrack", "Auto")]
+    public void Servico_nao_critico_seguro(string nome, string modo)
+    {
+        var svc = Svc(nome, modo);
+        Assert.True(ListaNegraServicos.EhSeguro(svc));
+    }
+
+    // ── Programas: componentes do sistema devem ser bloqueados ───────────
+
+    [Theory]
+    [InlineData("Microsoft Visual C++ 2022 Redistributable (x64)",   "Microsoft Corporation")]
+    [InlineData("Microsoft .NET Framework 4.8",                       "Microsoft Corporation")]
+    [InlineData(".NET Desktop Runtime 8.0.3",                         "Microsoft Corporation")]
+    [InlineData("Microsoft DirectX",                                  "Microsoft Corporation")]
+    [InlineData("DirectX End-User Runtime",                           "Microsoft Corporation")]
+    [InlineData("Windows SDK 10.0.22621.0",                          "Microsoft Corporation")]
+    [InlineData("Update for Windows 11 (KB5034123)",                 "Microsoft Corporation")]
+    [InlineData("Security Update for .NET Framework",                 "Microsoft Corporation")]
+    [InlineData("Intel(R) Management Engine Components",              "Intel Corporation")]
+    [InlineData("Microsoft Windows Desktop Runtime - 7.0.3 (x64)",   "Microsoft Corporation")]
+    [InlineData("Microsoft Edge WebView2 Runtime",                    "Microsoft Corporation")]
+    public void Programa_sistema_nao_seguro(string nome, string fabricante)
+    {
+        var prog = Prog(nome, fabricante, "MsiExec.exe /X{GUID}");
+        Assert.False(ListaNegraProgramas.EhSeguro(prog));
+    }
+
+    [Theory]
+    [InlineData("Microsoft Edge",             "Microsoft Corporation")]
+    [InlineData("Microsoft Teams",            "Microsoft Corporation")]
+    [InlineData("Microsoft OneDrive",         "Microsoft Corporation")]
+    [InlineData("Microsoft 365 - pt-br",      "Microsoft Corporation")]
+    [InlineData("Microsoft Office 2021",      "Microsoft Corporation")]
+    [InlineData("Microsoft Visual Studio Code","Microsoft Corporation")]
+    public void Produto_microsoft_seguro_exibido(string nome, string fabricante)
+    {
+        var prog = Prog(nome, fabricante, "MsiExec.exe /X{GUID}");
+        Assert.True(ListaNegraProgramas.EhSeguro(prog));
+    }
+
+    [Fact]
+    public void Programa_sem_uninstall_string_nao_seguro()
+    {
+        var prog = new ProgramaInstalado
+        {
+            Nome = "Spotify", Fabricante = "Spotify AB",
+            UninstallString = null, QuietUninstallString = null,
+        };
+        Assert.False(ListaNegraProgramas.EhSeguro(prog));
+    }
+
+    [Theory]
+    [InlineData("Spotify",          "Spotify AB")]
+    [InlineData("Discord",          "Discord Inc.")]
+    [InlineData("Steam",            "Valve Corporation")]
+    [InlineData("VLC media player", "VideoLAN")]
+    [InlineData("7-Zip 23.01",      "Igor Pavlov")]
+    [InlineData("Google Chrome",    "Google LLC")]
+    [InlineData("Adobe Acrobat",    "Adobe Inc.")]
+    [InlineData("WinRAR",           "win.rar GmbH")]
+    public void Programa_terceiro_seguro_exibido(string nome, string fabricante)
+    {
+        var prog = Prog(nome, fabricante, $"MsiExec.exe /X{{GUID-{nome}}}");
+        Assert.True(ListaNegraProgramas.EhSeguro(prog));
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────────────
+
+    private static ServicoWindows Svc(string nome, string modoInicio) =>
+        new() { Nome = nome, Descricao = nome, Status = "Running", ModoInicio = modoInicio };
+
+    private static ProgramaInstalado Prog(string nome, string fabricante, string uninstall) =>
+        new() { Nome = nome, Fabricante = fabricante, UninstallString = uninstall };
+}
+````
+
 ### `tests/HardwareOptimizer.Agent.Tests/ModuloBiosTests.cs`
 
 ````csharp
@@ -11471,17 +21303,33 @@ public sealed class SensoresLhmTests
     }
 
     [Fact]
-    public async Task Composto_para_no_primeiro_com_dados_sem_chamar_o_resto()
+    public async Task Composto_mescla_todos_os_leitores_e_chama_todos()
     {
+        // Novo comportamento: mescla — LHM dá GPU, WMI dá CPU; ambos chamados.
         var comDados = new LeitorFake(new LeituraSensores { Sensores = new[] { Temp("CPU", 50) } });
         var segundo = new LeitorFake(new LeituraSensores { Sensores = new[] { Temp("GPU", 70) } });
         var composto = new LeitorSensoresComposto(new ILeitorSensores[] { comDados, segundo });
 
         var leitura = await composto.LerAsync();
 
-        Assert.Equal(50, leitura.TemperaturaMaxC); // o primeiro venceu
+        Assert.Equal(2, leitura.Sensores.Count);    // CPU + GPU mesclados
+        Assert.Equal(70, leitura.TemperaturaMaxC);  // máximo entre ambos
         Assert.Equal(1, comDados.Chamadas);
-        Assert.Equal(0, segundo.Chamadas); // curto-circuito
+        Assert.Equal(1, segundo.Chamadas);           // ambos chamados
+    }
+
+    [Fact]
+    public async Task Composto_deduplica_sensor_com_mesmo_nome()
+    {
+        // Sensor "CPU" emitido por dois leitores → deve aparecer só uma vez (primeiro ganha).
+        var primeiro = new LeitorFake(new LeituraSensores { Sensores = new[] { Temp("CPU", 50) } });
+        var segundo = new LeitorFake(new LeituraSensores { Sensores = new[] { Temp("CPU", 70) } });
+        var composto = new LeitorSensoresComposto(new ILeitorSensores[] { primeiro, segundo });
+
+        var leitura = await composto.LerAsync();
+
+        Assert.Single(leitura.Sensores);
+        Assert.Equal(50, leitura.TemperaturaMaxC); // primeiro prevalece
     }
 
     [Fact]
@@ -11658,6 +21506,98 @@ public sealed class SensoresTests : IDisposable
 
         public Task<LeituraSensores> LerAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult(_leitura);
+    }
+}
+````
+
+### `tests/HardwareOptimizer.Agent.Tests/StartupScannerTests.cs`
+
+````csharp
+using System.Runtime.Versioning;
+using HardwareOptimizer.Agent.Startup;
+using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging.Abstractions;
+using Xunit;
+
+namespace HardwareOptimizer.Agent.Tests;
+
+[SupportedOSPlatform("windows")]
+public sealed class StartupScannerTests
+{
+    private static VerificadorInicializacao CriarVerificador() =>
+        new(NullLogger<VerificadorInicializacao>.Instance);
+
+    [Fact]
+    public void Varrer_retorna_lista_nao_nula()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var resultado = CriarVerificador().Varrer();
+
+        Assert.NotNull(resultado);
+    }
+
+    [Fact]
+    public void Varrer_todas_entradas_tem_nome_nao_vazio()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var resultado = CriarVerificador().Varrer();
+
+        Assert.All(resultado, e => Assert.False(string.IsNullOrEmpty(e.Nome)));
+    }
+
+    [Fact]
+    public void Varrer_todas_entradas_tem_origem_definida()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var resultado = CriarVerificador().Varrer();
+        var valoresValidos = Enum.GetValues<OrigemInicializacao>();
+
+        Assert.All(resultado, e => Assert.Contains(e.Origem, valoresValidos));
+    }
+
+    [Fact]
+    public void Varrer_entradas_registro_tem_ativo_refletindo_startup_approved()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var resultado = CriarVerificador().Varrer()
+            .Where(e => e.Origem == OrigemInicializacao.RegistroUsuario
+                     || e.Origem == OrigemInicializacao.RegistroMaquina)
+            .ToList();
+
+        // Deve ter encontrado pelo menos uma entrada (qualquer máquina Windows tem startup entries).
+        Assert.NotEmpty(resultado);
+
+        // Ativo reflete o estado real da chave StartupApproved — pode ser true ou false.
+        // Entradas sem flag em StartupApproved são habilitadas por padrão (true).
+        Assert.All(resultado, e => Assert.IsType<bool>(e.Ativo));
+    }
+
+    [Fact]
+    public void Varrer_entradas_tem_chave_rollback_preenchida()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var resultado = CriarVerificador().Varrer()
+            .Where(e => e.Origem == OrigemInicializacao.RegistroUsuario
+                     || e.Origem == OrigemInicializacao.RegistroMaquina)
+            .ToList();
+
+        Assert.All(resultado, e => Assert.False(string.IsNullOrEmpty(e.ChaveRollback)));
+    }
+
+    [Fact]
+    public void Varrer_impacto_nunca_e_valor_invalido()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var resultado = CriarVerificador().Varrer();
+        var valoresValidos = Enum.GetValues<ImpactoInicializacao>();
+
+        Assert.All(resultado, e => Assert.Contains(e.Impacto, valoresValidos));
     }
 }
 ````
@@ -12045,6 +21985,12 @@ public sealed class CerebroTests
         public Task<string> ResponderAsync(
             string promptSistema, string promptUsuario, CancellationToken cancellationToken = default) =>
             Task.FromResult(_resposta);
+
+        public Task<string> ResponderConversaAsync(
+            string promptSistema,
+            IReadOnlyList<(string Role, string Conteudo)> historico,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(_resposta);
     }
 }
 ````
@@ -12378,6 +22324,7 @@ public sealed class VisaoTests
     <ProjectReference Include="..\..\src\HardwareOptimizer.Core\HardwareOptimizer.Core.csproj" />
     <ProjectReference Include="..\..\src\HardwareOptimizer.Agent\HardwareOptimizer.Agent.csproj" />
     <ProjectReference Include="..\..\src\HardwareOptimizer.Ipc\HardwareOptimizer.Ipc.csproj" />
+    <ProjectReference Include="..\..\src\HardwareOptimizer.Features.Licensing\HardwareOptimizer.Features.Licensing.csproj" />
   </ItemGroup>
 
 </Project>
@@ -12389,6 +22336,124 @@ public sealed class VisaoTests
 global using Xunit;
 ````
 
+### `tests/HardwareOptimizer.Ipc.Tests/IpcStartupTests.cs`
+
+````csharp
+using System.Text.Json;
+using HardwareOptimizer.Agent.Collector;
+using HardwareOptimizer.Core.Common;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+using Xunit;
+
+namespace HardwareOptimizer.Ipc.Tests;
+
+public sealed class IpcStartupTests
+{
+    private static RoteadorIpc Roteador() => new(coletor: new ColetorFake());
+
+    private static RequisicaoIpc Req(string metodo, object? parametros = null) => new()
+    {
+        Metodo = metodo,
+        Parametros = parametros is null ? null : JsonSerializer.SerializeToElement(parametros),
+    };
+
+    [Fact]
+    public async Task Aplicar_e_alias_valido_de_aprovar()
+    {
+        // "aplicar" é alias de "aprovar" — sem ações → falha com mensagem de ação vazia
+        var r = await Roteador().TratarAsync(Req("aplicar", new { acoes = Array.Empty<string>() }));
+
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    [Fact]
+    public async Task Aplicar_com_acao_valida_executa_sem_excecao()
+    {
+        var r = await Roteador().TratarAsync(Req("aplicar", new { acoes = new[] { "PWR_PLANO_ALTO_DESEMPENHO" } }));
+
+        // Deve retornar sucesso ou falha controlada, nunca lançar exceção
+        Assert.NotNull(r);
+    }
+
+    [Fact]
+    public async Task ObterEntradasStartup_metodo_em_caixa_alta_funciona()
+    {
+        // Método passado pelo ViewModel em PascalCase; roteador normaliza para lower
+        var r = await Roteador().TratarAsync(Req("ObterEntradasStartup"));
+
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.True(r.Sucesso);
+            Assert.IsAssignableFrom<IReadOnlyList<InicializacaoEntrada>>(r.Resultado);
+        }
+        else
+        {
+            Assert.False(r.Sucesso);
+            Assert.Contains("Windows", r.Erro, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    [Fact]
+    public async Task DesativarStartup_sem_nome_retorna_falha()
+    {
+        // Parâmetro "nome" ausente → deve retornar falha descritiva
+        var r = await Roteador().TratarAsync(Req("DesativarStartup"));
+
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    [Fact]
+    public async Task DesativarStartup_nome_vazio_retorna_falha()
+    {
+        var r = await Roteador().TratarAsync(Req("DesativarStartup", new { nome = "" }));
+
+        Assert.False(r.Sucesso);
+    }
+
+    [Fact]
+    public async Task DesativarStartup_entrada_inexistente_retorna_falha()
+    {
+        // Entrada "AppTotalmenteInexistente" não está no registro → falha
+        var r = await Roteador().TratarAsync(
+            Req("DesativarStartup", new { nome = "AppTotalmenteInexistente_12345xyz" }));
+
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.False(r.Sucesso);
+            Assert.NotNull(r.Erro);
+        }
+        else
+        {
+            Assert.False(r.Sucesso);
+        }
+    }
+
+    [Fact]
+    public async Task Metodo_desconhecido_ainda_falha_apos_extensoes()
+    {
+        var r = await Roteador().TratarAsync(Req("metodonaoexiste"));
+
+        Assert.False(r.Sucesso);
+        Assert.Contains("Método desconhecido", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private sealed class ColetorFake : IColetorInventario
+    {
+        public Task<Inventario> ColetarAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult(new Inventario
+            {
+                Placa = new PlacaMae { Fabricante = "ASUS", Modelo = "B550-F" },
+                Cpu = new Processador { Nome = "Ryzen 5 5600X", Nucleos = 6 },
+                Gpu = new[] { new PlacaVideo { Nome = "RTX 3060" } },
+                SistemaOperacional = new SistemaOperacionalInfo { Tipo = SistemaOperacionalTipo.Windows },
+            });
+    }
+}
+````
+
 ### `tests/HardwareOptimizer.Ipc.Tests/IpcTests.cs`
 
 ````csharp
@@ -12396,6 +22461,7 @@ using System.Text.Json;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Features.Licensing;
 using HardwareOptimizer.Ipc;
 using Xunit;
 
@@ -12514,6 +22580,120 @@ public sealed class IpcTests
         }
     }
 
+    // ---- exportarbackupdrivers --------------------------------------------------
+
+    [Fact]
+    public async Task ExportarBackupDrivers_NaoWindows_RetornaFalha()
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("exportarbackupdrivers"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("Windows", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ExportarBackupDrivers_Windows_CriaSubpasta()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("exportarbackupdrivers"));
+
+        var raiz = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "OtimizeBuilder", "DriverBackups");
+
+        // A pasta base sempre deve ser criada, independentemente do pnputil ter êxito.
+        Assert.True(Directory.Exists(raiz), $"Esperava: {raiz}");
+
+        // Se pnputil teve êxito, Resultado deve ser a pasta com timestamp.
+        if (r.Sucesso)
+            Assert.IsType<string>(r.Resultado);
+    }
+
+    // ---- instalardriver ---------------------------------------------------------
+
+    [Fact]
+    public async Task InstalarDriver_SemParametros_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("instalardriver"));
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    [Fact]
+    public async Task InstalarDriver_UrlVazia_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("instalardriver", new { urlDownload = "" }));
+        Assert.False(r.Sucesso);
+        Assert.Contains("urlDownload", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    // ---- analisarbiosfoto -------------------------------------------------------
+
+    [Fact]
+    public async Task AnalisarBiosFoto_SemParametros_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("analisarbiosfoto"));
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    [Fact]
+    public async Task AnalisarBiosFoto_SemBase64_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("analisarbiosfoto", new { mediaType = "image/png" }));
+        Assert.False(r.Sucesso);
+        Assert.Contains("imagemBase64", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    // ---- obterstatuslicenca ---------------------------------------------------
+
+    [Fact]
+    public async Task ObterStatusLicenca_SemLicenca_RetornaGratuita()
+    {
+        var r = await Roteador().TratarAsync(Req("obterstatuslicenca"));
+        Assert.True(r.Sucesso);
+        var dto = Assert.IsType<StatusLicencaDto>(r.Resultado);
+        Assert.Equal("Gratuita", dto.Tipo);
+        Assert.False(dto.ModuloUpgrade);
+        Assert.False(dto.ContadorVidaUtil);
+        Assert.False(dto.GerenciadorDrivers);
+        Assert.False(dto.GuiaBiosIa);
+    }
+
+    [Fact]
+    public async Task ObterStatusLicenca_ComLicencaGratuita_SemAcesso()
+    {
+        var roteador = new RoteadorIpc(
+            coletor: new ColetorFake(Inventario()),
+            licenca: new LicencaFake(TipoLicenca.Gratuita));
+        var r = await roteador.TratarAsync(Req("obterstatuslicenca"));
+        Assert.True(r.Sucesso);
+        var dto = Assert.IsType<StatusLicencaDto>(r.Resultado);
+        Assert.Equal("Gratuita", dto.Tipo);
+        Assert.False(dto.ModuloUpgrade);
+        Assert.False(dto.GuiaBiosIa);
+    }
+
+    [Fact]
+    public async Task ObterStatusLicenca_ComLicencaPremium_TodasFuncionalidades()
+    {
+        var roteador = new RoteadorIpc(
+            coletor: new ColetorFake(Inventario()),
+            licenca: new LicencaFake(TipoLicenca.Premium));
+        var r = await roteador.TratarAsync(Req("obterstatuslicenca"));
+        Assert.True(r.Sucesso);
+        var dto = Assert.IsType<StatusLicencaDto>(r.Resultado);
+        Assert.Equal("Premium", dto.Tipo);
+        Assert.True(dto.ModuloUpgrade);
+        Assert.True(dto.ContadorVidaUtil);
+        Assert.True(dto.GerenciadorDrivers);
+        Assert.True(dto.GuiaBiosIa);
+    }
+
     private sealed class ColetorFake : IColetorInventario
     {
         private readonly Inventario _inventario;
@@ -12522,6 +22702,23 @@ public sealed class IpcTests
 
         public Task<Inventario> ColetarAsync(CancellationToken cancellationToken = default) =>
             Task.FromResult(_inventario);
+    }
+
+    private sealed class LicencaFake : IServicoLicenca
+    {
+        private readonly TipoLicenca _tipo;
+
+        public LicencaFake(TipoLicenca tipo) => _tipo = tipo;
+
+        public TipoLicenca TipoAtual => _tipo;
+
+        public bool TemAcesso(FuncionalidadePremium _) => _tipo == TipoLicenca.Premium;
+
+        public Task<ResultadoAtivacao> AtivarAsync(string chave, CancellationToken ct = default) =>
+            Task.FromResult(ResultadoAtivacao.Ok(_tipo));
+
+        public Task<ResultadoAtivacao> DesativarAsync(CancellationToken ct = default) =>
+            Task.FromResult(ResultadoAtivacao.Ok(TipoLicenca.Gratuita));
     }
 }
 ````
@@ -12567,10 +22764,748 @@ public sealed class IpcTests
 </Project>
 ````
 
+### `tests/HardwareOptimizer.App.Tests/BiosGuideViewModelTests.cs`
+
+````csharp
+using HardwareOptimizer.App.ViewModels;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+
+namespace HardwareOptimizer.App.Tests;
+
+public class BiosGuideViewModelTests
+{
+    // ── Estado inicial ─────────────────────────────────────────────────────────
+
+    [Fact]
+    public void EstadoInicial_SemAgente_ChatNaoDisponivel()
+    {
+        var vm = new BiosGuideViewModel();
+        Assert.False(vm.ChatDisponivel);
+    }
+
+    [Fact]
+    public void EstadoInicial_ComAgente_ChatDisponivel()
+    {
+        var vm = new BiosGuideViewModel(new AgenteIpcFake());
+        Assert.True(vm.ChatDisponivel);
+    }
+
+    [Fact]
+    public void EstadoInicial_PerguntaVazia_RespostaVazia_NaoPerguntando()
+    {
+        var vm = new BiosGuideViewModel(new AgenteIpcFake());
+        Assert.Equal(string.Empty, vm.Pergunta);
+        Assert.Equal(string.Empty, vm.RespostaIa);
+        Assert.False(vm.Perguntando);
+        Assert.False(vm.TemResposta);
+    }
+
+    // ── PerguntarCommand ──────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task PerguntarAsync_PerguntaVazia_NaoAlteraPerguntandoNemResposta()
+    {
+        var agente = new AgenteIpcFake();
+        var vm = new BiosGuideViewModel(agente);
+        vm.Pergunta = "   ";
+
+        await vm.PerguntarCommand.ExecuteAsync(null);
+
+        Assert.False(vm.Perguntando);
+        Assert.Equal(string.Empty, vm.RespostaIa);
+        Assert.Equal(0, agente.Chamadas);
+    }
+
+    [Fact]
+    public async Task PerguntarAsync_SemAgente_NaoLancaExcecao()
+    {
+        var vm = new BiosGuideViewModel(); // sem agente
+        vm.Pergunta = "Como habilito XMP?";
+
+        // Não deve lançar
+        await vm.PerguntarCommand.ExecuteAsync(null);
+
+        Assert.Equal(string.Empty, vm.RespostaIa);
+        Assert.False(vm.Perguntando);
+    }
+
+    [Fact]
+    public async Task PerguntarAsync_ComPergunta_ChamaAgenteEPreencheResposta()
+    {
+        var agente = new AgenteIpcFake("Ative o XMP no menu AI Tweaker.");
+        var vm = new BiosGuideViewModel(agente);
+        vm.Pergunta = "Como habilito XMP na ASUS?";
+
+        await vm.PerguntarCommand.ExecuteAsync(null);
+
+        Assert.Equal(1, agente.Chamadas);
+        Assert.Equal("Ative o XMP no menu AI Tweaker.", vm.RespostaIa);
+        Assert.True(vm.TemResposta);
+        Assert.False(vm.Perguntando);
+    }
+
+    [Fact]
+    public async Task PerguntarAsync_AgenteRetornaFalha_MostraMensagemFallback()
+    {
+        var agente = new AgenteIpcFake(sucesso: false);
+        var vm = new BiosGuideViewModel(agente);
+        vm.Pergunta = "Como desativo CSM?";
+
+        await vm.PerguntarCommand.ExecuteAsync(null);
+
+        Assert.False(string.IsNullOrEmpty(vm.RespostaIa));
+        Assert.False(vm.Perguntando);
+    }
+
+    [Fact]
+    public async Task PerguntarAsync_SegundaChamada_SubstituiRespostaAnterior()
+    {
+        var agente = new AgenteIpcFake("Resposta 1");
+        var vm = new BiosGuideViewModel(agente);
+
+        vm.Pergunta = "Primeira pergunta";
+        await vm.PerguntarCommand.ExecuteAsync(null);
+        Assert.Equal("Resposta 1", vm.RespostaIa);
+
+        agente.ProximaResposta = "Resposta 2";
+        vm.Pergunta = "Segunda pergunta";
+        await vm.PerguntarCommand.ExecuteAsync(null);
+        Assert.Equal("Resposta 2", vm.RespostaIa);
+        Assert.Equal(2, agente.Chamadas);
+    }
+
+    // ── Fake ──────────────────────────────────────────────────────────────────
+
+    private sealed class AgenteIpcFake : IRoteadorIpc
+    {
+        private readonly bool _sucesso;
+        public string ProximaResposta { get; set; }
+        public int Chamadas { get; private set; }
+
+        public AgenteIpcFake(string resposta = "OK", bool sucesso = true)
+        {
+            ProximaResposta = resposta;
+            _sucesso = sucesso;
+        }
+
+        public Task<RespostaIpc> TratarAsync(RequisicaoIpc req, CancellationToken ct = default)
+        {
+            Chamadas++;
+            var resp = _sucesso
+                ? RespostaIpc.Ok(req.Id, ProximaResposta)
+                : RespostaIpc.Falha(req.Id, "Erro simulado.");
+            return Task.FromResult(resp);
+        }
+    }
+}
+
+public class DriversViewModelBackupTests
+{
+    [Fact]
+    public void PodeExportarBackup_SemAgente_Falso()
+    {
+        var vm = new DriversViewModel();
+        Assert.False(vm.PodeExportarBackup);
+    }
+
+    [Fact]
+    public void PodeExportarBackup_ComAgente_Verdadeiro()
+    {
+        var vm = new DriversViewModel(new AgenteBackupFake());
+        Assert.True(vm.PodeExportarBackup);
+    }
+
+    [Fact]
+    public void EstadoInicial_NaoExportando_StatusVazio()
+    {
+        var vm = new DriversViewModel(new AgenteBackupFake());
+        Assert.False(vm.Exportando);
+        Assert.Equal(string.Empty, vm.BackupStatus);
+    }
+
+    [Fact]
+    public async Task ExportarBackupCommand_Sucesso_AtualizaBackupStatus()
+    {
+        var agente = new AgenteBackupFake("/tmp/OtimizeBuilder/DriverBackups/2026-01-01");
+        var vm = new DriversViewModel(agente);
+
+        await vm.ExportarBackupCommand.ExecuteAsync(null);
+
+        Assert.False(vm.Exportando);
+        Assert.Contains("2026-01-01", vm.BackupStatus);
+    }
+
+    [Fact]
+    public async Task ExportarBackupCommand_Falha_MostraMensagemErro()
+    {
+        var agente = new AgenteBackupFake(sucesso: false);
+        var vm = new DriversViewModel(agente);
+
+        await vm.ExportarBackupCommand.ExecuteAsync(null);
+
+        Assert.False(vm.Exportando);
+        Assert.Contains("Falha", vm.BackupStatus);
+    }
+
+    [Fact]
+    public async Task ExportarBackupCommand_SemAgente_NaoAlteraStatus()
+    {
+        var vm = new DriversViewModel(); // sem agente
+        await vm.ExportarBackupCommand.ExecuteAsync(null);
+        Assert.Equal(string.Empty, vm.BackupStatus);
+    }
+
+    private sealed class AgenteBackupFake : IRoteadorIpc
+    {
+        private readonly string _pasta;
+        private readonly bool _sucesso;
+
+        public AgenteBackupFake(string pasta = "/drivers", bool sucesso = true)
+        {
+            _pasta   = pasta;
+            _sucesso = sucesso;
+        }
+
+        public Task<RespostaIpc> TratarAsync(RequisicaoIpc req, CancellationToken ct = default)
+        {
+            var resp = _sucesso
+                ? RespostaIpc.Ok(req.Id, _pasta)
+                : RespostaIpc.Falha(req.Id, "Erro simulado.");
+            return Task.FromResult(resp);
+        }
+    }
+}
+
+public class InfoDriverViewModelDownloadTests
+{
+    [Fact]
+    public void TemDownload_StatusAtualizacaoComUrl_Verdadeiro()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_10DE",
+            Descricao = "NVIDIA RTX",
+            Status = StatusDriver.AtualizacaoDisponivel,
+            UrlDownload = "https://www.nvidia.com/drivers",
+        });
+
+        Assert.True(vm.TemDownload);
+        Assert.Equal("https://www.nvidia.com/drivers", vm.UrlDownload);
+    }
+
+    [Fact]
+    public void TemDownload_StatusAtualizado_Falso()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_10DE",
+            Descricao = "NVIDIA RTX",
+            Status = StatusDriver.Atualizado,
+            UrlDownload = "https://www.nvidia.com/drivers",
+        });
+
+        Assert.False(vm.TemDownload);
+    }
+
+    [Fact]
+    public void TemDownload_StatusAtualizacaoSemUrl_Falso()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_10DE",
+            Descricao = "NVIDIA RTX",
+            Status = StatusDriver.AtualizacaoDisponivel,
+            UrlDownload = null,
+        });
+
+        Assert.False(vm.TemDownload);
+    }
+
+    [Fact]
+    public void TemDownload_StatusDesconhecido_Falso()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_FFFF",
+            Descricao = "Dispositivo",
+            Status = StatusDriver.Desconhecido,
+            UrlDownload = "https://exemplo.com",
+        });
+
+        Assert.False(vm.TemDownload);
+    }
+
+    [Fact]
+    public void HardwareId_Preservado()
+    {
+        var hwid = "PCI\\VEN_10DE&DEV_2204";
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = hwid,
+            Descricao = "NVIDIA",
+            Status = StatusDriver.Desconhecido,
+        });
+
+        Assert.Equal(hwid, vm.HardwareId);
+    }
+}
+````
+
+### `tests/HardwareOptimizer.App.Tests/DashboardViewModelTests.cs`
+
+````csharp
+using HardwareOptimizer.App.ViewModels;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+using Xunit;
+
+namespace HardwareOptimizer.App.Tests;
+
+public sealed class DashboardViewModelTests
+{
+    private static IRoteadorIpc RoteadorVazio() =>
+        new RoteadorFake(_ => RespostaIpc.Ok("1", "ok"));
+
+    private static Sensor S(string nome, TipoSensor tipo, double valor) =>
+        new() { Nome = nome, Tipo = tipo, Valor = valor, Unidade = "" };
+
+    private static LeituraSensores Leitura(params Sensor[] sensores) =>
+        new() { Sensores = sensores };
+
+    [Fact]
+    public void AtualizarSensores_com_cpu_temp_atualiza_CpuTemp()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(S("[CPU] Ryzen / Core 0", TipoSensor.Temperatura, 65.0)));
+
+        Assert.Equal("65°C", vm.CpuTemp);
+    }
+
+    [Fact]
+    public void AtualizarSensores_cpu_temp_acima_85_nivel_alerta_2()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(S("[CPU] Core 0", TipoSensor.Temperatura, 90.0)));
+
+        Assert.Equal(2, vm.CpuNivelAlerta);
+    }
+
+    [Fact]
+    public void AtualizarSensores_cpu_temp_acima_70_nivel_alerta_1()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(S("[CPU] Core 0", TipoSensor.Temperatura, 75.0)));
+
+        Assert.Equal(1, vm.CpuNivelAlerta);
+    }
+
+    [Fact]
+    public void AtualizarSensores_cpu_temp_abaixo_70_nivel_alerta_0()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(S("[CPU] Core 0", TipoSensor.Temperatura, 60.0)));
+
+        Assert.Equal(0, vm.CpuNivelAlerta);
+    }
+
+    [Fact]
+    public void AtualizarSensores_extrai_max_de_multiplos_cores()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(
+            S("[CPU] Core 0", TipoSensor.Temperatura, 55.0),
+            S("[CPU] Core 1", TipoSensor.Temperatura, 72.0),
+            S("[CPU] Core 2", TipoSensor.Temperatura, 68.0)));
+
+        Assert.Equal("72°C", vm.CpuTemp);
+    }
+
+    [Fact]
+    public void AtualizarSensores_gpu_temp_nivel_alerta_2_acima_85()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(S("[GPU] RTX / GPU Core", TipoSensor.Temperatura, 87.0)));
+
+        Assert.Equal(2, vm.GpuNivelAlerta);
+    }
+
+    [Fact]
+    public void AtualizarSensores_gpu_temp_nivel_alerta_1_acima_75()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(S("[GPU] RTX / GPU Core", TipoSensor.Temperatura, 80.0)));
+
+        Assert.Equal(1, vm.GpuNivelAlerta);
+    }
+
+    [Fact]
+    public void AtualizarSensores_ram_uso_gb_atualiza_RamUso()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(S("[RAM] DDR4 / Memory Used", TipoSensor.Outro, 8.5)));
+
+        Assert.Contains("GB", vm.RamUso, StringComparison.Ordinal);
+        Assert.Contains("8", vm.RamUso, StringComparison.Ordinal);
+        Assert.Contains("5", vm.RamUso, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AtualizarSensores_ram_pct_nivel_alerta_2_acima_90()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(S("[RAM] Total / Virtual Memory Load", TipoSensor.Carga, 92.0)));
+
+        Assert.Equal(2, vm.RamNivelAlerta);
+    }
+
+    [Fact]
+    public void AtualizarSensores_storage_read_atualiza_StorageRead()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura(S("[STORAGE] SSD / Read Rate", TipoSensor.Outro, 250.0)));
+
+        Assert.Contains("MB/s", vm.StorageRead, StringComparison.Ordinal);
+        Assert.Contains("250", vm.StorageRead, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AtualizarSensores_sem_sensores_mantem_tracejado()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        vm.AtualizarSensores(Leitura());
+
+        Assert.Equal("--", vm.CpuTemp);
+        Assert.Equal("--", vm.GpuTemp);
+        Assert.Equal("--", vm.RamUso);
+    }
+
+    [Fact]
+    public void AtualizarSensores_historico_cpu_cresce_ate_60()
+    {
+        var vm = new DashboardViewModel(RoteadorVazio());
+
+        for (int i = 0; i < 70; i++)
+            vm.AtualizarSensores(Leitura(S("[CPU] Core 0", TipoSensor.Temperatura, 50.0 + i)));
+
+        Assert.Equal(60, vm.HistCpuTemp.Count);
+    }
+
+    private sealed class RoteadorFake : IRoteadorIpc
+    {
+        private readonly Func<RequisicaoIpc, RespostaIpc> _responder;
+        public RoteadorFake(Func<RequisicaoIpc, RespostaIpc> responder) => _responder = responder;
+        public Task<RespostaIpc> TratarAsync(RequisicaoIpc requisicao, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_responder(requisicao));
+    }
+}
+````
+
+### `tests/HardwareOptimizer.App.Tests/DriversViewModelTests.cs`
+
+````csharp
+using HardwareOptimizer.App.ViewModels;
+using HardwareOptimizer.Core.Contracts;
+
+namespace HardwareOptimizer.App.Tests;
+
+public class DriversViewModelTests
+{
+    // ── Popular ──────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Popular_ComDrivers_PopulaListaOrdenadaPorDescricao()
+    {
+        var vm = new DriversViewModel();
+        vm.Popular([
+            new InfoDriver { HardwareId = "PCI\\VEN_10EC", Descricao = "Realtek Audio", Status = StatusDriver.Desconhecido },
+            new InfoDriver { HardwareId = "PCI\\VEN_10DE", Descricao = "NVIDIA RTX 4080", Status = StatusDriver.Atualizado },
+        ]);
+
+        Assert.True(vm.TemResultados);
+        Assert.Equal(2, vm.Drivers.Count);
+        Assert.Equal("NVIDIA RTX 4080", vm.Drivers[0].Descricao);
+        Assert.Equal("Realtek Audio", vm.Drivers[1].Descricao);
+    }
+
+    [Fact]
+    public void Popular_ListaVazia_TemResultadosFalso()
+    {
+        var vm = new DriversViewModel();
+        vm.Popular([]);
+
+        Assert.False(vm.TemResultados);
+        Assert.Empty(vm.Drivers.ToList());
+    }
+
+    [Fact]
+    public void Popular_ComDoisDrivers_StatusTextContaContagem()
+    {
+        var vm = new DriversViewModel();
+        vm.Popular([
+            new InfoDriver { HardwareId = "PCI\\VEN_10DE", Descricao = "NVIDIA", Status = StatusDriver.Atualizado },
+            new InfoDriver { HardwareId = "PCI\\VEN_10EC", Descricao = "Realtek", Status = StatusDriver.Desconhecido },
+        ]);
+
+        Assert.Contains("2", vm.StatusText);
+    }
+
+    [Fact]
+    public void Popular_ListaVazia_StatusTextIndicaNenhumDispositivo()
+    {
+        var vm = new DriversViewModel();
+        vm.Popular([]);
+
+        Assert.Contains("Nenhum", vm.StatusText);
+    }
+
+    [Fact]
+    public void Popular_TwiceInRow_SubstituiListaAnterior()
+    {
+        var vm = new DriversViewModel();
+        vm.Popular([
+            new InfoDriver { HardwareId = "PCI\\VEN_10DE", Descricao = "NVIDIA", Status = StatusDriver.Atualizado },
+        ]);
+        vm.Popular([
+            new InfoDriver { HardwareId = "USB\\VID_046D", Descricao = "Logitech", Status = StatusDriver.Desconhecido },
+            new InfoDriver { HardwareId = "USB\\VID_045E", Descricao = "Microsoft", Status = StatusDriver.Desconhecido },
+        ]);
+
+        Assert.Equal(2, vm.Drivers.Count);
+        Assert.Equal("Logitech", vm.Drivers[0].Descricao);
+    }
+}
+
+public class InfoDriverViewModelTests
+{
+    [Fact]
+    public void Status_Atualizado_TextoECorCorretos()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_10DE",
+            Descricao = "NVIDIA",
+            Status = StatusDriver.Atualizado,
+        });
+
+        Assert.Equal("ATUALIZADO", vm.StatusTexto);
+    }
+
+    [Fact]
+    public void Status_AtualizacaoDisponivel_TextoCorreto()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_10DE",
+            Descricao = "NVIDIA",
+            VersaoDisponivel = "999.0",
+            Status = StatusDriver.AtualizacaoDisponivel,
+        });
+
+        Assert.Equal("ATUALIZAÇÃO", vm.StatusTexto);
+    }
+
+    [Fact]
+    public void Status_Desconhecido_TextoTraco()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_FFFF",
+            Descricao = "Dispositivo",
+            Status = StatusDriver.Desconhecido,
+        });
+
+        Assert.Equal("—", vm.StatusTexto);
+    }
+
+    [Fact]
+    public void Fabricante_Nulo_ExibeTraco()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_10DE",
+            Descricao = "Test",
+            Fabricante = null,
+            Status = StatusDriver.Desconhecido,
+        });
+
+        Assert.Equal("—", vm.Fabricante);
+    }
+
+    [Fact]
+    public void Fabricante_Vazio_ExibeTraco()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_10DE",
+            Descricao = "Test",
+            Fabricante = "   ",
+            Status = StatusDriver.Desconhecido,
+        });
+
+        Assert.Equal("—", vm.Fabricante);
+    }
+
+    [Fact]
+    public void VersaoAtual_Nula_ExibeTraco()
+    {
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = "PCI\\VEN_10DE",
+            Descricao = "Test",
+            VersaoAtual = null,
+            Status = StatusDriver.Desconhecido,
+        });
+
+        Assert.Equal("—", vm.VersaoAtual);
+    }
+
+    [Fact]
+    public void HwidCurto_HwidComMaisDe50Chars_TruncadoComReticencias()
+    {
+        var hwid = "PCI\\VEN_10DE&DEV_2204&SUBSYS_372E1458&REV_A1\\4&1234567890&0&00E0";
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = hwid,
+            Descricao = "Test",
+            Status = StatusDriver.Desconhecido,
+        });
+
+        Assert.True(vm.HwidCurto.Length <= 50);
+        Assert.EndsWith("…", vm.HwidCurto);
+    }
+
+    [Fact]
+    public void HwidCurto_HwidCurto_NaoTrunca()
+    {
+        var hwid = "USB\\VID_8087";
+        var vm = new InfoDriverViewModel(new InfoDriver
+        {
+            HardwareId = hwid,
+            Descricao = "Intel USB",
+            Status = StatusDriver.Desconhecido,
+        });
+
+        Assert.Equal(hwid, vm.HwidCurto);
+    }
+}
+````
+
 ### `tests/HardwareOptimizer.App.Tests/GlobalUsings.cs`
 
 ````csharp
 global using Xunit;
+````
+
+### `tests/HardwareOptimizer.App.Tests/IaCopilotoViewModelTests.cs`
+
+````csharp
+using HardwareOptimizer.App.ViewModels;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+using Xunit;
+
+namespace HardwareOptimizer.App.Tests;
+
+public sealed class IaCopilotoViewModelTests
+{
+    private static IRoteadorIpc RoteadorVazio() =>
+        new RoteadorFake(_ => RespostaIpc.Ok("1", "resposta ia"));
+
+    [Fact]
+    public void Estado_inicial_sem_alerta_e_sem_mensagens()
+    {
+        var vm = new IaCopilotoViewModel(RoteadorVazio());
+
+        Assert.False(vm.TemAlertaPendente);
+        Assert.Empty(vm.Mensagens);
+    }
+
+    [Fact]
+    public void ReceberAlerta_adiciona_mensagem_no_topo()
+    {
+        var vm = new IaCopilotoViewModel(RoteadorVazio());
+
+        vm.ReceberAlerta("CPU 90°C — ventilação comprometida.");
+
+        Assert.Single(vm.Mensagens);
+        Assert.Equal(0, vm.Mensagens.IndexOf(vm.Mensagens[0]));
+        Assert.Contains("CPU 90°C", vm.Mensagens[0].Texto, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ReceberAlerta_define_TemAlertaPendente_true()
+    {
+        var vm = new IaCopilotoViewModel(RoteadorVazio());
+
+        vm.ReceberAlerta("teste");
+
+        Assert.True(vm.TemAlertaPendente);
+    }
+
+    [Fact]
+    public void ReceberAlerta_mensagem_marcada_como_alerta()
+    {
+        var vm = new IaCopilotoViewModel(RoteadorVazio());
+
+        vm.ReceberAlerta("pico de ram");
+
+        Assert.True(vm.Mensagens[0].EhAlerta);
+    }
+
+    [Fact]
+    public void MarcarComoLido_limpa_TemAlertaPendente()
+    {
+        var vm = new IaCopilotoViewModel(RoteadorVazio());
+        vm.ReceberAlerta("qualquer coisa");
+
+        vm.MarcarComoLido();
+
+        Assert.False(vm.TemAlertaPendente);
+    }
+
+    [Fact]
+    public void Multiplos_alertas_sao_inseridos_no_indice_0()
+    {
+        var vm = new IaCopilotoViewModel(RoteadorVazio());
+
+        vm.ReceberAlerta("Alerta 1");
+        vm.ReceberAlerta("Alerta 2");
+
+        // Alerta 2 deve ser o primeiro (índice 0)
+        Assert.Contains("Alerta 2", vm.Mensagens[0].Texto, StringComparison.Ordinal);
+        Assert.Contains("Alerta 1", vm.Mensagens[1].Texto, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ReceberAlerta_autor_e_Sistema()
+    {
+        var vm = new IaCopilotoViewModel(RoteadorVazio());
+
+        vm.ReceberAlerta("teste autor");
+
+        Assert.Equal("Sistema", vm.Mensagens[0].Autor);
+    }
+
+    private sealed class RoteadorFake : IRoteadorIpc
+    {
+        private readonly Func<RequisicaoIpc, RespostaIpc> _responder;
+        public RoteadorFake(Func<RequisicaoIpc, RespostaIpc> responder) => _responder = responder;
+        public Task<RespostaIpc> TratarAsync(RequisicaoIpc requisicao, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_responder(requisicao));
+    }
+}
 ````
 
 ### `tests/HardwareOptimizer.App.Tests/MainWindowViewModelTests.cs`
@@ -12670,6 +23605,297 @@ public sealed class MainWindowViewModelTests
 
         public RoteadorFake(Func<RequisicaoIpc, RespostaIpc> responder) => _responder = responder;
 
+        public Task<RespostaIpc> TratarAsync(RequisicaoIpc requisicao, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_responder(requisicao));
+    }
+}
+````
+
+### `tests/HardwareOptimizer.App.Tests/OtimizadorWindowsViewModelTests.cs`
+
+````csharp
+using HardwareOptimizer.App.ViewModels;
+using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
+using Xunit;
+
+namespace HardwareOptimizer.App.Tests;
+
+public sealed class OtimizadorWindowsViewModelTests
+{
+    // ── Startup ───────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Popular_com_entradas_popula_lista()
+    {
+        var entradas = new List<InicializacaoEntrada>
+        {
+            new() { Nome = "Spotify", Caminho = @"C:\Spotify\Spotify.exe", Impacto = ImpactoInicializacao.Medio, Origem = OrigemInicializacao.RegistroUsuario, Ativo = true, ChaveRollback = "" },
+            new() { Nome = "Steam",   Caminho = @"C:\Steam\Steam.exe",   Impacto = ImpactoInicializacao.Alto,  Origem = OrigemInicializacao.RegistroMaquina, Ativo = true, ChaveRollback = "" },
+        };
+
+        var vm = new OtimizadorWindowsViewModel(new RoteadorFake(_ => RespostaIpc.Ok("x", true)));
+        vm.Popular(entradas);
+
+        Assert.Equal(2, vm.EntradasStartup.Count);
+        Assert.Contains(vm.EntradasStartup, e => e.Nome == "Spotify");
+        Assert.Contains(vm.EntradasStartup, e => e.Nome == "Steam");
+    }
+
+    [Fact]
+    public void Popular_sem_entradas_lista_vazia()
+    {
+        var vm = new OtimizadorWindowsViewModel(new RoteadorFake(_ => RespostaIpc.Ok("x", true)));
+        vm.Popular([]);
+
+        Assert.Empty(vm.EntradasStartup);
+    }
+
+    [Fact]
+    public void Popular_ordena_por_impacto_decrescente()
+    {
+        var entradas = new List<InicializacaoEntrada>
+        {
+            new() { Nome = "Baixo",  Caminho = "", Impacto = ImpactoInicializacao.Baixo, Origem = OrigemInicializacao.RegistroUsuario, Ativo = true, ChaveRollback = "" },
+            new() { Nome = "Alto",   Caminho = "", Impacto = ImpactoInicializacao.Alto,  Origem = OrigemInicializacao.RegistroUsuario, Ativo = true, ChaveRollback = "" },
+            new() { Nome = "Medio",  Caminho = "", Impacto = ImpactoInicializacao.Medio, Origem = OrigemInicializacao.RegistroUsuario, Ativo = true, ChaveRollback = "" },
+        };
+
+        var vm = new OtimizadorWindowsViewModel(new RoteadorFake(_ => RespostaIpc.Ok("x", true)));
+        vm.Popular(entradas);
+
+        Assert.Equal("Alto",  vm.EntradasStartup[0].Nome);
+        Assert.Equal("Medio", vm.EntradasStartup[1].Nome);
+        Assert.Equal("Baixo", vm.EntradasStartup[2].Nome);
+    }
+
+    [Fact]
+    public async Task Toggle_entrada_sucesso_inverte_ativo()
+    {
+        var roteador = new RoteadorFake(req => RespostaIpc.Ok(req.Id, true));
+        var vm = new OtimizadorWindowsViewModel(roteador);
+
+        var entrada = new InicializacaoEntrada
+        {
+            Nome = "Spotify", Caminho = @"C:\Spotify\Spotify.exe",
+            Impacto = ImpactoInicializacao.Medio, Origem = OrigemInicializacao.RegistroUsuario,
+            Ativo = true, ChaveRollback = "",
+        };
+        vm.Popular([entrada]);
+
+        var entradaVm = vm.EntradasStartup[0];
+        Assert.True(entradaVm.Ativo);
+
+        await entradaVm.ToggleCommand.ExecuteAsync(null);
+
+        Assert.False(entradaVm.Ativo);
+    }
+
+    [Fact]
+    public async Task Toggle_entrada_falha_mantem_estado()
+    {
+        var roteador = new RoteadorFake(req => RespostaIpc.Falha(req.Id, "acesso negado"));
+        var vm = new OtimizadorWindowsViewModel(roteador);
+
+        var entrada = new InicializacaoEntrada
+        {
+            Nome = "Desconhecido", Caminho = "",
+            Impacto = ImpactoInicializacao.Desconhecido, Origem = OrigemInicializacao.RegistroUsuario,
+            Ativo = true, ChaveRollback = "",
+        };
+        vm.Popular([entrada]);
+
+        var entradaVm = vm.EntradasStartup[0];
+        await entradaVm.ToggleCommand.ExecuteAsync(null);
+
+        Assert.True(entradaVm.Ativo);
+    }
+
+    // ── InicializacaoEntradaViewModel ─────────────────────────────────────
+
+    [Fact]
+    public void InicializacaoEntradaViewModel_cor_impacto_alto_e_vermelho()
+    {
+        var entradaVm = new InicializacaoEntradaViewModel(
+            new InicializacaoEntrada { Nome = "Steam", Caminho = "", Impacto = ImpactoInicializacao.Alto, Origem = OrigemInicializacao.RegistroUsuario, Ativo = true, ChaveRollback = "" },
+            _ => Task.CompletedTask);
+
+        Assert.Equal("#FF4444", entradaVm.CorImpacto);
+    }
+
+    [Fact]
+    public void InicializacaoEntradaViewModel_cor_impacto_medio_e_amarelo()
+    {
+        var entradaVm = new InicializacaoEntradaViewModel(
+            new InicializacaoEntrada { Nome = "Spotify", Caminho = "", Impacto = ImpactoInicializacao.Medio, Origem = OrigemInicializacao.RegistroUsuario, Ativo = true, ChaveRollback = "" },
+            _ => Task.CompletedTask);
+
+        Assert.Equal("#FFCC00", entradaVm.CorImpacto);
+    }
+
+    // ── Serviços ──────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task CarregarServicos_sucesso_popula_lista()
+    {
+        var servicos = new List<ServicoWindows>
+        {
+            new() { Nome = "wuauserv",   Descricao = "Windows Update",    Status = "Running", Pid = 1234 },
+            new() { Nome = "spooler",    Descricao = "Print Spooler",     Status = "Stopped", Pid = 0    },
+            new() { Nome = "LanmanServer", Descricao = "Server",          Status = "Running", Pid = 500  },
+        };
+
+        var roteador = new RoteadorFake(req => req.Metodo == "obterservicos"
+            ? RespostaIpc.Ok(req.Id, (IReadOnlyList<ServicoWindows>)servicos)
+            : RespostaIpc.Falha(req.Id, "inesperado"));
+
+        var vm = new OtimizadorWindowsViewModel(roteador);
+        vm.SubPagina = SubPaginaOtimizador.Servicos;
+        await Task.Delay(50);
+
+        Assert.Equal(3, vm.ServicosFiltrados.Count);
+    }
+
+    [Fact]
+    public async Task FiltroServicos_filtra_por_nome()
+    {
+        var servicos = new List<ServicoWindows>
+        {
+            new() { Nome = "wuauserv", Descricao = "Windows Update", Status = "Running", Pid = 1 },
+            new() { Nome = "spooler",  Descricao = "Print Spooler",  Status = "Stopped", Pid = 0 },
+        };
+
+        var roteador = new RoteadorFake(req => req.Metodo == "obterservicos"
+            ? RespostaIpc.Ok(req.Id, (IReadOnlyList<ServicoWindows>)servicos)
+            : RespostaIpc.Falha(req.Id, "inesperado"));
+
+        var vm = new OtimizadorWindowsViewModel(roteador);
+        vm.SubPagina = SubPaginaOtimizador.Servicos;
+        await Task.Delay(50);
+
+        vm.FiltroServicos = "spooler";
+
+        Assert.Single(vm.ServicosFiltrados);
+        Assert.Equal("spooler", vm.ServicosFiltrados[0].Nome);
+    }
+
+    [Fact]
+    public async Task ToggleServico_running_para_servico()
+    {
+        string? metodoEnviado = null;
+        var servicos = new List<ServicoWindows>
+        {
+            new() { Nome = "spooler", Descricao = "Print Spooler", Status = "Running", Pid = 12 },
+        };
+
+        var roteador = new RoteadorFake(req =>
+        {
+            metodoEnviado = req.Metodo;
+            return req.Metodo == "obterservicos"
+                ? RespostaIpc.Ok(req.Id, (IReadOnlyList<ServicoWindows>)servicos)
+                : RespostaIpc.Ok(req.Id, true);
+        });
+
+        var vm = new OtimizadorWindowsViewModel(roteador);
+        vm.SubPagina = SubPaginaOtimizador.Servicos;
+        await Task.Delay(50);
+
+        await vm.ServicosFiltrados[0].ToggleCommand.ExecuteAsync(null);
+
+        Assert.Equal("pararservico", metodoEnviado);
+        Assert.Equal("Stopped", vm.ServicosFiltrados[0].Status);
+    }
+
+    // ── ServicoViewModel ─────────────────────────────────────────────────
+
+    [Fact]
+    public void ServicoViewModel_running_exibe_botao_parar()
+    {
+        var svc = new ServicoViewModel(
+            new ServicoWindows { Nome = "spooler", Descricao = "Print Spooler", Status = "Running", Pid = 1 },
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
+
+        Assert.Equal("PARAR", svc.TextoBotao);
+        Assert.True(svc.Rodando);
+    }
+
+    [Fact]
+    public void ServicoViewModel_stopped_exibe_botao_iniciar()
+    {
+        var svc = new ServicoViewModel(
+            new ServicoWindows { Nome = "spooler", Descricao = "Print Spooler", Status = "Stopped", Pid = 0 },
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
+
+        Assert.Equal("INICIAR", svc.TextoBotao);
+        Assert.False(svc.Rodando);
+    }
+
+    [Fact]
+    public void ServicoViewModel_pid_zero_exibe_traco()
+    {
+        var svc = new ServicoViewModel(
+            new ServicoWindows { Nome = "spooler", Descricao = "Print Spooler", Status = "Stopped", Pid = 0 },
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
+
+        Assert.Equal("—", svc.PidTexto);
+    }
+
+    [Fact]
+    public void ServicoViewModel_modo_auto_converte_para_portugues()
+    {
+        var svc = new ServicoViewModel(
+            new ServicoWindows { Nome = "wuauserv", Descricao = "Windows Update", Status = "Running", Pid = 1, ModoInicio = "Auto" },
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
+
+        Assert.Equal("Automático", svc.ModoInicioSelecionado);
+    }
+
+    [Fact]
+    public void ServicoViewModel_modo_disabled_converte_para_portugues()
+    {
+        var svc = new ServicoViewModel(
+            new ServicoWindows { Nome = "spooler", Descricao = "Print Spooler", Status = "Stopped", Pid = 0, ModoInicio = "Disabled" },
+            _ => Task.CompletedTask, (_, _) => Task.CompletedTask);
+
+        Assert.Equal("Desativado", svc.ModoInicioSelecionado);
+    }
+
+    [Fact]
+    public async Task AlterarModoInicio_chama_rota_correta()
+    {
+        string? metodoCapturado = null;
+        string? modoCapturado   = null;
+
+        var servicos = new List<ServicoWindows>
+        {
+            new() { Nome = "spooler", Descricao = "Print Spooler", Status = "Stopped", Pid = 0, ModoInicio = "Auto" },
+        };
+
+        var roteador = new RoteadorFake(req =>
+        {
+            metodoCapturado = req.Metodo;
+            if (req.Parametros is { } p && p.TryGetProperty("modo", out var m))
+                modoCapturado = m.GetString();
+            return req.Metodo == "obterservicos"
+                ? RespostaIpc.Ok(req.Id, (IReadOnlyList<ServicoWindows>)servicos)
+                : RespostaIpc.Ok(req.Id, true);
+        });
+
+        var vm = new OtimizadorWindowsViewModel(roteador);
+        vm.SubPagina = SubPaginaOtimizador.Servicos;
+        await Task.Delay(50);
+
+        vm.ServicosFiltrados[0].ModoInicioSelecionado = "Desativado";
+        await Task.Delay(50);
+
+        Assert.Equal("alterarmododeinicio", metodoCapturado);
+        Assert.Equal("Desativado", modoCapturado);
+    }
+
+    private sealed class RoteadorFake : IRoteadorIpc
+    {
+        private readonly Func<RequisicaoIpc, RespostaIpc> _responder;
+        public RoteadorFake(Func<RequisicaoIpc, RespostaIpc> responder) => _responder = responder;
         public Task<RespostaIpc> TratarAsync(RequisicaoIpc requisicao, CancellationToken cancellationToken = default) =>
             Task.FromResult(_responder(requisicao));
     }

@@ -11,6 +11,33 @@ roadmap no [README](README.md#mapa-do-roadmap)).
 
 ### Adicionado
 
+#### Licença — Validação de chave offline via HMAC-SHA256 (2026-06-23)
+
+Impede que qualquer string não-vazia ative o plano Premium.
+
+- **`ValidadorChaveLicenca`** — valida chaves offline usando HMAC-SHA256 com segredo embutido como `ReadOnlySpan<byte>` (evita string literal em binário). Chaves são vinculadas ao Machine GUID — não podem ser reutilizadas em outro PC.
+- **Formato da chave:** `XXXXX-XXXXX-XXXXX-XXXXX` (20 chars hex = primeiros 10 bytes do HMAC)
+- **`GerarChave(machineId)`** — método para a ferramenta interna de geração de chaves por cliente
+- **`ServicoLicencaLocal.AtivarAsync`** atualizado: valida via `ValidadorChaveLicenca` antes de salvar. Chave inválida retorna `ResultadoAtivacao.Falhar("Chave inválida para esta máquina.")`
+- **Testes** — 6 novos casos: chave correta válida, chave de outra máquina rejeitada, chave vazia rejeitada, chave aleatória rejeitada, formato com/sem traços aceito
+
+#### WindowsService — DetectorAnomalias extraído + suite de testes (2026-06-23)
+
+`MonitorWorker` tinha a detecção embutida em métodos privados, impossibilitando testes.
+
+- **`DetectorAnomalias`** — classe pública extraída; mantém histórico de CPU (`Queue<double>`) e expõe `Detectar(LeituraSensores) → IReadOnlyList<string>` + `ExtrairValor` estático
+- **`MonitorWorker`** refatorado para delegar ao `DetectorAnomalias`; comportamento idêntico
+- **`HardwareOptimizer.WindowsService.Tests`** — novo projeto (`net8.0-windows`), adicionado à solução. 9 casos: RAM acima/abaixo/exatamente no limiar, spike CPU completo/incompleto, reset da fila após alerta, leitura vazia, `ExtrairValor` null e case-insensitive
+
+#### Distribuição — Script de assinatura de código EV (2026-06-23)
+
+- **`scripts\assinar-binario.ps1`** — assina o executável com certificado EV via `signtool.exe`. Lê `OTIMIZE_CERT_THUMBPRINT` do ambiente (sem hardcode). Ver `docs\DISTRIBUICAO.md` para o processo completo de aquisição e implantação.
+
+### A fazer
+- Adquirir certificado EV (Extended Validation) para eliminar o aviso do Windows SmartScreen na primeira instalação.
+
+---
+
 #### Drivers — Instalação silenciosa via pnputil (2026-06-22)
 
 Novo fluxo completo de instalação de driver sem abrir o navegador.

@@ -1,7 +1,6 @@
 using System.IO.Pipes;
 using System.Text.Json;
 using HardwareOptimizer.Agent.Sensors;
-using HardwareOptimizer.Core.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace HardwareOptimizer.WindowsService;
@@ -13,18 +12,16 @@ namespace HardwareOptimizer.WindowsService;
 public sealed class MonitorWorker : BackgroundService
 {
     private const string PipeAlerts = "otimize-alertas";
-    private const double LimiarRamPorcentagem = 85.0;
-    private const double LimiarCpuSpike = 90.0;
-    private const int JanelaSpikeSeg = 5;
 
     private readonly ServicoSensores _sensores;
+    private readonly DetectorAnomalias _detector;
     private readonly ILogger<MonitorWorker> _log;
-    private readonly Queue<double> _historicoCpu = new(JanelaSpikeSeg * 2 + 1);
 
     public MonitorWorker(ILogger<MonitorWorker> log, ILoggerFactory loggerFactory)
     {
         _log = log;
         _sensores = new ServicoSensores(loggerFactory: loggerFactory);
+        _detector = new DetectorAnomalias();
     }
 
     protected override async Task ExecuteAsync(CancellationToken ct)
@@ -36,7 +33,8 @@ public sealed class MonitorWorker : BackgroundService
             try
             {
                 var leitura = await _sensores.LerAsync(ct);
-                VerificarAnomalias(leitura);
+                foreach (var mensagem in _detector.Detectar(leitura))
+                    PublicarAlerta(mensagem);
             }
             catch (OperationCanceledException) { break; }
             catch (Exception ex)
@@ -46,28 +44,6 @@ public sealed class MonitorWorker : BackgroundService
 
             await Task.Delay(500, ct);
         }
-    }
-
-    private void VerificarAnomalias(LeituraSensores leitura)
-    {
-        var cpuUso = ExtrairValor(leitura, TipoSensor.Carga, "CPU Total");
-        if (cpuUso.HasValue)
-        {
-            if (_historicoCpu.Count >= JanelaSpikeSeg * 2)
-                _historicoCpu.Dequeue();
-            _historicoCpu.Enqueue(cpuUso.Value);
-
-            if (_historicoCpu.Count >= JanelaSpikeSeg &&
-                _historicoCpu.All(v => v > LimiarCpuSpike))
-            {
-                PublicarAlerta($"CPU acima de {LimiarCpuSpike}% por {JanelaSpikeSeg}+ segundos consecutivos.");
-                _historicoCpu.Clear();
-            }
-        }
-
-        var ramUso = ExtrairValor(leitura, TipoSensor.Carga, "[RAM]");
-        if (ramUso.HasValue && ramUso.Value > LimiarRamPorcentagem)
-            PublicarAlerta($"RAM em uso elevado: {ramUso.Value:F0}%");
     }
 
     private void PublicarAlerta(string mensagem)
@@ -93,11 +69,4 @@ public sealed class MonitorWorker : BackgroundService
             }
         });
     }
-
-    private static double? ExtrairValor(LeituraSensores leitura, TipoSensor tipo, string fragmento) =>
-        leitura.Sensores
-            .Where(s => s.Tipo == tipo &&
-                        s.Nome.Contains(fragmento, StringComparison.OrdinalIgnoreCase))
-            .Select(s => (double?)s.Valor)
-            .FirstOrDefault();
 }
