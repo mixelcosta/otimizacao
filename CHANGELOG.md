@@ -11,6 +11,74 @@ roadmap no [README](README.md#mapa-do-roadmap)).
 
 ### Adicionado
 
+#### Drivers — Instalação silenciosa via pnputil (2026-06-22)
+
+Novo fluxo completo de instalação de driver sem abrir o navegador.
+
+- **IPC `instalardriver`** — rota do `RoteadorIpc` que recebe `{ urlDownload }`,
+  baixa o arquivo via `HttpClient`, detecta a extensão e roteia:
+  - `.inf` / `.cab` → `pnputil /add-driver <caminho> /install` (retorna saída do pnputil)
+  - `.exe` → executa o instalador diretamente (`UseShellExecute = true`)
+  - qualquer outro formato → retorna falha descritiva
+- **`DriversViewModel`** — `InstalarDriverCommand`, `Instalando` (bool), `StatusInstalacao` (string)
+- **`DriversView.axaml`** — botão `⬆ instalar` em cada linha da tabela (visível quando `TemDownload`),
+  texto de `StatusInstalacao` no rodapé ao lado do status de scan
+- **Testes** — 2 novos casos: `InstalarDriver_SemParametros_RetornaFalha`,
+  `InstalarDriver_UrlVazia_RetornaFalha`
+
+#### Guia BIOS IA — Análise de foto por visão multimodal (2026-06-22)
+
+Permite ao usuário fotografar a tela de BIOS e obter orientação da IA sobre
+a versão e as configurações detectadas.
+
+- **IPC `analisarbiosfoto`** — rota que recebe `{ imagemBase64, mediaType }`,
+  instancia `ClienteVisaoAnthropic` + `ModuloVisao`, chama
+  `InterpretarAsync(imagem, CasoUsoVisao.LerVersaoBios)` e retorna texto formatado com
+  fabricante, modelo, versão BIOS e próximo passo sugerido pela IA
+- **`BiosGuideViewModel`** — `AnalisarFotoAsync(caminho)` (public; lê bytes, converte para base64,
+  chama IPC), `AnalisandoFoto` (bool), `ResultadoFoto` (string), `TemResultadoFoto` (bool)
+- **`BiosGuideView.axaml`** — seção "ANALISAR FOTO DO BIOS" dentro do card de IA:
+  botão "📷 Carregar foto do BIOS", indicador "Analisando imagem…", card de resultado
+- **`BiosGuideView.axaml.cs`** — `OnCarregarFotoClick`: abre `StorageProvider.OpenFilePickerAsync`
+  com filtro PNG/JPG/JPEG/WEBP, chama `BiosGuideViewModel.AnalisarFotoAsync(path)`
+- **Testes** — 2 novos casos: `AnalisarBiosFoto_SemParametros_RetornaFalha`,
+  `AnalisarBiosFoto_SemBase64_RetornaFalha`
+
+#### IPC — Rota `obterstatuslicenca` (2026-06-22)
+
+- **`StatusLicencaDto`** — novo record em `ProtocoloIpc.cs`:
+  `Tipo`, `ModuloUpgrade`, `ContadorVidaUtil`, `GerenciadorDrivers`, `GuiaBiosIa`
+- **`RoteadorIpc`** — `IServicoLicenca?` injetado via construtor (parâmetro opcional,
+  preserva compatibilidade retroativa com todos os 20 testes existentes);
+  handler `ObterStatusLicenca` retorna o DTO populado com o estado real ou defaults Gratuita
+- **`HardwareOptimizer.Ipc.csproj`** — referência adicionada a `Features.Licensing`
+- **Testes** — 3 novos casos: sem licença → Gratuita, com fake Gratuita → sem acesso,
+  com fake Premium → todas funcionalidades liberadas
+
+#### UI — Alinhamento do design system (Sprint 4) (2026-06-22)
+
+`InfoSistemaView.axaml` e `OtimizadorWindowsView.axaml` totalmente reescritas para
+seguir a paleta do design system, encerrando o Sprint 4 de alinhamento visual.
+
+**`InfoSistemaView.axaml`:**
+- Estrutura reestruturada para `Grid RowDefinitions="Auto,*"` com header persistente (fora do scroll)
+- 9 cards de seção convertidos: `Background="#0D0D0D"` → `LinearGradientBrush #0C0C1E → #09091A`
+- `BorderBrush="#1E1E3C" BorderThickness="1"` adicionados em todos os cards
+- Separadores `Rectangle Fill="#1A1A1A"` → `Fill="#1E1E3C"`
+- Valores primários `#FFFFFF` → `#E0E0F2`; secundários `#AAAAAA` → `#484865`; labels `#555555` → `#282840`
+- Destaques do acento ciano: núcleos/threads, clock base, versão BIOS, total/tipo de RAM, VRAM, link de GPU
+
+**`OtimizadorWindowsView.axaml`:**
+- Estilos de aba (`.aba`, `.aba-ativa`, `.sel-rapida`, `.efeito`) atualizados para a paleta
+- Cards de Exibições Gráficas, Programas, Inicialização e Serviços convertidos
+- Aba ativa: `BorderBrush="#00C8FF"` (era `#00FF88`)
+- Botão de desinstalação: `Background="#1A0000" Foreground="#FF4444"` (semântica vermelho)
+- Botão de confirmação de efeito: `Background="#00C87018" Foreground="#00C870"` (semântica verde)
+
+---
+
+### Adicionado
+
 #### UI — Redesign visual "Otimize Builder" (2026-06-15)
 
 Redesign completo da interface gráfica Avalonia com estética tecnológica e moderna,

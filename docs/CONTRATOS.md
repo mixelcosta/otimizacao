@@ -17,6 +17,8 @@ Referência dos objetos de dados trocados entre os planos e serializados em JSON
 - [ResultadoValidacao](#resultadovalidacao)
 - [RelatorioExecutivo](#relatorioexecutivo)
 - [LeituraVisual](#leituravisual)
+- [StatusLicencaDto](#statuslicencadto)
+- [InfoDriver](#infodriver)
 
 ---
 
@@ -140,3 +142,62 @@ Saída do módulo de visão.
 
 A leitura é cruzada com o inventário (`ConferenciaVisual`); confiança baixa pede
 nova foto.
+
+---
+
+## StatusLicencaDto
+
+Retornado pelo método IPC `obterstatuslicenca`. Indica o plano atual e quais
+funcionalidades Premium estão disponíveis.
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| `tipo` | `"Gratuita"` \| `"Premium"` | Plano da licença atual |
+| `moduloUpgrade` | bool | Acesso ao módulo UPGRADE (compatibilidade + gargalo) |
+| `contadorVidaUtil` | bool | Acesso ao Contador de Vida Útil (S.M.A.R.T.) |
+| `gerenciadorDrivers` | bool | Acesso ao Gerenciador de Drivers (WHQL + pnputil) |
+| `guiaBiosIa` | bool | Acesso ao Guia BIOS IA (chat + visão multimodal) |
+
+```json
+{
+  "tipo": "Premium",
+  "moduloUpgrade": true,
+  "contadorVidaUtil": true,
+  "gerenciadorDrivers": true,
+  "guiaBiosIa": true
+}
+```
+
+> A implementação local (`ServicoLicencaLocal`) persiste a licença em
+> `%AppData%\OtimizeBuilder\license.dat` com criptografia DPAPI.
+> Ver [MODULOS_PREMIUM.md](MODULOS_PREMIUM.md) para o ciclo de vida completo.
+
+---
+
+## InfoDriver
+
+Retornado na lista do método IPC `obterdrivers`. Cada item representa um
+dispositivo detectado via WMI (`Win32_PnPEntity`).
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| `hardwareId` | string | `DeviceID` / `HardwareID` do dispositivo |
+| `descricao` | string | Nome legível do dispositivo |
+| `fabricante` | string? | Fabricante declarado |
+| `versaoAtual` | string? | Versão do driver instalado |
+| `versaoDisponivel` | string? | Versão mais recente (catálogo WHQL) |
+| `urlDownload` | string? | URL do pacote de driver mais recente |
+| `certificadoWhql` | bool | Certificado pelo WHQL/WHCP da Microsoft |
+| `status` | enum | `Atualizado`, `AtualizacaoDisponivel`, `Desconhecido` |
+
+```json
+{
+  "hardwareId": "PCI\\VEN_10DE&DEV_2204",
+  "descricao": "NVIDIA GeForce RTX 3090",
+  "fabricante": "NVIDIA",
+  "versaoAtual": "31.0.15.3623",
+  "versaoDisponivel": "31.0.15.5074",
+  "urlDownload": "https://…/driver.inf",
+  "certificadoWhql": true,
+  "status": "AtualizacaoDisponivel"
+}

@@ -32,7 +32,8 @@ IA**.
 | [SEGURANCA.md](SEGURANCA.md) | Modelo de segurança, privacidade e consentimento. |
 | [CATALOGO.md](CATALOGO.md) | Catálogo de ações whitelisted e seus limites. |
 | [CONTRATOS.md](CONTRATOS.md) | Contratos de dados (JSON) e schemas. |
-| [API_IPC.md](API_IPC.md) | Protocolo IPC (métodos, requisição/resposta). |
+| [API_IPC.md](API_IPC.md) | Protocolo IPC — todos os métodos, parâmetros e exemplos. |
+| [MODULOS_PREMIUM.md](MODULOS_PREMIUM.md) | Módulos Premium: Licença, UPGRADE, Vida Útil, Drivers, Guia BIOS IA. |
 | [arquitetura_otimizador.json](arquitetura_otimizador.json) | Documento de arquitetura original (referência). |
 
 ## 📋 Projeto

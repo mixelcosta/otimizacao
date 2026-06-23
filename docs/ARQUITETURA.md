@@ -35,38 +35,55 @@ original, veja [`arquitetura_otimizador.json`](arquitetura_otimizador.json).
 ## Projetos e dependências
 
 ```
-HardwareOptimizer.Core      (domínio puro, sem efeitos colaterais, sem deps externas)
+HardwareOptimizer.Core          (domínio puro, sem efeitos colaterais, sem deps externas)
         ▲        ▲       ▲
         │        │       │
-   Agent│   Cerebro│     │
+   Agent│   Cerebro│  Features.*│
         │        │       │
 HardwareOptimizer.Agent   HardwareOptimizer.Cerebro   (efeitos colaterais / LLM)
-        ▲        ▲         ▲
-        └────────┴────┬────┘
+HardwareOptimizer.Features.Licensing                   (gating Freemium/Premium)
+HardwareOptimizer.Features.Upgrade                     (compatibilidade, gargalo, links)
+HardwareOptimizer.Features.LifeCounter                 (S.M.A.R.T., estimativa de vida)
+HardwareOptimizer.Features.Drivers                     (HWID, catálogo WHQL, pnputil)
+        ▲        ▲         ▲         ▲(Features.*)
+        └────────┴────┬────┴─────────┘
                       │
             HardwareOptimizer.Ipc          (composição: protocolo + roteador + transporte)
                  ▲          ▲
                  │          │
    HardwareOptimizer.App   HardwareOptimizer.Cli    (UI desktop / linha de comando)
+
+HardwareOptimizer.WindowsService   (Worker background, monitor de anomalias — Windows)
 ```
 
 | Projeto | Papel | Depende de |
 | --- | --- | --- |
 | `HardwareOptimizer.Core` | Domínio puro: contratos, catálogo, validação, perfis, consentimento, privacidade, BIOS, score. | (só BCL) |
-| `HardwareOptimizer.Agent` | Efeitos colaterais: coletor, sensores, backup, executor, validação, persistência SQLite. | Core |
-| `HardwareOptimizer.Cerebro` | Cérebro: matriz de decisão, guard, local/LLM, visão. | Core, SDK Anthropic |
-| `HardwareOptimizer.Ipc` | Protocolo, roteador (dispatcher) e transporte named pipe. | Core, Agent, Cerebro |
-| `HardwareOptimizer.App` | UI desktop Avalonia (MVVM) — produto **Otimize Builder**. Sidebar com estado ativo, dashboard de sensores, info sistema, otimizador Windows, IA copiloto e módulos Premium. | Ipc |
+| `HardwareOptimizer.Agent` | Efeitos colaterais: coletor, sensores, backup, executor, validação, persistência SQLite, HWID, startup scanner, S.M.A.R.T. | Core |
+| `HardwareOptimizer.Cerebro` | Cérebro: matriz de decisão, guard, local/LLM, visão multimodal. | Core, SDK Anthropic |
+| `HardwareOptimizer.Features.Licensing` | Gating Freemium/Premium: `IServicoLicenca`, `ServicoLicencaLocal` (DPAPI), `FuncionalidadePremium`, `TipoLicenca`. | Core |
+| `HardwareOptimizer.Features.Upgrade` | Módulo UPGRADE: compatibilidade, cálculo de gargalo, agente LLM de upgrade. | Core, Cerebro |
+| `HardwareOptimizer.Features.LifeCounter` | Módulo Vida Útil: `CalculadoraVidaUtil`, banco TBW por modelo. | Core, Agent |
+| `HardwareOptimizer.Features.Drivers` | Módulo Drivers: `AtualizadorDrivers` (pnputil), repositório WHQL. | Core, Agent |
+| `HardwareOptimizer.Ipc` | Protocolo, roteador (dispatcher) e transporte named pipe. | Core, Agent, Cerebro, Features.* |
+| `HardwareOptimizer.App` | UI desktop Avalonia (MVVM) — produto **Otimize Builder**. Sidebar, dashboard, info sistema, otimizador Windows, módulos Premium. | Ipc |
 | `HardwareOptimizer.Cli` | Linha de comando (orquestra tudo). | Core, Agent, Cerebro, Ipc |
+| `HardwareOptimizer.WindowsService` | Worker Windows Service: polling 500ms, detecção de anomalias, notificação via named pipe. | Core, Agent |
 
 ### Mapa de módulos (resumo)
 - **Core:** `Common` (Resultado, enums), `Contracts`, `Catalog`, `Profiles`,
   `Consent`, `Privacy`, `Bios`, `Reporting`.
 - **Agent:** `Collector`, `Sensors`, `Backup`, `Execution`
   (+ `Execution/Windows` para a execução real), `Validation`, `Bios`,
-  `Persistence`, `Platform` (portas de registro e processo).
-- **Cerebro:** raiz (matriz, guard, local/LLM, cliente Anthropic) + `Visao`.
-- **Ipc:** protocolo, `RoteadorIpc`, `ServidorNamedPipe`, `ClienteNamedPipe`.
+  `Persistence`, `Platform` (portas de registro e processo),
+  `Drivers` (HWID/ColetorHwid), `Smart` (LeitorSmart), `Startup` (VerificadorInicializacao, GerenciadorInicializacao), `Services` (ColetorServicos).
+- **Cerebro:** raiz (matriz, guard, local/LLM, cliente Anthropic) + `Visao`
+  (pipeline multimodal: `ModuloVisao`, `ClienteVisaoAnthropic`, `ConferenciaVisual`).
+- **Features.Licensing:** `IServicoLicenca`, `ServicoLicencaLocal`, `FuncionalidadePremium` enum.
+- **Features.Upgrade:** `AgenteUpgrade` (LLM), `ValidadorCompatibilidade`, `CalculadoraGargalo`.
+- **Features.LifeCounter:** `CalculadoraVidaUtil`, `tbw_database.json`.
+- **Features.Drivers:** `AtualizadorDrivers`, `IRepositorioDriversWhql`.
+- **Ipc:** protocolo, `RoteadorIpc` (dispatcher centralizado), `ServidorNamedPipe`, `ClienteNamedPipe`.
 
 ---
 
@@ -144,6 +161,17 @@ Para o detalhamento das regras invariantes, veja [SEGURANCA.md](SEGURANCA.md).
 | Texto escuro | `#282840` | Items bloqueados (Premium) |
 | Fundo badge PRO | `#1A1000` | Border do badge "PRO" na sidebar |
 | Fundo badge alerta | `#3D0000` | Border do badge "!" de alerta IA |
+
+### Cores semânticas (separadas do acento)
+
+| Token | Valor | Uso |
+| --- | --- | --- |
+| Sucesso / aplicado | `#00C870` | Verde — status ATUALIZADO, otimizações aplicadas |
+| Alerta / gargalo | `#FF8C00` | Laranja — bottleneck, avisos XMP |
+| Erro / destrutivo | `#FF4444` | Vermelho — erro, botão de desinstalar |
+
+> Manter as cores semânticas separadas do acento primário (`#00C8FF`) preserva
+> a consistência: verde semântico (`#00C870`) ≠ verde de métrica (`#00FF88`).
 
 ### Padrão: barra de acento lateral sem code-behind
 
