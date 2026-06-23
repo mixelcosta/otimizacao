@@ -11,6 +11,35 @@ roadmap no [README](README.md#mapa-do-roadmap)).
 
 ### Adicionado
 
+#### Monetização — LemonSqueezy + validação online de licença (2026-06-23)
+
+Sistema de pagamento real via LemonSqueezy, substituindo a validação offline HMAC como mecanismo principal de licenciamento.
+
+- **`ServicoLicencaLemonSqueezy`** — nova implementação de `IServicoLicenca` que chama a API REST do LemonSqueezy (`POST /activate`, `/validate`, `/deactivate`). Persiste o resultado em DPAPI (`%AppData%\OtimizeBuilder\license.dat`) com campos: `Chave`, `InstanceId`, `NomeCliente`, `EmailCliente`, `UltimaValidacao`.
+- **`LicencaConfig`** — constantes centralizadas: `UrlCompra` (URL do checkout no LemonSqueezy, substituir antes de distribuir) e `DiasGracePeriodo = 7` (dias offline tolerados antes de suspender o Premium).
+- **`IServicoLicenca` expandida** — novos membros: `string? NomeCliente`, `string? EmailCliente`, `Task<ResultadoAtivacao> ValidarOnlineAsync(CancellationToken)`.
+- **`ResultadoAtivacao`** — campos opcionais `NomeCliente` e `EmailCliente` retornados na ativação bem-sucedida.
+- **`App.axaml.cs`** — substitui `ServicoLicencaLocal` por `ServicoLicencaLemonSqueezy`; chama `ValidarOnlineAsync()` em background na inicialização do app.
+- **`ConfiguracoesView.axaml`** — card de venda "Assinar Premium →" (visível apenas para usuários Gratuita) com lista dos 4 benefícios Premium e botão com gradiente roxo→azul; botão "Verificar online"; exibe nome e email do cliente quando Premium ativo.
+- **`ConfiguracoesViewModel.cs`** — comandos `AbrirPaginaCompraCommand` (abre checkout no navegador) e `ValidarOnlineCommand`; propriedades `NomeCliente` e `EmailCliente`.
+- **Fluxo completo**: compra no LemonSqueezy → chave enviada por email → usuário cola em Configurações → ativação via API → módulos desbloqueados imediatamente; cancelamento detectado na próxima validação online (a cada abertura do app + botão manual).
+- **Grace period**: até 7 dias sem internet mantém o Premium; após isso, licença suspensa até reconexão.
+
+#### UI/UX — Melhorias visuais e funcionais (2026-06-23)
+
+- **Contorno dos botões** — `BorderThickness="1"` adicionado em todos os estilos de botão do sistema (`Button.nav`, `Button.nav-premium`, `Button.nav-locked`, `Button.scan`, `Button.sel-rapida`, botões DESATIVAR/ATIVAR/PARAR/INICIAR) com `BorderBrush` ajustado por contexto.
+- **Home — visibilidade de texto** — `Foreground="#1E1E38"` → `#4A4A70` no cabeçalho; `#3C3C62` → `#6868A0` no StatusText; eliminava o contraste quase zero no tema escuro.
+- **Exportar Relatório HTML** — `ServicoRelatorio.ExportarHtmlAsync()` gera relatório dark-themed completo na Área de Trabalho após o scan e o abre automaticamente no navegador. Seções: Sistema Operacional, CPU, RAM (tabela de módulos), GPU, Placa-mãe + BIOS, Armazenamento (tabela), S.M.A.R.T. (tabela), Rede (tabela). Botão "↓ Exportar Relatório HTML" na tela Home pós-scan; `StatusExport` com feedback de progresso.
+- **Notificações Win32 na taskbar** — `ServicoNotificacaoWindows` usa P/Invoke (`Shell_NotifyIcon`, `NOTIFYICONDATA` com `NIF_INFO` / `NIIF_WARNING`) para exibir balloon tip quando o WindowsService detecta anomalia de CPU/RAM e o app está minimizado ou em outra aba. HWND obtido em `ShellWindow.OnOpened` via `TryGetPlatformHandle()?.Handle`. Thread-safe via `Interlocked.Increment`. Descartado em `ShellViewModel.Dispose`.
+- **UPGRADE — sugestões concretas** — `UpgradeViewModel.GerarSugestoes()` produz recomendações específicas com nome, categoria, fabricante, specs e motivo. CPU por socket: AM4 → Ryzen 5000, AM5 → Ryzen 7000/9000, LGA1700 → Intel 12/13ª gen. GPU por geração: anterior à RTX 3000 / RX 6000 → sugestão de upgrade. RAM dual-channel quando apenas um módulo. Armazenamento NVMe Gen 4. Pasta térmica após 2 anos. `UpgradeView.axaml` exibe os cards com gradiente de cor por categoria.
+
+#### Testes — Cobertura das funcionalidades novas (2026-06-23)
+
+- **`ConfiguracoesViewModelTests`** — novo arquivo com **12 testes**: status inicial (Gratuita/Premium), ativação com sucesso (com nome de cliente, sem nome, limpeza de campo), ativação com falha, desativação, validação online (válida, assinatura expirada).
+- **`LicencaGateTests` expandido** — **+7 testes**: `ResultadoAtivacao.Ok` com `NomeCliente`/`EmailCliente`, `ResultadoAtivacao.Ok` sem nome retorna null, `ResultadoAtivacao.Falhar` sem nome/email, `LicencaConfig.UrlCompra` não-vazia, `LicencaConfig.DiasGracePeriodo` positivo, `ValidarOnlineAsync` nos dois fakes.
+- **Fakes atualizados** — `LicencaGratuita`, `LicencaPremium` (`Licensing.Tests`) e `LicencaFake` (`Ipc.Tests`) implementam os novos membros de `IServicoLicenca`.
+- **Total da suíte: 446 testes, 0 falhas** (era 285 em 2026-06-15; 13 em 2026-06-23 antes desta sessão).
+
 #### Licença — Validação de chave offline via HMAC-SHA256 (2026-06-23)
 
 Impede que qualquer string não-vazia ative o plano Premium.

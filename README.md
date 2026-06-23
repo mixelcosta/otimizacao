@@ -100,18 +100,21 @@ HardwareOptimizer.sln
 │   ├── HardwareOptimizer.App/            UI desktop Avalonia (MVVM) — Otimize Builder
 │   │   ├── Views/
 │   │   │   ├── ShellWindow.axaml         Janela principal: sidebar + área de conteúdo
-│   │   │   ├── HomeView.axaml            Tela de SCAN inicial
+│   │   │   ├── HomeView.axaml            Tela de SCAN + exportar relatório HTML
 │   │   │   ├── DashboardView.axaml       Cards de sensores + gráficos em tempo real
 │   │   │   ├── OtimizadorWindowsView     Exibições, programas, inicialização, serviços
 │   │   │   ├── InfoSistemaView.axaml     Todas as especificações de hardware
 │   │   │   ├── IaCopilotoView.axaml      Chat com análise de inventário
-│   │   │   ├── UpgradeView.axaml         Compatibilidade + gargalo [Premium]
+│   │   │   ├── UpgradeView.axaml         Gargalo + sugestões concretas [Premium]
 │   │   │   ├── VidaUtilView.axaml        Saúde S.M.A.R.T. dos discos [Premium]
 │   │   │   ├── DriversView.axaml         HWID + atualização de drivers [Premium]
 │   │   │   ├── BiosGuideView.axaml       Guia BIOS passo a passo [Premium]
-│   │   │   └── ConfiguracoesView.axaml   Configurações do sistema
+│   │   │   └── ConfiguracoesView.axaml   Licença LemonSqueezy + ativação + compra
 │   │   ├── ViewModels/
 │   │   │   └── ShellViewModel.cs         Navegação + 9 propriedades PaginaEhXxx
+│   │   ├── Services/
+│   │   │   ├── ServicoRelatorio.cs       Gerador de relatório HTML dark-themed
+│   │   │   └── ServicoNotificacaoWindows.cs  Balloon tip Win32 (Shell_NotifyIcon)
 │   │   └── Controls/
 │   │       ├── SensorCard.axaml          Card de sensor com barra de acento colorida
 │   │       ├── AnelScanControl.axaml     Anel animado de progresso de scan
@@ -122,10 +125,12 @@ HardwareOptimizer.sln
 │   ├── HardwareOptimizer.Agent.Tests/              Executor, coletor, persistência, backup, sensores, validação
 │   ├── HardwareOptimizer.Cerebro.Tests/            Guard, matriz, cérebro local/LLM, visão, privacidade
 │   ├── HardwareOptimizer.Ipc.Tests/                Roteador + loopback real de named pipe
-│   ├── HardwareOptimizer.App.Tests/                ViewModels da UI (com roteador falso)
+│   ├── HardwareOptimizer.App.Tests/                ViewModels da UI — 83 testes (inclui ConfiguracoesViewModel)
 │   ├── HardwareOptimizer.Features.Upgrade.Tests/   Compatibilidade + cálculo de gargalo
 │   ├── HardwareOptimizer.Features.LifeCounter.Tests/ Cálculo de vida útil S.M.A.R.T.
-│   └── HardwareOptimizer.Features.Licensing.Tests/  Gate Freemium/Premium
+│   ├── HardwareOptimizer.Features.Licensing.Tests/  Gate Freemium/Premium + LicencaConfig + ResultadoAtivacao
+│   ├── HardwareOptimizer.Features.Drivers.Tests/    HWID + catálogo WHQL + pnputil
+│   └── HardwareOptimizer.WindowsService.Tests/      DetectorAnomalias + MonitorWorker
 ├── scripts/publish.sh               Publicação self-contained multiplataforma
 ├── Dockerfile                       Imagem de distribuição (Linux)
 ├── docs/INSTALACAO.md · docs/MANUAL.md  Instalação e manual de uso
@@ -297,6 +302,7 @@ Entrega incremental, conforme o `roadmap_desenvolvimento` do documento.
 | 9 | Validação e testes | ✅ Runner de estresse (parser + análise: WHEA/memória/artefatos/TDR/BSOD/temperatura/queda de score) ligado ao rollback automático |
 | 10 | Relatório e score | ✅ Notas 0-100 por domínio + nota final ponderada + relatório executivo |
 | 11 | Hardening e distribuição | ◐ Publish self-contained multiplataforma + Docker + workflow de release + documentação; assinatura de código (EV) é passo operacional |
+| 12 | Monetização | ✅ Integração LemonSqueezy: checkout automático, ativação por license key via API REST, validação periódica online, grace period de 7 dias offline, downgrade automático ao cancelar; UI de compra na tela Configurações |
 
 Legenda: ✅ entregue · ◐ parcial/estrutural · ⏳ planejado.
 

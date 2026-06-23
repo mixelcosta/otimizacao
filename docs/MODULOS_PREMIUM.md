@@ -29,15 +29,81 @@ por `IServicoLicenca` e verificado antes de exibir o conteúdo na UI
 
 ```
 HardwareOptimizer.Features.Licensing/
-├── IServicoLicenca.cs          — interface: TipoAtual, TemAcesso(), AtivarAsync(), DesativarAsync()
-├── ServicoLicencaLocal.cs      — implementação: persiste em %AppData%\OtimizeBuilder\license.dat (DPAPI)
-├── FuncionalidadePremium.cs    — enum: ModuloUpgrade=0, ContadorVidaUtil=1, GerenciadorDrivers=2, GuiaBiosIa=3
-└── TipoLicenca.cs              — enum: Gratuita=0, Premium=1
+├── IServicoLicenca.cs                — TipoAtual, NomeCliente, EmailCliente,
+│                                       TemAcesso(), AtivarAsync(), DesativarAsync(),
+│                                       ValidarOnlineAsync()
+├── ServicoLicencaLemonSqueezy.cs     — implementação principal: API REST LemonSqueezy
+│                                       + DPAPI em %AppData%\OtimizeBuilder\license.dat
+├── ServicoLicencaLocal.cs            — implementação offline HMAC (fallback/desenvolvimento)
+├── LicencaConfig.cs                  — UrlCompra (checkout LemonSqueezy) + DiasGracePeriodo
+├── FuncionalidadePremium.cs          — enum: ModuloUpgrade=0 … GuiaBiosIa=3
+├── ResultadoAtivacao.cs              — Sucesso, NovoTipo, Erro, NomeCliente, EmailCliente
+└── ValidadorChaveLicenca.cs          — validação offline HMAC-SHA256 (usado por ServicoLicencaLocal)
 ```
 
-**`ServicoLicencaLocal`** é decorado com `[SupportedOSPlatform("windows")]` porque
-usa DPAPI (`System.Security.Cryptography.ProtectedData`) para criptografar o
-arquivo de licença em repouso.
+### Interface `IServicoLicenca`
+
+```csharp
+public interface IServicoLicenca
+{
+    TipoLicenca TipoAtual { get; }
+    string? NomeCliente { get; }      // nome do comprador (vindo do LemonSqueezy)
+    string? EmailCliente { get; }     // email do comprador
+    bool TemAcesso(FuncionalidadePremium funcionalidade);
+    Task<ResultadoAtivacao> AtivarAsync(string chave, CancellationToken ct = default);
+    Task<ResultadoAtivacao> DesativarAsync(CancellationToken ct = default);
+    Task<ResultadoAtivacao> ValidarOnlineAsync(CancellationToken ct = default);
+}
+```
+
+### `ServicoLicencaLemonSqueezy` — fluxo de ativação
+
+```
+AtivarAsync("XXXX-XXXX-XXXX-XXXX")
+    ↓ POST https://api.lemonsqueezy.com/v1/licenses/activate
+       { license_key, instance_name: Environment.MachineName }
+    ↓ Resposta: { activated: true, instance.id, meta.customer_name/email }
+    ↓ RegistroLicenca salvo com DPAPI em %AppData%\OtimizeBuilder\license.dat
+    ↓ TipoAtual = Premium; NomeCliente/EmailCliente preenchidos
+    ↓ ResultadoAtivacao.Ok(Premium, nome, email)
+```
+
+### `ServicoLicencaLemonSqueezy` — validação periódica
+
+```
+ValidarOnlineAsync()  (chamada em background na inicialização do app)
+    ↓ POST https://api.lemonsqueezy.com/v1/licenses/validate
+       { license_key, instance_id }
+    ↓ { valid: true }  → atualiza UltimaValidacao no disco; mantém Premium
+    ↓ { valid: false } → deleta license.dat; downgrade para Gratuita
+    ↓ Erro de rede:
+        - até 7 dias sem internet → mantém Premium (grace period)
+        - mais de 7 dias           → downgrade temporário até reconexão
+```
+
+### Grace period e reconexão
+
+O campo `UltimaValidacao` (armazenado em DPAPI) permite que o app funcione offline
+até `LicencaConfig.DiasGracePeriodo` dias (padrão 7). Ao reconectar e o usuário
+clicar "Verificar online" ou reabrir o app, a validação é repetida.
+
+### UI — `ConfiguracoesView`
+
+| Estado da licença | O que é exibido |
+| --- | --- |
+| **Gratuita** | Card "Assinar Premium →" com lista de benefícios e botão de checkout |
+| **Premium** | Badge azul com ✓, nome e email do cliente, botões "Verificar online" e "Revogar licença" |
+
+Botões adicionados ao `ConfiguracoesViewModel`:
+- **`AbrirPaginaCompraCommand`** — abre `LicencaConfig.UrlCompra` no navegador padrão
+- **`ValidarOnlineCommand`** — chama `ValidarOnlineAsync()` e exibe resultado em `MensagemAtivacao`
+
+### Como configurar o checkout (desenvolvedor)
+
+1. Criar produto no [LemonSqueezy](https://lemonsqueezy.com) com License Keys habilitadas
+2. Configurar ativação máxima = 1 por chave (1 PC por licença)
+3. Substituir `LicencaConfig.UrlCompra` pela URL real do checkout
+4. Compilar e distribuir
 
 ### IPC: `obterstatuslicenca`
 
