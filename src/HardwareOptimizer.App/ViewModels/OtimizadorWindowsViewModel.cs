@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Ipc;
+using System.Linq;
 
 namespace HardwareOptimizer.App.ViewModels;
 
@@ -23,18 +24,8 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         EntradasStartup = [];
         ProgramasFiltrados = [];
         ServicosFiltrados = [];
-        EfeitosVisuais =
-        [
-            new("Animações ao minimizar e maximizar janelas"),
-            new("Animações na barra de tarefas e área de notificação"),
-            new("Transparência e vidro (Aero / DWM compositing)"),
-            new("Sombras sob janelas e cursor do mouse"),
-            new("Mostrar conteúdo das janelas ao arrastar"),
-            new("Efeito Peek — pré-visualização na área de trabalho"),
-            new("Fade e deslizamento de menus e dicas de ferramenta"),
-            new("Miniaturas de janelas na barra de tarefas (Aero Snap)"),
-            new("Suavização de bordas de fontes de tela (ClearType sub-pixel)"),
-        ];
+        EfeitosVisuais = [];
+        _ = CarregarEfeitosVisuaisAsync();
     }
 
     // ── Submenu ────────────────────────────────────────────────────────────
@@ -52,7 +43,9 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         OnPropertyChanged(nameof(AbaInicializacaoAtiva));
         OnPropertyChanged(nameof(AbaServicosAtiva));
 
-        if (value == SubPaginaOtimizador.Servicos && !_servicosCarregados)
+        if (value == SubPaginaOtimizador.EfeitosVisuais)
+            _ = CarregarEfeitosVisuaisAsync();
+        else if (value == SubPaginaOtimizador.Servicos && !_servicosCarregados)
             _ = CarregarServicosAsync();
     }
 
@@ -78,38 +71,61 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
 
     // ── Efeitos Visuais ────────────────────────────────────────────────────
 
+    [ObservableProperty] private bool _carregandoEfeitos;
+
     public ObservableCollection<EfeitoVisualViewModel> EfeitosVisuais { get; }
 
     [RelayCommand]
-    private void SelecionarTudo() { foreach (var e in EfeitosVisuais) e.Selecionado = true; }
-
-    [RelayCommand]
-    private void LimparSelecao() { foreach (var e in EfeitosVisuais) e.Selecionado = false; }
-
-    [RelayCommand]
-    private async Task AplicarEfeitosSelecionadosAsync()
+    private async Task CarregarEfeitosVisuaisAsync()
     {
-        var selecionados = EfeitosVisuais.Where(e => e.Selecionado).ToList();
-        if (selecionados.Count == 0)
+        CarregandoEfeitos = true;
+        StatusOtimizador = "Lendo configurações do Windows…";
+        try
         {
-            StatusOtimizador = "Nenhum efeito selecionado.";
-            return;
-        }
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "obterefeitosvisuais" });
+            if (!resp.Sucesso)
+            {
+                StatusOtimizador = "Falha ao ler efeitos: " + resp.Erro;
+                return;
+            }
 
+            if (resp.Resultado is not IReadOnlyList<EfeitoVisual> lista) return;
+
+            EfeitosVisuais.Clear();
+            foreach (var e in lista)
+                EfeitosVisuais.Add(new EfeitoVisualViewModel(e, ToggleEfeitoAsync));
+
+            EfeitosVisuaisDesativados = EfeitosVisuais.All(e => !e.Ativo);
+            StatusOtimizador = "Pronto.";
+        }
+        finally { CarregandoEfeitos = false; }
+    }
+
+    private async Task ToggleEfeitoAsync(EfeitoVisualViewModel efeito)
+    {
         Ocupado = true;
-        StatusOtimizador = $"Desativando {selecionados.Count} efeito(s)…";
+        var novoEstado = !efeito.Ativo;
+        var acao = novoEstado ? "Ativando" : "Desativando";
+        StatusOtimizador = acao + " " + efeito.Nome + "...";
         try
         {
             var resp = await _agente.TratarAsync(new RequisicaoIpc
             {
-                Metodo     = "aplicar",
-                Parametros = JsonSerializer.SerializeToElement(
-                    new { acoes = new[] { "SO_EFEITOS_VISUAIS_DESEMPENHO" } }),
+                Metodo     = "alterarefeito",
+                Parametros = JsonSerializer.SerializeToElement(new { id = efeito.Id, ativo = novoEstado }),
             });
-            EfeitosVisuaisDesativados = resp.Sucesso;
-            StatusOtimizador = resp.Sucesso
-                ? $"{selecionados.Count} efeito(s) desativado(s) com sucesso."
-                : "Falha: " + resp.Erro;
+
+            if (resp.Sucesso)
+            {
+                efeito.Ativo = novoEstado;
+                EfeitosVisuaisDesativados = EfeitosVisuais.All(e => !e.Ativo);
+                var resultado = novoEstado ? "ativado" : "desativado";
+                StatusOtimizador = efeito.Nome + " " + resultado + ".";
+            }
+            else
+            {
+                StatusOtimizador = "Falha: " + resp.Erro;
+            }
         }
         finally { Ocupado = false; }
     }
@@ -349,9 +365,39 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
 
 public partial class EfeitoVisualViewModel : ObservableObject
 {
+    private readonly Func<EfeitoVisualViewModel, Task> _toggle;
+
+    public EfeitoVisualViewModel(EfeitoVisual modelo, Func<EfeitoVisualViewModel, Task> toggle)
+    {
+        Id     = modelo.Id;
+        Nome   = modelo.Nome;
+        _ativo = modelo.Ativo;
+        _toggle = toggle;
+        ToggleCommand = new AsyncRelayCommand(() => _toggle(this));
+    }
+
+    public IAsyncRelayCommand ToggleCommand { get; }
+
+    public string Id   { get; }
     public string Nome { get; }
-    [ObservableProperty] private bool _selecionado = true;
-    public EfeitoVisualViewModel(string nome) => Nome = nome;
+
+    [ObservableProperty]
+    private bool _ativo;
+
+    partial void OnAtivoChanged(bool value)
+    {
+        OnPropertyChanged(nameof(TextoBotao));
+        OnPropertyChanged(nameof(CorBotaoFundo));
+        OnPropertyChanged(nameof(CorBotaoTexto));
+        OnPropertyChanged(nameof(CorIndicador));
+        OnPropertyChanged(nameof(CorNome));
+    }
+
+    public string TextoBotao    => Ativo ? "DESATIVAR" : "ATIVAR";
+    public string CorBotaoFundo => Ativo ? "#2A0808"   : "#082A12";
+    public string CorBotaoTexto => Ativo ? "#CC3333"   : "#00C870";
+    public string CorIndicador  => Ativo ? "#00C870"   : "#282840";
+    public string CorNome       => Ativo ? "#E0E0F2"   : "#484865";
 }
 
 public partial class ProgramaInstaladoViewModel : ObservableObject

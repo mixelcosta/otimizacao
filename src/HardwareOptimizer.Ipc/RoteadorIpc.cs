@@ -14,6 +14,7 @@ using HardwareOptimizer.Agent.Services;
 using HardwareOptimizer.Agent.Smart;
 using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Agent.Validation;
+using HardwareOptimizer.Agent.VisualEffects;
 using HardwareOptimizer.Cerebro;
 using HardwareOptimizer.Cerebro.Visao;
 using HardwareOptimizer.Core.Catalog;
@@ -116,6 +117,12 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "analisarbiosfoto" => await AnalisarBiosFotoAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "obterstatuslicenca" => ObterStatusLicenca(requisicao),
+                "obterefeitosvisuais" => OperatingSystem.IsWindows()
+                    ? ObterEfeitosVisuaisWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "alterarefeito" => OperatingSystem.IsWindows()
+                    ? AplicarEfeitoVisualWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
         }
@@ -775,5 +782,29 @@ Write-Output 'OK'
         {
             return RespostaIpc.Falha(req.Id, ex.Message);
         }
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static RespostaIpc ObterEfeitosVisuaisWindows(RequisicaoIpc req)
+    {
+        var efeitos = GerenciadorEfeitosVisuais.ObterTodos();
+        return RespostaIpc.Ok(req.Id, efeitos);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static RespostaIpc AplicarEfeitoVisualWindows(RequisicaoIpc req)
+    {
+        if (req.Parametros is not { } p
+            || !p.TryGetProperty("id",    out var idEl)    || idEl.ValueKind    != JsonValueKind.String
+            || !p.TryGetProperty("ativo", out var ativoEl) || ativoEl.ValueKind != JsonValueKind.True
+                && ativoEl.ValueKind != JsonValueKind.False)
+            return RespostaIpc.Falha(req.Id, "Parâmetros 'id' e 'ativo' obrigatórios.");
+
+        var id    = idEl.GetString()!;
+        var ativo = ativoEl.GetBoolean();
+        var ok    = GerenciadorEfeitosVisuais.Aplicar(id, ativo);
+        return ok
+            ? RespostaIpc.Ok(req.Id, true)
+            : RespostaIpc.Falha(req.Id, $"Falha ao aplicar efeito '{id}'.");
     }
 }
