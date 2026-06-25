@@ -31,16 +31,30 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         Drivers = new DriversViewModel(agente);
         BiosGuide = new BiosGuideViewModel(agente);
         Configuracoes = new ConfiguracoesViewModel(licenca, OnLicencaAlterada);
-        Home = new HomeViewModel(agente, () => PaginaAtual = Dashboard, inv =>
-        {
-            InfoSistema.Popular(inv);
-            OtimizadorWindows.Popular(inv.EntradasStartup);
-            OtimizadorWindows.PopularProgramas(inv.ProgramasInstalados);
-            VidaUtil.Popular(inv.SaudeDiscos);
-            Drivers.Popular(inv.Drivers);
-            BiosGuide.Popular(inv);
-            ScanConcluido = true;
-        });
+        Home = new HomeViewModel(
+            agente,
+            () => PaginaAtual = Dashboard,
+            inv =>
+            {
+                InfoSistema.Popular(inv);
+                OtimizadorWindows.Popular(inv.EntradasStartup);
+                OtimizadorWindows.PopularProgramas(inv.ProgramasInstalados);
+                VidaUtil.Popular(inv.SaudeDiscos);
+                Drivers.Popular(inv.Drivers);
+                BiosGuide.Popular(inv);
+                ScanConcluido = true;
+                OnPropertyChanged(nameof(TemAlertaBios));
+            },
+            aba =>
+            {
+                PaginaAtual = OtimizadorWindows;
+                if (aba == "inicializacao") OtimizadorWindows.SubPagina = SubPaginaOtimizador.Inicializacao;
+                else if (aba == "programas") OtimizadorWindows.SubPagina = SubPaginaOtimizador.ProgramasInstalados;
+            },
+            () =>
+            {
+                if (_licenca.TemAcesso(FuncionalidadePremium.GuiaBiosIa)) PaginaAtual = BiosGuide;
+            });
 
         _ehPremium = licenca.TipoAtual == TipoLicenca.Premium;
 
@@ -72,6 +86,8 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     [ObservableProperty] private bool _temAlertaIa;
     [ObservableProperty] private bool _ehPremium;
     [ObservableProperty] private bool _scanConcluido;
+
+    public bool TemAlertaBios => BiosGuide.AlertaXmpAtivo;
 
     // Propriedades para binding de estado ativo na sidebar
     public bool PaginaEhDashboard    => PaginaAtual == Dashboard;

@@ -189,25 +189,88 @@
                HorizontalAlignment="Center"
                Margin="0,20,0,0" />
 
-    <!-- Botões pós-scan -->
-    <StackPanel Grid.Row="3"
-                IsVisible="{Binding ScanConcluido}"
-                HorizontalAlignment="Center"
-                Spacing="10"
-                Margin="0,18,0,44">
-      <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
-        <Button Classes="acao"
-                Command="{Binding IrParaDashboardCommand}"
-                Content="Ver Dashboard" />
-        <Button Classes="acao"
-                Command="{Binding ExportarRelatorioCommand}"
-                Content="↓  Exportar Relatório HTML" />
+    <!-- Painel pós-scan: pontuação + achados + ações -->
+    <ScrollViewer Grid.Row="3"
+                  IsVisible="{Binding ScanConcluido}"
+                  Margin="0,12,0,0"
+                  MaxHeight="340">
+      <StackPanel HorizontalAlignment="Center" MaxWidth="600" Spacing="10" Margin="20,0,20,40">
+
+        <!-- Pontuação de otimização -->
+        <Border CornerRadius="12" Padding="18,14" BorderThickness="1">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+              <GradientStop Color="#0C0C1E" Offset="0" />
+              <GradientStop Color="#09091A" Offset="1" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <Border.BorderBrush>
+            <SolidColorBrush Color="#1E1E3C" />
+          </Border.BorderBrush>
+          <Grid ColumnDefinitions="Auto,*">
+            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,18,0">
+              <TextBlock Text="{Binding PontuacaoOtimizacao}"
+                         Foreground="{Binding CorPontuacao}"
+                         FontSize="44" FontWeight="Black"
+                         HorizontalAlignment="Center" />
+              <TextBlock Text="/100" Foreground="#282840" FontSize="11"
+                         HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="3">
+              <TextBlock Text="{Binding LabelPontuacao}"
+                         Foreground="{Binding CorPontuacao}"
+                         FontSize="14" FontWeight="SemiBold" />
+              <TextBlock Text="Pontuação calculada com base em startup, drivers, RAM e segurança"
+                         Foreground="#282840" FontSize="11" TextWrapping="Wrap" />
+            </StackPanel>
+          </Grid>
+        </Border>
+
+        <!-- Lista de achados -->
+        <ItemsControl ItemsSource="{Binding Achados}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:AchadoScanViewModel">
+              <Border Background="#06060F" CornerRadius="8" Padding="14,10" Margin="0,2"
+                      BorderBrush="#1E1E3C" BorderThickness="1">
+                <Grid ColumnDefinitions="24,*,Auto">
+                  <TextBlock Grid.Column="0" Text="{Binding Icone}"
+                             Foreground="{Binding CorIcone}"
+                             FontSize="14" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="1" Text="{Binding Descricao}"
+                             Foreground="#8080A0" FontSize="12"
+                             VerticalAlignment="Center" TextWrapping="Wrap"
+                             Margin="10,0,8,0" />
+                  <Button Grid.Column="2"
+                          IsVisible="{Binding TemAcao}"
+                          Command="{Binding $parent[ItemsControl].((vm:HomeViewModel)DataContext).IrParaAcaoCommand}"
+                          CommandParameter="{Binding Acao}"
+                          Content="Ver →"
+                          Background="Transparent" Foreground="#484865"
+                          BorderBrush="#1E1E3C" BorderThickness="1"
+                          CornerRadius="5" Padding="10,4" FontSize="11"
+                          VerticalAlignment="Center" Cursor="Hand" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Botões de ação -->
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center" Margin="0,6,0,0">
+          <Button Classes="acao"
+                  Command="{Binding IrParaDashboardCommand}"
+                  Content="Ver Dashboard" />
+          <Button Classes="acao"
+                  Command="{Binding ExportarRelatorioCommand}"
+                  Content="↓  Exportar Relatório HTML" />
+        </StackPanel>
+        <TextBlock Text="{Binding StatusExport}"
+                   Foreground="#484865" FontSize="11"
+                   HorizontalAlignment="Center"
+                   IsVisible="{Binding StatusExport, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
       </StackPanel>
-      <TextBlock Text="{Binding StatusExport}"
-                 Foreground="#484865" FontSize="11"
-                 HorizontalAlignment="Center"
-                 IsVisible="{Binding StatusExport, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
-    </StackPanel>
+    </ScrollViewer>
 
   </Grid>
 

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace HardwareOptimizer.App.ViewModels;
 
-public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao, Servicos }
+public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao, Servicos, Limpeza }
 
 public partial class OtimizadorWindowsViewModel : ObservableObject
 {
@@ -38,30 +38,37 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         OnPropertyChanged(nameof(MostrarProgramas));
         OnPropertyChanged(nameof(MostrarInicializacao));
         OnPropertyChanged(nameof(MostrarServicos));
+        OnPropertyChanged(nameof(MostrarLimpeza));
         OnPropertyChanged(nameof(AbaEfeitosAtiva));
         OnPropertyChanged(nameof(AbaProgramasAtiva));
         OnPropertyChanged(nameof(AbaInicializacaoAtiva));
         OnPropertyChanged(nameof(AbaServicosAtiva));
+        OnPropertyChanged(nameof(AbaLimpezaAtiva));
 
         if (value == SubPaginaOtimizador.EfeitosVisuais)
             _ = CarregarEfeitosVisuaisAsync();
         else if (value == SubPaginaOtimizador.Servicos && !_servicosCarregados)
             _ = CarregarServicosAsync();
+        else if (value == SubPaginaOtimizador.Limpeza && !_limpezaEscaneada)
+            _ = EscanearLimpezaAsync();
     }
 
     public bool MostrarEfeitosVisuais => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
     public bool MostrarProgramas      => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
     public bool MostrarInicializacao  => SubPagina == SubPaginaOtimizador.Inicializacao;
     public bool MostrarServicos       => SubPagina == SubPaginaOtimizador.Servicos;
+    public bool MostrarLimpeza        => SubPagina == SubPaginaOtimizador.Limpeza;
     public bool AbaEfeitosAtiva       => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
     public bool AbaProgramasAtiva     => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
     public bool AbaInicializacaoAtiva => SubPagina == SubPaginaOtimizador.Inicializacao;
     public bool AbaServicosAtiva      => SubPagina == SubPaginaOtimizador.Servicos;
+    public bool AbaLimpezaAtiva       => SubPagina == SubPaginaOtimizador.Limpeza;
 
     [RelayCommand] private void IrParaEfeitosVisuais() => SubPagina = SubPaginaOtimizador.EfeitosVisuais;
     [RelayCommand] private void IrParaProgramas()      => SubPagina = SubPaginaOtimizador.ProgramasInstalados;
     [RelayCommand] private void IrParaInicializacao()  => SubPagina = SubPaginaOtimizador.Inicializacao;
     [RelayCommand] private void IrParaServicos()       => SubPagina = SubPaginaOtimizador.Servicos;
+    [RelayCommand] private void IrParaLimpeza()        => SubPagina = SubPaginaOtimizador.Limpeza;
 
     // ── Estado geral ───────────────────────────────────────────────────────
 
@@ -74,6 +81,87 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
     [ObservableProperty] private bool _carregandoEfeitos;
 
     public ObservableCollection<EfeitoVisualViewModel> EfeitosVisuais { get; }
+
+    // ── Presets de Efeitos Visuais ─────────────────────────────────────────
+
+    private static readonly Dictionary<string, bool> _presetDesempenho =
+        new(StringComparer.Ordinal)
+        {
+            ["ComboBoxAnimation"]   = false, ["TaskbarAnimations"]   = false,
+            ["UiEffects"]           = false, ["WindowAnimation"]     = false,
+            ["SelectionFade"]       = false, ["TooltipAnimation"]    = false,
+            ["MenuAnimation"]       = false, ["AeroPeek"]            = false,
+            ["DragFullWindows"]     = false, ["Thumbnails"]          = false,
+            ["ListviewAlphaSelect"] = false, ["DropShadow"]          = false,
+            ["CursorShadow"]        = false, ["ListboxSmoothScroll"] = false,
+            ["ThumbnailCache"]      = false, ["FontSmoothing"]       = false,
+            ["ListviewShadow"]      = false,
+        };
+
+    private static readonly Dictionary<string, bool> _presetBalanceado =
+        new(StringComparer.Ordinal)
+        {
+            ["ComboBoxAnimation"]   = true,  ["TaskbarAnimations"]   = true,
+            ["UiEffects"]           = true,  ["WindowAnimation"]     = true,
+            ["SelectionFade"]       = true,  ["TooltipAnimation"]    = true,
+            ["MenuAnimation"]       = true,  ["AeroPeek"]            = true,
+            ["DragFullWindows"]     = true,  ["Thumbnails"]          = true,
+            ["ListviewAlphaSelect"] = true,  ["DropShadow"]          = true,
+            ["CursorShadow"]        = false, ["ListboxSmoothScroll"] = true,
+            ["ThumbnailCache"]      = true,  ["FontSmoothing"]       = true,
+            ["ListviewShadow"]      = true,
+        };
+
+    private static readonly Dictionary<string, bool> _presetQualidade =
+        new(StringComparer.Ordinal)
+        {
+            ["ComboBoxAnimation"]   = true, ["TaskbarAnimations"]   = true,
+            ["UiEffects"]           = true, ["WindowAnimation"]     = true,
+            ["SelectionFade"]       = true, ["TooltipAnimation"]    = true,
+            ["MenuAnimation"]       = true, ["AeroPeek"]            = true,
+            ["DragFullWindows"]     = true, ["Thumbnails"]          = true,
+            ["ListviewAlphaSelect"] = true, ["DropShadow"]          = true,
+            ["CursorShadow"]        = true, ["ListboxSmoothScroll"] = true,
+            ["ThumbnailCache"]      = true, ["FontSmoothing"]       = true,
+            ["ListviewShadow"]      = true,
+        };
+
+    [RelayCommand]
+    private Task AplicarPresetDesempenhoAsync() => AplicarPresetAsync(_presetDesempenho, "Máximo Desempenho");
+
+    [RelayCommand]
+    private Task AplicarPresetBalanceadoAsync() => AplicarPresetAsync(_presetBalanceado, "Balanceado");
+
+    [RelayCommand]
+    private Task AplicarPresetQualidadeAsync() => AplicarPresetAsync(_presetQualidade, "Máxima Qualidade");
+
+    private async Task AplicarPresetAsync(Dictionary<string, bool> preset, string nomePreset)
+    {
+        Ocupado = true;
+        StatusOtimizador = "Aplicando preset \"" + nomePreset + "\"…";
+        int ok = 0, falhas = 0;
+        try
+        {
+            foreach (var efeito in EfeitosVisuais)
+            {
+                if (!preset.TryGetValue(efeito.Id, out var novoValor) || efeito.Ativo == novoValor)
+                    continue;
+
+                var resp = await _agente.TratarAsync(new RequisicaoIpc
+                {
+                    Metodo     = "alterarefeito",
+                    Parametros = JsonSerializer.SerializeToElement(new { id = efeito.Id, ativo = novoValor }),
+                });
+                if (resp.Sucesso) { efeito.Ativo = novoValor; ok++; }
+                else falhas++;
+            }
+            EfeitosVisuaisDesativados = EfeitosVisuais.All(e => !e.Ativo);
+            StatusOtimizador = falhas == 0
+                ? "Preset \"" + nomePreset + "\" aplicado (" + ok + " efeitos alterados)."
+                : "Preset aplicado com " + falhas + " falha(s).";
+        }
+        finally { Ocupado = false; }
+    }
 
     [RelayCommand]
     private async Task CarregarEfeitosVisuaisAsync()
@@ -267,13 +355,44 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
 
     // ── Serviços Windows ───────────────────────────────────────────────────
 
+    // Serviços que podem ser desativados com segurança sem afetar o sistema
+    private static readonly HashSet<string> _servicosSeguros = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "SysMain",        // Superfetch — pré-carregamento de apps
+        "DiagTrack",      // Telemetria da Microsoft
+        "WSearch",        // Windows Search — indexação de arquivos
+        "Spooler",        // Impressão (se não tiver impressora)
+        "XblAuthManager", // Xbox Live
+        "XblGameSave",    // Xbox Live Game Save
+        "XboxGipSvc",     // Xbox Accessory Management
+        "XboxNetApiSvc",  // Xbox Live Networking
+        "RemoteRegistry", // Registro Remoto
+        "Fax",            // Fax
+        "MapsBroker",     // Mapas baixados
+        "WalletService",  // Carteira digital Windows
+        "RetailDemo",     // Modo demonstração de loja
+        "WebClient",      // WebDAV
+        "WorkFoldersSvc", // Pastas de trabalho
+        "TrkWks",         // Rastreamento de links distribuídos
+        "WerSvc",         // Relatório de erros do Windows
+        "PrintNotify",    // Notificações de impressora
+        "wisvc",          // Windows Insider Service
+        "icssvc",         // Hotspot móvel
+        "PhoneSvc",       // Serviço de telefone
+    };
+
     [ObservableProperty] private string _filtroServicos      = "";
     [ObservableProperty] private string _totalServicosLabel  = "—";
     [ObservableProperty] private bool   _carregandoServicos;
+    [ObservableProperty] private bool   _filtrarServicosСeguros;
 
     public ObservableCollection<ServicoViewModel> ServicosFiltrados { get; }
 
-    partial void OnFiltroServicosChanged(string value) => AplicarFiltroServicos();
+    partial void OnFiltroServicosChanged(string value)       => AplicarFiltroServicos();
+    partial void OnFiltrarServicosСegurosChanged(bool value) => AplicarFiltroServicos();
+
+    [RelayCommand]
+    private void AlternarFiltroSeguros() => FiltrarServicosСeguros = !FiltrarServicosСeguros;
 
     [RelayCommand]
     private async Task CarregarServicosAsync()
@@ -299,9 +418,13 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
     private void AplicarFiltroServicos()
     {
         var filtro = FiltroServicos.Trim();
+        IEnumerable<ServicoViewModel> base_ = FiltrarServicosСeguros
+            ? _todosServicos.Where(s => _servicosSeguros.Contains(s.Nome))
+            : _todosServicos;
+
         var resultado = string.IsNullOrEmpty(filtro)
-            ? _todosServicos
-            : _todosServicos.Where(s =>
+            ? base_.ToList()
+            : base_.Where(s =>
                 s.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
                 s.Descricao.Contains(filtro, StringComparison.OrdinalIgnoreCase)).ToList();
 
@@ -358,6 +481,84 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
                 : "Falha: " + resp.Erro;
         }
         finally { Ocupado = false; }
+    }
+
+    // ── Limpeza do Sistema ─────────────────────────────────────────────────
+
+    private bool _limpezaEscaneada;
+
+    [ObservableProperty] private bool   _escaneandoLimpeza;
+    [ObservableProperty] private bool   _executandoLimpeza;
+    [ObservableProperty] private string _resultadoLimpeza  = "";
+    [ObservableProperty] private string _totalLimpezaLabel = "—";
+
+    public ObservableCollection<CategoriaLimpezaViewModel> CategoriasLimpeza { get; } = [];
+
+    [RelayCommand]
+    private async Task EscanearLimpezaAsync()
+    {
+        EscaneandoLimpeza = true;
+        ResultadoLimpeza  = "";
+        StatusOtimizador  = "Analisando pastas temporárias…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "escanearlimpeza" });
+            if (!resp.Sucesso) { StatusOtimizador = "Falha: " + resp.Erro; return; }
+
+            if (resp.Resultado is not IReadOnlyList<CategoriaLimpeza> lista) return;
+            CategoriasLimpeza.Clear();
+            foreach (var c in lista)
+                CategoriasLimpeza.Add(new CategoriaLimpezaViewModel(c));
+
+            _limpezaEscaneada = true;
+            AtualizarTotalLimpeza();
+            StatusOtimizador = "Scan de limpeza concluído.";
+        }
+        finally { EscaneandoLimpeza = false; }
+    }
+
+    [RelayCommand]
+    private async Task ExecutarLimpezaAsync()
+    {
+        var selecionadas = CategoriasLimpeza.Where(c => c.Selecionada).Select(c => c.Id).ToList();
+        if (selecionadas.Count == 0) { StatusOtimizador = "Selecione pelo menos uma categoria."; return; }
+
+        ExecutandoLimpeza = true;
+        StatusOtimizador  = $"Limpando {selecionadas.Count} categoria(s)…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "executarlimpeza",
+                Parametros = JsonSerializer.SerializeToElement(new { ids = selecionadas }),
+            });
+
+            if (resp.Sucesso && resp.Resultado is ResultadoLimpeza resultado)
+            {
+                ResultadoLimpeza = "Liberado: " + resultado.TotalFormatado
+                    + (resultado.Erros.Count > 0 ? $" ({resultado.Erros.Count} item(ns) em uso ignorado(s))" : "");
+                StatusOtimizador = ResultadoLimpeza;
+                _limpezaEscaneada = false;
+                await EscanearLimpezaAsync();
+            }
+            else
+            {
+                StatusOtimizador = "Falha: " + resp.Erro;
+            }
+        }
+        finally { ExecutandoLimpeza = false; }
+    }
+
+    private void AtualizarTotalLimpeza()
+    {
+        long total = CategoriasLimpeza.Where(c => c.Selecionada).Sum(c => c.TamanhoBytes);
+        TotalLimpezaLabel = total switch
+        {
+            >= 1_073_741_824 => $"{total / 1_073_741_824.0:F1} GB",
+            >= 1_048_576     => $"{total / 1_048_576.0:F1} MB",
+            >= 1_024         => $"{total / 1_024.0:F0} KB",
+            _                => total > 0 ? $"{total} B" : "0 KB",
+        };
     }
 }
 
@@ -554,4 +755,23 @@ public partial class InicializacaoEntradaViewModel : ObservableObject
     public string CorStatus     => Ativo ? "#00C870"      : "#555555";
     public string CorBotaoFundo => Ativo ? "#2A0808"      : "#082A12";
     public string CorBotaoTexto => Ativo ? "#CC3333"      : "#00C870";
+}
+
+public partial class CategoriaLimpezaViewModel : ObservableObject
+{
+    public CategoriaLimpezaViewModel(CategoriaLimpeza modelo)
+    {
+        Id             = modelo.Id;
+        Nome           = modelo.Nome;
+        TamanhoBytes   = modelo.TamanhoBytes;
+        TamanhoFormatado = modelo.TamanhoFormatado;
+        _selecionada   = modelo.TamanhoBytes > 0;
+    }
+
+    public string Id               { get; }
+    public string Nome             { get; }
+    public long   TamanhoBytes     { get; }
+    public string TamanhoFormatado { get; }
+
+    [ObservableProperty] private bool _selecionada;
 }

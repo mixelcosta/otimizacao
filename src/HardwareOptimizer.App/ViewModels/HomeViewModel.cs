@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,20 +8,45 @@ using HardwareOptimizer.Ipc;
 
 namespace HardwareOptimizer.App.ViewModels;
 
+public sealed class AchadoScanViewModel
+{
+    public string Icone       { get; init; } = "";
+    public string Descricao   { get; init; } = "";
+    public string CorIcone    { get; init; } = "#FFAA00";
+    public string Acao        { get; init; } = "";
+    public bool   TemAcao     => !string.IsNullOrEmpty(Acao);
+}
+
 public partial class HomeViewModel : ObservableObject
 {
     private readonly IRoteadorIpc _agente;
     private readonly Action _navegarParaDashboard;
+    private readonly Action<string>? _navegarParaOtimizador;
+    private readonly Action? _navegarParaBios;
 
     private readonly Action<Inventario>? _onScanCompleto;
     private Inventario? _ultimoInventario;
 
-    public HomeViewModel(IRoteadorIpc agente, Action navegarParaDashboard, Action<Inventario>? onScanCompleto = null)
+    public HomeViewModel(
+        IRoteadorIpc agente,
+        Action navegarParaDashboard,
+        Action<Inventario>? onScanCompleto = null,
+        Action<string>? navegarParaOtimizador = null,
+        Action? navegarParaBios = null)
     {
         _agente = agente;
         _navegarParaDashboard = navegarParaDashboard;
         _onScanCompleto = onScanCompleto;
+        _navegarParaOtimizador = navegarParaOtimizador;
+        _navegarParaBios = navegarParaBios;
+        Achados = [];
     }
+
+    // ── Achados pós-scan ───────────────────────────────────────────────────
+    public ObservableCollection<AchadoScanViewModel> Achados { get; }
+    [ObservableProperty] private int    _pontuacaoOtimizacao = 100;
+    [ObservableProperty] private string _corPontuacao        = "#00C870";
+    [ObservableProperty] private string _labelPontuacao      = "Sistema otimizado";
 
     // ── Scan state ─────────────────────────────────────────────────────────
 
@@ -131,7 +157,6 @@ public partial class HomeViewModel : ObservableObject
 
     private void AplicarResultados(Inventario inv)
     {
-        // Sum detected components: 1 CPU + GPUs + RAM sticks + 1 Mobo
         int total = 1 + inv.Gpu.Count + inv.Memoria.Count + 1;
         ContadorDispositivos = total.ToString();
         CorContador = new SolidColorBrush(Color.Parse("#00C870"));
@@ -150,6 +175,8 @@ public partial class HomeViewModel : ObservableObject
             CorBios    = new SolidColorBrush(Color.Parse("#FF8C00"));
         }
 
+        GerarAchadosEPontuacao(inv);
+
         _ultimoInventario = inv;
         ProgressoScan     = 1.0;
         TextoBotaoScan    = "100%";
@@ -157,6 +184,152 @@ public partial class HomeViewModel : ObservableObject
         UltimoScanLabel   = $"Último scan: {DateTime.Now:HH:mm  dd/MM/yyyy}";
         StatusText        = "Hardware detectado com sucesso";
         ScanConcluido     = true;
+    }
+
+    private void GerarAchadosEPontuacao(Inventario inv)
+    {
+        Achados.Clear();
+        int score = 100;
+
+        // Startup de alto impacto
+        var startupAlto = inv.EntradasStartup
+            .Where(e => e.Ativo && e.Impacto == ImpactoInicializacao.Alto)
+            .ToList();
+        if (startupAlto.Count > 0)
+        {
+            score -= Math.Min(20, startupAlto.Count * 7);
+            Achados.Add(new AchadoScanViewModel
+            {
+                Icone     = "⚡",
+                Descricao = $"{startupAlto.Count} programa{(startupAlto.Count > 1 ? "s" : "")} de alto impacto na inicialização",
+                CorIcone  = "#FFAA00",
+                Acao      = "inicializacao",
+            });
+        }
+
+        // Bloatware instalado
+        var bloatware = inv.ProgramasInstalados.Where(p => p.Bloatware).ToList();
+        if (bloatware.Count > 0)
+        {
+            score -= Math.Min(15, bloatware.Count * 5);
+            Achados.Add(new AchadoScanViewModel
+            {
+                Icone     = "🗑",
+                Descricao = $"{bloatware.Count} programa{(bloatware.Count > 1 ? "s" : "")} identificado{(bloatware.Count > 1 ? "s" : "")} como bloatware",
+                CorIcone  = "#FF6666",
+                Acao      = "programas",
+            });
+        }
+
+        // XMP/RAM rodando abaixo do potencial
+        bool xmpDesativado = false;
+        if (inv.Memoria.Count > 0)
+        {
+            var modulo = inv.Memoria.FirstOrDefault();
+            if (modulo != null &&
+                modulo.VelocidadeMhz.HasValue &&
+                modulo.VelocidadeConfiguradaMhz.HasValue &&
+                modulo.VelocidadeConfiguradaMhz.Value < modulo.VelocidadeMhz.Value * 0.9)
+            {
+                xmpDesativado = true;
+                score -= 15;
+                Achados.Add(new AchadoScanViewModel
+                {
+                    Icone     = "💾",
+                    Descricao = $"RAM rodando a {modulo.VelocidadeConfiguradaMhz} MHz (potencial XMP: {modulo.VelocidadeMhz} MHz)",
+                    CorIcone  = "#FFAA00",
+                    Acao      = "bios",
+                });
+            }
+
+            // Single Channel com apenas 1 pente
+            if (inv.Memoria.Count == 1)
+            {
+                score -= 10;
+                Achados.Add(new AchadoScanViewModel
+                {
+                    Icone     = "📊",
+                    Descricao = "RAM em Single-Channel — adicionar um 2° pente duplica a largura de banda",
+                    CorIcone  = "#8888CC",
+                    Acao      = "",
+                });
+            }
+        }
+
+        // Secure Boot desativado
+        if (inv.Placa.SecureBoot == false)
+        {
+            score -= 8;
+            Achados.Add(new AchadoScanViewModel
+            {
+                Icone     = "🔓",
+                Descricao = "Secure Boot está desativado — risco de segurança",
+                CorIcone  = "#FF6666",
+                Acao      = "bios",
+            });
+        }
+
+        // Drivers desatualizados
+        int driversDesatualizados = inv.Drivers.Count(d => d.Status == StatusDriver.AtualizacaoDisponivel);
+        if (driversDesatualizados > 0)
+        {
+            score -= Math.Min(10, driversDesatualizados * 5);
+            Achados.Add(new AchadoScanViewModel
+            {
+                Icone     = "🔧",
+                Descricao = $"{driversDesatualizados} driver{(driversDesatualizados > 1 ? "s" : "")} desatualizado{(driversDesatualizados > 1 ? "s" : "")} detectado{(driversDesatualizados > 1 ? "s" : "")}",
+                CorIcone  = "#FFAA00",
+                Acao      = "",
+            });
+        }
+
+        // Disco acima de 90%
+        if (inv.Metricas?.Discos != null)
+        {
+            var discoCheio = inv.Metricas.Discos.FirstOrDefault(d => d.UsoPercent >= 90);
+            if (discoCheio != null)
+            {
+                score -= 8;
+                Achados.Add(new AchadoScanViewModel
+                {
+                    Icone     = "💿",
+                    Descricao = $"Drive {discoCheio.Letra} com {discoCheio.UsoPercent}% de uso — pouco espaço livre",
+                    CorIcone  = "#CC3333",
+                    Acao      = "limpeza",
+                });
+            }
+        }
+
+        if (Achados.Count == 0)
+        {
+            Achados.Add(new AchadoScanViewModel
+            {
+                Icone     = "✓",
+                Descricao = "Sistema bem otimizado — nenhum problema crítico encontrado",
+                CorIcone  = "#00C870",
+                Acao      = "",
+            });
+        }
+
+        score = Math.Max(0, Math.Min(100, score));
+        PontuacaoOtimizacao = score;
+        CorPontuacao  = score >= 80 ? "#00C870" : score >= 55 ? "#FFAA00" : "#CC3333";
+        LabelPontuacao = score >= 80 ? "Sistema otimizado" : score >= 55 ? "Melhorias disponíveis" : "Atenção necessária";
+    }
+
+    [RelayCommand]
+    private void IrParaAcao(string acao)
+    {
+        switch (acao)
+        {
+            case "inicializacao":
+            case "programas":
+                _navegarParaOtimizador?.Invoke(acao);
+                break;
+            case "bios":
+                _navegarParaBios?.Invoke();
+                break;
+        }
     }
 
     private async Task AvançarProgressoAsync(CancellationToken ct)

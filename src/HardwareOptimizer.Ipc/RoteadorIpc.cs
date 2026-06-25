@@ -14,6 +14,7 @@ using HardwareOptimizer.Agent.Services;
 using HardwareOptimizer.Agent.Smart;
 using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Agent.Validation;
+using HardwareOptimizer.Agent.Cleanup;
 using HardwareOptimizer.Agent.VisualEffects;
 using HardwareOptimizer.Cerebro;
 using HardwareOptimizer.Cerebro.Visao;
@@ -122,6 +123,12 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "alterarefeito" => OperatingSystem.IsWindows()
                     ? AplicarEfeitoVisualWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "escanearlimpeza" => OperatingSystem.IsWindows()
+                    ? EscanearLimpezaWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "executarlimpeza" => OperatingSystem.IsWindows()
+                    ? ExecutarLimpezaWindows(requisicao)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
@@ -806,5 +813,29 @@ Write-Output 'OK'
         return ok
             ? RespostaIpc.Ok(req.Id, true)
             : RespostaIpc.Falha(req.Id, $"Falha ao aplicar efeito '{id}'.");
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static RespostaIpc EscanearLimpezaWindows(RequisicaoIpc req)
+    {
+        var categorias = GerenciadorLimpeza.Escanear();
+        return RespostaIpc.Ok(req.Id, categorias);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static RespostaIpc ExecutarLimpezaWindows(RequisicaoIpc req)
+    {
+        if (req.Parametros is not { } p
+            || !p.TryGetProperty("ids", out var idsEl)
+            || idsEl.ValueKind != JsonValueKind.Array)
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'ids' (array) obrigatório.");
+
+        var ids = idsEl.EnumerateArray()
+            .Where(e => e.ValueKind == JsonValueKind.String)
+            .Select(e => e.GetString()!)
+            .ToList();
+
+        var resultado = GerenciadorLimpeza.Limpar(ids);
+        return RespostaIpc.Ok(req.Id, resultado);
     }
 }

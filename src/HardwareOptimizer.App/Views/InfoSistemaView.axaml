@@ -186,8 +186,15 @@
             <Grid ColumnDefinitions="160,*">
               <TextBlock Text="Secure Boot" Foreground="#282840" FontSize="12"
                          VerticalAlignment="Center" />
-              <TextBlock Grid.Column="1" Text="{Binding SecureBoot}"
-                         Foreground="#484865" FontSize="12" />
+              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="{Binding SecureBoot}" Foreground="#484865" FontSize="12"
+                           VerticalAlignment="Center" />
+                <Border Background="#3A0800" CornerRadius="4" Padding="6,2"
+                        IsVisible="{Binding AlertaSecureBootOff}">
+                  <TextBlock Text="⚠ desativado" Foreground="#CC3333"
+                             FontSize="10" FontWeight="Bold" />
+                </Border>
+              </StackPanel>
             </Grid>
 
           </StackPanel>
@@ -233,6 +240,33 @@
             </Grid>
 
           </StackPanel>
+        </Border>
+
+        <!-- ═══ ALERTA XMP ═══ -->
+        <Border CornerRadius="8" Padding="14,10" BorderThickness="1"
+                IsVisible="{Binding AlertaXmpDesativado}">
+          <Border.Background><SolidColorBrush Color="#1A0F00" /></Border.Background>
+          <Border.BorderBrush><SolidColorBrush Color="#FFAA0050" /></Border.BorderBrush>
+          <Grid ColumnDefinitions="Auto,*">
+            <TextBlock Grid.Column="0" Text="⚠" Foreground="#FFAA00" FontSize="16"
+                       VerticalAlignment="Top" Margin="0,0,10,0" />
+            <TextBlock Grid.Column="1" Text="{Binding AlertaXmpTexto}"
+                       Foreground="#FFAA00" FontSize="12" TextWrapping="Wrap" />
+          </Grid>
+        </Border>
+
+        <!-- ═══ ALERTA SINGLE CHANNEL ═══ -->
+        <Border CornerRadius="8" Padding="14,10" BorderThickness="1"
+                IsVisible="{Binding AlertaSingleChannel}">
+          <Border.Background><SolidColorBrush Color="#0A0A1A" /></Border.Background>
+          <Border.BorderBrush><SolidColorBrush Color="#8888CC50" /></Border.BorderBrush>
+          <Grid ColumnDefinitions="Auto,*">
+            <TextBlock Grid.Column="0" Text="💡" FontSize="16"
+                       VerticalAlignment="Top" Margin="0,0,10,0" />
+            <TextBlock Grid.Column="1"
+                       Text="RAM em Single-Channel — um segundo pente no slot correto ativa Dual-Channel e aumenta a largura de banda em até 2×."
+                       Foreground="#8888CC" FontSize="12" TextWrapping="Wrap" />
+          </Grid>
         </Border>
 
         <!-- ═══ MEMÓRIA RAM ═══ -->
@@ -287,6 +321,19 @@
             </ItemsControl>
 
           </StackPanel>
+        </Border>
+
+        <!-- ═══ ALERTA PCIe SUBÓTIMO ═══ -->
+        <Border CornerRadius="8" Padding="14,10" BorderThickness="1"
+                IsVisible="{Binding AlertaPcieSubotimo}">
+          <Border.Background><SolidColorBrush Color="#1A0F00" /></Border.Background>
+          <Border.BorderBrush><SolidColorBrush Color="#FFAA0050" /></Border.BorderBrush>
+          <Grid ColumnDefinitions="Auto,*">
+            <TextBlock Grid.Column="0" Text="⚠" Foreground="#FFAA00" FontSize="16"
+                       VerticalAlignment="Top" Margin="0,0,10,0" />
+            <TextBlock Grid.Column="1" Text="{Binding AlertaPcieTexto}"
+                       Foreground="#FFAA00" FontSize="12" TextWrapping="Wrap" />
+          </Grid>
         </Border>
 
         <!-- ═══ PLACA DE VÍDEO ═══ -->

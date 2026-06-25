@@ -40,6 +40,15 @@
       <Setter Property="Background" Value="#0F0F1E" />
     </Style>
 
+    <!-- Botão filtro ativo -->
+    <Style Selector="Button.filtro-ativo">
+      <Setter Property="Background" Value="#051A08" />
+      <Setter Property="Foreground" Value="#00C870" />
+    </Style>
+    <Style Selector="Button.filtro-ativo:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#081F0A" />
+    </Style>
+
     <!-- Checkboxes dos programas -->
     <Style Selector="CheckBox.programa">
       <Setter Property="Foreground" Value="Transparent" />
@@ -71,7 +80,7 @@
       </StackPanel>
 
       <!-- Abas do submenu -->
-      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*">
         <Button Grid.Column="0"
                 Classes="aba"
                 Classes.aba-ativa="{Binding AbaEfeitosAtiva}"
@@ -94,7 +103,13 @@
                 Classes="aba"
                 Classes.aba-ativa="{Binding AbaServicosAtiva}"
                 Command="{Binding IrParaServicosCommand}"
-                Content="Serviços" />
+                Content="Serviços"
+                Margin="0,0,24,0" />
+        <Button Grid.Column="4"
+                Classes="aba"
+                Classes.aba-ativa="{Binding AbaLimpezaAtiva}"
+                Command="{Binding IrParaLimpezaCommand}"
+                Content="Limpeza" />
       </Grid>
 
       <!-- Linha separadora -->
@@ -126,6 +141,46 @@
                     FontSize="12" Content="↺ Atualizar"
                     VerticalAlignment="Center" />
           </Grid>
+
+          <!-- Presets rápidos -->
+          <Border Background="#06060F" CornerRadius="8" Padding="12,10"
+                  BorderBrush="#1E1E3C" BorderThickness="1"
+                  IsVisible="{Binding !CarregandoEfeitos}">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+              <TextBlock Grid.Column="0" Text="PRESET:" Foreground="#282840"
+                         FontSize="10" FontWeight="Bold" LetterSpacing="2"
+                         VerticalAlignment="Center" Margin="0,0,14,0" />
+              <Button Grid.Column="1"
+                      Command="{Binding AplicarPresetDesempenhoCommand}"
+                      IsEnabled="{Binding !Ocupado}"
+                      Content="⚡ MÁXIMO DESEMPENHO"
+                      Background="#0A1A0A" Foreground="#00C870"
+                      BorderBrush="#00C87030" BorderThickness="1"
+                      CornerRadius="5" Padding="12,6"
+                      FontSize="11" FontWeight="SemiBold"
+                      HorizontalAlignment="Left"
+                      Cursor="Hand" />
+              <Button Grid.Column="2"
+                      Command="{Binding AplicarPresetBalanceadoCommand}"
+                      IsEnabled="{Binding !Ocupado}"
+                      Content="◑ BALANCEADO"
+                      Background="#0A0A1A" Foreground="#8888CC"
+                      BorderBrush="#8888CC30" BorderThickness="1"
+                      CornerRadius="5" Padding="12,6"
+                      FontSize="11" FontWeight="SemiBold"
+                      Margin="8,0"
+                      Cursor="Hand" />
+              <Button Grid.Column="3"
+                      Command="{Binding AplicarPresetQualidadeCommand}"
+                      IsEnabled="{Binding !Ocupado}"
+                      Content="✦ MÁXIMA QUALIDADE"
+                      Background="#1A0A1A" Foreground="#AA66CC"
+                      BorderBrush="#AA66CC30" BorderThickness="1"
+                      CornerRadius="5" Padding="12,6"
+                      FontSize="11" FontWeight="SemiBold"
+                      Cursor="Hand" />
+            </Grid>
+          </Border>
 
           <!-- Indicador de carregamento -->
           <TextBlock Text="Lendo configurações do Windows…"
@@ -400,8 +455,8 @@
         <!-- ════ ABA: SERVIÇOS ══════════════════════════════════════════════ -->
         <StackPanel IsVisible="{Binding MostrarServicos}" Spacing="12">
 
-          <!-- Barra de busca + botão atualizar -->
-          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+          <!-- Barra de busca + filtro seguros + botão atualizar -->
+          <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
             <Border Grid.Column="0" Background="#09091A" CornerRadius="8" Padding="12,10"
                     BorderBrush="#1E1E3C" BorderThickness="1">
               <Grid ColumnDefinitions="Auto,*">
@@ -419,7 +474,20 @@
                          CaretBrush="#00C8FF" />
               </Grid>
             </Border>
+            <!-- Botão filtro candidatos seguros -->
             <Button Grid.Column="1"
+                    Command="{Binding AlternarFiltroSegurosCommand}"
+                    Classes.filtro-ativo="{Binding FiltrarServicosСeguros}"
+                    Background="#09091A" Foreground="#484865"
+                    BorderBrush="#00C87050" BorderThickness="1"
+                    Padding="12,10" CornerRadius="8" FontSize="12"
+                    FontWeight="SemiBold" Cursor="Hand">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="🛡" FontSize="12" VerticalAlignment="Center" />
+                <TextBlock Text="Candidatos Seguros" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+            <Button Grid.Column="2"
                     Command="{Binding CarregarServicosCommand}"
                     IsEnabled="{Binding !CarregandoServicos}"
                     Background="#09091A" Foreground="#484865"
@@ -427,6 +495,14 @@
                     CornerRadius="8" Padding="14,10"
                     FontSize="12" Content="↺ Atualizar" />
           </Grid>
+
+          <!-- Dica quando filtro seguros ativo -->
+          <Border Background="#051A08" CornerRadius="6" Padding="12,8"
+                  BorderBrush="#00C87030" BorderThickness="1"
+                  IsVisible="{Binding FiltrarServicosСeguros}">
+            <TextBlock Foreground="#00C870" FontSize="11" TextWrapping="Wrap"
+                       Text="Exibindo apenas serviços que podem ser desativados com segurança. Cada um tem baixo impacto no sistema — desativar libera CPU e memória em segundo plano." />
+          </Border>
 
           <!-- Contador -->
           <TextBlock Text="{Binding TotalServicosLabel}"
@@ -531,6 +607,101 @@
           <TextBlock Text="{Binding StatusOtimizador}"
                      Foreground="#484865" FontSize="12"
                      Margin="4,4,0,0" />
+
+        </StackPanel>
+
+        <!-- ════ ABA: LIMPEZA ══════════════════════════════════════════════ -->
+        <StackPanel IsVisible="{Binding MostrarLimpeza}" Spacing="12">
+
+          <!-- Cabeçalho -->
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="Limpeza do Sistema" Foreground="#E0E0F2"
+                         FontWeight="SemiBold" FontSize="13" />
+              <TextBlock Foreground="#282840" FontSize="11" Margin="0,2,0,0"
+                         Text="Selecione as categorias para remover arquivos desnecessários e liberar espaço em disco" />
+            </StackPanel>
+            <Button Grid.Column="1"
+                    Command="{Binding EscanearLimpezaCommand}"
+                    IsEnabled="{Binding !EscaneandoLimpeza}"
+                    Background="#09091A" Foreground="#484865"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    CornerRadius="8" Padding="12,8"
+                    FontSize="12" Content="↺ Reanalisar"
+                    VerticalAlignment="Center" />
+          </Grid>
+
+          <!-- Carregando -->
+          <TextBlock Text="Analisando pastas temporárias…"
+                     IsVisible="{Binding EscaneandoLimpeza}"
+                     Foreground="#484865" FontSize="13"
+                     HorizontalAlignment="Center" Margin="0,20" />
+
+          <!-- Lista de categorias -->
+          <ItemsControl ItemsSource="{Binding CategoriasLimpeza}"
+                        IsVisible="{Binding !EscaneandoLimpeza}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:CategoriaLimpezaViewModel">
+                <Border Background="#06060F" CornerRadius="6" Padding="14,10" Margin="0,2"
+                        BorderBrush="#1E1E3C" BorderThickness="1">
+                  <Grid ColumnDefinitions="Auto,*,120">
+
+                    <!-- Checkbox -->
+                    <CheckBox Grid.Column="0"
+                              IsChecked="{Binding Selecionada}"
+                              VerticalAlignment="Center"
+                              Margin="0,0,12,0" />
+
+                    <!-- Nome -->
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Nome}"
+                               Foreground="#C0C0D8"
+                               FontSize="12"
+                               VerticalAlignment="Center" />
+
+                    <!-- Tamanho -->
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding TamanhoFormatado}"
+                               Foreground="#00C8FF"
+                               FontSize="12" FontWeight="SemiBold"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center" />
+
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Rodapé: total + botão limpar -->
+          <Border IsVisible="{Binding !EscaneandoLimpeza}"
+                  Background="#06060F" CornerRadius="8" Padding="14,10"
+                  BorderBrush="#1E1E3C" BorderThickness="1">
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Espaço a liberar:" Foreground="#282840" FontSize="11" />
+                <TextBlock Text="{Binding TotalLimpezaLabel}"
+                           Foreground="#00C8FF" FontSize="16" FontWeight="Bold" />
+              </StackPanel>
+              <Button Grid.Column="1"
+                      Command="{Binding ExecutarLimpezaCommand}"
+                      IsEnabled="{Binding !ExecutandoLimpeza}"
+                      Background="#001A10" Foreground="#00C870"
+                      BorderBrush="#00C87040" BorderThickness="1"
+                      CornerRadius="8" Padding="20,10"
+                      FontSize="13" FontWeight="SemiBold"
+                      Cursor="Hand"
+                      Content="🗑  Limpar Selecionadas" />
+            </Grid>
+          </Border>
+
+          <!-- Resultado da limpeza -->
+          <Border Background="#051A08" CornerRadius="6" Padding="12,8"
+                  BorderBrush="#00C87030" BorderThickness="1"
+                  IsVisible="{Binding ResultadoLimpeza, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <TextBlock Text="{Binding ResultadoLimpeza}"
+                       Foreground="#00C870" FontSize="12" />
+          </Border>
 
         </StackPanel>
 

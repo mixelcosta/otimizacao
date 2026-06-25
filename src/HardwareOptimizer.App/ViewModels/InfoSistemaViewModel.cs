@@ -66,6 +66,14 @@ public partial class InfoSistemaViewModel : ObservableObject
 
     [ObservableProperty] private bool _comDados;
 
+    // ── Alertas contextuais ────────────────────────────────────────────────
+    [ObservableProperty] private bool   _alertaSingleChannel;
+    [ObservableProperty] private bool   _alertaXmpDesativado;
+    [ObservableProperty] private string _alertaXmpTexto       = "";
+    [ObservableProperty] private bool   _alertaSecureBootOff;
+    [ObservableProperty] private bool   _alertaPcieSubotimo;
+    [ObservableProperty] private string _alertaPcieTexto      = "";
+
     public void Popular(Inventario inv)
     {
         // Sistema Operacional
@@ -156,6 +164,45 @@ public partial class InfoSistemaViewModel : ObservableObject
         TemSaudeDiscos = SaudeDiscosSmart.Count > 0;
 
         ComDados = true;
+
+        // ── Alertas contextuais ─────────────────────────────────────────────
+        AlertaSingleChannel = inv.Memoria.Count == 1;
+
+        if (inv.Memoria.Count > 0)
+        {
+            var m = inv.Memoria[0];
+            if (m.VelocidadeMhz.HasValue && m.VelocidadeConfiguradaMhz.HasValue &&
+                m.VelocidadeConfiguradaMhz.Value < m.VelocidadeMhz.Value * 0.9)
+            {
+                AlertaXmpDesativado = true;
+                AlertaXmpTexto = $"RAM configurada a {m.VelocidadeConfiguradaMhz} MHz, mas o kit suporta {m.VelocidadeMhz} MHz (XMP/EXPO). Ative no Guia BIOS.";
+            }
+            else
+            {
+                AlertaXmpDesativado = false;
+                AlertaXmpTexto = "";
+            }
+        }
+
+        AlertaSecureBootOff = inv.Placa.SecureBoot == false;
+
+        if (inv.Gpu.Count > 0)
+        {
+            var gpu = inv.Gpu[0];
+            if (gpu.LinkWidthAtual != null && gpu.LinkWidthMax != null &&
+                gpu.LinkWidthAtual != gpu.LinkWidthMax &&
+                gpu.LinkWidthAtual.StartsWith("x", StringComparison.OrdinalIgnoreCase))
+            {
+                if (int.TryParse(gpu.LinkWidthAtual[1..], out var atual) &&
+                    int.TryParse(gpu.LinkWidthMax[1..], out var max) && atual < max)
+                {
+                    AlertaPcieSubotimo = true;
+                    AlertaPcieTexto = $"GPU usando PCIe {gpu.LinkWidthAtual} (máximo suportado: {gpu.LinkWidthMax}). Verifique o slot PCIe da placa-mãe.";
+                }
+                else { AlertaPcieSubotimo = false; AlertaPcieTexto = ""; }
+            }
+            else { AlertaPcieSubotimo = false; AlertaPcieTexto = ""; }
+        }
     }
 
     private static string FormatarClock(int mhz) =>

@@ -23,6 +23,23 @@
     <ScrollViewer Grid.Row="1" Margin="0,12,0,0">
       <StackPanel Margin="24,0,24,24" Spacing="12">
 
+        <!-- Alerta XMP automático -->
+        <Border CornerRadius="10" Padding="16,12" BorderThickness="1"
+                IsVisible="{Binding AlertaXmpAtivo}">
+          <Border.Background><SolidColorBrush Color="#1A0F00" /></Border.Background>
+          <Border.BorderBrush><SolidColorBrush Color="#FFAA0060" /></Border.BorderBrush>
+          <Grid ColumnDefinitions="Auto,*">
+            <TextBlock Grid.Column="0" Text="⚡" FontSize="22"
+                       VerticalAlignment="Top" Margin="0,0,12,0" />
+            <StackPanel Grid.Column="1" Spacing="4">
+              <TextBlock Text="XMP / EXPO não ativado — desempenho abaixo do potencial"
+                         Foreground="#FFAA00" FontSize="13" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding AlertaXmpMensagem}"
+                         Foreground="#CC8800" FontSize="11" TextWrapping="Wrap" />
+            </StackPanel>
+          </Grid>
+        </Border>
+
         <!-- Info da placa -->
         <Border Background="#0C0C1E" CornerRadius="8"
                 BorderBrush="#1E1E3C" BorderThickness="1"

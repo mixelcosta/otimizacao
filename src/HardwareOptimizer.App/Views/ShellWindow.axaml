@@ -239,10 +239,17 @@
                   Classes.ativo="{Binding PaginaEhBiosGuide}"
                   Command="{Binding IrParaBiosGuideCommand}"
                   IsVisible="{Binding EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <TextBlock Text="▸" FontSize="13" VerticalAlignment="Center" />
-              <TextBlock Text="Guia BIOS IA" VerticalAlignment="Center" />
-            </StackPanel>
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
+                <TextBlock Text="▸" FontSize="13" VerticalAlignment="Center" />
+                <TextBlock Text="Guia BIOS IA" VerticalAlignment="Center" />
+              </StackPanel>
+              <Border Grid.Column="1" Background="#CC3333" CornerRadius="8"
+                      Padding="6,2" VerticalAlignment="Center"
+                      IsVisible="{Binding TemAlertaBios}">
+                <TextBlock Text="!" Foreground="White" FontSize="10" FontWeight="Bold" />
+              </Border>
+            </Grid>
           </Button>
           <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
             <StackPanel Orientation="Horizontal" Spacing="12">

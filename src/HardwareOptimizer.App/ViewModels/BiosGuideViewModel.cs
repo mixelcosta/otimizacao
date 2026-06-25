@@ -26,6 +26,10 @@ public partial class BiosGuideViewModel : ObservableObject
     [ObservableProperty] private string _avisoXmp = string.Empty;
     [ObservableProperty] private int _passoAtual;
 
+    // Badge de alerta: XMP não ativado detectado no scan
+    [ObservableProperty] private bool   _alertaXmpAtivo;
+    [ObservableProperty] private string _alertaXmpMensagem = "";
+
     public string PassoAtualInstrucao =>
         PassoAtual > 0 && PassoAtual <= PassosXmp.Count
             ? PassosXmp[PassoAtual - 1].Instrucao
@@ -73,6 +77,19 @@ public partial class BiosGuideViewModel : ObservableObject
         PassoAtual = PassosXmp.Count > 0 ? 1 : 0;
         OnPropertyChanged(nameof(PassoAtualInstrucao));
         OnPropertyChanged(nameof(TemPassos));
+
+        // Detectar XMP desativado e gerar alerta
+        if (inv.Memoria.Count > 0)
+        {
+            var m = inv.Memoria[0];
+            if (m.VelocidadeMhz.HasValue && m.VelocidadeConfiguradaMhz.HasValue &&
+                m.VelocidadeConfiguradaMhz.Value < m.VelocidadeMhz.Value * 0.9)
+            {
+                AlertaXmpAtivo = true;
+                AlertaXmpMensagem = $"Sua RAM está a {m.VelocidadeConfiguradaMhz} MHz mas suporta {m.VelocidadeMhz} MHz. "
+                    + "Ative XMP/EXPO na BIOS seguindo o guia abaixo para ganho de desempenho.";
+            }
+        }
     }
 
     [RelayCommand]
