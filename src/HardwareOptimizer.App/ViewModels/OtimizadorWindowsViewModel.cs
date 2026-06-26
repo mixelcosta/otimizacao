@@ -224,7 +224,7 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
     [ObservableProperty] private string _totalProgramasLabel = "—";
     [ObservableProperty] private string _desinstalarLabel    = "Desinstalar selecionados";
 
-    public ObservableCollection<ProgramaInstaladoViewModel> ProgramasFiltrados { get; }
+    public BulkObservableCollection<ProgramaInstaladoViewModel> ProgramasFiltrados { get; }
 
     partial void OnFiltroProgramasChanged(string value) => AplicarFiltro();
 
@@ -253,8 +253,7 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
                 p.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
                 p.Fabricante.Contains(filtro, StringComparison.OrdinalIgnoreCase)).ToList();
 
-        ProgramasFiltrados.Clear();
-        foreach (var p in resultado) ProgramasFiltrados.Add(p);
+        ProgramasFiltrados.ReplaceAll(resultado);
 
         int n = resultado.Count;
         TotalProgramasLabel = n == 0
@@ -386,13 +385,19 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
     [ObservableProperty] private bool   _carregandoServicos;
     [ObservableProperty] private bool   _filtrarServicosСeguros;
 
-    public ObservableCollection<ServicoViewModel> ServicosFiltrados { get; }
+    public BulkObservableCollection<ServicoViewModel> ServicosFiltrados { get; }
 
     partial void OnFiltroServicosChanged(string value)       => AplicarFiltroServicos();
     partial void OnFiltrarServicosСegurosChanged(bool value) => AplicarFiltroServicos();
 
     [RelayCommand]
     private void AlternarFiltroSeguros() => FiltrarServicosСeguros = !FiltrarServicosСeguros;
+
+    public void PreAquecer()
+    {
+        if (!_servicosCarregados)
+            _ = CarregarServicosAsync();
+    }
 
     [RelayCommand]
     private async Task CarregarServicosAsync()
@@ -428,8 +433,7 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
                 s.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase) ||
                 s.Descricao.Contains(filtro, StringComparison.OrdinalIgnoreCase)).ToList();
 
-        ServicosFiltrados.Clear();
-        foreach (var s in resultado) ServicosFiltrados.Add(s);
+        ServicosFiltrados.ReplaceAll(resultado);
 
         int n = resultado.Count;
         TotalServicosLabel = n == 0

@@ -44,6 +44,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
                 BiosGuide.Popular(inv);
                 ScanConcluido = true;
                 OnPropertyChanged(nameof(TemAlertaBios));
+                OtimizadorWindows.PreAquecer();
             },
             aba =>
             {
