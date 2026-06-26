@@ -328,54 +328,52 @@
       </DockPanel>
     </Border>
 
-    <!-- ═══ ÁREA DE CONTEÚDO ═══ -->
-    <ContentControl Grid.Column="1"
-                    Content="{Binding PaginaAtual}"
-                    Background="#030308">
-      <ContentControl.DataTemplates>
+    <!-- ═══ ÁREA DE CONTEÚDO — views pré-instanciadas, sem recreação ═══
+         Cada wrapper Panel mantém o DataContext do Shell para o IsVisible;
+         o DataContext do filho é setado individualmente dentro de cada Panel. -->
+    <Panel Grid.Column="1" Background="#030308">
 
-        <DataTemplate DataType="vm:HomeViewModel">
-          <views:HomeView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhHome}">
+        <views:HomeView DataContext="{Binding Home}" />
+      </Panel>
 
-        <DataTemplate DataType="vm:DashboardViewModel">
-          <views:DashboardView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhDashboard}">
+        <views:DashboardView DataContext="{Binding Dashboard}" />
+      </Panel>
 
-        <DataTemplate DataType="vm:OtimizadorWindowsViewModel">
-          <views:OtimizadorWindowsView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhOtimizador}">
+        <views:OtimizadorWindowsView DataContext="{Binding OtimizadorWindows}" />
+      </Panel>
 
-        <DataTemplate DataType="vm:IaCopilotoViewModel">
-          <views:IaCopilotoView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhIaCopiloto}">
+        <views:IaCopilotoView DataContext="{Binding IaCopiloto}" />
+      </Panel>
 
-        <DataTemplate DataType="vm:InfoSistemaViewModel">
-          <views:InfoSistemaView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhInfoSistema}">
+        <views:InfoSistemaView DataContext="{Binding InfoSistema}" />
+      </Panel>
 
-        <DataTemplate DataType="vm:UpgradeViewModel">
-          <views:UpgradeView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhUpgrade}">
+        <views:UpgradeView DataContext="{Binding Upgrade}" />
+      </Panel>
 
-        <DataTemplate DataType="vm:VidaUtilViewModel">
-          <views:VidaUtilView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhVidaUtil}">
+        <views:VidaUtilView DataContext="{Binding VidaUtil}" />
+      </Panel>
 
-        <DataTemplate DataType="vm:DriversViewModel">
-          <views:DriversView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhDrivers}">
+        <views:DriversView DataContext="{Binding Drivers}" />
+      </Panel>
 
-        <DataTemplate DataType="vm:BiosGuideViewModel">
-          <views:BiosGuideView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhBiosGuide}">
+        <views:BiosGuideView DataContext="{Binding BiosGuide}" />
+      </Panel>
 
-        <DataTemplate DataType="vm:ConfiguracoesViewModel">
-          <views:ConfiguracoesView />
-        </DataTemplate>
+      <Panel IsVisible="{Binding PaginaEhConfiguracoes}">
+        <views:ConfiguracoesView DataContext="{Binding Configuracoes}" />
+      </Panel>
 
-      </ContentControl.DataTemplates>
-    </ContentControl>
+    </Panel>
 
   </Grid>
 </Window>

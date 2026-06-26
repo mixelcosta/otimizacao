@@ -90,6 +90,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     public bool TemAlertaBios => BiosGuide.AlertaXmpAtivo;
 
     // Propriedades para binding de estado ativo na sidebar
+    public bool PaginaEhHome         => PaginaAtual == Home;
     public bool PaginaEhDashboard    => PaginaAtual == Dashboard;
     public bool PaginaEhOtimizador   => PaginaAtual == OtimizadorWindows;
     public bool PaginaEhInfoSistema  => PaginaAtual == InfoSistema;
@@ -102,6 +103,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
 
     partial void OnPaginaAtualChanged(ObservableObject value)
     {
+        OnPropertyChanged(nameof(PaginaEhHome));
         OnPropertyChanged(nameof(PaginaEhDashboard));
         OnPropertyChanged(nameof(PaginaEhOtimizador));
         OnPropertyChanged(nameof(PaginaEhInfoSistema));
@@ -191,6 +193,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
 
     private async Task TickSensoresAsync()
     {
+        if (PaginaAtual != Dashboard) return;
         try
         {
             var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "sensores" });

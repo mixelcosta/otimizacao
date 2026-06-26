@@ -533,9 +533,23 @@
             </Grid>
           </Border>
 
-          <!-- Lista de serviços -->
+          <!-- Lista de serviços — virtualizada para não renderizar 280+ itens de uma vez -->
           <ItemsControl ItemsSource="{Binding ServicosFiltrados}"
-                        IsVisible="{Binding !CarregandoServicos}">
+                        IsVisible="{Binding !CarregandoServicos}"
+                        MaxHeight="420">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <VirtualizingStackPanel />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.Template>
+              <ControlTemplate>
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                  <ItemsPresenter />
+                </ScrollViewer>
+              </ControlTemplate>
+            </ItemsControl.Template>
             <ItemsControl.ItemTemplate>
               <DataTemplate x:DataType="vm:ServicoViewModel">
                 <Border Background="#06060F" CornerRadius="5" Padding="14,6" Margin="0,1">
