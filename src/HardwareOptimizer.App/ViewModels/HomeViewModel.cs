@@ -106,7 +106,7 @@ public partial class HomeViewModel : ObservableObject
 
         try
         {
-            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "coletar" });
+            var resp = await Task.Run(async () => await _agente.TratarAsync(new RequisicaoIpc { Metodo = "coletar" }));
             cts.Cancel();
 
             if (resp.Sucesso && resp.Resultado is Inventario inv)
