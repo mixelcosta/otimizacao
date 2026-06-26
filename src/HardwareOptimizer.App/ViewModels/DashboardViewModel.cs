@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Ipc;
@@ -38,30 +37,24 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private string _storageWrite = "--";
     [ObservableProperty] private int _storageNivelAlerta;
 
-    // Histórico para gráficos (alimentado pelo ShellViewModel via callback)
-    public ObservableCollection<double> HistCpuTemp { get; } = new();
-    public ObservableCollection<double> HistGpuTemp { get; } = new();
-    public ObservableCollection<double> HistCpuClock { get; } = new();
-    public ObservableCollection<double> HistGpuClock { get; } = new();
+    // Callbacks de gráfico: a View conecta esses delegates ao controle de gráfico.
+    // Elimina o overhead de ObservableCollection (RemoveAt O(n) + 2 CollectionChanged por tick).
+    internal Action<double>? CpuTempAtualizada;
+    internal Action<double>? GpuTempAtualizada;
+    internal Action<double>? CpuClockAtualizado;
+    internal Action<double>? GpuClockAtualizado;
 
     /// <summary>Chamado pelo ShellViewModel a cada leitura de sensores.</summary>
     public void AtualizarSensores(LeituraSensores leitura)
     {
-        // Temperatura: pega o valor máximo (sensor mais quente = mais conservador)
         var cpuTempVal  = ExtrairMax(leitura, TipoSensor.Temperatura, "[CPU]");
         var gpuTempVal  = ExtrairMax(leitura, TipoSensor.Temperatura, "[GPU]");
         var cpuCargaVal = ExtrairMax(leitura, TipoSensor.Carga, "[CPU]");
         var gpuCargaVal = ExtrairMax(leitura, TipoSensor.Carga, "[GPU]");
-
-        // Clock: pega o valor máximo (core mais rápido = mais representativo)
         var cpuClockVal = ExtrairMax(leitura, TipoSensor.Clock, "[CPU]");
         var gpuClockVal = ExtrairMax(leitura, TipoSensor.Clock, "[GPU]");
-
-        // RAM: GB usados (Data) + % via Load
         var ramUsadoVal = ExtrairSensor(leitura, TipoSensor.Outro, "Memory Used");
         var ramPctVal   = ExtrairSensor(leitura, TipoSensor.Carga, "[RAM]");
-
-        // Storage: throughput Read Rate / Write Rate
         var storageReadVal  = ExtrairSensor(leitura, TipoSensor.Outro, "Read Rate");
         var storageWriteVal = ExtrairSensor(leitura, TipoSensor.Outro, "Write Rate");
 
@@ -70,15 +63,14 @@ public partial class DashboardViewModel : ObservableObject
             CpuTemp = $"{cpuTempVal.Value:F0}°C";
             CpuNivelAlerta = cpuTempVal.Value switch { > 85 => 2, > 70 => 1, _ => 0 };
             CpuChartLabel = "CPU Temp";
-            AdicionarHistorico(HistCpuTemp, cpuTempVal.Value);
+            CpuTempAtualizada?.Invoke(cpuTempVal.Value);
         }
         else if (cpuCargaVal.HasValue)
         {
-            // Fallback: CPU temp não disponível sem admin — usa uso % do processador
             CpuTemp = $"{cpuCargaVal.Value:F0}%";
             CpuNivelAlerta = cpuCargaVal.Value switch { > 90 => 2, > 70 => 1, _ => 0 };
             CpuChartLabel = "CPU Load";
-            AdicionarHistorico(HistCpuTemp, cpuCargaVal.Value);
+            CpuTempAtualizada?.Invoke(cpuCargaVal.Value);
         }
 
         if (gpuTempVal.HasValue)
@@ -86,27 +78,26 @@ public partial class DashboardViewModel : ObservableObject
             GpuTemp = $"{gpuTempVal.Value:F0}°C";
             GpuNivelAlerta = gpuTempVal.Value switch { > 85 => 2, > 75 => 1, _ => 0 };
             GpuChartLabel = "GPU Temp";
-            AdicionarHistorico(HistGpuTemp, gpuTempVal.Value);
+            GpuTempAtualizada?.Invoke(gpuTempVal.Value);
         }
         else if (gpuCargaVal.HasValue)
         {
-            // Fallback: GPU temp não disponível sem admin — usa utilização % via perf counters
             GpuTemp = $"{gpuCargaVal.Value:F0}%";
             GpuNivelAlerta = gpuCargaVal.Value switch { > 90 => 2, > 70 => 1, _ => 0 };
             GpuChartLabel = "GPU Load";
-            AdicionarHistorico(HistGpuTemp, gpuCargaVal.Value);
+            GpuTempAtualizada?.Invoke(gpuCargaVal.Value);
         }
 
         if (cpuClockVal.HasValue)
         {
             CpuClock = $"{cpuClockVal.Value:F0} MHz";
-            AdicionarHistorico(HistCpuClock, cpuClockVal.Value);
+            CpuClockAtualizado?.Invoke(cpuClockVal.Value);
         }
 
         if (gpuClockVal.HasValue)
         {
             GpuClock = $"{gpuClockVal.Value:F0} MHz";
-            AdicionarHistorico(HistGpuClock, gpuClockVal.Value);
+            GpuClockAtualizado?.Invoke(gpuClockVal.Value);
         }
 
         if (ramUsadoVal.HasValue)
@@ -139,12 +130,5 @@ public partial class DashboardViewModel : ObservableObject
             .Select(s => s.Valor)
             .ToList();
         return valores.Count > 0 ? valores.Max() : null;
-    }
-
-    private static void AdicionarHistorico(ObservableCollection<double> hist, double valor)
-    {
-        while (hist.Count >= 60)
-            hist.RemoveAt(0);
-        hist.Add(valor);
     }
 }

@@ -53,32 +53,33 @@ $out | ConvertTo-Json -Depth 3 -Compress";
 
     public SistemaOperacionalTipo Tipo => SistemaOperacionalTipo.Windows;
 
-    public Task<LeituraSensores> LerAsync(CancellationToken cancellationToken = default)
+    public async Task<LeituraSensores> LerAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         if (_cache is not null && DateTime.UtcNow < _cacheExpira)
-            return Task.FromResult(_cache);
+            return _cache;
 
         // Não bloqueia: se WMI já está rodando em outra thread, devolve o cache atual
         // (pode ser null na primeira vez — nesse caso LHM cobre os outros sensores).
         if (!_wmiLock.Wait(0))
-            return Task.FromResult(_cache ?? new LeituraSensores());
+            return _cache ?? new LeituraSensores();
 
         // Re-verifica depois de adquirir o lock
         if (_cache is not null && DateTime.UtcNow < _cacheExpira)
         {
             _wmiLock.Release();
-            return Task.FromResult(_cache);
+            return _cache;
         }
 
         try
         {
-            var sensores = ExecutarConsultasWmi();
+            // Task.Run: move o processo PowerShell para o thread pool — não bloqueia a UI thread.
+            var sensores = await Task.Run(ExecutarConsultasWmi, cancellationToken).ConfigureAwait(false);
             _log.LogDebug("Leitor WMI: {Qtd} sensor(es) lidos.", sensores.Count);
             _cache = new LeituraSensores { Sensores = sensores };
             _cacheExpira = DateTime.UtcNow + _intervaloWmi;
-            return Task.FromResult(_cache);
+            return _cache;
         }
         finally
         {

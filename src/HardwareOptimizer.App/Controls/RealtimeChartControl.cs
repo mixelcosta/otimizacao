@@ -25,6 +25,14 @@ public sealed class RealtimeChartControl : Control
     private const int CapacidadeMaxima = 60;
     private readonly Queue<double> _valores = new(CapacidadeMaxima + 1);
 
+    // Brushes/pens constantes reutilizados entre renders (evita alocação a cada frame).
+    private static readonly IBrush FundoBrush = new SolidColorBrush(Color.Parse("#0A0A0A"));
+    private static readonly IBrush TextBrush  = new SolidColorBrush(Color.Parse("#888888"));
+    private static readonly Pen   GradePen    = new(new SolidColorBrush(Color.Parse("#1A1A1A")), 1);
+
+    // Pen da linha atualizado apenas quando LinhaCor muda.
+    private Pen _linhaPen = new(new SolidColorBrush(Colors.Cyan), 1.5);
+
     static RealtimeChartControl()
     {
         AffectsRender<RealtimeChartControl>(LabelProperty, LinhaCorProperty, MaximoProperty, MinimoProperty);
@@ -54,6 +62,13 @@ public sealed class RealtimeChartControl : Control
         set => SetValue(MinimoProperty, value);
     }
 
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == LinhaCorProperty)
+            _linhaPen = new Pen(new SolidColorBrush(LinhaCor), 1.5);
+    }
+
     public void AdicionarValor(double valor)
     {
         if (_valores.Count >= CapacidadeMaxima)
@@ -68,19 +83,12 @@ public sealed class RealtimeChartControl : Control
         var h = Bounds.Height;
         if (w <= 0 || h <= 0) return;
 
-        var fundo = new SolidColorBrush(Color.Parse("#0A0A0A"));
-        var grade = new SolidColorBrush(Color.Parse("#1A1A1A"));
-        var linhaPen = new Pen(new SolidColorBrush(LinhaCor), 1.5);
-        var gradePen = new Pen(grade, 1);
-        var textBrush = new SolidColorBrush(Color.Parse("#888888"));
+        context.DrawRectangle(FundoBrush, null, new Rect(0, 0, w, h));
 
-        context.DrawRectangle(fundo, null, new Rect(0, 0, w, h));
-
-        // Linhas de grade horizontais a cada 25%
         for (int i = 1; i < 4; i++)
         {
             double y = h * i / 4.0;
-            context.DrawLine(gradePen, new Point(0, y), new Point(w, y));
+            context.DrawLine(GradePen, new Point(0, y), new Point(w, y));
         }
 
         var pontos = _valores.ToArray();
@@ -106,9 +114,8 @@ public sealed class RealtimeChartControl : Control
             }
         }
 
-        context.DrawGeometry(null, linhaPen, geometria);
+        context.DrawGeometry(null, _linhaPen, geometria);
 
-        // Valor atual no canto superior direito
         if (pontos.Length > 0)
         {
             var ft = new FormattedText(
@@ -117,7 +124,7 @@ public sealed class RealtimeChartControl : Control
                 FlowDirection.LeftToRight,
                 Typeface.Default,
                 11,
-                textBrush);
+                TextBrush);
             context.DrawText(ft, new Point(4, 4));
         }
     }

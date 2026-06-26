@@ -55,6 +55,9 @@ tests/*       um projeto de teste por camada
 | **`Resultado` / `Resultado<T>`** | Use para fluxo de validação em vez de exceções de controle. |
 | **Imutabilidade** | Contratos são `record` imutáveis; coleções são `IReadOnlyList`/`IReadOnlyDictionary`. |
 | **Async** | `Task`/`async`; `ConfigureAwait(false)` em bibliotecas. |
+| **Thread pool para E/S síncrona na UI** | Qualquer leitura bloqueante (WMI, PowerShell, LHM) que seja chamada a partir de um `DispatcherTimer` ou de um comando de View deve ser envolvida em `Task.Run(async () => await ...)`. Nunca chame E/S síncrona diretamente da UI thread — isso bloqueia animações e o dispatcher do Avalonia. |
+| **Guard contra ticks sobrepostos** | Timers que disparam operações async (ex.: `TickSensoresAsync`) devem usar `Interlocked.CompareExchange` para descartar um novo tick se o anterior ainda não concluiu, evitando acúmulo de tasks. |
+| **Callbacks em vez de ObservableCollection para dados de gráfico** | Use `Action<T>?` para notificar a View sobre novas amostras de sensor em vez de `ObservableCollection<double>`. A coleção causa `RemoveAt(0)` O(n) e 2 `CollectionChanged` por amostra quando cheia. O controle de gráfico mantém seu próprio buffer circular. |
 | **Cultura** | Use `CultureInfo.InvariantCulture` em parsing/format numérico. |
 | **Sem efeitos colaterais no Core** | E/S e processos só no Agent. |
 

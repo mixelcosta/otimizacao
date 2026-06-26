@@ -192,18 +192,26 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         EhPremium = _licenca.TipoAtual == TipoLicenca.Premium;
     }
 
+    private int _sensorTickEmAndamento;
+
     private async Task TickSensoresAsync()
     {
         if (PaginaAtual != Dashboard) return;
+        if (System.Threading.Interlocked.CompareExchange(ref _sensorTickEmAndamento, 1, 0) != 0) return;
         try
         {
-            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "sensores" });
+            var resp = await Task.Run(async () =>
+                await _agente.TratarAsync(new RequisicaoIpc { Metodo = "sensores" }).ConfigureAwait(false));
             if (resp.Sucesso && resp.Resultado is LeituraSensores leitura)
                 Dashboard.AtualizarSensores(leitura);
         }
         catch
         {
             // Sensor tick falha silenciosamente; a UI mostra "--" quando sem dados.
+        }
+        finally
+        {
+            System.Threading.Interlocked.Exchange(ref _sensorTickEmAndamento, 0);
         }
     }
 

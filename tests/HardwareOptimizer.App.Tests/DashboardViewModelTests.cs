@@ -135,14 +135,15 @@ public sealed class DashboardViewModelTests
     }
 
     [Fact]
-    public void AtualizarSensores_historico_cpu_cresce_ate_60()
+    public void AtualizarSensores_cpu_temp_callback_invocado()
     {
         var vm = new DashboardViewModel(RoteadorVazio());
+        double? capturado = null;
+        vm.CpuTempAtualizada = v => capturado = v;
 
-        for (int i = 0; i < 70; i++)
-            vm.AtualizarSensores(Leitura(S("[CPU] Core 0", TipoSensor.Temperatura, 50.0 + i)));
+        vm.AtualizarSensores(Leitura(S("[CPU] Core 0", TipoSensor.Temperatura, 72.0)));
 
-        Assert.Equal(60, vm.HistCpuTemp.Count);
+        Assert.Equal(72.0, capturado);
     }
 
     private sealed class RoteadorFake : IRoteadorIpc
