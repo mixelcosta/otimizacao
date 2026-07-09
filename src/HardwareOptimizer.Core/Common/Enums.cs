@@ -22,6 +22,7 @@ public enum CategoriaAcao
     Drivers = 4,
     Servicos = 5,
     Rede = 6,
+    FeaturesWindows = 7,
 }
 
 /// <summary>Classificação de risco de uma ação, do documento.</summary>

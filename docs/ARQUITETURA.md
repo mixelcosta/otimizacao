@@ -76,7 +76,7 @@ HardwareOptimizer.WindowsService   (Worker background, monitor de anomalias — 
 - **Agent:** `Collector`, `Sensors`, `Backup`, `Execution`
   (+ `Execution/Windows` para a execução real), `Validation`, `Bios`,
   `Persistence`, `Platform` (portas de registro e processo),
-  `Drivers` (HWID/ColetorHwid), `Smart` (LeitorSmart), `Startup` (VerificadorInicializacao, GerenciadorInicializacao), `Services` (ColetorServicos).
+  `Drivers` (HWID/ColetorHwid), `Smart` (LeitorSmart), `Startup` (VerificadorInicializacao, GerenciadorInicializacao), `Services` (ColetorServicos), `Features` (GerenciadorFeaturesWindows — recursos opcionais via DISM).
 - **Cerebro:** raiz (matriz, guard, local/LLM, cliente Anthropic) + `Visao`
   (pipeline multimodal: `ModuloVisao`, `ClienteVisaoAnthropic`, `ConferenciaVisual`).
 - **Features.Licensing:** `IServicoLicenca`, `ServicoLicencaLocal`, `FuncionalidadePremium` enum.
@@ -136,6 +136,8 @@ permitindo localizar o ponto exato de qualquer falha.
 | **WMI PowerShell em Task.Run** | `LeitorSensoresWindows.ExecutarConsultasWmi` dispara `powershell.exe` e bloqueia em `ReadToEnd()`. Movido para `await Task.Run(...)` — quando o cache de 8s expira, o processo corre no thread pool sem engolir nenhuma thread de UI/IPC. |
 | **Task.Run no ScanAsync** | `LeitorWindows.LerAsync` executa ~10 consultas WMI/CIM síncronas antes do primeiro `await`. Como o IPC é in-process, essas chamadas bloqueavam a UI thread e impediam que `AvançarProgressoAsync` atualizasse o percentual do botão SCAN. A correção envolve `_agente.TratarAsync` em `Task.Run(async () => ...)`. |
 | **BulkObservableCollection** | Substitui o padrão `Clear + N×Add` (283 eventos `CollectionChanged`) por um único `ReplaceAll` que chama `Reset`. Usada nas listas de programas e serviços do `OtimizadorWindowsViewModel`. |
+| **Windows Optional Features via `AlvoFeatureWindows`** | A lacuna do catálogo para recursos como WSL, Hyper-V, .NET Framework 3.5 e Windows Sandbox foi preenchida com `CategoriaAcao.FeaturesWindows` (enum 7), 4 novas `AcaoOtimizacao`, 4 novos `cmd.feature.*.v1` e a classe `AlvoFeatureWindows` em `EstadoSistemaWindows` — encapsula `dism.exe /enable-feature` e `/disable-feature` atrás da mesma interface `IEstadoSistema` do resto do catálogo. A UI ativa a operação via IPC `habilitarfeature`/`desabilitarfeature` com UAC automático. |
+| **`ILogger` em `ExecutorProcesso`** | O exit code de todo processo externo (powercfg, sc.exe, dism.exe) é agora registrado em Debug ao final de cada `Executar()`. Facilita diagnóstico de "soft failures" onde o processo retorna código ≠ 0 mas a exceção não é propagada. O logger é opcional (padrão `NullLogger`). |
 | **`Resultado<T>` em vez de exceções** | Fluxo de validação legível para UI e auditoria, sem exceções de controle. |
 | **Modo simulação (dry-run) padrão** | O executor opera sobre `IEstadoSistema` abstrato; o simulado torna executor e rollback totalmente testáveis sem tocar o sistema real. A execução real do Windows (`EstadoSistemaWindows`) implementa a mesma interface e só é ativada por opt-in explícito (`HWOPT_EXECUCAO_REAL`). |
 | **Execução real isolada por portas** | `EstadoSistemaWindows` traduz os alvos do catálogo em registro/powercfg/serviços através de `IAcessoRegistro` e `IExecutorProcesso`, mantendo a lógica testável fora do Windows e o executor inalterado. |

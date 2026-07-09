@@ -65,6 +65,10 @@ public sealed class RegistroComandos
                     ? nome
                     : throw FaltaParametro("nome_servico", "cmd.srv.desativar_servico.v1")),
                 _ => "Disabled"),
+            Fixo("cmd.feature.wsl.v1",     "feature:Microsoft-Windows-Subsystem-Linux", "Enabled"),
+            Fixo("cmd.feature.hyperv.v1",  "feature:Microsoft-Hyper-V-All",             "Enabled"),
+            Fixo("cmd.feature.netfx35.v1", "feature:NetFx3",                            "Enabled"),
+            Fixo("cmd.feature.sandbox.v1", "feature:Containers-DisposableClientVM",      "Enabled"),
         });
     }
 

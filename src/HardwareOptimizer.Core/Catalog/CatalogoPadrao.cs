@@ -154,6 +154,62 @@ public static class CatalogoPadrao
 
         yield return new AcaoOtimizacao
         {
+            Id = "FEATURE_WSL",
+            Categoria = CategoriaAcao.FeaturesWindows,
+            Titulo = "Habilitar WSL (Subsistema Windows para Linux)",
+            Descricao = "Ativa o componente opcional que permite executar distribuições Linux diretamente no Windows.",
+            ComandoInternoId = "cmd.feature.wsl.v1",
+            Reversao = "Desativar o Subsistema Windows para Linux.",
+            Risco = NivelRisco.Baixo,
+            RequerAprovacao = true,
+            RequerReinicio = true,
+            PreCondicoes = new[] { "backup_confirmado" },
+        };
+
+        yield return new AcaoOtimizacao
+        {
+            Id = "FEATURE_HYPER_V",
+            Categoria = CategoriaAcao.FeaturesWindows,
+            Titulo = "Habilitar Hyper-V",
+            Descricao = "Ativa a plataforma de virtualização Hyper-V da Microsoft.",
+            ComandoInternoId = "cmd.feature.hyperv.v1",
+            Reversao = "Desativar o Hyper-V.",
+            Risco = NivelRisco.Baixo,
+            RequerAprovacao = true,
+            RequerReinicio = true,
+            PreCondicoes = new[] { "backup_confirmado" },
+        };
+
+        yield return new AcaoOtimizacao
+        {
+            Id = "FEATURE_NETFX35",
+            Categoria = CategoriaAcao.FeaturesWindows,
+            Titulo = "Habilitar .NET Framework 3.5",
+            Descricao = "Instala o .NET Framework 3.5 para suporte a aplicativos que dependem dessa versão legada.",
+            ComandoInternoId = "cmd.feature.netfx35.v1",
+            Reversao = "Desativar o .NET Framework 3.5.",
+            Risco = NivelRisco.Nenhum,
+            RequerAprovacao = true,
+            RequerReinicio = false,
+            PreCondicoes = new[] { "backup_confirmado" },
+        };
+
+        yield return new AcaoOtimizacao
+        {
+            Id = "FEATURE_SANDBOX",
+            Categoria = CategoriaAcao.FeaturesWindows,
+            Titulo = "Habilitar Windows Sandbox",
+            Descricao = "Ativa a área de trabalho isolada e descartável para testar aplicativos com segurança.",
+            ComandoInternoId = "cmd.feature.sandbox.v1",
+            Reversao = "Desativar o Windows Sandbox.",
+            Risco = NivelRisco.Nenhum,
+            RequerAprovacao = true,
+            RequerReinicio = true,
+            PreCondicoes = new[] { "backup_confirmado" },
+        };
+
+        yield return new AcaoOtimizacao
+        {
             Id = "NET_THROTTLING_DESABILITAR",
             Categoria = CategoriaAcao.Rede,
             Titulo = "Desabilitar limitação de rede (NetworkThrottlingIndex)",

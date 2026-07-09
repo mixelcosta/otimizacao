@@ -1377,6 +1377,62 @@ public static class CatalogoPadrao
 
         yield return new AcaoOtimizacao
         {
+            Id = "FEATURE_WSL",
+            Categoria = CategoriaAcao.FeaturesWindows,
+            Titulo = "Habilitar WSL (Subsistema Windows para Linux)",
+            Descricao = "Ativa o componente opcional que permite executar distribuições Linux diretamente no Windows.",
+            ComandoInternoId = "cmd.feature.wsl.v1",
+            Reversao = "Desativar o Subsistema Windows para Linux.",
+            Risco = NivelRisco.Baixo,
+            RequerAprovacao = true,
+            RequerReinicio = true,
+            PreCondicoes = new[] { "backup_confirmado" },
+        };
+
+        yield return new AcaoOtimizacao
+        {
+            Id = "FEATURE_HYPER_V",
+            Categoria = CategoriaAcao.FeaturesWindows,
+            Titulo = "Habilitar Hyper-V",
+            Descricao = "Ativa a plataforma de virtualização Hyper-V da Microsoft.",
+            ComandoInternoId = "cmd.feature.hyperv.v1",
+            Reversao = "Desativar o Hyper-V.",
+            Risco = NivelRisco.Baixo,
+            RequerAprovacao = true,
+            RequerReinicio = true,
+            PreCondicoes = new[] { "backup_confirmado" },
+        };
+
+        yield return new AcaoOtimizacao
+        {
+            Id = "FEATURE_NETFX35",
+            Categoria = CategoriaAcao.FeaturesWindows,
+            Titulo = "Habilitar .NET Framework 3.5",
+            Descricao = "Instala o .NET Framework 3.5 para suporte a aplicativos que dependem dessa versão legada.",
+            ComandoInternoId = "cmd.feature.netfx35.v1",
+            Reversao = "Desativar o .NET Framework 3.5.",
+            Risco = NivelRisco.Nenhum,
+            RequerAprovacao = true,
+            RequerReinicio = false,
+            PreCondicoes = new[] { "backup_confirmado" },
+        };
+
+        yield return new AcaoOtimizacao
+        {
+            Id = "FEATURE_SANDBOX",
+            Categoria = CategoriaAcao.FeaturesWindows,
+            Titulo = "Habilitar Windows Sandbox",
+            Descricao = "Ativa a área de trabalho isolada e descartável para testar aplicativos com segurança.",
+            ComandoInternoId = "cmd.feature.sandbox.v1",
+            Reversao = "Desativar o Windows Sandbox.",
+            Risco = NivelRisco.Nenhum,
+            RequerAprovacao = true,
+            RequerReinicio = true,
+            PreCondicoes = new[] { "backup_confirmado" },
+        };
+
+        yield return new AcaoOtimizacao
+        {
             Id = "NET_THROTTLING_DESABILITAR",
             Categoria = CategoriaAcao.Rede,
             Titulo = "Desabilitar limitação de rede (NetworkThrottlingIndex)",
@@ -1819,6 +1875,7 @@ public enum CategoriaAcao
     Drivers = 4,
     Servicos = 5,
     Rede = 6,
+    FeaturesWindows = 7,
 }
 
 /// <summary>Classificação de risco de uma ação, do documento.</summary>
@@ -2219,6 +2276,28 @@ public sealed record InfoDriver
     public bool CertificadoWhql { get; init; }
 
     public StatusDriver Status { get; init; }
+}
+````
+
+### `src/HardwareOptimizer.Core/Contracts/InfoFeatureWindows.cs`
+
+````csharp
+namespace HardwareOptimizer.Core.Contracts;
+
+/// <summary>Estado de um recurso opcional do Windows (Windows Optional Feature).</summary>
+public record InfoFeatureWindows
+{
+    public string Nome         { get; init; } = "";
+    public string NomeExibicao { get; init; } = "";
+    public string Descricao    { get; init; } = "";
+
+    /// <summary>
+    /// Estado reportado pelo DISM: "Enabled", "Disabled", "EnablePending",
+    /// "DisablePending" ou "Desconhecido" quando leitura não foi possível.
+    /// </summary>
+    public string Estado { get; init; } = "";
+
+    public bool Habilitada => Estado == "Enabled";
 }
 ````
 
@@ -6175,6 +6254,10 @@ public sealed class RegistroComandos
                     ? nome
                     : throw FaltaParametro("nome_servico", "cmd.srv.desativar_servico.v1")),
                 _ => "Disabled"),
+            Fixo("cmd.feature.wsl.v1",     "feature:Microsoft-Windows-Subsystem-Linux", "Enabled"),
+            Fixo("cmd.feature.hyperv.v1",  "feature:Microsoft-Hyper-V-All",             "Enabled"),
+            Fixo("cmd.feature.netfx35.v1", "feature:NetFx3",                            "Enabled"),
+            Fixo("cmd.feature.sandbox.v1", "feature:Containers-DisposableClientVM",      "Enabled"),
         });
     }
 
@@ -6336,6 +6419,7 @@ public sealed class EstadoSistemaWindows : IEstadoSistema
             "registro" => MapearRegistro(chave),
             "powercfg" => MapearPowercfg(chave),
             "servico" => new AlvoServico(_processo, chave, _log),
+            "feature" => new AlvoFeatureWindows(_processo, chave, _log),
             _ => throw NaoMapeado(alvo),
         };
     }
@@ -6393,6 +6477,64 @@ public sealed class EstadoSistemaWindows : IEstadoSistema
 
     private static NotSupportedException NaoMapeado(string alvo) =>
         new($"Alvo do estado do sistema não mapeado para Windows: '{alvo}'.");
+
+    /// <summary>Recurso Opcional do Windows via DISM (enable-feature / disable-feature).</summary>
+    private sealed class AlvoFeatureWindows : IAlvoWindows
+    {
+        private readonly IExecutorProcesso _processo;
+        private readonly string _feature;
+        private readonly ILogger _log;
+
+        public AlvoFeatureWindows(IExecutorProcesso processo, string feature, ILogger log)
+        {
+            _processo = processo;
+            _feature  = feature;
+            _log      = log;
+        }
+
+        public string? Ler()
+        {
+            var resultado = _processo.Executar(
+                "dism.exe",
+                new[] { "/online", "/get-featureinfo", $"/featurename:{_feature}" });
+            return resultado.Sucesso ? ExtrairEstado(resultado.SaidaPadrao) : null;
+        }
+
+        public void Escrever(string valor)
+        {
+            var (acao, args) = ResolverAcao(valor);
+            var resultado = _processo.Executar("dism.exe", args);
+            if (!resultado.Sucesso)
+                throw FalhaProcesso($"dism.exe {acao} {_feature}", resultado);
+            _log.LogInformation("Feature '{Feature}': {Acao} concluído.", _feature, acao);
+        }
+
+        public void Restaurar(string? valorAnterior)
+        {
+            if (!string.IsNullOrWhiteSpace(valorAnterior))
+                Escrever(valorAnterior);
+        }
+
+        private (string acao, string[] args) ResolverAcao(string valor) =>
+            valor.Equals("Enabled", StringComparison.OrdinalIgnoreCase)
+                ? ("enable", new[] { "/online", "/enable-feature", $"/featurename:{_feature}", "/all", "/norestart" })
+                : ("disable", new[] { "/online", "/disable-feature", $"/featurename:{_feature}", "/norestart" });
+
+        // Extrai o valor da linha "State : Enabled" ou "Estado : Habilitado" (independente do idioma).
+        internal static string? ExtrairEstado(string saida)
+        {
+            foreach (var linha in saida.Split('\n'))
+            {
+                var idx = linha.IndexOf(':', StringComparison.Ordinal);
+                if (idx < 0) continue;
+                var chave = linha[..idx].Trim();
+                if (chave.Equals("State", StringComparison.OrdinalIgnoreCase)
+                    || chave.Equals("Estado", StringComparison.OrdinalIgnoreCase))
+                    return linha[(idx + 1)..].Trim();
+            }
+            return null;
+        }
+    }
 
     /// <summary>Estratégia de um alvo concreto (registro, plano, serviço).</summary>
     private interface IAlvoWindows
@@ -6642,6 +6784,124 @@ public sealed class EstadoSistemaWindows : IEstadoSistema
             "BOOT" or "BOOT_START" => "boot",
             _ => "demand",
         };
+    }
+}
+````
+
+### `src/HardwareOptimizer.Agent/Features/GerenciadorFeaturesWindows.cs`
+
+````csharp
+using System.Diagnostics;
+using System.Runtime.Versioning;
+using System.Text;
+using HardwareOptimizer.Core.Contracts;
+
+namespace HardwareOptimizer.Agent.Features;
+
+/// <summary>
+/// Lê o estado e habilita/desabilita Recursos Opcionais do Windows via DISM.
+/// A lista curada inclui apenas features seguras e amplamente utilizadas.
+/// Leitura usa PowerShell (sem elevação na maioria dos casos); escrita requer
+/// elevação (UAC) e é disparada via <c>UseShellExecute=true, Verb="runas"</c>.
+/// </summary>
+[SupportedOSPlatform("windows")]
+public static class GerenciadorFeaturesWindows
+{
+    /// <summary>Catálogo curado de features seguras para habilitar/desabilitar.</summary>
+    internal static readonly IReadOnlyList<InfoFeatureWindows> Catalogo = new InfoFeatureWindows[]
+    {
+        new() { Nome = "Microsoft-Windows-Subsystem-Linux",
+                NomeExibicao = "WSL — Subsistema Linux",
+                Descricao    = "Executa distribuições Linux nativamente no Windows." },
+        new() { Nome = "Microsoft-Hyper-V-All",
+                NomeExibicao = "Hyper-V",
+                Descricao    = "Plataforma de virtualização da Microsoft." },
+        new() { Nome = "NetFx3",
+                NomeExibicao = ".NET Framework 3.5",
+                Descricao    = "Suporte a aplicativos legados que requerem .NET 3.5." },
+        new() { Nome = "Containers-DisposableClientVM",
+                NomeExibicao = "Windows Sandbox",
+                Descricao    = "Área isolada e descartável para testar aplicativos com segurança." },
+        new() { Nome = "TelnetClient",
+                NomeExibicao = "Cliente Telnet",
+                Descricao    = "Diagnóstico de rede via protocolo Telnet." },
+    };
+
+    /// <summary>Retorna o catálogo curado com o estado atual de cada feature.</summary>
+    public static IReadOnlyList<InfoFeatureWindows> ObterInfos() =>
+        Catalogo.Select(f => f with { Estado = LerEstado(f.Nome) }).ToList();
+
+    /// <summary>Habilita uma feature via DISM (dispara UAC se necessário).</summary>
+    public static async Task<(bool Ok, string? Erro)> HabilitarAsync(string nome, CancellationToken ct) =>
+        EhNomeValido(nome)
+            ? await ExecutarDismAsync($"/enable-feature /featurename:{nome} /all /norestart", ct).ConfigureAwait(false)
+            : (false, $"Feature '{nome}' não está na lista de features suportadas.");
+
+    /// <summary>Desabilita uma feature via DISM (dispara UAC se necessário).</summary>
+    public static async Task<(bool Ok, string? Erro)> DesabilitarAsync(string nome, CancellationToken ct) =>
+        EhNomeValido(nome)
+            ? await ExecutarDismAsync($"/disable-feature /featurename:{nome} /norestart", ct).ConfigureAwait(false)
+            : (false, $"Feature '{nome}' não está na lista de features suportadas.");
+
+    private static bool EhNomeValido(string nome) =>
+        Catalogo.Any(f => string.Equals(f.Nome, nome, StringComparison.OrdinalIgnoreCase));
+
+    private static string LerEstado(string nome)
+    {
+        try
+        {
+            var script  = $"(Get-WindowsOptionalFeature -Online -FeatureName '{nome}').State";
+            var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+            var psi = new ProcessStartInfo
+            {
+                FileName               = "powershell.exe",
+                Arguments              = $"-NoProfile -NonInteractive -EncodedCommand {encoded}",
+                RedirectStandardOutput = true,
+                UseShellExecute        = false,
+                CreateNoWindow         = true,
+            };
+            using var proc = Process.Start(psi);
+            if (proc is null) return "Desconhecido";
+            var saida = proc.StandardOutput.ReadToEnd().Trim();
+            return proc.WaitForExit(10_000) && !string.IsNullOrWhiteSpace(saida) ? saida : "Desconhecido";
+        }
+        catch
+        {
+            return "Desconhecido";
+        }
+    }
+
+    private static async Task<(bool Ok, string? Erro)> ExecutarDismAsync(string args, CancellationToken ct)
+    {
+        // Executa DISM em sessão elevada via PowerShell + runas.
+        var script  = $"dism.exe /online {args}; exit $LASTEXITCODE";
+        var encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+
+        var psi = new ProcessStartInfo
+        {
+            FileName        = "powershell.exe",
+            Arguments       = $"-NoProfile -ExecutionPolicy Bypass -EncodedCommand {encoded}",
+            UseShellExecute = true,
+            Verb            = "runas",
+            WindowStyle     = ProcessWindowStyle.Hidden,
+        };
+
+        try
+        {
+            using var proc = Process.Start(psi)!;
+            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
+            return proc.ExitCode == 0
+                ? (true, null)
+                : (false, $"DISM saiu com código {proc.ExitCode}.");
+        }
+        catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+        {
+            return (false, "Operação cancelada (UAC negado).");
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
     }
 }
 ````
@@ -6941,6 +7201,8 @@ public sealed class AcessoRegistroWindows : IAcessoRegistro
 
 ````csharp
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Agent.Platform;
 
@@ -6953,9 +7215,13 @@ namespace HardwareOptimizer.Agent.Platform;
 public sealed class ExecutorProcesso : IExecutorProcesso
 {
     private readonly TimeSpan _tempoLimite;
+    private readonly ILogger _log;
 
-    public ExecutorProcesso(TimeSpan? tempoLimite = null) =>
+    public ExecutorProcesso(TimeSpan? tempoLimite = null, ILogger? logger = null)
+    {
         _tempoLimite = tempoLimite ?? TimeSpan.FromSeconds(30);
+        _log = logger ?? NullLogger.Instance;
+    }
 
     public ResultadoProcesso Executar(string arquivo, IReadOnlyList<string> argumentos)
     {
@@ -7001,10 +7267,18 @@ public sealed class ExecutorProcesso : IExecutorProcesso
 
         // Garante que as leituras assíncronas concluíram após a saída do processo.
         processo.WaitForExit();
-        return new ResultadoProcesso(
+        var resultado = new ResultadoProcesso(
             processo.ExitCode,
             leituraSaida.GetAwaiter().GetResult(),
             leituraErro.GetAwaiter().GetResult());
+
+        _log.LogDebug(
+            "Processo '{Arquivo}' saiu com código {Codigo}.{Stderr}",
+            arquivo,
+            resultado.CodigoSaida,
+            resultado.SaidaErro is { Length: > 0 } e ? $" Stderr: {e.Trim()}" : "");
+
+        return resultado;
     }
 }
 ````
@@ -10895,6 +11169,7 @@ using HardwareOptimizer.Agent.Smart;
 using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Agent.Cleanup;
+using HardwareOptimizer.Agent.Features;
 using HardwareOptimizer.Agent.VisualEffects;
 using HardwareOptimizer.Cerebro;
 using HardwareOptimizer.Cerebro.Visao;
@@ -11009,6 +11284,15 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "executarlimpeza" => OperatingSystem.IsWindows()
                     ? ExecutarLimpezaWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "obterfeatures" => OperatingSystem.IsWindows()
+                    ? ObterFeaturesWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "habilitarfeature" => OperatingSystem.IsWindows()
+                    ? await HabilitarFeatureAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "desabilitarfeature" => OperatingSystem.IsWindows()
+                    ? await DesabilitarFeatureAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
@@ -11696,6 +11980,39 @@ Write-Output 'OK'
     }
 
     [SupportedOSPlatform("windows")]
+    private static RespostaIpc ObterFeaturesWindows(RequisicaoIpc req)
+    {
+        var features = GerenciadorFeaturesWindows.ObterInfos();
+        return RespostaIpc.Ok(req.Id, features);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> HabilitarFeatureAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var nome = LerParamString(req.Parametros, "nome");
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+
+        var (ok, erro) = await GerenciadorFeaturesWindows.HabilitarAsync(nome, ct).ConfigureAwait(false);
+        return ok ? RespostaIpc.Ok(req.Id, true) : RespostaIpc.Falha(req.Id, erro ?? "Falha desconhecida.");
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> DesabilitarFeatureAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var nome = LerParamString(req.Parametros, "nome");
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+
+        var (ok, erro) = await GerenciadorFeaturesWindows.DesabilitarAsync(nome, ct).ConfigureAwait(false);
+        return ok ? RespostaIpc.Ok(req.Id, true) : RespostaIpc.Falha(req.Id, erro ?? "Falha desconhecida.");
+    }
+
+    private static string? LerParamString(JsonElement? parametros, string chave) =>
+        parametros is { } p && p.TryGetProperty(chave, out var v) && v.ValueKind == JsonValueKind.String
+            ? v.GetString() : null;
+
+    [SupportedOSPlatform("windows")]
     private static RespostaIpc EscanearLimpezaWindows(RequisicaoIpc req)
     {
         var categorias = GerenciadorLimpeza.Escanear();
@@ -11827,6 +12144,12 @@ public sealed class ServidorNamedPipe
     <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>HardwareOptimizer.App.Tests</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
   <ItemGroup>
@@ -14676,7 +14999,7 @@ using System.Linq;
 
 namespace HardwareOptimizer.App.ViewModels;
 
-public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao, Servicos, Limpeza }
+public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao, Servicos, Limpeza, FeaturesWindows }
 
 public partial class OtimizadorWindowsViewModel : ObservableObject
 {
@@ -14707,11 +15030,13 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         OnPropertyChanged(nameof(MostrarInicializacao));
         OnPropertyChanged(nameof(MostrarServicos));
         OnPropertyChanged(nameof(MostrarLimpeza));
+        OnPropertyChanged(nameof(MostrarFeatures));
         OnPropertyChanged(nameof(AbaEfeitosAtiva));
         OnPropertyChanged(nameof(AbaProgramasAtiva));
         OnPropertyChanged(nameof(AbaInicializacaoAtiva));
         OnPropertyChanged(nameof(AbaServicosAtiva));
         OnPropertyChanged(nameof(AbaLimpezaAtiva));
+        OnPropertyChanged(nameof(AbaFeaturesAtiva));
 
         if (value == SubPaginaOtimizador.EfeitosVisuais)
             _ = CarregarEfeitosVisuaisAsync();
@@ -14719,6 +15044,8 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
             _ = CarregarServicosAsync();
         else if (value == SubPaginaOtimizador.Limpeza && !_limpezaEscaneada)
             _ = EscanearLimpezaAsync();
+        else if (value == SubPaginaOtimizador.FeaturesWindows && !_featuresCarregadas)
+            _ = CarregarFeaturesAsync();
     }
 
     public bool MostrarEfeitosVisuais => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
@@ -14726,17 +15053,20 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
     public bool MostrarInicializacao  => SubPagina == SubPaginaOtimizador.Inicializacao;
     public bool MostrarServicos       => SubPagina == SubPaginaOtimizador.Servicos;
     public bool MostrarLimpeza        => SubPagina == SubPaginaOtimizador.Limpeza;
+    public bool MostrarFeatures       => SubPagina == SubPaginaOtimizador.FeaturesWindows;
     public bool AbaEfeitosAtiva       => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
     public bool AbaProgramasAtiva     => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
     public bool AbaInicializacaoAtiva => SubPagina == SubPaginaOtimizador.Inicializacao;
     public bool AbaServicosAtiva      => SubPagina == SubPaginaOtimizador.Servicos;
     public bool AbaLimpezaAtiva       => SubPagina == SubPaginaOtimizador.Limpeza;
+    public bool AbaFeaturesAtiva      => SubPagina == SubPaginaOtimizador.FeaturesWindows;
 
     [RelayCommand] private void IrParaEfeitosVisuais() => SubPagina = SubPaginaOtimizador.EfeitosVisuais;
     [RelayCommand] private void IrParaProgramas()      => SubPagina = SubPaginaOtimizador.ProgramasInstalados;
     [RelayCommand] private void IrParaInicializacao()  => SubPagina = SubPaginaOtimizador.Inicializacao;
     [RelayCommand] private void IrParaServicos()       => SubPagina = SubPaginaOtimizador.Servicos;
     [RelayCommand] private void IrParaLimpeza()        => SubPagina = SubPaginaOtimizador.Limpeza;
+    [RelayCommand] private void IrParaFeatures()       => SubPagina = SubPaginaOtimizador.FeaturesWindows;
 
     // ── Estado geral ───────────────────────────────────────────────────────
 
@@ -15232,6 +15562,84 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
             _                => total > 0 ? $"{total} B" : "0 KB",
         };
     }
+
+    // ── Features Windows ──────────────────────────────────────────────────
+
+    private bool _featuresCarregadas;
+
+    [ObservableProperty] private bool _carregandoFeatures;
+
+    public ObservableCollection<FeatureWindowsViewModel> Features { get; } = [];
+
+    [RelayCommand]
+    private async Task CarregarFeaturesAsync()
+    {
+        CarregandoFeatures = true;
+        StatusOtimizador   = "Verificando recursos opcionais do Windows…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "obterfeatures" });
+            if (!resp.Sucesso) { StatusOtimizador = "Falha: " + resp.Erro; return; }
+
+            if (resp.Resultado is not IReadOnlyList<InfoFeatureWindows> lista) return;
+
+            Features.Clear();
+            foreach (var f in lista)
+                Features.Add(new FeatureWindowsViewModel(f, HabilitarFeatureAsync, DesabilitarFeatureAsync));
+
+            _featuresCarregadas = true;
+            StatusOtimizador = "Pronto.";
+        }
+        finally { CarregandoFeatures = false; }
+    }
+
+    private async Task HabilitarFeatureAsync(FeatureWindowsViewModel feature)
+    {
+        Ocupado = true;
+        StatusOtimizador = $"Habilitando '{feature.NomeExibicao}'…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "habilitarfeature",
+                Parametros = JsonSerializer.SerializeToElement(new { nome = feature.Nome }),
+            });
+            if (resp.Sucesso)
+            {
+                feature.Estado = "Enabled";
+                StatusOtimizador = $"'{feature.NomeExibicao}' habilitado. Reinício pode ser necessário.";
+            }
+            else
+            {
+                StatusOtimizador = "Falha: " + resp.Erro;
+            }
+        }
+        finally { Ocupado = false; }
+    }
+
+    private async Task DesabilitarFeatureAsync(FeatureWindowsViewModel feature)
+    {
+        Ocupado = true;
+        StatusOtimizador = $"Desabilitando '{feature.NomeExibicao}'…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "desabilitarfeature",
+                Parametros = JsonSerializer.SerializeToElement(new { nome = feature.Nome }),
+            });
+            if (resp.Sucesso)
+            {
+                feature.Estado = "Disabled";
+                StatusOtimizador = $"'{feature.NomeExibicao}' desabilitado.";
+            }
+            else
+            {
+                StatusOtimizador = "Falha: " + resp.Erro;
+            }
+        }
+        finally { Ocupado = false; }
+    }
 }
 
 // ── ViewModels auxiliares ──────────────────────────────────────────────────
@@ -15446,6 +15854,61 @@ public partial class CategoriaLimpezaViewModel : ObservableObject
     public string TamanhoFormatado { get; }
 
     [ObservableProperty] private bool _selecionada;
+}
+
+public partial class FeatureWindowsViewModel : ObservableObject
+{
+    private readonly Func<FeatureWindowsViewModel, Task> _habilitar;
+    private readonly Func<FeatureWindowsViewModel, Task> _desabilitar;
+
+    public FeatureWindowsViewModel(
+        InfoFeatureWindows modelo,
+        Func<FeatureWindowsViewModel, Task> habilitar,
+        Func<FeatureWindowsViewModel, Task> desabilitar)
+    {
+        Nome         = modelo.Nome;
+        NomeExibicao = modelo.NomeExibicao;
+        Descricao    = modelo.Descricao;
+        _estado      = modelo.Estado;
+        _habilitar   = habilitar;
+        _desabilitar = desabilitar;
+        HabilitarCommand   = new AsyncRelayCommand(() => _habilitar(this));
+        DesabilitarCommand = new AsyncRelayCommand(() => _desabilitar(this));
+    }
+
+    public IAsyncRelayCommand HabilitarCommand   { get; }
+    public IAsyncRelayCommand DesabilitarCommand { get; }
+
+    public string Nome         { get; }
+    public string NomeExibicao { get; }
+    public string Descricao    { get; }
+
+    [ObservableProperty] private string _estado;
+
+    partial void OnEstadoChanged(string value)
+    {
+        OnPropertyChanged(nameof(Habilitada));
+        OnPropertyChanged(nameof(TextoEstado));
+        OnPropertyChanged(nameof(CorEstado));
+        OnPropertyChanged(nameof(CorBotaoHabilitar));
+        OnPropertyChanged(nameof(CorTextoHabilitar));
+        OnPropertyChanged(nameof(CorBotaoDesabilitar));
+        OnPropertyChanged(nameof(CorTextoDesabilitar));
+    }
+
+    public bool   Habilitada          => Estado == "Enabled";
+    public string TextoEstado         => Estado switch
+    {
+        "Enabled"       => "Habilitado",
+        "Disabled"      => "Desabilitado",
+        "EnablePending" => "Pendente (reiniciar)",
+        _               => "Desconhecido",
+    };
+    public string CorEstado           => Estado == "Enabled" ? "#00C870" : "#484865";
+    public string CorBotaoHabilitar   => Habilitada ? "#121212" : "#082A12";
+    public string CorTextoHabilitar   => Habilitada ? "#282840" : "#00C870";
+    public string CorBotaoDesabilitar => Habilitada ? "#2A0808" : "#121212";
+    public string CorTextoDesabilitar => Habilitada ? "#CC3333" : "#282840";
 }
 ````
 
@@ -18389,7 +18852,7 @@ public partial class MainWindow : Window
       </StackPanel>
 
       <!-- Abas do submenu -->
-      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
         <Button Grid.Column="0"
                 Classes="aba"
                 Classes.aba-ativa="{Binding AbaEfeitosAtiva}"
@@ -18418,7 +18881,13 @@ public partial class MainWindow : Window
                 Classes="aba"
                 Classes.aba-ativa="{Binding AbaLimpezaAtiva}"
                 Command="{Binding IrParaLimpezaCommand}"
-                Content="Limpeza" />
+                Content="Limpeza"
+                Margin="0,0,24,0" />
+        <Button Grid.Column="5"
+                Classes="aba"
+                Classes.aba-ativa="{Binding AbaFeaturesAtiva}"
+                Command="{Binding IrParaFeaturesCommand}"
+                Content="Recursos Windows" />
       </Grid>
 
       <!-- Linha separadora -->
@@ -19025,6 +19494,122 @@ public partial class MainWindow : Window
             <TextBlock Text="{Binding ResultadoLimpeza}"
                        Foreground="#00C870" FontSize="12" />
           </Border>
+
+        </StackPanel>
+
+        <!-- ════ ABA: RECURSOS WINDOWS (FEATURES) ══════════════════════════ -->
+        <StackPanel IsVisible="{Binding MostrarFeatures}" Spacing="12">
+
+          <!-- Cabeçalho + botão atualizar -->
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="Recursos Opcionais do Windows" Foreground="#E0E0F2"
+                         FontWeight="SemiBold" FontSize="13" />
+              <TextBlock Foreground="#282840" FontSize="11" Margin="0,2,0,0"
+                         Text="Habilite ou desabilite recursos opcionais do Windows — cada operação requer confirmação de administrador (UAC)" />
+            </StackPanel>
+            <Button Grid.Column="1"
+                    Command="{Binding CarregarFeaturesCommand}"
+                    IsEnabled="{Binding !CarregandoFeatures}"
+                    Background="#09091A" Foreground="#484865"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    CornerRadius="8" Padding="12,8"
+                    FontSize="12" Content="↺ Atualizar"
+                    VerticalAlignment="Center" />
+          </Grid>
+
+          <!-- Aviso UAC -->
+          <Border Background="#0A0A1A" CornerRadius="6" Padding="12,8"
+                  BorderBrush="#00C8FF30" BorderThickness="1">
+            <TextBlock Foreground="#484865" FontSize="11" TextWrapping="Wrap"
+                       Text="ℹ  Habilitar ou desabilitar recursos exige privilégios de administrador. Uma janela UAC será exibida para confirmar a operação." />
+          </Border>
+
+          <!-- Indicador de carregamento -->
+          <TextBlock Text="Verificando recursos instalados…"
+                     IsVisible="{Binding CarregandoFeatures}"
+                     Foreground="#484865" FontSize="13"
+                     HorizontalAlignment="Center"
+                     Margin="0,20" />
+
+          <!-- Cabeçalho de colunas -->
+          <Border Background="#06060F" CornerRadius="6" Padding="14,7" Margin="0,0,0,2"
+                  IsVisible="{Binding !CarregandoFeatures}">
+            <Grid ColumnDefinitions="*,160,90,90">
+              <TextBlock Grid.Column="0" Text="RECURSO"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+              <TextBlock Grid.Column="1" Text="ESTADO"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+            </Grid>
+          </Border>
+
+          <!-- Lista de features -->
+          <ItemsControl ItemsSource="{Binding Features}"
+                        IsVisible="{Binding !CarregandoFeatures}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:FeatureWindowsViewModel">
+                <Border Background="#06060F" CornerRadius="5" Padding="14,10" Margin="0,1"
+                        BorderBrush="#1E1E3C" BorderThickness="1">
+                  <Grid ColumnDefinitions="*,160,90,90">
+
+                    <!-- Nome + descrição -->
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                      <TextBlock Text="{Binding NomeExibicao}"
+                                 Foreground="#E0E0F2" FontWeight="SemiBold"
+                                 FontSize="12" />
+                      <TextBlock Text="{Binding Descricao}"
+                                 Foreground="#282840" FontSize="10"
+                                 TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <!-- Estado -->
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding TextoEstado}"
+                               Foreground="{Binding CorEstado}"
+                               FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Margin="8,0,4,0" />
+
+                    <!-- Botão HABILITAR -->
+                    <Button Grid.Column="2"
+                            Command="{Binding HabilitarCommand}"
+                            IsEnabled="{Binding !Habilitada}"
+                            Content="HABILITAR"
+                            Background="{Binding CorBotaoHabilitar}"
+                            Foreground="{Binding CorTextoHabilitar}"
+                            BorderBrush="#00C87030"
+                            BorderThickness="1"
+                            FontSize="10" FontWeight="Bold"
+                            CornerRadius="4" Padding="0,6"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="0,0,4,0" />
+
+                    <!-- Botão DESABILITAR -->
+                    <Button Grid.Column="3"
+                            Command="{Binding DesabilitarCommand}"
+                            IsEnabled="{Binding Habilitada}"
+                            Content="DESABILITAR"
+                            Background="{Binding CorBotaoDesabilitar}"
+                            Foreground="{Binding CorTextoDesabilitar}"
+                            BorderBrush="#FF444430"
+                            BorderThickness="1"
+                            FontSize="10" FontWeight="Bold"
+                            CornerRadius="4" Padding="0,6"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            VerticalAlignment="Center" />
+
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Status de operação -->
+          <TextBlock Text="{Binding StatusOtimizador}" Foreground="#484865" FontSize="12"
+                     Margin="4,4,0,0" />
 
         </StackPanel>
 
@@ -22747,6 +23332,206 @@ public sealed class ExecutorControladoTests
 }
 ````
 
+### `tests/HardwareOptimizer.Agent.Tests/FeaturesWindowsTests.cs`
+
+````csharp
+using HardwareOptimizer.Agent.Execution.Windows;
+using HardwareOptimizer.Agent.Features;
+using HardwareOptimizer.Agent.Platform;
+using HardwareOptimizer.Core.Catalog;
+using HardwareOptimizer.Core.Common;
+using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging.Abstractions;
+using Xunit;
+
+namespace HardwareOptimizer.Agent.Tests;
+
+public sealed class FeaturesWindowsTests
+{
+    // ── AlvoFeatureWindows: ExtrairEstado (parsing puro, sem Windows) ──────
+
+    [Theory]
+    [InlineData("Feature Name : TelnetClient\r\nState : Enabled\r\n", "Enabled")]
+    [InlineData("Feature Name : TelnetClient\r\nState : Disabled\r\n", "Disabled")]
+    [InlineData("Feature Name : TelnetClient\r\nState : EnablePending\r\n", "EnablePending")]
+    [InlineData("", null)]
+    [InlineData("Outro : Valor\r\n", null)]
+    public void ExtrairEstado_parseia_saida_dism(string saida, string? esperado)
+    {
+        var resultado = AlvoFeatureWindowsTestHelper.ExtrairEstado(saida);
+        Assert.Equal(esperado, resultado);
+    }
+
+    [Fact]
+    public void ExtrairEstado_aceita_label_em_portugues()
+    {
+        // DISM em pt-BR pode exibir "Estado" em vez de "State".
+        var saida = "Nome do Recurso : NetFx3\r\nEstado : Habilitado\r\n";
+        var resultado = AlvoFeatureWindowsTestHelper.ExtrairEstado(saida);
+        Assert.Equal("Habilitado", resultado);
+    }
+
+    // ── AlvoFeatureWindows: Escrever / Restaurar (via ProcessoFake) ────────
+
+    [Fact]
+    public async Task Feature_enable_chama_dism_com_enable_feature()
+    {
+        var proc   = new ProcessoFake();
+        var estado = new EstadoSistemaWindows(new RegistroFake(), proc);
+
+        await Task.Run(() => estado.Escrever("feature:TelnetClient", "Enabled"));
+
+        Assert.Contains(proc.Chamados, c =>
+            c.Contains("dism.exe") && c.Contains("/enable-feature") && c.Contains("TelnetClient"));
+    }
+
+    [Fact]
+    public async Task Feature_disable_chama_dism_com_disable_feature()
+    {
+        var proc   = new ProcessoFake();
+        var estado = new EstadoSistemaWindows(new RegistroFake(), proc);
+
+        await Task.Run(() => estado.Escrever("feature:TelnetClient", "Disabled"));
+
+        Assert.Contains(proc.Chamados, c =>
+            c.Contains("dism.exe") && c.Contains("/disable-feature") && c.Contains("TelnetClient"));
+    }
+
+    [Fact]
+    public void Feature_restaurar_nulo_nao_chama_dism()
+    {
+        var proc   = new ProcessoFake();
+        var estado = new EstadoSistemaWindows(new RegistroFake(), proc);
+
+        estado.Restaurar("feature:TelnetClient", null);
+
+        Assert.Empty(proc.Chamados);
+    }
+
+    [Fact]
+    public void Alvo_feature_nao_mapeado_lanca_not_supported()
+    {
+        var estado = new EstadoSistemaWindows(new RegistroFake(), new ProcessoFake());
+        Assert.Throws<NotSupportedException>(() => estado.Ler("recurso:XYZ"));
+    }
+
+    // ── GerenciadorFeaturesWindows: catálogo curado ─────────────────────────
+
+    [Fact]
+    public void Catalogo_features_nao_esta_vazio()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        Assert.NotEmpty(GerenciadorFeaturesWindows.Catalogo);
+    }
+
+    [Fact]
+    public void Catalogo_features_contem_wsl_e_hyperv()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        var nomes = GerenciadorFeaturesWindows.Catalogo.Select(f => f.Nome).ToList();
+        Assert.Contains("Microsoft-Windows-Subsystem-Linux", nomes);
+        Assert.Contains("Microsoft-Hyper-V-All",             nomes);
+    }
+
+    [Fact]
+    public void Catalogo_features_todas_tem_nome_exibicao_e_descricao()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        foreach (var f in GerenciadorFeaturesWindows.Catalogo)
+        {
+            Assert.False(string.IsNullOrWhiteSpace(f.NomeExibicao),
+                $"Feature '{f.Nome}' sem NomeExibicao.");
+            Assert.False(string.IsNullOrWhiteSpace(f.Descricao),
+                $"Feature '{f.Nome}' sem Descricao.");
+        }
+    }
+
+    // ── CatalogoPadrao: 4 novas entradas FeaturesWindows ───────────────────
+
+    [Fact]
+    public void Catalogo_contem_4_features_windows()
+    {
+        var catalogo = CatalogoPadrao.Criar();
+        var features = catalogo.Todas.Where(a => a.Categoria == CategoriaAcao.FeaturesWindows).ToList();
+        Assert.Equal(4, features.Count);
+    }
+
+    [Theory]
+    [InlineData("FEATURE_WSL")]
+    [InlineData("FEATURE_HYPER_V")]
+    [InlineData("FEATURE_NETFX35")]
+    [InlineData("FEATURE_SANDBOX")]
+    public void Catalogo_feature_possui_entrada_correta(string id)
+    {
+        var catalogo = CatalogoPadrao.Criar();
+        var acao = catalogo.Todas.FirstOrDefault(a => a.Id == id);
+
+        Assert.NotNull(acao);
+        Assert.Equal(CategoriaAcao.FeaturesWindows, acao.Categoria);
+        Assert.False(string.IsNullOrWhiteSpace(acao.ComandoInternoId));
+    }
+
+    // ── InfoFeatureWindows: record auxiliar ─────────────────────────────────
+
+    [Theory]
+    [InlineData("Enabled",  true)]
+    [InlineData("Disabled", false)]
+    [InlineData("",         false)]
+    [InlineData("Desconhecido", false)]
+    public void InfoFeature_habilitada_derivado_de_estado(string estado, bool esperado)
+    {
+        var info = new InfoFeatureWindows { Estado = estado };
+        Assert.Equal(esperado, info.Habilitada);
+    }
+
+    // ── Fakes locais ─────────────────────────────────────────────────────────
+
+    private sealed class ProcessoFake : IExecutorProcesso
+    {
+        public List<string> Chamados { get; } = [];
+
+        public ResultadoProcesso Executar(string arquivo, IReadOnlyList<string> argumentos)
+        {
+            Chamados.Add(arquivo + " " + string.Join(' ', argumentos));
+            return new ResultadoProcesso(0, "", "");
+        }
+    }
+
+    private sealed class RegistroFake : IAcessoRegistro
+    {
+        private readonly Dictionary<string, uint> _store = new(StringComparer.OrdinalIgnoreCase);
+
+        private static string K(ColmeiaRegistro c, string s, string n) => $"{c}|{s}|{n}";
+        public uint? LerDword(ColmeiaRegistro c, string s, string n) =>
+            _store.TryGetValue(K(c, s, n), out var v) ? v : null;
+        public void EscreverDword(ColmeiaRegistro c, string s, string n, uint v) => _store[K(c, s, n)] = v;
+        public void RemoverValor(ColmeiaRegistro c, string s, string n) => _store.Remove(K(c, s, n));
+    }
+}
+
+/// <summary>
+/// Expõe o método interno ExtrairEstado do AlvoFeatureWindows para teste.
+/// AlvoFeatureWindows é uma classe privada dentro de EstadoSistemaWindows —
+/// testamos via reflection ou duplicando a lógica simples aqui.
+/// </summary>
+internal static class AlvoFeatureWindowsTestHelper
+{
+    public static string? ExtrairEstado(string saida)
+    {
+        foreach (var linha in saida.Split('\n'))
+        {
+            var idx = linha.IndexOf(':', StringComparison.Ordinal);
+            if (idx < 0) continue;
+            var chave = linha[..idx].Trim();
+            if (chave.Equals("State",  StringComparison.OrdinalIgnoreCase)
+             || chave.Equals("Estado", StringComparison.OrdinalIgnoreCase))
+                return linha[(idx + 1)..].Trim();
+        }
+        return null;
+    }
+}
+````
+
 ### `tests/HardwareOptimizer.Agent.Tests/FluxoCompletoTests.cs`
 
 ````csharp
@@ -24804,6 +25589,66 @@ public sealed class IpcTests
         Assert.True(dto.ContadorVidaUtil);
         Assert.True(dto.GerenciadorDrivers);
         Assert.True(dto.GuiaBiosIa);
+    }
+
+    // ── obterfeatures / habilitarfeature / desabilitarfeature ──────────────
+
+    [Fact]
+    public async Task ObterFeatures_NaoWindows_RetornaFalha()
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("obterfeatures"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("Windows", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task HabilitarFeature_SemNome_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("habilitarfeature"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("nome", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task HabilitarFeature_NomeForaDaLista_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("habilitarfeature", new { nome = "FeatureNaoExistente123" }));
+        Assert.False(r.Sucesso);
+    }
+
+    [Fact]
+    public async Task DesabilitarFeature_SemNome_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("desabilitarfeature"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("nome", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DesabilitarFeature_NomeForaDaLista_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("desabilitarfeature", new { nome = "FeatureNaoExistente123" }));
+        Assert.False(r.Sucesso);
+    }
+
+    [Fact]
+    public async Task Catalogo_inclui_features_windows()
+    {
+        var r = await Roteador().TratarAsync(Req("catalogo"));
+        Assert.True(r.Sucesso);
+        var lista = Assert.IsAssignableFrom<IReadOnlyList<AcaoResumoDto>>(r.Resultado);
+        Assert.Contains(lista, a => a.Id == "FEATURE_WSL");
+        Assert.Contains(lista, a => a.Id == "FEATURE_HYPER_V");
     }
 
     private sealed class ColetorFake : IColetorInventario

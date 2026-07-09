@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Agent.Platform;
 
@@ -11,9 +13,13 @@ namespace HardwareOptimizer.Agent.Platform;
 public sealed class ExecutorProcesso : IExecutorProcesso
 {
     private readonly TimeSpan _tempoLimite;
+    private readonly ILogger _log;
 
-    public ExecutorProcesso(TimeSpan? tempoLimite = null) =>
+    public ExecutorProcesso(TimeSpan? tempoLimite = null, ILogger? logger = null)
+    {
         _tempoLimite = tempoLimite ?? TimeSpan.FromSeconds(30);
+        _log = logger ?? NullLogger.Instance;
+    }
 
     public ResultadoProcesso Executar(string arquivo, IReadOnlyList<string> argumentos)
     {
@@ -59,9 +65,17 @@ public sealed class ExecutorProcesso : IExecutorProcesso
 
         // Garante que as leituras assíncronas concluíram após a saída do processo.
         processo.WaitForExit();
-        return new ResultadoProcesso(
+        var resultado = new ResultadoProcesso(
             processo.ExitCode,
             leituraSaida.GetAwaiter().GetResult(),
             leituraErro.GetAwaiter().GetResult());
+
+        _log.LogDebug(
+            "Processo '{Arquivo}' saiu com código {Codigo}.{Stderr}",
+            arquivo,
+            resultado.CodigoSaida,
+            resultado.SaidaErro is { Length: > 0 } e ? $" Stderr: {e.Trim()}" : "");
+
+        return resultado;
     }
 }

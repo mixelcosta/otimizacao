@@ -15,6 +15,7 @@ using HardwareOptimizer.Agent.Smart;
 using HardwareOptimizer.Agent.Startup;
 using HardwareOptimizer.Agent.Validation;
 using HardwareOptimizer.Agent.Cleanup;
+using HardwareOptimizer.Agent.Features;
 using HardwareOptimizer.Agent.VisualEffects;
 using HardwareOptimizer.Cerebro;
 using HardwareOptimizer.Cerebro.Visao;
@@ -129,6 +130,15 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "executarlimpeza" => OperatingSystem.IsWindows()
                     ? ExecutarLimpezaWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "obterfeatures" => OperatingSystem.IsWindows()
+                    ? ObterFeaturesWindows(requisicao)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "habilitarfeature" => OperatingSystem.IsWindows()
+                    ? await HabilitarFeatureAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "desabilitarfeature" => OperatingSystem.IsWindows()
+                    ? await DesabilitarFeatureAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
@@ -814,6 +824,39 @@ Write-Output 'OK'
             ? RespostaIpc.Ok(req.Id, true)
             : RespostaIpc.Falha(req.Id, $"Falha ao aplicar efeito '{id}'.");
     }
+
+    [SupportedOSPlatform("windows")]
+    private static RespostaIpc ObterFeaturesWindows(RequisicaoIpc req)
+    {
+        var features = GerenciadorFeaturesWindows.ObterInfos();
+        return RespostaIpc.Ok(req.Id, features);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> HabilitarFeatureAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var nome = LerParamString(req.Parametros, "nome");
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+
+        var (ok, erro) = await GerenciadorFeaturesWindows.HabilitarAsync(nome, ct).ConfigureAwait(false);
+        return ok ? RespostaIpc.Ok(req.Id, true) : RespostaIpc.Falha(req.Id, erro ?? "Falha desconhecida.");
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> DesabilitarFeatureAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var nome = LerParamString(req.Parametros, "nome");
+        if (string.IsNullOrEmpty(nome))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'nome' obrigatório.");
+
+        var (ok, erro) = await GerenciadorFeaturesWindows.DesabilitarAsync(nome, ct).ConfigureAwait(false);
+        return ok ? RespostaIpc.Ok(req.Id, true) : RespostaIpc.Falha(req.Id, erro ?? "Falha desconhecida.");
+    }
+
+    private static string? LerParamString(JsonElement? parametros, string chave) =>
+        parametros is { } p && p.TryGetProperty(chave, out var v) && v.ValueKind == JsonValueKind.String
+            ? v.GetString() : null;
 
     [SupportedOSPlatform("windows")]
     private static RespostaIpc EscanearLimpezaWindows(RequisicaoIpc req)

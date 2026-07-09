@@ -100,6 +100,7 @@ public sealed class EstadoSistemaWindows : IEstadoSistema
             "registro" => MapearRegistro(chave),
             "powercfg" => MapearPowercfg(chave),
             "servico" => new AlvoServico(_processo, chave, _log),
+            "feature" => new AlvoFeatureWindows(_processo, chave, _log),
             _ => throw NaoMapeado(alvo),
         };
     }
@@ -157,6 +158,64 @@ public sealed class EstadoSistemaWindows : IEstadoSistema
 
     private static NotSupportedException NaoMapeado(string alvo) =>
         new($"Alvo do estado do sistema não mapeado para Windows: '{alvo}'.");
+
+    /// <summary>Recurso Opcional do Windows via DISM (enable-feature / disable-feature).</summary>
+    private sealed class AlvoFeatureWindows : IAlvoWindows
+    {
+        private readonly IExecutorProcesso _processo;
+        private readonly string _feature;
+        private readonly ILogger _log;
+
+        public AlvoFeatureWindows(IExecutorProcesso processo, string feature, ILogger log)
+        {
+            _processo = processo;
+            _feature  = feature;
+            _log      = log;
+        }
+
+        public string? Ler()
+        {
+            var resultado = _processo.Executar(
+                "dism.exe",
+                new[] { "/online", "/get-featureinfo", $"/featurename:{_feature}" });
+            return resultado.Sucesso ? ExtrairEstado(resultado.SaidaPadrao) : null;
+        }
+
+        public void Escrever(string valor)
+        {
+            var (acao, args) = ResolverAcao(valor);
+            var resultado = _processo.Executar("dism.exe", args);
+            if (!resultado.Sucesso)
+                throw FalhaProcesso($"dism.exe {acao} {_feature}", resultado);
+            _log.LogInformation("Feature '{Feature}': {Acao} concluído.", _feature, acao);
+        }
+
+        public void Restaurar(string? valorAnterior)
+        {
+            if (!string.IsNullOrWhiteSpace(valorAnterior))
+                Escrever(valorAnterior);
+        }
+
+        private (string acao, string[] args) ResolverAcao(string valor) =>
+            valor.Equals("Enabled", StringComparison.OrdinalIgnoreCase)
+                ? ("enable", new[] { "/online", "/enable-feature", $"/featurename:{_feature}", "/all", "/norestart" })
+                : ("disable", new[] { "/online", "/disable-feature", $"/featurename:{_feature}", "/norestart" });
+
+        // Extrai o valor da linha "State : Enabled" ou "Estado : Habilitado" (independente do idioma).
+        internal static string? ExtrairEstado(string saida)
+        {
+            foreach (var linha in saida.Split('\n'))
+            {
+                var idx = linha.IndexOf(':', StringComparison.Ordinal);
+                if (idx < 0) continue;
+                var chave = linha[..idx].Trim();
+                if (chave.Equals("State", StringComparison.OrdinalIgnoreCase)
+                    || chave.Equals("Estado", StringComparison.OrdinalIgnoreCase))
+                    return linha[(idx + 1)..].Trim();
+            }
+            return null;
+        }
+    }
 
     /// <summary>Estratégia de um alvo concreto (registro, plano, serviço).</summary>
     private interface IAlvoWindows

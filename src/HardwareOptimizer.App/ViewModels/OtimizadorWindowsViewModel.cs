@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace HardwareOptimizer.App.ViewModels;
 
-public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao, Servicos, Limpeza }
+public enum SubPaginaOtimizador { EfeitosVisuais, ProgramasInstalados, Inicializacao, Servicos, Limpeza, FeaturesWindows }
 
 public partial class OtimizadorWindowsViewModel : ObservableObject
 {
@@ -39,11 +39,13 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
         OnPropertyChanged(nameof(MostrarInicializacao));
         OnPropertyChanged(nameof(MostrarServicos));
         OnPropertyChanged(nameof(MostrarLimpeza));
+        OnPropertyChanged(nameof(MostrarFeatures));
         OnPropertyChanged(nameof(AbaEfeitosAtiva));
         OnPropertyChanged(nameof(AbaProgramasAtiva));
         OnPropertyChanged(nameof(AbaInicializacaoAtiva));
         OnPropertyChanged(nameof(AbaServicosAtiva));
         OnPropertyChanged(nameof(AbaLimpezaAtiva));
+        OnPropertyChanged(nameof(AbaFeaturesAtiva));
 
         if (value == SubPaginaOtimizador.EfeitosVisuais)
             _ = CarregarEfeitosVisuaisAsync();
@@ -51,6 +53,8 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
             _ = CarregarServicosAsync();
         else if (value == SubPaginaOtimizador.Limpeza && !_limpezaEscaneada)
             _ = EscanearLimpezaAsync();
+        else if (value == SubPaginaOtimizador.FeaturesWindows && !_featuresCarregadas)
+            _ = CarregarFeaturesAsync();
     }
 
     public bool MostrarEfeitosVisuais => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
@@ -58,17 +62,20 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
     public bool MostrarInicializacao  => SubPagina == SubPaginaOtimizador.Inicializacao;
     public bool MostrarServicos       => SubPagina == SubPaginaOtimizador.Servicos;
     public bool MostrarLimpeza        => SubPagina == SubPaginaOtimizador.Limpeza;
+    public bool MostrarFeatures       => SubPagina == SubPaginaOtimizador.FeaturesWindows;
     public bool AbaEfeitosAtiva       => SubPagina == SubPaginaOtimizador.EfeitosVisuais;
     public bool AbaProgramasAtiva     => SubPagina == SubPaginaOtimizador.ProgramasInstalados;
     public bool AbaInicializacaoAtiva => SubPagina == SubPaginaOtimizador.Inicializacao;
     public bool AbaServicosAtiva      => SubPagina == SubPaginaOtimizador.Servicos;
     public bool AbaLimpezaAtiva       => SubPagina == SubPaginaOtimizador.Limpeza;
+    public bool AbaFeaturesAtiva      => SubPagina == SubPaginaOtimizador.FeaturesWindows;
 
     [RelayCommand] private void IrParaEfeitosVisuais() => SubPagina = SubPaginaOtimizador.EfeitosVisuais;
     [RelayCommand] private void IrParaProgramas()      => SubPagina = SubPaginaOtimizador.ProgramasInstalados;
     [RelayCommand] private void IrParaInicializacao()  => SubPagina = SubPaginaOtimizador.Inicializacao;
     [RelayCommand] private void IrParaServicos()       => SubPagina = SubPaginaOtimizador.Servicos;
     [RelayCommand] private void IrParaLimpeza()        => SubPagina = SubPaginaOtimizador.Limpeza;
+    [RelayCommand] private void IrParaFeatures()       => SubPagina = SubPaginaOtimizador.FeaturesWindows;
 
     // ── Estado geral ───────────────────────────────────────────────────────
 
@@ -564,6 +571,84 @@ public partial class OtimizadorWindowsViewModel : ObservableObject
             _                => total > 0 ? $"{total} B" : "0 KB",
         };
     }
+
+    // ── Features Windows ──────────────────────────────────────────────────
+
+    private bool _featuresCarregadas;
+
+    [ObservableProperty] private bool _carregandoFeatures;
+
+    public ObservableCollection<FeatureWindowsViewModel> Features { get; } = [];
+
+    [RelayCommand]
+    private async Task CarregarFeaturesAsync()
+    {
+        CarregandoFeatures = true;
+        StatusOtimizador   = "Verificando recursos opcionais do Windows…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "obterfeatures" });
+            if (!resp.Sucesso) { StatusOtimizador = "Falha: " + resp.Erro; return; }
+
+            if (resp.Resultado is not IReadOnlyList<InfoFeatureWindows> lista) return;
+
+            Features.Clear();
+            foreach (var f in lista)
+                Features.Add(new FeatureWindowsViewModel(f, HabilitarFeatureAsync, DesabilitarFeatureAsync));
+
+            _featuresCarregadas = true;
+            StatusOtimizador = "Pronto.";
+        }
+        finally { CarregandoFeatures = false; }
+    }
+
+    private async Task HabilitarFeatureAsync(FeatureWindowsViewModel feature)
+    {
+        Ocupado = true;
+        StatusOtimizador = $"Habilitando '{feature.NomeExibicao}'…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "habilitarfeature",
+                Parametros = JsonSerializer.SerializeToElement(new { nome = feature.Nome }),
+            });
+            if (resp.Sucesso)
+            {
+                feature.Estado = "Enabled";
+                StatusOtimizador = $"'{feature.NomeExibicao}' habilitado. Reinício pode ser necessário.";
+            }
+            else
+            {
+                StatusOtimizador = "Falha: " + resp.Erro;
+            }
+        }
+        finally { Ocupado = false; }
+    }
+
+    private async Task DesabilitarFeatureAsync(FeatureWindowsViewModel feature)
+    {
+        Ocupado = true;
+        StatusOtimizador = $"Desabilitando '{feature.NomeExibicao}'…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc
+            {
+                Metodo     = "desabilitarfeature",
+                Parametros = JsonSerializer.SerializeToElement(new { nome = feature.Nome }),
+            });
+            if (resp.Sucesso)
+            {
+                feature.Estado = "Disabled";
+                StatusOtimizador = $"'{feature.NomeExibicao}' desabilitado.";
+            }
+            else
+            {
+                StatusOtimizador = "Falha: " + resp.Erro;
+            }
+        }
+        finally { Ocupado = false; }
+    }
 }
 
 // ── ViewModels auxiliares ──────────────────────────────────────────────────
@@ -778,4 +863,59 @@ public partial class CategoriaLimpezaViewModel : ObservableObject
     public string TamanhoFormatado { get; }
 
     [ObservableProperty] private bool _selecionada;
+}
+
+public partial class FeatureWindowsViewModel : ObservableObject
+{
+    private readonly Func<FeatureWindowsViewModel, Task> _habilitar;
+    private readonly Func<FeatureWindowsViewModel, Task> _desabilitar;
+
+    public FeatureWindowsViewModel(
+        InfoFeatureWindows modelo,
+        Func<FeatureWindowsViewModel, Task> habilitar,
+        Func<FeatureWindowsViewModel, Task> desabilitar)
+    {
+        Nome         = modelo.Nome;
+        NomeExibicao = modelo.NomeExibicao;
+        Descricao    = modelo.Descricao;
+        _estado      = modelo.Estado;
+        _habilitar   = habilitar;
+        _desabilitar = desabilitar;
+        HabilitarCommand   = new AsyncRelayCommand(() => _habilitar(this));
+        DesabilitarCommand = new AsyncRelayCommand(() => _desabilitar(this));
+    }
+
+    public IAsyncRelayCommand HabilitarCommand   { get; }
+    public IAsyncRelayCommand DesabilitarCommand { get; }
+
+    public string Nome         { get; }
+    public string NomeExibicao { get; }
+    public string Descricao    { get; }
+
+    [ObservableProperty] private string _estado;
+
+    partial void OnEstadoChanged(string value)
+    {
+        OnPropertyChanged(nameof(Habilitada));
+        OnPropertyChanged(nameof(TextoEstado));
+        OnPropertyChanged(nameof(CorEstado));
+        OnPropertyChanged(nameof(CorBotaoHabilitar));
+        OnPropertyChanged(nameof(CorTextoHabilitar));
+        OnPropertyChanged(nameof(CorBotaoDesabilitar));
+        OnPropertyChanged(nameof(CorTextoDesabilitar));
+    }
+
+    public bool   Habilitada          => Estado == "Enabled";
+    public string TextoEstado         => Estado switch
+    {
+        "Enabled"       => "Habilitado",
+        "Disabled"      => "Desabilitado",
+        "EnablePending" => "Pendente (reiniciar)",
+        _               => "Desconhecido",
+    };
+    public string CorEstado           => Estado == "Enabled" ? "#00C870" : "#484865";
+    public string CorBotaoHabilitar   => Habilitada ? "#121212" : "#082A12";
+    public string CorTextoHabilitar   => Habilitada ? "#282840" : "#00C870";
+    public string CorBotaoDesabilitar => Habilitada ? "#2A0808" : "#121212";
+    public string CorTextoDesabilitar => Habilitada ? "#CC3333" : "#282840";
 }

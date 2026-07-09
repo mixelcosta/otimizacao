@@ -81,6 +81,34 @@ Método desconhecido retorna `sucesso: false`.
 | --- | --- | --- | --- |
 | `desinstalarprogramas` | `{ programas: [{ nome, uninstallString?, quietUninstallString? }] }` | `int` (count iniciados) | **Windows** |
 
+### Otimizador Windows — Recursos Opcionais
+
+| Método | Parâmetros | Resultado | Obs |
+| --- | --- | --- | --- |
+| `obterfeatures` | — | `InfoFeatureWindows[]` | **Windows**. Retorna catálogo curado com estado atual de cada recurso. |
+| `habilitarfeature` | `{ nome: string }` | `true` | **Windows**, eleva UAC. `nome` deve estar no catálogo curado. |
+| `desabilitarfeature` | `{ nome: string }` | `true` | **Windows**, eleva UAC. `nome` deve estar no catálogo curado. |
+
+**Catálogo curado de features suportadas:**
+
+| `nome` | `nomeExibicao` |
+| --- | --- |
+| `Microsoft-Windows-Subsystem-Linux` | WSL — Subsistema Linux |
+| `Microsoft-Hyper-V-All` | Hyper-V |
+| `NetFx3` | .NET Framework 3.5 |
+| `Containers-DisposableClientVM` | Windows Sandbox |
+| `TelnetClient` | Cliente Telnet |
+
+**Formato de `InfoFeatureWindows`:**
+
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| `nome` | string | ID DISM da feature |
+| `nomeExibicao` | string | Nome amigável para exibição |
+| `descricao` | string | Descrição da finalidade |
+| `estado` | `"Enabled"` \| `"Disabled"` \| `"EnablePending"` \| `"Desconhecido"` | Estado lido via PowerShell |
+| `habilitada` | bool | `true` quando `estado == "Enabled"` |
+
 ### Drivers (Premium)
 
 | Método | Parâmetros | Resultado | Obs |

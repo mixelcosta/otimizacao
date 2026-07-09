@@ -235,6 +235,66 @@ public sealed class IpcTests
         Assert.True(dto.GuiaBiosIa);
     }
 
+    // ── obterfeatures / habilitarfeature / desabilitarfeature ──────────────
+
+    [Fact]
+    public async Task ObterFeatures_NaoWindows_RetornaFalha()
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("obterfeatures"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("Windows", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task HabilitarFeature_SemNome_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("habilitarfeature"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("nome", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task HabilitarFeature_NomeForaDaLista_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("habilitarfeature", new { nome = "FeatureNaoExistente123" }));
+        Assert.False(r.Sucesso);
+    }
+
+    [Fact]
+    public async Task DesabilitarFeature_SemNome_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("desabilitarfeature"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("nome", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DesabilitarFeature_NomeForaDaLista_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("desabilitarfeature", new { nome = "FeatureNaoExistente123" }));
+        Assert.False(r.Sucesso);
+    }
+
+    [Fact]
+    public async Task Catalogo_inclui_features_windows()
+    {
+        var r = await Roteador().TratarAsync(Req("catalogo"));
+        Assert.True(r.Sucesso);
+        var lista = Assert.IsAssignableFrom<IReadOnlyList<AcaoResumoDto>>(r.Resultado);
+        Assert.Contains(lista, a => a.Id == "FEATURE_WSL");
+        Assert.Contains(lista, a => a.Id == "FEATURE_HYPER_V");
+    }
+
     private sealed class ColetorFake : IColetorInventario
     {
         private readonly Inventario _inventario;

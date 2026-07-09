@@ -17,17 +17,17 @@ A suíte roda no CI (`.github/workflows/ci.yml`) a cada push/PR.
 | Projeto | Cobre | Testes |
 | --- | --- | --- |
 | `HardwareOptimizer.Core.Tests` | Catálogo, validador, perfis, consentimento, sanitização, BIOS, versão, score, `Resultado`, `FaixaNumerica`. | 87 |
-| `HardwareOptimizer.Agent.Tests` | Executor + rollback, comandos, pré-condições, coletor, backup, persistência, sensores, validação/regressão, BIOS+cache, startup scanner, HWID, S.M.A.R.T., serviços Windows. | 151 |
+| `HardwareOptimizer.Agent.Tests` | Executor + rollback, comandos, pré-condições, coletor, backup, persistência, sensores, validação/regressão, BIOS+cache, startup scanner, HWID, S.M.A.R.T., serviços Windows, features Windows. | 173 |
 | `HardwareOptimizer.Cerebro.Tests` | Guard da resposta, matriz, cérebro local/LLM, privacidade, visão (parser, módulo, conferência). | 26 |
 | `HardwareOptimizer.Features.Licensing.Tests` | `IServicoLicenca`, `ServicoLicencaLocal`, gating de funcionalidades, `ValidadorChaveLicenca` (HMAC offline). | 20 |
 | `HardwareOptimizer.Features.Upgrade.Tests` | `ValidadorCompatibilidade`, `CalculadoraGargalo`, `AgenteUpgrade`. | 20 |
 | `HardwareOptimizer.Features.LifeCounter.Tests` | `CalculadoraVidaUtil`, TBW estimado, S.M.A.R.T. | 8 |
 | `HardwareOptimizer.Features.Drivers.Tests` | `AtualizadorDrivers`, `ColetorHwid`, repositório WHQL. | 17 |
-| `HardwareOptimizer.Ipc.Tests` | Roteador (todos os métodos) + loopback real de named pipe. | 24 |
+| `HardwareOptimizer.Ipc.Tests` | Roteador (todos os métodos) + loopback real de named pipe. | 30 |
 | `HardwareOptimizer.App.Tests` | ViewModels da UI (com roteador falso). | 83 |
 | `HardwareOptimizer.WindowsService.Tests` | `DetectorAnomalias`: RAM/CPU spike, janela de histórico, `ExtrairValor`. | 10 |
 
-**Total: 446 testes** (0 falhas).
+**Total: 474 testes** (0 falhas).
 
 ## Rastreabilidade — regras invariantes ↔ testes
 

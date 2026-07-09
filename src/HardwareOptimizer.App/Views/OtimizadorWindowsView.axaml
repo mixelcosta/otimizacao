@@ -80,7 +80,7 @@
       </StackPanel>
 
       <!-- Abas do submenu -->
-      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+      <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
         <Button Grid.Column="0"
                 Classes="aba"
                 Classes.aba-ativa="{Binding AbaEfeitosAtiva}"
@@ -109,7 +109,13 @@
                 Classes="aba"
                 Classes.aba-ativa="{Binding AbaLimpezaAtiva}"
                 Command="{Binding IrParaLimpezaCommand}"
-                Content="Limpeza" />
+                Content="Limpeza"
+                Margin="0,0,24,0" />
+        <Button Grid.Column="5"
+                Classes="aba"
+                Classes.aba-ativa="{Binding AbaFeaturesAtiva}"
+                Command="{Binding IrParaFeaturesCommand}"
+                Content="Recursos Windows" />
       </Grid>
 
       <!-- Linha separadora -->
@@ -716,6 +722,122 @@
             <TextBlock Text="{Binding ResultadoLimpeza}"
                        Foreground="#00C870" FontSize="12" />
           </Border>
+
+        </StackPanel>
+
+        <!-- ════ ABA: RECURSOS WINDOWS (FEATURES) ══════════════════════════ -->
+        <StackPanel IsVisible="{Binding MostrarFeatures}" Spacing="12">
+
+          <!-- Cabeçalho + botão atualizar -->
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="Recursos Opcionais do Windows" Foreground="#E0E0F2"
+                         FontWeight="SemiBold" FontSize="13" />
+              <TextBlock Foreground="#282840" FontSize="11" Margin="0,2,0,0"
+                         Text="Habilite ou desabilite recursos opcionais do Windows — cada operação requer confirmação de administrador (UAC)" />
+            </StackPanel>
+            <Button Grid.Column="1"
+                    Command="{Binding CarregarFeaturesCommand}"
+                    IsEnabled="{Binding !CarregandoFeatures}"
+                    Background="#09091A" Foreground="#484865"
+                    BorderBrush="#1E1E3C" BorderThickness="1"
+                    CornerRadius="8" Padding="12,8"
+                    FontSize="12" Content="↺ Atualizar"
+                    VerticalAlignment="Center" />
+          </Grid>
+
+          <!-- Aviso UAC -->
+          <Border Background="#0A0A1A" CornerRadius="6" Padding="12,8"
+                  BorderBrush="#00C8FF30" BorderThickness="1">
+            <TextBlock Foreground="#484865" FontSize="11" TextWrapping="Wrap"
+                       Text="ℹ  Habilitar ou desabilitar recursos exige privilégios de administrador. Uma janela UAC será exibida para confirmar a operação." />
+          </Border>
+
+          <!-- Indicador de carregamento -->
+          <TextBlock Text="Verificando recursos instalados…"
+                     IsVisible="{Binding CarregandoFeatures}"
+                     Foreground="#484865" FontSize="13"
+                     HorizontalAlignment="Center"
+                     Margin="0,20" />
+
+          <!-- Cabeçalho de colunas -->
+          <Border Background="#06060F" CornerRadius="6" Padding="14,7" Margin="0,0,0,2"
+                  IsVisible="{Binding !CarregandoFeatures}">
+            <Grid ColumnDefinitions="*,160,90,90">
+              <TextBlock Grid.Column="0" Text="RECURSO"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+              <TextBlock Grid.Column="1" Text="ESTADO"
+                         Foreground="#282840" FontSize="10" FontWeight="Bold" LetterSpacing="2" />
+            </Grid>
+          </Border>
+
+          <!-- Lista de features -->
+          <ItemsControl ItemsSource="{Binding Features}"
+                        IsVisible="{Binding !CarregandoFeatures}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:FeatureWindowsViewModel">
+                <Border Background="#06060F" CornerRadius="5" Padding="14,10" Margin="0,1"
+                        BorderBrush="#1E1E3C" BorderThickness="1">
+                  <Grid ColumnDefinitions="*,160,90,90">
+
+                    <!-- Nome + descrição -->
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                      <TextBlock Text="{Binding NomeExibicao}"
+                                 Foreground="#E0E0F2" FontWeight="SemiBold"
+                                 FontSize="12" />
+                      <TextBlock Text="{Binding Descricao}"
+                                 Foreground="#282840" FontSize="10"
+                                 TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <!-- Estado -->
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding TextoEstado}"
+                               Foreground="{Binding CorEstado}"
+                               FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Margin="8,0,4,0" />
+
+                    <!-- Botão HABILITAR -->
+                    <Button Grid.Column="2"
+                            Command="{Binding HabilitarCommand}"
+                            IsEnabled="{Binding !Habilitada}"
+                            Content="HABILITAR"
+                            Background="{Binding CorBotaoHabilitar}"
+                            Foreground="{Binding CorTextoHabilitar}"
+                            BorderBrush="#00C87030"
+                            BorderThickness="1"
+                            FontSize="10" FontWeight="Bold"
+                            CornerRadius="4" Padding="0,6"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="0,0,4,0" />
+
+                    <!-- Botão DESABILITAR -->
+                    <Button Grid.Column="3"
+                            Command="{Binding DesabilitarCommand}"
+                            IsEnabled="{Binding Habilitada}"
+                            Content="DESABILITAR"
+                            Background="{Binding CorBotaoDesabilitar}"
+                            Foreground="{Binding CorTextoDesabilitar}"
+                            BorderBrush="#FF444430"
+                            BorderThickness="1"
+                            FontSize="10" FontWeight="Bold"
+                            CornerRadius="4" Padding="0,6"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            VerticalAlignment="Center" />
+
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <!-- Status de operação -->
+          <TextBlock Text="{Binding StatusOtimizador}" Foreground="#484865" FontSize="12"
+                     Margin="4,4,0,0" />
 
         </StackPanel>
 

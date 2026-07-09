@@ -20,6 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>HardwareOptimizer.App.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\HardwareOptimizer.Ipc\HardwareOptimizer.Ipc.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Features.Licensing\HardwareOptimizer.Features.Licensing.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Features.Upgrade\HardwareOptimizer.Features.Upgrade.csproj" />
