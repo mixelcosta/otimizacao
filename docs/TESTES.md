@@ -23,11 +23,11 @@ A suíte roda no CI (`.github/workflows/ci.yml`) a cada push/PR.
 | `HardwareOptimizer.Features.Upgrade.Tests` | `ValidadorCompatibilidade`, `CalculadoraGargalo`, `AgenteUpgrade`. | 20 |
 | `HardwareOptimizer.Features.LifeCounter.Tests` | `CalculadoraVidaUtil`, TBW estimado, S.M.A.R.T. | 8 |
 | `HardwareOptimizer.Features.Drivers.Tests` | `AtualizadorDrivers`, `ColetorHwid`, repositório WHQL. | 17 |
-| `HardwareOptimizer.Ipc.Tests` | Roteador (todos os métodos) + loopback real de named pipe. | 30 |
+| `HardwareOptimizer.Ipc.Tests` | Roteador (todos os métodos) + loopback real de named pipe + ambiente simulado end-to-end. | 53 |
 | `HardwareOptimizer.App.Tests` | ViewModels da UI (com roteador falso). | 83 |
 | `HardwareOptimizer.WindowsService.Tests` | `DetectorAnomalias`: RAM/CPU spike, janela de histórico, `ExtrairValor`. | 10 |
 
-**Total: 474 testes** (0 falhas).
+**Total: 497 testes** (0 falhas).
 
 ## Rastreabilidade — regras invariantes ↔ testes
 
@@ -51,6 +51,12 @@ A suíte roda no CI (`.github/workflows/ci.yml`) a cada push/PR.
 | Chave de outra máquina não ativa Premium | `LicencaGateTests.ValidadorChave_chave_de_outra_maquina_e_invalida` |
 | CPU spike detectado após janela mínima | `DetectorAnomaliasTests.Cpu_spike_completo_*` |
 | RAM alta gera alerta imediato | `DetectorAnomaliasTests.Ram_acima_do_limiar_*` |
+| Serviço crítico do SO não pode ser parado | `SimulacaoAmbienteTests` (via pipe) + `CenariosAvancadosTests.Servicos_pararservico_critico_*` |
+| Modo de início inválido é rejeitado antes do PowerShell | `CenariosAvancadosTests.Servicos_alterarmododeinicio_modo_invalido_*` |
+| Features Windows retornam 5 itens curados com campos obrigatórios | `SimulacaoAmbienteTests.Features_Windows_via_pipe_*` |
+| Catálogo cobre ≥ 5 categorias distintas | `SimulacaoAmbienteTests.Catalogo_via_pipe_abrange_pelo_menos_5_categorias_*` |
+| Servidor de pipe mantém-se ativo entre múltiplas requisições | `SimulacaoAmbienteTests.Pipe_responde_5_requisicoes_*` |
+| Nome de perfil personalizado aparece no relatório | `SimulacaoAmbienteTests.Aprovacao_com_nome_perfil_*` |
 
 ## Tipos de teste
 
