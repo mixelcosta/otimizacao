@@ -35,6 +35,7 @@ IA**.
 | [API_IPC.md](API_IPC.md) | Protocolo IPC — todos os métodos, parâmetros e exemplos. |
 | [MODULOS_PREMIUM.md](MODULOS_PREMIUM.md) | Módulos Premium: Licença, UPGRADE, Vida Útil, Drivers, Guia BIOS IA. |
 | [arquitetura_otimizador.json](arquitetura_otimizador.json) | Documento de arquitetura original (referência). |
+| [REFERENCIA_WINUTIL.md](REFERENCIA_WINUTIL.md) | Engenharia reversa do WinUtil (Chris Titus Tech) e comparação com a arquitetura do Otimize Builder. |
 
 ## 📋 Projeto
 
