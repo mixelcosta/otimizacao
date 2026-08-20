@@ -1,9 +1,9 @@
 # Brainstorming Session Results
 
-**Session Date:** 2026-08-07 (parte 1) · 2026-08-18 (parte 2) · 2026-08-19 (parte 3, iniciada e pausada)
+**Session Date:** 2026-08-07 (parte 1) · 2026-08-18 (parte 2) · 2026-08-19–20 (parte 3, em andamento)
 **Facilitator:** Business Analyst Mary 📊
 **Participant:** Michel Filipe
-**Status:** ⏸️ **SESSÃO PAUSADA — Parte 3 de 3, em andamento.** Retomar dentro da Técnica 3 (Assumption Reversal), na primeira premissa. Ver [Ponto exato de parada](#ponto-exato-de-parada) abaixo.
+**Status:** ⏸️ **SESSÃO PAUSADA — Parte 3, em andamento.** Técnica 3 (Assumption Reversal) e Técnica 4 (One Feature Only) concluídas. Técnica bônus How Might We em andamento (2 perguntas fechadas). Retomar dentro de How Might We — ver [Ponto exato de parada](#ponto-exato-de-parada) abaixo.
 **Memlog desta parte:** `docs/brainstorming/brainstorm-upgrade-custo-beneficio-2026-08-19/.memlog.md`
 
 ---
@@ -18,11 +18,11 @@
 
 **Premissa de negócio declarada:** monetização por **parceria com lojas**, com receita vinda das vendas de hardware recomendadas pelo app.
 
-**Techniques Planned:** Role Playing (#16) → Morphological Analysis (#12) → Assumption Reversal (#15) → Resource Constraints (#18).
+**Techniques Planned:** Role Playing (#16) → Morphological Analysis (#12) → Assumption Reversal (#15) → Resource Constraints (#18) *(substituída — ver nota)*.
 
-**Techniques Completed:** Role Playing ✅ · Morphological Analysis ✅ · Assumption Reversal 🔄 **em andamento** (iniciada, 0 de 6 premissas respondidas)
+**Techniques Completed:** Role Playing ✅ · Morphological Analysis ✅ · Assumption Reversal ✅ · One Feature Only ✅ *(substitui Resource Constraints, ausente do catálogo atual)* · How Might We 🔄 **em andamento** (2 perguntas fechadas, técnica aberta por natureza)
 
-**Total Ideas Generated:** 38 achados registrados.
+**Total Ideas Generated:** 38 achados na Parte 2 + 22 novos registros nesta parte (ideias, insights e decisões da Técnica 3, Técnica 4 e How Might We).
 
 ### Key Themes Identified
 
@@ -31,6 +31,10 @@
 - **Gamer e profissional são a mesma pessoa** em momentos diferentes do dia.
 - A honestidade do produto se prova **recomendando o mais barato primeiro**, não declarando boa intenção.
 - O app decide por **fato coletado**, nunca por diagnóstico perguntado.
+- ⭐ **"100% do hardware" nunca foi um pedido técnico** — é o jeito errado de nomear "otimização de software". Esgotar o grátis antes do pago já é a arquitetura da T3 resolvida.
+- ⭐ **Diagnóstico não pertence a nenhuma trilha** — é infraestrutura compartilhada entre otimização de SO e upgrade, o que sustenta os dois produtos ao mesmo tempo.
+- **O núcleo mínimo do produto é manter drivers, softwares e BIOS atualizados** — sozinho, já ataca a causa-raiz da dor #1 (BSOD/travamento) das três personas.
+- **Monetização é dupla, não única**: comissão de loja parceira (fechada: ML, Amazon, Kabum etc.) + assinatura mensal de módulos premium — a segunda cobre exatamente os casos (ex.: notebook com RAM soldada) onde a primeira não se aplica.
 
 ---
 
@@ -193,30 +197,132 @@ Análise do artefato `otimizacao-0.1.0` (182 arquivos, ~27.400 linhas, 160 teste
 
 ---
 
-### Assumption Reversal (#15) — 🔄 em andamento
+### Assumption Reversal (#15) — ✅ concluída
 
 **Description:** Listar as premissas embutidas no problema, inverter cada uma ao seu oposto, e reconstruir uma solução sobre a base invertida.
 
 **Alvo:** resolver a T3 (descompasso entre demanda declarada e dor real) e estressar as demais premissas candidatas.
 
-**Mecânica combinada:** a facilitadora apresenta uma premissa por vez; o participante inverte e desenvolve as implicações. Uma pergunta por mensagem, sem menus.
+**As 6 premissas invertidas:**
 
-**Fila de premissas (ordem de trabalho):**
+**1. "O usuário quer usar 100% do hardware."** *(alvo direto da T3)*
 
-1. ⏳ **"O usuário quer usar 100% do hardware."** *(alvo direto da T3)* — **pergunta feita, resposta pendente**
-2. ⬜ "O app deve sugerir upgrade para toda máquina que não seja a melhor existente"
-3. ⬜ "Otimização de SO é o produto; upgrade é o extra"
-4. ⬜ "O usuário precisa aprovar cada alteração" *(decisão arquitetural — inverter apenas como exercício)*
-5. ⬜ "Vendedor conceituado é sinônimo de confiança"
-6. ⬜ "O app deve funcionar sozinho, sem comunidade ou dados de outros usuários"
+**Ideas Generated:**
 
-**Pergunta em aberto no ponto de parada (reproduzir literalmente ao retomar):**
+36. Invertida, a frase não é sobre saturar o hardware — é sobre máquina rápida: menos lentidão na inicialização, abertura ágil de programas, hardware trabalhando leve.
+37. O nome certo para o que o usuário pede é **"otimização de software"**, não "desempenho máximo do hardware".
+38. Upgrade de peça só faz sentido, na visão invertida, em 3 casos concretos: **mais RAM, mais clock/processamento (CPU), troca de HD físico por SSD**.
+39. Os três casos convergem na mesma dor: RAM carrega softwares com mais agilidade; clock maior sustenta processos simultâneos; SSD verifica arquivos mais rápido que mídia física — juntos, "ganho expressivo em velocidade", não uso pleno do hardware.
+40. A ordem otimizar-antes-de-upgrade não é regra do app — é **decisão do usuário**. O app sempre apresenta as duas possibilidades (grátis e paga) e é o usuário quem decide o quanto tenta de graça antes de partir para peça.
 
-> Premissa 1: **"O usuário quer usar 100% do hardware."** Inverte. Se essa frase fosse **falsa** — se o usuário, no fundo, não quisesse usar 100% do hardware nunca — o que ele estaria pedindo de verdade quando diz "quero desempenho máximo"?
+**Insights Discovered:**
 
-**Ideas Generated:** nenhuma ainda — sessão pausada antes da primeira resposta do participante.
+- ⭐ **T3 RESOLVIDA.** "Usar 100% do hardware" vira "aproveitar 100% do que a máquina já tem, via software, sem gastar" (prova: %+FPS no jogo nomeado) — e só depois disso esgotado entra a sugestão de upgrade de peça, com sua própria prova (ganho estimado da peça nova). A palavra "100%" nunca foi sobre saturar fisicamente o hardware; era sobre esgotar o grátis antes do pago. Não existe contradição entre pedido literal e dor real: o app nunca escolhe entre atender um ou outro — apresenta as duas trilhas e o usuário decide a ordem, coerente com P5 (app recomenda, usuário aprova).
 
-**Insights Discovered:** nenhum ainda.
+**2. "O app deve sugerir upgrade para toda máquina que não seja a melhor existente."**
+
+**Ideas Generated:**
+
+41. O teto de upgrade não é "a melhor máquina do mercado" — é o **teto de compatibilidade da própria máquina**: capacidade máxima de RAM já atingida, melhor CPU aceito por aquela placa-mãe, melhor GPU já lançada, fonte mais potente compatível, melhor refrigeração possível, melhor SSD de leitura/gravação. Sugerir além disso é sugerir o que não instala.
+42. Mesmo no teto de capacidade, ainda há upgrade: um **eixo de qualidade** em vez de potência bruta — RAM de menor latência/maior frequência na mesma capacidade, GPU considerada "melhor" por rodar mais fria (não por ser mais forte).
+
+**Insights Discovered:**
+
+- O catálogo de upgrade tem uma segunda dimensão além de "mais forte": **mais eficiente, mais silenciosa, mais fria**. O app dificilmente fica sem nada pra oferecer, mesmo no teto.
+
+**3. "Otimização de SO é o produto; upgrade é o extra."**
+
+**Ideas Generated:**
+
+43. Se upgrade fosse o produto principal, a monetização não mudaria — **mudaria a tela** de abertura do app.
+44. ⭐ Monetização detalhada pela primeira vez nesta sessão: **comissão via link direto para lojas parceiras + assinatura mensal para liberar módulos premium do próprio app**. Duas fontes de receita, não uma.
+
+**Insights Discovered:**
+
+- **P3 se dissolve como a T3.** Mesmo no mundo invertido (upgrade como produto principal), a leitura completa do hardware tem que vir antes de qualquer indicação de peça — senão o app recomenda algo incompatível. Diagnóstico não é "o produto" nem "o extra": é **infraestrutura compartilhada** que sustenta as duas trilhas. A ordem de tela muda; o que roda primeiro no motor, não.
+
+**4. "O usuário precisa aprovar cada alteração."** *(decisão arquitetural travada e testada — inversão só como exercício, não candidata a mudança real)*
+
+**Ideas Generated:**
+
+45. As únicas categorias que o participante aceitaria sem aprovação prévia: **limpeza de arquivos temporários e atualizações do Windows**.
+
+**Insights Discovered:**
+
+- O critério é **risco zero**: só dispensaria aprovação o que não traz nenhum prejuízo possível ao usuário. Driver e configuração de energia não passam nesse crivo, porque podem gerar instabilidade — reforça por que a regra de aprovação universal existe para (quase) tudo o mais.
+
+**5. "Vendedor conceituado é sinônimo de confiança."**
+
+**Ideas Generated:**
+
+46. Reputação da loja não basta: **preço absurdamente baixo, mesmo em vendedor conceituado, quebra a confiança** — o sinal de golpe/produto falsificado vem do preço fora da curva, não do nome da loja.
+47. ⭐ **Lista de lojas parceiras nomeada pela primeira vez:** Mercado Livre, Amazon, Kabum etc. — vitrine fechada, não marketplace aberto.
+
+**Insights Discovered:**
+
+- P5 resolvida por **escopo fechado**: o risco de "vendedor conceituado com preço suspeito" fica restrito a essa lista pequena e pré-acordada de parceiras, não a qualquer seller de um marketplace aberto.
+
+**6. "O app deve funcionar sozinho, sem comunidade ou dados de outros usuários."**
+
+**Ideas Generated:**
+
+48. Dado útil de outros usuários seria o **resultado real das recomendações de upgrade e dos ajustes de BIOS** — prova social agregada, não só a promessa do fabricante.
+
+**Insights Discovered:**
+
+- ⭐ P6 destrava a pergunta crítica em aberto desde a Técnica 2: sem dado de outros usuários, o app não tem parâmetro de comparação nenhum. **Dado agregado e anônimo pode virar a métrica de prova da Combinação C** (+X% no jogo XPTO) sem depender de benchmark manual do usuário sozinho.
+
+---
+
+### One Feature Only — ✅ concluída *(substitui "Resource Constraints #18", ausente do catálogo de técnicas atual; escolhida em conjunto com o participante por ser a que mais força priorização direta)*
+
+**Description:** O módulo só pode manter uma única capacidade — tudo o mais é cortado — e essa capacidade precisa se sustentar sozinha.
+
+**Ideas Generated:**
+
+49. Candidatas levantadas: **verificação de drivers** e **otimização de efeitos visuais do Windows** — nenhuma tinha aparecido antes na sessão.
+50. Escolhida: **verificação de drivers**. Escopo expandido em seguida para **manter todos os drivers e softwares do computador atualizados**, não só drivers isolados.
+51. Ordem de prioridade revelada: depois desse núcleo, a próxima coisa que o participante lutaria para trazer de volta é o **diagnóstico de manutenção** (Combinação A).
+
+**Insights Discovered:**
+
+- ⭐ **A feature única passa no teste de dor.** Bug de driver de vídeo ou BIOS desatualizada podem ser causa-raiz de BSOD/travamento — manter drivers, softwares e BIOS atualizados sozinho já ataca a dor #1 das três personas. Não é feature decorativa: é o núcleo mínimo defensável do produto.
+- **Ranking de prioridade emergiu sem ser perguntado diretamente:** 1º núcleo de atualização, 2º diagnóstico de manutenção — insumo direto para a convergência final.
+
+---
+
+### How Might We — 🔄 em andamento
+
+**Description:** Reformular o problema como perguntas de oportunidade ("Como poderíamos...") antes de ideiar em cima delas.
+
+**Alvo:** os dois buracos abertos em "Areas for Further Exploration" — descoberta da vitrine e conversão do notebook pós-corte de periféricos.
+
+**HMW#1 — Como poderíamos fazer o usuário descobrir a vitrine sem que pareça propaganda? ✅ fechada**
+
+**Ideas Generated:**
+
+52. Proposta inicial: uma frase-convite ("Melhore aqui seu desempenho, FPS, etc...") dentro do relatório de resultado do diagnóstico.
+53. ⚠️ Essa proposta esbarrou na decisão 33 (vitrine nunca no fluxo de diagnóstico ou tela de resultado) — tensão levantada e resolvida na mesma rodada.
+54. **Resolução:** o relatório mostra **fato numérico neutro** para os dois caminhos — `Otimização do S.O. = X%` / `Upgrade hardware = X%` — sem preço, loja ou CTA de venda. O clique em "Upgrade hardware" é o que leva à vitrine (preço/loja), fora do relatório.
+
+**Insights Discovered:**
+
+- **Dado no relatório, venda na vitrine** — a separação da decisão 33 sobrevive intacta porque a linha é fato, não anúncio.
+
+**HMW#2 — Como dar ao notebook um caminho de conversão, já que a decisão 28 cortou periféricos e a Carla só converte de novo se estiver fazendo live? ✅ fechada**
+
+**Ideas Generated:**
+
+55. Caminho combina peça (**troca de SSD, aumento de RAM**) com otimização de SO (ajuste de efeitos visuais, limpeza de disco, atualização de drivers/softwares) — o que sobra do notebook depois do corte de periféricos é exatamente RAM e SSD.
+56. Caso limite testado: notebook com **RAM soldada**, sem slot pra trocar — resta só o pacote de otimização via SO, sem peça nenhuma.
+
+**Insights Discovered:**
+
+- ⭐ **A segunda perna do negócio cobre o buraco da primeira.** Notebook com RAM soldada perde a comissão de peça, mas não perde monetização — é exatamente o caso que a assinatura mensal de módulos premium cobre, já que ela não depende de venda de hardware nenhuma.
+
+**Notable Connections:**
+
+- Achado 44 (assinatura mensal) + achado 56 (RAM soldada) = a monetização dupla não era redundância, era **cobertura complementar** para o segmento que a comissão de peça não alcança.
 
 ---
 
@@ -233,11 +339,10 @@ Análise do artefato `otimizacao-0.1.0` (182 arquivos, ~27.400 linhas, 160 teste
 *Resolução:* achado 15 — a Carla faz live e tira renda da máquina. Tem justificativa de investimento, dor pública de estabilidade e é canal de aquisição.
 *Nota:* a decisão 28 (cortar periféricos) reduz parte dessa resolução. Vale revisitar se o notebook voltar a ficar sem caminho de conversão.
 
-### T3 — Descompasso entre demanda declarada e dor real ⏳ **EM ABERTO**
+### ~~T3 — Descompasso entre demanda declarada e dor real~~ ✅ **RESOLVIDA**
 
-O usuário pede "100% do hardware" e descreve BSOD e superaquecimento. Atender ao pedido literal entrega a coisa errada; atender à dor contraria o pedido — e o teste com o Rafael sugere que isso gera **alívio**.
-
-**Alvo da Técnica 3 — em trabalho.** A primeira pergunta de inversão já foi colocada (ver seção da Técnica 3 acima); resposta ainda não recebida.
+*Era:* o usuário pede "100% do hardware" e descreve BSOD e superaquecimento. Atender ao pedido literal entrega a coisa errada; atender à dor contraria o pedido.
+*Resolução:* Assumption Reversal, Premissa 1 — "usar 100% do hardware" nunca foi um pedido técnico de saturação; é o jeito errado de nomear "otimização de software". O app nunca precisa escolher entre pedido e dor: apresenta as duas trilhas (otimização grátis primeiro, upgrade pago depois, cada uma com sua prova) e o usuário decide a ordem. Não há mais contradição — pedido e dor apontam pro mesmo lugar.
 
 ---
 
@@ -245,42 +350,39 @@ O usuário pede "100% do hardware" e descreve BSOD e superaquecimento. Atender a
 
 ### Ponto exato de parada
 
-**Dentro da Técnica 3 — Assumption Reversal (#15), na Premissa 1 de 6.** A facilitadora já fez a primeira pergunta de inversão (reproduzida na íntegra na seção "Assumption Reversal (#15) — 🔄 em andamento" acima). **Pergunta pendente de resposta do participante** — retomar reapresentando essa pergunta antes de prosseguir. Nenhuma ideia foi gerada ainda nesta técnica.
+**Dentro da técnica bônus How Might We, logo após o fechamento da HMW#2** (conversão do notebook). Nenhuma pergunta pendente de resposta — a sessão foi pausada num ponto de fechamento limpo, a pedido do participante.
 
-### Premissas candidatas a inversão
+**Ao retomar, oferecer três caminhos** (não decidir sozinha):
+1. Mais rodadas de How Might We — outros HMWs possíveis: descoberta da vitrine para quem *não* lê o relatório, persona Bruno (entusiasta) ainda não explorada, divulgação legal (CDC) da comissão.
+2. Seguir para **convergência/síntese** (fechar a sessão de geração e organizar tudo em conclusões).
+3. Escolher uma técnica nova do catálogo para abrir mais uma frente.
 
-Ordem de trabalho definida (a 1ª já está em curso, ver acima):
+### Roteiro original — status final
 
-- 1️⃣ "O usuário quer usar 100% do hardware" (T3) — **em curso, pergunta feita**
-- 2️⃣ "O app deve sugerir upgrade para toda máquina que não seja a melhor existente"
-- 3️⃣ "Otimização de SO é o produto; upgrade é o extra"
-- 4️⃣ "O usuário precisa aprovar cada alteração" *(decisão arquitetural — inverter apenas como exercício)*
-- 5️⃣ "Vendedor conceituado é sinônimo de confiança"
-- 6️⃣ "O app deve funcionar sozinho, sem comunidade ou dados de outros usuários"
-
-### Roteiro restante
-
-| Etapa | Técnica | Objetivo |
+| Etapa | Técnica | Resultado |
 | --- | --- | --- |
-| 3 | Assumption Reversal (#15) | 🔄 Em andamento — estressar as 6 premissas (1 de 6 em curso) e resolver T3 |
-| 4 | Resource Constraints (#18) | Convergir e priorizar sob restrição forçada |
+| 3 | Assumption Reversal (#15) | ✅ Concluída — 6 de 6 premissas invertidas, **T3 resolvida** |
+| 4 | Resource Constraints (#18) | ✅ Concluída como **One Feature Only** (técnica substituta, catálogo atual não tem "Resource Constraints") — núcleo mínimo definido: atualização de drivers/softwares/BIOS |
+| bônus | How Might We | 🔄 Em andamento — 2 perguntas fechadas (descoberta da vitrine, conversão do notebook) |
 
 ### Preparação sugerida (opcional)
 
-- A Técnica 3 rende mais com **energia de contestar** do que de concordar. Vale retomar descansado.
-- Trazer, se houver, qualquer material sobre as parcerias com lojas: modelo de comissão, lojas-alvo, conversas em andamento.
+- How Might We e convergência rendem mais com **energia de organizar e decidir** do que de contestar — inverso da Técnica 3. Vale retomar num momento de cabeça fria.
+- Trazer, se houver, qualquer material sobre as parcerias com lojas (ML, Amazon, Kabum): modelo de comissão exato, e sobre a assinatura mensal: faixas de preço e lista de módulos premium cogitados.
 
 ---
 
 ## Questions That Emerged
 
-- Como medir "+X% no jogo XPTO" sem instalar nada invasivo e sem depender de benchmark manual do usuário? **(crítica — única métrica de prova restante da Combinação C)**
-- **Como o usuário descobre que a aba de vitrine existe?** Vitrine que ninguém visita não monetiza.
+- ✅ **Como medir "+X% no jogo XPTO" sem benchmark manual?** Apontamento de resposta na Premissa 6: dado agregado e anônimo de outros usuários pode virar a métrica de prova, substituindo o benchmark individual. Falta detalhar o mecanismo de coleta.
+- ✅ **Como o usuário descobre a vitrine?** Resolvida na HMW#1 — linha factual de ganho estimado (`Otimização do S.O. = X%` / `Upgrade hardware = X%`) no relatório de resultado, sem CTA de venda.
+- ✅ **Como o app trata o notebook pós-corte de periféricos (decisão 28)?** Resolvida na HMW#2 — RAM/SSD como peça quando há slot; assinatura mensal de módulos premium quando não há (RAM soldada).
 - Sem armazenamento no inventário (L4), o app pode recomendar SSD — provavelmente a melhor recomendação de custo-benefício disponível?
 - O que autoriza o app a estimar ganho de uma peça que o usuário não possui? Que base de dados sustenta isso, e como ela envelhece a cada driver novo?
 - Um app que recomenda hardware e ganha comissão precisa de que divulgação no Brasil (CDC, publicidade velada)?
 - Se a dor real é instabilidade e temperatura, cooler e fonte deveriam vir antes de GPU e CPU na vitrine?
-- Como o app trata o notebook depois do corte de periféricos (decisão 28)?
+- **Nova:** o mecanismo de dado agregado entre usuários (Premissa 6) exige coleta de telemetria — que consentimento e que dado exatamente é enviado, dado que hoje a sanitização antes da nuvem já é regra do projeto?
+- **Nova:** a assinatura mensal de módulos premium (decisão 44) precisa de definição — quais módulos ficam atrás do paywall, e isso não entra em tensão com a filosofia de honestidade já validada (achado 8)?
 
 ---
 
@@ -295,18 +397,18 @@ Ordem de trabalho definida (a 1ª já está em curso, ver acima):
 
 ### Areas for Further Exploration
 
-- **Persona entusiasta (Bruno):** dispensada nesta sessão. Define o teto técnico e é o crítico público mais provável.
-- **Métrica de ganho estimado:** é o elo mais fraco da Combinação C.
-- **Descoberta da vitrine:** problema de produto ainda não atacado.
-- **Notebook pós-corte de periféricos:** caminho de conversão ficou frágil.
+- **Persona entusiasta (Bruno):** ainda dispensada. Define o teto técnico e é o crítico público mais provável — candidata a HMW ou Role Playing futuro.
+- **Mecanismo de dado agregado entre usuários:** a Premissa 6 abriu a ideia, mas telemetria/consentimento/formato ainda não foram desenhados.
+- **Definição dos módulos premium da assinatura:** o que fica atrás do paywall, sem contradizer a honestidade já validada como princípio do produto.
+- **Divulgação legal da comissão (CDC):** segue sem resposta.
 
 ### Recommended Follow-up Techniques
 
-- Após a Técnica 4, considerar **`*create-project-brief`** para consolidar o módulo, ou **`*agent pm`** para transformar o resultado em PRD.
+- Com T1, T2 e T3 resolvidas e o núcleo mínimo (One Feature Only) definido, considerar **`*create-project-brief`** para consolidar o módulo, ou **`*agent pm`** para transformar o resultado em PRD assim que a convergência final for feita.
 
 ### Next Session Planning
 
-- **Suggested topics:** Técnicas 3 e 4 completas; resolução da T3; priorização final sob restrição.
+- **Suggested topics:** fechar How Might We (ou seguir direto pra convergência); sintetizar tudo em prioridades acionáveis; decidir entre PRD ou project brief como próximo artefato.
 - **Recommended timeframe:** próxima sessão, sem necessidade de recontextualização além deste documento.
 - **Preparation needed:** nenhuma obrigatória.
 
