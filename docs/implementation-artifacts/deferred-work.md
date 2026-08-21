@@ -37,3 +37,7 @@ Itens encontrados durante o desenvolvimento que não pertencem à história atua
 - source_spec: `docs/implementation-artifacts/spec-1-2-driver-scan-aprovacao-rollback.md`
   summary: nenhuma operação longa desta história (download de até 5 min, chamadas de `pnputil` elevadas) tem afordance de cancelamento na UI.
   evidence: achado do Edge Case Hunter. Cancelamento de UI é trabalho maior, fora do escopo desta história.
+
+- source_spec: `docs/implementation-artifacts/spec-1-2-driver-scan-aprovacao-rollback.md`
+  summary: `RoteadorIpc.CriarOrquestradorAtualizacao()` é reconstruído do zero em toda chamada IPC (`varrerdrivers`, `aprovaratualizacaodriver`, `reverteratualizacaodriver`), incluindo `ColetorHwid` e `RepositorioWhqlEstatico` (que re-desserializa o `whql_catalog.json` embarcado) mesmo em `reverteratualizacaodriver`, que não usa nenhum dos dois.
+  evidence: achado da revisão independente (`bmad-code-review`) pós-commit da Story 1.2. Custo hoje é baixo (catálogo pequeno), mas cresce se o catálogo crescer (ver item já deferido sobre curadoria do catálogo). Corrigir exigiria tornar `IProvedorFonteOficial` opcional/lazy no construtor de `AtualizadorDrivers` pra `reverteratualizacaodriver` não pagar esse custo — decidido não fazer sob pressão de tempo, pra não arriscar um refactor apressado no meio da revisão.

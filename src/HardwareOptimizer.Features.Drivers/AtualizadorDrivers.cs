@@ -145,10 +145,15 @@ public sealed class AtualizadorDrivers
         try
         {
             // Ver nota em InstalarAsync: Verb="runas" exige UseShellExecute=true.
+            // /subdirs é obrigatório aqui: ExportarBackupAsync usa "pnputil
+            // /export-driver *", que grava cada pacote em uma subpasta numerada
+            // própria (ex. backup\0\oem12.inf, backup\1\oem13.inf) — sem /subdirs
+            // o glob "*.inf" na raiz do backup não encontra nada e o pnputil
+            // retorna sucesso sem restaurar driver nenhum.
             var processo = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = "pnputil.exe",
-                Arguments = $"/add-driver \"{Path.Combine(caminhoBackup, "*.inf")}\" /install",
+                Arguments = $"/add-driver \"{Path.Combine(caminhoBackup, "*.inf")}\" /subdirs /install",
                 UseShellExecute = true,
                 Verb = "runas",
             };

@@ -427,21 +427,10 @@ public sealed class RoteadorIpc : IRoteadorIpc
             return RespostaIpc.Falha(req.Id, "Parâmetro 'urlDownload' obrigatório.");
 
         var url = u.GetString()!;
-        var orquestrador = CriarOrquestradorAtualizacao();
 
-        // Backup obrigatório antes de qualquer instalação — sem backup bem-sucedido,
-        // a instalação não prossegue (Boundaries §Always).
-        var backup = await orquestrador.BackupAsync(ct).ConfigureAwait(false);
-        if (!backup.Sucesso)
-        {
-            return RespostaIpc.Ok(req.Id, new ResultadoAprovacaoDriverDto
-            {
-                Sucesso = false,
-                Erro = "Backup falhou: " + backup.Erro,
-                CaminhoBackup = null,
-            });
-        }
-
+        // Validação barata e determinística (extensão do arquivo) roda ANTES do
+        // backup, que dispara um pnputil /export-driver real — evita pagar o
+        // custo de um backup completo numa requisição já fadada a falhar.
         string ext;
         try { ext = Path.GetExtension(new Uri(url).LocalPath).ToLowerInvariant(); }
         catch
@@ -457,7 +446,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 {
                     Sucesso = false,
                     Erro = "URL de download inválida — não foi possível determinar o formato do arquivo.",
-                    CaminhoBackup = backup.CaminhoBackup,
+                    CaminhoBackup = null,
                 });
             }
         }
@@ -468,7 +457,24 @@ public sealed class RoteadorIpc : IRoteadorIpc
             {
                 Sucesso = false,
                 Erro = $"Formato '{ext}' não suportado para instalação via pnputil.",
-                CaminhoBackup = backup.CaminhoBackup,
+                CaminhoBackup = null,
+            });
+        }
+
+        var orquestrador = CriarOrquestradorAtualizacao();
+
+        // Backup obrigatório antes de qualquer instalação — sem backup bem-sucedido,
+        // a instalação não prossegue (Boundaries §Always). Só chega aqui depois da
+        // validação barata de extensão, pra não pagar um pnputil /export-driver
+        // completo numa requisição já fadada a falhar.
+        var backup = await orquestrador.BackupAsync(ct).ConfigureAwait(false);
+        if (!backup.Sucesso)
+        {
+            return RespostaIpc.Ok(req.Id, new ResultadoAprovacaoDriverDto
+            {
+                Sucesso = false,
+                Erro = "Backup falhou: " + backup.Erro,
+                CaminhoBackup = null,
             });
         }
 
