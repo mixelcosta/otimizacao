@@ -9,11 +9,11 @@ public class AtualizadorDriversTests
 {
     private static AtualizadorDrivers Criar(
         IReadOnlyList<InfoDriver> dispositivos,
-        IRepositorioDriversWhql repo)
+        IProvedorFonteOficial provedor)
     {
         return new AtualizadorDrivers(
             new ColetorHwidFake(dispositivos),
-            repo,
+            provedor,
             NullLogger<AtualizadorDrivers>.Instance);
     }
 
@@ -22,7 +22,7 @@ public class AtualizadorDriversTests
     {
         var atualizador = Criar(
             [new InfoDriver { HardwareId = "PCI\\VEN_FFFF", Descricao = "Genérico", Status = StatusDriver.Desconhecido }],
-            new RepositorioFake([]));
+            new ProvedorFake([]));
 
         var resultado = await atualizador.VarrerAsync();
 
@@ -33,7 +33,7 @@ public class AtualizadorDriversTests
     [Fact]
     public async Task VarrerAsync_VersaoNovaDisponivel_RetornaAtualizacaoDisponivel()
     {
-        var repo = new RepositorioFake([
+        var repo = new ProvedorFake([
             new InfoDriver
             {
                 HardwareId = "PCI\\VEN_10DE",
@@ -58,7 +58,7 @@ public class AtualizadorDriversTests
     [Fact]
     public async Task VarrerAsync_MesmaVersao_RetornaAtualizado()
     {
-        var repo = new RepositorioFake([
+        var repo = new ProvedorFake([
             new InfoDriver
             {
                 HardwareId = "PCI\\VEN_10DE",
@@ -81,7 +81,7 @@ public class AtualizadorDriversTests
     [Fact]
     public async Task VarrerAsync_VersaoDisponivelNula_RetornaAtualizado()
     {
-        var repo = new RepositorioFake([
+        var repo = new ProvedorFake([
             new InfoDriver
             {
                 HardwareId = "USB\\VID_046D",
@@ -109,7 +109,7 @@ public class AtualizadorDriversTests
                 new InfoDriver { HardwareId = "USB\\VID_045E", Descricao = "Microsoft KB", Status = StatusDriver.Desconhecido },
                 new InfoDriver { HardwareId = "PCI\\VEN_10DE", Descricao = "NVIDIA", Status = StatusDriver.Desconhecido },
             ],
-            new RepositorioFake([]));
+            new ProvedorFake([]));
 
         var resultado = await atualizador.VarrerAsync();
 
@@ -119,7 +119,7 @@ public class AtualizadorDriversTests
     [Fact]
     public async Task VarrerAsync_ListaVazia_RetornaListaVazia()
     {
-        var atualizador = Criar([], new RepositorioFake([]));
+        var atualizador = Criar([], new ProvedorFake([]));
 
         var resultado = await atualizador.VarrerAsync();
 
@@ -131,7 +131,7 @@ public class AtualizadorDriversTests
     {
         var atualizador = Criar(
             [new InfoDriver { HardwareId = "PCI\\VEN_10DE", Descricao = "NVIDIA", Status = StatusDriver.Desconhecido }],
-            new RepositorioComErro());
+            new ProvedorComErro());
 
         var resultado = await atualizador.VarrerAsync();
 
@@ -139,24 +139,45 @@ public class AtualizadorDriversTests
         Assert.Equal(StatusDriver.Desconhecido, resultado[0].Status);
     }
 
+    [Fact]
+    public async Task RestaurarBackupAsync_PastaDeBackupNaoExiste_RetornaFalhaClara()
+    {
+        var atualizador = Criar([], new ProvedorFake([]));
+        var caminhoInexistente = Path.Combine(
+            Path.GetTempPath(), "hwopt-backup-teste-" + Guid.NewGuid().ToString("N"));
+
+        var resultado = await atualizador.RestaurarBackupAsync(caminhoInexistente);
+
+        Assert.True(resultado.Falha);
+        Assert.Contains("não encontrado", resultado.MensagemErro, StringComparison.OrdinalIgnoreCase);
+    }
+
     private sealed class ColetorHwidFake(IReadOnlyList<InfoDriver> dispositivos) : IColetorHwid
     {
         public IReadOnlyList<InfoDriver> Coletar() => dispositivos;
     }
 
-    private sealed class RepositorioFake(IReadOnlyList<InfoDriver> entradas) : IRepositorioDriversWhql
+    private sealed class ProvedorFake(IReadOnlyList<InfoDriver> entradas) : IProvedorFonteOficial
     {
-        public Task<InfoDriver?> ConsultarAsync(string hardwareId, CancellationToken ct = default)
+        public Task<InfoFonteOficial?> ConsultarAsync(string identificador, CancellationToken ct = default)
         {
             var encontrado = entradas.FirstOrDefault(e =>
-                e.HardwareId.Equals(hardwareId, StringComparison.OrdinalIgnoreCase));
-            return Task.FromResult<InfoDriver?>(encontrado);
+                e.HardwareId.Equals(identificador, StringComparison.OrdinalIgnoreCase));
+            InfoFonteOficial? info = encontrado is null
+                ? null
+                : new InfoFonteOficial
+                {
+                    VersaoDisponivel = encontrado.VersaoDisponivel,
+                    UrlDownload = encontrado.UrlDownload,
+                    CertificadoWhql = encontrado.CertificadoWhql,
+                };
+            return Task.FromResult(info);
         }
     }
 
-    private sealed class RepositorioComErro : IRepositorioDriversWhql
+    private sealed class ProvedorComErro : IProvedorFonteOficial
     {
-        public Task<InfoDriver?> ConsultarAsync(string hardwareId, CancellationToken ct = default)
+        public Task<InfoFonteOficial?> ConsultarAsync(string identificador, CancellationToken ct = default)
             => throw new InvalidOperationException("Erro simulado de repositório.");
     }
 }

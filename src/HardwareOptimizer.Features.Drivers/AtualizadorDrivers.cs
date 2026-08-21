@@ -8,16 +8,16 @@ namespace HardwareOptimizer.Features.Drivers;
 public sealed class AtualizadorDrivers
 {
     private readonly IColetorHwid _coletor;
-    private readonly IRepositorioDriversWhql _repositorio;
+    private readonly IProvedorFonteOficial _provedor;
     private readonly ILogger<AtualizadorDrivers> _log;
 
     public AtualizadorDrivers(
         IColetorHwid coletor,
-        IRepositorioDriversWhql repositorio,
+        IProvedorFonteOficial provedor,
         ILogger<AtualizadorDrivers> log)
     {
         _coletor = coletor;
-        _repositorio = repositorio;
+        _provedor = provedor;
         _log = log;
     }
 
@@ -31,7 +31,7 @@ public sealed class AtualizadorDrivers
             ct.ThrowIfCancellationRequested();
             try
             {
-                var disponivel = await _repositorio.ConsultarAsync(dev.HardwareId, ct);
+                var disponivel = await _provedor.ConsultarAsync(dev.HardwareId, ct);
                 if (disponivel is null)
                 {
                     resultado.Add(dev with { Status = StatusDriver.Desconhecido });
@@ -102,14 +102,16 @@ public sealed class AtualizadorDrivers
 
         try
         {
+            // Verb="runas" só é honrado pelo Windows quando UseShellExecute=true —
+            // com false (necessário pra RedirectStandardOutput/Error), a elevação
+            // é silenciosamente ignorada e o pnputil roda sem privilégio, falhando
+            // sem UAC. Elevação é obrigatória aqui, então abrimos mão da captura de
+            // saída (não suportada com UseShellExecute=true).
             var processo = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = "pnputil.exe",
                 Arguments = $"/add-driver \"{caminhoInf}\" /install",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
+                UseShellExecute = true,
                 Verb = "runas",
             };
 
@@ -124,6 +126,44 @@ public sealed class AtualizadorDrivers
         catch (Exception ex)
         {
             _log.LogError(ex, "Falha ao instalar driver '{Arquivo}'.", caminhoInf);
+            return Resultado.Falhar(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Rollback: reinstala os drivers a partir de um backup exportado previamente
+    /// por <see cref="ExportarBackupAsync"/>. Acionado explicitamente pelo usuário
+    /// — nunca automático. Reaproveita o mesmo padrão de <see cref="InstalarAsync"/>,
+    /// mas aponta o pnputil para todos os .inf do diretório de backup.
+    /// </summary>
+    public async Task<Resultado> RestaurarBackupAsync(string caminhoBackup, CancellationToken ct = default)
+    {
+        if (!Directory.Exists(caminhoBackup))
+            return Resultado.Falhar(
+                $"Backup não encontrado em '{caminhoBackup}'. O diretório pode ter sido removido do disco.");
+
+        try
+        {
+            // Ver nota em InstalarAsync: Verb="runas" exige UseShellExecute=true.
+            var processo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "pnputil.exe",
+                Arguments = $"/add-driver \"{Path.Combine(caminhoBackup, "*.inf")}\" /install",
+                UseShellExecute = true,
+                Verb = "runas",
+            };
+
+            using var proc = System.Diagnostics.Process.Start(processo);
+            if (proc is null) return Resultado.Falhar("Não foi possível iniciar pnputil.exe");
+
+            await proc.WaitForExitAsync(ct);
+            return proc.ExitCode == 0
+                ? Resultado.Ok()
+                : Resultado.Falhar($"pnputil /add-driver (restauração) retornou código {proc.ExitCode}.");
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Falha ao restaurar backup de drivers '{Caminho}'.", caminhoBackup);
             return Resultado.Falhar(ex.Message);
         }
     }

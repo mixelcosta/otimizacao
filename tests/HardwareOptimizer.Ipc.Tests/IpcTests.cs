@@ -152,24 +152,67 @@ public sealed class IpcTests
             Assert.IsType<string>(r.Resultado);
     }
 
-    // ---- instalardriver ---------------------------------------------------------
+    // ---- varrerdrivers ------------------------------------------------------------
 
     [Fact]
-    public async Task InstalarDriver_SemParametros_RetornaFalha()
+    public async Task VarrerDrivers_NaoWindows_RetornaFalha()
     {
-        var r = await Roteador().TratarAsync(Req("instalardriver"));
+        if (OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("varrerdrivers"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("Windows", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task VarrerDrivers_Windows_RetornaListaDeDrivers()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("varrerdrivers"));
+        Assert.True(r.Sucesso);
+        Assert.IsAssignableFrom<IReadOnlyList<InfoDriver>>(r.Resultado);
+    }
+
+    // ---- aprovaratualizacaodriver -------------------------------------------------
+
+    [Fact]
+    public async Task AprovarAtualizacaoDriver_SemParametros_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("aprovaratualizacaodriver"));
         Assert.False(r.Sucesso);
         Assert.NotNull(r.Erro);
     }
 
     [Fact]
-    public async Task InstalarDriver_UrlVazia_RetornaFalha()
+    public async Task AprovarAtualizacaoDriver_UrlVazia_RetornaFalha()
     {
         if (!OperatingSystem.IsWindows()) return;
 
-        var r = await Roteador().TratarAsync(Req("instalardriver", new { urlDownload = "" }));
+        var r = await Roteador().TratarAsync(Req("aprovaratualizacaodriver", new { urlDownload = "" }));
         Assert.False(r.Sucesso);
         Assert.Contains("urlDownload", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    // ---- reverteratualizacaodriver --------------------------------------------------
+
+    [Fact]
+    public async Task ReverterAtualizacaoDriver_SemParametros_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("reverteratualizacaodriver"));
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    [Fact]
+    public async Task ReverterAtualizacaoDriver_BackupInexistente_RetornaFalhaClara()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var caminho = Path.Combine(Path.GetTempPath(), "hwopt-backup-inexistente-" + Guid.NewGuid().ToString("N"));
+        var r = await Roteador().TratarAsync(Req("reverteratualizacaodriver", new { caminhoBackup = caminho }));
+        Assert.False(r.Sucesso);
+        Assert.Contains("não encontrado", r.Erro, StringComparison.OrdinalIgnoreCase);
     }
 
     // ---- analisarbiosfoto -------------------------------------------------------

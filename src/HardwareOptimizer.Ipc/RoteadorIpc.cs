@@ -24,6 +24,8 @@ using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Core.Privacy;
 using HardwareOptimizer.Core.Profiles;
 using HardwareOptimizer.Core.Reporting;
+using HardwareOptimizer.Features.Atualizacao;
+using HardwareOptimizer.Features.Drivers;
 using HardwareOptimizer.Features.Licensing;
 using HardwareOptimizer.Features.LifeCounter;
 using HardwareOptimizer.Features.Upgrade.Agente;
@@ -87,8 +89,14 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "obtersaudediscos" => OperatingSystem.IsWindows()
                     ? ObterSaudeDiscosWindows(requisicao)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
-                "obterdrivers" => OperatingSystem.IsWindows()
-                    ? ObterDriversWindows(requisicao)
+                "varrerdrivers" => OperatingSystem.IsWindows()
+                    ? await VarrerDriversWindowsAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "aprovaratualizacaodriver" => OperatingSystem.IsWindows()
+                    ? await AprovarAtualizacaoDriverAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "reverteratualizacaodriver" => OperatingSystem.IsWindows()
+                    ? await ReverterAtualizacaoDriverAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "desinstalarprogramas" => OperatingSystem.IsWindows()
                     ? await DesinstalarProgramasAsync(requisicao, cancellationToken).ConfigureAwait(false)
@@ -113,9 +121,6 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "chat_bios" => await ChatBiosAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "exportarbackupdrivers" => OperatingSystem.IsWindows()
                     ? await ExportarBackupDriversAsync(requisicao, cancellationToken).ConfigureAwait(false)
-                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
-                "instalardriver" => OperatingSystem.IsWindows()
-                    ? await InstalarDriverAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "analisarbiosfoto" => await AnalisarBiosFotoAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "obterstatuslicenca" => ObterStatusLicenca(requisicao),
@@ -381,12 +386,155 @@ public sealed class RoteadorIpc : IRoteadorIpc
         return RespostaIpc.Ok(req.Id, resultado);
     }
 
+    /// <summary>
+    /// Monta o <see cref="OrquestradorAtualizacao"/> — ponto único de varredura,
+    /// backup, instalação e rollback de drivers. Nenhum outro método deste roteador
+    /// deve tocar <see cref="AtualizadorDrivers"/>/<c>IRepositorioDriversWhql</c>
+    /// diretamente (Boundaries §Always da spec-1-2-driver-scan-aprovacao-rollback).
+    /// </summary>
     [SupportedOSPlatform("windows")]
-    private RespostaIpc ObterDriversWindows(RequisicaoIpc req)
+    private static OrquestradorAtualizacao CriarOrquestradorAtualizacao()
     {
-        var coletor = new ColetorHwid(NullLogger<ColetorHwid>.Instance);
-        var drivers = coletor.Coletar();
+        var atualizador = new AtualizadorDrivers(
+            new ColetorHwid(NullLogger<ColetorHwid>.Instance),
+            new ProvedorFonteOficialDriver(new RepositorioWhqlEstatico()),
+            NullLogger<AtualizadorDrivers>.Instance);
+        return new OrquestradorAtualizacao(atualizador);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> VarrerDriversWindowsAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var orquestrador = CriarOrquestradorAtualizacao();
+        var drivers = await orquestrador.VarrerAsync(ct).ConfigureAwait(false);
         return RespostaIpc.Ok(req.Id, drivers);
+    }
+
+    /// <summary>
+    /// Fluxo de aprovação: backup obrigatório dos drivers atuais ANTES de
+    /// qualquer instalação (Boundaries §Always). Se o backup falhar, a
+    /// instalação não é tentada. O caminho do backup é devolvido mesmo quando a
+    /// instalação em si falha depois, para permanecer disponível como referência
+    /// (I/O Matrix: "Instalação falha").
+    /// </summary>
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> AprovarAtualizacaoDriverAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p
+            || !p.TryGetProperty("urlDownload", out var u)
+            || u.ValueKind != JsonValueKind.String
+            || string.IsNullOrWhiteSpace(u.GetString()))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'urlDownload' obrigatório.");
+
+        var url = u.GetString()!;
+        var orquestrador = CriarOrquestradorAtualizacao();
+
+        // Backup obrigatório antes de qualquer instalação — sem backup bem-sucedido,
+        // a instalação não prossegue (Boundaries §Always).
+        var backup = await orquestrador.BackupAsync(ct).ConfigureAwait(false);
+        if (!backup.Sucesso)
+        {
+            return RespostaIpc.Ok(req.Id, new ResultadoAprovacaoDriverDto
+            {
+                Sucesso = false,
+                Erro = "Backup falhou: " + backup.Erro,
+                CaminhoBackup = null,
+            });
+        }
+
+        string ext;
+        try { ext = Path.GetExtension(new Uri(url).LocalPath).ToLowerInvariant(); }
+        catch
+        {
+            // A URL pode não ser um Uri válido nem um caminho de arquivo válido —
+            // Path.GetExtension também lança para caracteres inválidos. Nunca deixa
+            // escapar sem tratamento (o filtro de exceção de TratarAsync não cobre
+            // ArgumentException/UriFormatException).
+            try { ext = Path.GetExtension(url).ToLowerInvariant(); }
+            catch
+            {
+                return RespostaIpc.Ok(req.Id, new ResultadoAprovacaoDriverDto
+                {
+                    Sucesso = false,
+                    Erro = "URL de download inválida — não foi possível determinar o formato do arquivo.",
+                    CaminhoBackup = backup.CaminhoBackup,
+                });
+            }
+        }
+
+        if (ext is not (".inf" or ".cab"))
+        {
+            return RespostaIpc.Ok(req.Id, new ResultadoAprovacaoDriverDto
+            {
+                Sucesso = false,
+                Erro = $"Formato '{ext}' não suportado para instalação via pnputil.",
+                CaminhoBackup = backup.CaminhoBackup,
+            });
+        }
+
+        var pastaTemp = Path.Combine(Path.GetTempPath(), "OtimizeBuilder", "Drivers", Guid.NewGuid().ToString("N"));
+        try
+        {
+            Directory.CreateDirectory(pastaTemp);
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Ok(req.Id, new ResultadoAprovacaoDriverDto
+            {
+                Sucesso = false,
+                Erro = $"Falha ao preparar pasta temporária: {ex.Message}",
+                CaminhoBackup = backup.CaminhoBackup,
+            });
+        }
+
+        string nomeArq;
+        try { nomeArq = Path.GetFileName(new Uri(url).LocalPath); }
+        catch { nomeArq = string.Empty; }
+        if (string.IsNullOrEmpty(nomeArq)) nomeArq = $"driver{ext}";
+
+        var destino = Path.Combine(pastaTemp, nomeArq);
+
+        try
+        {
+            using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
+            var bytes = await http.GetByteArrayAsync(url, ct).ConfigureAwait(false);
+            await File.WriteAllBytesAsync(destino, bytes, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            return RespostaIpc.Ok(req.Id, new ResultadoAprovacaoDriverDto
+            {
+                Sucesso = false,
+                Erro = $"Falha no download: {ex.Message}",
+                CaminhoBackup = backup.CaminhoBackup,
+            });
+        }
+
+        var instalacao = await orquestrador.InstalarAsync(destino, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, new ResultadoAprovacaoDriverDto
+        {
+            Sucesso = instalacao.Sucesso,
+            Erro = instalacao.Sucesso ? null : instalacao.MensagemErro,
+            CaminhoBackup = backup.CaminhoBackup,
+        });
+    }
+
+    /// <summary>
+    /// Rollback acionado pelo usuário: reinstala a partir de um backup exportado
+    /// anteriormente. Nunca automático/silencioso (Boundaries §Never).
+    /// </summary>
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> ReverterAtualizacaoDriverAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        var caminho = LerParamString(req.Parametros, "caminhoBackup");
+        if (string.IsNullOrWhiteSpace(caminho))
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'caminhoBackup' obrigatório.");
+
+        var orquestrador = CriarOrquestradorAtualizacao();
+        var resultado = await orquestrador.ReverterAsync(caminho, ct).ConfigureAwait(false);
+        return resultado.Sucesso
+            ? RespostaIpc.Ok(req.Id, true)
+            : RespostaIpc.Falha(req.Id, resultado.MensagemErro);
     }
 
     [SupportedOSPlatform("windows")]
@@ -450,89 +598,6 @@ public sealed class RoteadorIpc : IRoteadorIpc
             return proc.ExitCode == 0
                 ? RespostaIpc.Ok(req.Id, pasta)
                 : RespostaIpc.Falha(req.Id, $"pnputil saiu com código {proc.ExitCode}.");
-        }
-        catch (Exception ex)
-        {
-            return RespostaIpc.Falha(req.Id, ex.Message);
-        }
-    }
-
-    [SupportedOSPlatform("windows")]
-    private static async Task<RespostaIpc> InstalarDriverAsync(RequisicaoIpc req, CancellationToken ct)
-    {
-        if (req.Parametros is not { } p
-            || !p.TryGetProperty("urlDownload", out var u)
-            || u.ValueKind != JsonValueKind.String
-            || string.IsNullOrWhiteSpace(u.GetString()))
-            return RespostaIpc.Falha(req.Id, "Parâmetro 'urlDownload' obrigatório.");
-
-        var url = u.GetString()!;
-
-        string ext;
-        try { ext = Path.GetExtension(new Uri(url).LocalPath).ToLowerInvariant(); }
-        catch { ext = Path.GetExtension(url).ToLowerInvariant(); }
-
-        var pastaTemp = Path.Combine(Path.GetTempPath(), "OtimizeBuilder", "Drivers", Guid.NewGuid().ToString("N"));
-        Directory.CreateDirectory(pastaTemp);
-
-        string nomeArq;
-        try { nomeArq = Path.GetFileName(new Uri(url).LocalPath); }
-        catch { nomeArq = string.Empty; }
-        if (string.IsNullOrEmpty(nomeArq)) nomeArq = $"driver{ext}";
-
-        var destino = Path.Combine(pastaTemp, nomeArq);
-
-        try
-        {
-            using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
-            var bytes = await http.GetByteArrayAsync(url, ct).ConfigureAwait(false);
-            await File.WriteAllBytesAsync(destino, bytes, ct).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            return RespostaIpc.Falha(req.Id, $"Falha no download: {ex.Message}");
-        }
-
-        return ext switch
-        {
-            ".inf" or ".cab" => await InstalarComPnputilAsync(req, destino, ct).ConfigureAwait(false),
-            ".exe"           => IniciarInstalador(req, destino),
-            _                => RespostaIpc.Falha(req.Id, $"Formato '{ext}' não suportado para instalação silenciosa."),
-        };
-    }
-
-    private static async Task<RespostaIpc> InstalarComPnputilAsync(RequisicaoIpc req, string caminho, CancellationToken ct)
-    {
-        var psi = new ProcessStartInfo
-        {
-            FileName               = "pnputil.exe",
-            Arguments              = $"/add-driver \"{caminho}\" /install",
-            UseShellExecute        = false,
-            CreateNoWindow         = true,
-            RedirectStandardOutput = true,
-            RedirectStandardError  = true,
-        };
-        try
-        {
-            using var proc = Process.Start(psi)!;
-            var stdout = await proc.StandardOutput.ReadToEndAsync(ct).ConfigureAwait(false);
-            await proc.WaitForExitAsync(ct).ConfigureAwait(false);
-            return proc.ExitCode == 0
-                ? RespostaIpc.Ok(req.Id, stdout.Trim())
-                : RespostaIpc.Falha(req.Id, $"pnputil saiu com código {proc.ExitCode}.");
-        }
-        catch (Exception ex)
-        {
-            return RespostaIpc.Falha(req.Id, ex.Message);
-        }
-    }
-
-    private static RespostaIpc IniciarInstalador(RequisicaoIpc req, string caminho)
-    {
-        try
-        {
-            Process.Start(new ProcessStartInfo { FileName = caminho, UseShellExecute = true });
-            return RespostaIpc.Ok(req.Id, "Instalador iniciado.");
         }
         catch (Exception ex)
         {

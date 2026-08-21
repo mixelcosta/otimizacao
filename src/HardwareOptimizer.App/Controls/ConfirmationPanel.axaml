@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="HardwareOptimizer.App.Controls.ConfirmationPanel">
+
+  <Border x:Name="RootBorder"
+          Background="#09091A"
+          BorderBrush="#FFAA00" BorderThickness="2"
+          CornerRadius="8" Padding="16,14">
+    <StackPanel Spacing="12">
+
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <TextBlock Text="⚠" FontSize="14" Foreground="#FFAA00" VerticalAlignment="Center" />
+        <TextBlock Text="CONFIRMAÇÃO NECESSÁRIA" FontSize="11" FontWeight="Bold"
+                   Foreground="#484865" LetterSpacing="2" VerticalAlignment="Center" />
+      </StackPanel>
+
+      <TextBlock x:Name="MensagemText"
+                 Foreground="#E0E0F2" FontSize="12"
+                 TextWrapping="Wrap" />
+
+      <CheckBox x:Name="ConfirmarCheckBox"
+                Content="Entendo os riscos e confirmo a operação."
+                Foreground="#8080AA" FontSize="11" />
+
+      <Button x:Name="ConfirmarButton"
+              Content="Confirmar e aplicar"
+              IsEnabled="False"
+              HorizontalAlignment="Left"
+              Background="#00C8FF18" Foreground="#00C8FF"
+              BorderBrush="#00C8FF40" BorderThickness="1"
+              Padding="14,7" CornerRadius="5"
+              FontSize="12" FontWeight="SemiBold"
+              Cursor="Hand" />
+
+    </StackPanel>
+  </Border>
+
+</UserControl>

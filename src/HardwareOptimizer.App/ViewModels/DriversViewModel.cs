@@ -25,8 +25,25 @@ public partial class DriversViewModel : ObservableObject
     [ObservableProperty] private string _filtroTexto = string.Empty;
     [ObservableProperty] private string _backupStatus = string.Empty;
     [ObservableProperty] private bool _exportando;
+    [ObservableProperty] private bool _escaneando;
     [ObservableProperty] private bool _instalando;
     [ObservableProperty] private string _statusInstalacao = string.Empty;
+
+    // ── Estado do Confirmation Panel ────────────────────────────────────────
+    [ObservableProperty] private InfoDriverViewModel? _driverSelecionado;
+    [ObservableProperty] private bool _painelConfirmacaoAberto;
+    [ObservableProperty] private bool _confirmado;
+    [ObservableProperty] private string _mensagemConfirmacao = string.Empty;
+    [ObservableProperty] private string? _caminhoBackupAtual;
+
+    /// <summary>
+    /// Ganho/custo estimados do item selecionado. Contratos existem a partir
+    /// desta história (Core/Contracts) — o primeiro consumo real com dados
+    /// calculados é a Story 3.4/3.5 (ganho) e 3.8 (custo); aqui permanecem
+    /// disponíveis, porém não populados, para o fluxo de driver.
+    /// </summary>
+    [ObservableProperty] private GanhoEstimado? _ganhoEstimadoAtual;
+    [ObservableProperty] private Custo? _custoAtual;
 
     public bool PodeExportarBackup => _agente is not null;
 
@@ -60,26 +77,128 @@ public partial class DriversViewModel : ObservableObject
             : $"{Drivers.Count} de {_todosDrivers.Count} dispositivo(s).";
     }
 
+    /// <summary>
+    /// Varredura via <c>varrerdrivers</c> (IProvedorFonteOficial por trás do
+    /// IPC) — versão atual vs. oficial mais recente, com fallback para
+    /// "Desconhecido" quando a fonte falha (I/O Matrix).
+    /// </summary>
     [RelayCommand]
-    private async Task InstalarDriverAsync(InfoDriverViewModel? driver)
+    private async Task EscanearAsync()
     {
-        if (driver?.UrlDownload is null || _agente is null || Instalando) return;
+        if (_agente is null || Escaneando) return;
+
+        Escaneando = true;
+        StatusText = "Escaneando drivers…";
+        try
+        {
+            var resp = await _agente.TratarAsync(new RequisicaoIpc { Metodo = "varrerdrivers" });
+            if (resp.Sucesso && resp.Resultado is IReadOnlyList<InfoDriver> drivers)
+            {
+                Popular(drivers);
+            }
+            else
+            {
+                StatusText = $"Falha ao escanear: {resp.Erro}";
+            }
+        }
+        finally
+        {
+            Escaneando = false;
+        }
+    }
+
+    /// <summary>Abre o Confirmation Panel inline para o driver selecionado.</summary>
+    [RelayCommand]
+    private void AbrirConfirmacao(InfoDriverViewModel? driver)
+    {
+        if (driver is null) return;
+
+        DriverSelecionado = driver;
+        PainelConfirmacaoAberto = true;
+        Confirmado = false;
+        CaminhoBackupAtual = null;
+        GanhoEstimadoAtual = null;
+        CustoAtual = null;
+        StatusInstalacao = string.Empty;
+        MensagemConfirmacao =
+            $"Atualizar \"{driver.Descricao}\" para a versão mais recente conhecida. " +
+            "Um backup dos drivers atuais será criado antes da instalação — " +
+            "sem backup bem-sucedido, a instalação não prossegue.";
+    }
+
+    [RelayCommand]
+    private void FecharConfirmacao()
+    {
+        PainelConfirmacaoAberto = false;
+        DriverSelecionado = null;
+        Confirmado = false;
+    }
+
+    /// <summary>
+    /// Fluxo de aprovação: backup obrigatório antes da instalação, via
+    /// <c>aprovaratualizacaodriver</c>. Nunca dispara sem o usuário ter
+    /// confirmado explicitamente no painel (botão de aplicar desabilitado até
+    /// então — gate vive no próprio <c>ConfirmationPanel</c>).
+    /// </summary>
+    [RelayCommand]
+    private async Task AplicarAtualizacaoAsync()
+    {
+        var driver = DriverSelecionado;
+        if (driver?.UrlDownload is null || _agente is null || Instalando || !Confirmado) return;
 
         Instalando = true;
-        StatusInstalacao = $"Baixando {driver.Descricao}…";
+        StatusInstalacao = "Fazendo backup dos drivers atuais…";
         try
         {
             var payload = JsonSerializer.SerializeToElement(new
             {
                 urlDownload = driver.UrlDownload,
-                descricao   = driver.Descricao,
+                descricao = driver.Descricao,
             });
             var resp = await _agente.TratarAsync(
-                new RequisicaoIpc { Metodo = "instalardriver", Parametros = payload });
+                new RequisicaoIpc { Metodo = "aprovaratualizacaodriver", Parametros = payload });
+
+            if (resp.Sucesso && resp.Resultado is ResultadoAprovacaoDriverDto dto)
+            {
+                CaminhoBackupAtual = dto.CaminhoBackup;
+                StatusInstalacao = dto.Sucesso
+                    ? $"✓ Driver instalado. Backup em: {dto.CaminhoBackup}"
+                    : $"Falha: {dto.Erro}" + (dto.CaminhoBackup is null ? "" : $" (backup disponível em: {dto.CaminhoBackup})");
+            }
+            else
+            {
+                StatusInstalacao = $"Falha: {resp.Erro}";
+            }
+        }
+        finally
+        {
+            Instalando = false;
+            // Cada tentativa exige nova confirmação explícita — sucesso ou falha,
+            // o gate do painel volta a ficar fechado até o usuário reconfirmar.
+            Confirmado = false;
+        }
+    }
+
+    /// <summary>
+    /// Rollback acionado pelo usuário via <c>reverteratualizacaodriver</c> —
+    /// nunca automático. Requer um backup já exportado nesta sessão do painel.
+    /// </summary>
+    [RelayCommand]
+    private async Task ReverterAsync()
+    {
+        if (_agente is null || string.IsNullOrEmpty(CaminhoBackupAtual) || Instalando) return;
+
+        Instalando = true;
+        StatusInstalacao = "Revertendo a partir do backup…";
+        try
+        {
+            var payload = JsonSerializer.SerializeToElement(new { caminhoBackup = CaminhoBackupAtual });
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "reverteratualizacaodriver", Parametros = payload });
 
             StatusInstalacao = resp.Sucesso
-                ? "✓ Driver instalado com sucesso."
-                : $"Falha: {resp.Erro}";
+                ? "✓ Rollback concluído a partir do backup."
+                : $"Falha no rollback: {resp.Erro}";
         }
         finally
         {

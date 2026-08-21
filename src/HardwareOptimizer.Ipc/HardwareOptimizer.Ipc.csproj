@@ -7,6 +7,8 @@
     <ProjectReference Include="..\HardwareOptimizer.Features.LifeCounter\HardwareOptimizer.Features.LifeCounter.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Features.Upgrade\HardwareOptimizer.Features.Upgrade.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Features.Licensing\HardwareOptimizer.Features.Licensing.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Drivers\HardwareOptimizer.Features.Drivers.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Atualizacao\HardwareOptimizer.Features.Atualizacao.csproj" />
   </ItemGroup>
 
   <ItemGroup>

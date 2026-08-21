@@ -1,23 +1,41 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             xmlns:controls="using:HardwareOptimizer.App.Controls"
              x:Class="HardwareOptimizer.App.Views.DriversView"
              x:DataType="vm:DriversViewModel">
 
   <Grid RowDefinitions="Auto,Auto,*,Auto">
 
     <!-- ── Cabeçalho ── -->
-    <StackPanel Grid.Row="0" Margin="24,20,24,0" Spacing="3">
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
-                VerticalAlignment="Center" />
-        <TextBlock Text="DRIVERS" FontSize="13" FontWeight="Bold"
-                   Foreground="#484865" LetterSpacing="3"
-                   VerticalAlignment="Center" />
+    <Grid Grid.Row="0" Margin="24,20,24,0" ColumnDefinitions="*,Auto">
+      <StackPanel Grid.Column="0" Spacing="3">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                  VerticalAlignment="Center" />
+          <TextBlock Text="DRIVERS" FontSize="13" FontWeight="Bold"
+                     Foreground="#484865" LetterSpacing="3"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="Dispositivos detectados via WMI — Display, Rede, Áudio, USB, Armazenamento"
+                   Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
       </StackPanel>
-      <TextBlock Text="Dispositivos detectados via WMI — Display, Rede, Áudio, USB, Armazenamento"
-                 Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
-    </StackPanel>
+
+      <Button Grid.Column="1"
+              Command="{Binding EscanearCommand}"
+              IsEnabled="{Binding !Escaneando}"
+              Background="#00C8FF18" Foreground="#00C8FF"
+              BorderBrush="#00C8FF40" BorderThickness="1"
+              Padding="12,6" CornerRadius="5"
+              FontSize="11" FontWeight="SemiBold"
+              VerticalAlignment="Center"
+              Cursor="Hand">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <TextBlock Text="↻" FontSize="12" VerticalAlignment="Center" />
+          <TextBlock Text="Escanear drivers" VerticalAlignment="Center" />
+        </StackPanel>
+      </Button>
+    </Grid>
 
     <!-- ── Filtro ── -->
     <Border Grid.Row="1" Margin="24,12,24,0"
@@ -130,9 +148,9 @@
                             FontSize="10" FontWeight="SemiBold"
                             HorizontalAlignment="Right"
                             Cursor="Hand" />
-                    <Button Content="⬆ instalar"
+                    <Button Content="⬆ atualizar"
                             IsVisible="{Binding TemDownload}"
-                            Command="{Binding $parent[ItemsControl].DataContext.InstalarDriverCommand}"
+                            Command="{Binding $parent[ItemsControl].DataContext.AbrirConfirmacaoCommand}"
                             CommandParameter="{Binding}"
                             Background="#09091A" Foreground="#484865"
                             BorderBrush="#1E1E3C" BorderThickness="1"
@@ -148,6 +166,14 @@
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        <!-- Confirmation Panel — inline no scroll, nunca modal (convenção do app) -->
+        <controls:ConfirmationPanel
+            IsVisible="{Binding PainelConfirmacaoAberto}"
+            Severidade="Driver"
+            Mensagem="{Binding MensagemConfirmacao}"
+            PodeConfirmar="{Binding Confirmado}"
+            ConfirmarCommand="{Binding AplicarAtualizacaoCommand}" />
 
         <!-- Nota WHQL -->
         <Border CornerRadius="8" Padding="14,10"
@@ -185,6 +211,15 @@
                      Foreground="#484865" FontSize="11"
                      VerticalAlignment="Center"
                      IsVisible="{Binding StatusInstalacao, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          <Button Content="↺ reverter para o backup"
+                  Command="{Binding ReverterCommand}"
+                  IsEnabled="{Binding !Instalando}"
+                  IsVisible="{Binding CaminhoBackupAtual, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                  Background="#FFAA0018" Foreground="#FFAA00"
+                  BorderBrush="#FFAA0040" BorderThickness="1"
+                  Padding="10,4" CornerRadius="5"
+                  FontSize="11" FontWeight="SemiBold"
+                  Cursor="Hand" />
         </StackPanel>
 
         <!-- Backup -->

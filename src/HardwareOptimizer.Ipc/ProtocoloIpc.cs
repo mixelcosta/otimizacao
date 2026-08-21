@@ -100,6 +100,19 @@ public sealed record StatusLicencaDto
     public required bool GuiaBiosIa { get; init; }
 }
 
+/// <summary>
+/// Resultado de <c>aprovaratualizacaodriver</c>: backup + instalação. O caminho
+/// do backup fica preenchido sempre que o backup teve sucesso, mesmo que a
+/// instalação em si falhe depois — o backup continua disponível para referência
+/// (I/O Matrix: "Instalação falha").
+/// </summary>
+public sealed record ResultadoAprovacaoDriverDto
+{
+    public required bool Sucesso { get; init; }
+    public string? Erro { get; init; }
+    public string? CaminhoBackup { get; init; }
+}
+
 /// <summary>Opções de serialização compartilhadas pelo protocolo IPC.</summary>
 public static class ProtocoloIpc
 {
