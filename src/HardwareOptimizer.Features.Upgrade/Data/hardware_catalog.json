@@ -1,0 +1,42 @@
+{
+  "processadores": [
+    { "modelo": "Intel Core i9-14900K",  "socket": "LGA1700", "tdpW": 125, "nucleos": 24, "score": 2800 },
+    { "modelo": "Intel Core i7-14700K",  "socket": "LGA1700", "tdpW": 125, "nucleos": 20, "score": 2400 },
+    { "modelo": "Intel Core i5-14600K",  "socket": "LGA1700", "tdpW": 125, "nucleos": 14, "score": 1900 },
+    { "modelo": "Intel Core i5-13400",   "socket": "LGA1700", "tdpW": 65,  "nucleos": 10, "score": 1500 },
+    { "modelo": "Intel Core i3-13100",   "socket": "LGA1700", "tdpW": 60,  "nucleos": 4,  "score": 900 },
+    { "modelo": "AMD Ryzen 9 7950X",     "socket": "AM5",     "tdpW": 170, "nucleos": 16, "score": 3000 },
+    { "modelo": "AMD Ryzen 9 7900X",     "socket": "AM5",     "tdpW": 170, "nucleos": 12, "score": 2500 },
+    { "modelo": "AMD Ryzen 7 7700X",     "socket": "AM5",     "tdpW": 105, "nucleos": 8,  "score": 2000 },
+    { "modelo": "AMD Ryzen 5 7600X",     "socket": "AM5",     "tdpW": 105, "nucleos": 6,  "score": 1700 },
+    { "modelo": "AMD Ryzen 5 7600",      "socket": "AM5",     "tdpW": 65,  "nucleos": 6,  "score": 1600 },
+    { "modelo": "AMD Ryzen 9 5900X",     "socket": "AM4",     "tdpW": 105, "nucleos": 12, "score": 2200 },
+    { "modelo": "AMD Ryzen 7 5700X",     "socket": "AM4",     "tdpW": 65,  "nucleos": 8,  "score": 1800 },
+    { "modelo": "AMD Ryzen 5 5600X",     "socket": "AM4",     "tdpW": 65,  "nucleos": 6,  "score": 1500 },
+    { "modelo": "AMD Ryzen 5 5600",      "socket": "AM4",     "tdpW": 65,  "nucleos": 6,  "score": 1400 }
+  ],
+  "gpus": [
+    { "modelo": "NVIDIA RTX 4090",   "interface": "PCIe 4.0 x16", "tdpW": 450, "vramGb": 24, "score": 3000 },
+    { "modelo": "NVIDIA RTX 4080",   "interface": "PCIe 4.0 x16", "tdpW": 320, "vramGb": 16, "score": 2400 },
+    { "modelo": "NVIDIA RTX 4070 Ti","interface": "PCIe 4.0 x16", "tdpW": 285, "vramGb": 12, "score": 2100 },
+    { "modelo": "NVIDIA RTX 4070",   "interface": "PCIe 4.0 x16", "tdpW": 200, "vramGb": 12, "score": 1800 },
+    { "modelo": "NVIDIA RTX 4060 Ti","interface": "PCIe 4.0 x16", "tdpW": 165, "vramGb": 8,  "score": 1500 },
+    { "modelo": "NVIDIA RTX 4060",   "interface": "PCIe 4.0 x16", "tdpW": 115, "vramGb": 8,  "score": 1300 },
+    { "modelo": "NVIDIA RTX 3080",   "interface": "PCIe 4.0 x16", "tdpW": 320, "vramGb": 10, "score": 2000 },
+    { "modelo": "NVIDIA RTX 3070",   "interface": "PCIe 4.0 x16", "tdpW": 220, "vramGb": 8,  "score": 1700 },
+    { "modelo": "NVIDIA RTX 3060 Ti","interface": "PCIe 4.0 x16", "tdpW": 200, "vramGb": 8,  "score": 1500 },
+    { "modelo": "AMD RX 7900 XTX",  "interface": "PCIe 4.0 x16", "tdpW": 355, "vramGb": 24, "score": 2600 },
+    { "modelo": "AMD RX 7800 XT",   "interface": "PCIe 4.0 x16", "tdpW": 263, "vramGb": 16, "score": 1900 },
+    { "modelo": "AMD RX 7700 XT",   "interface": "PCIe 4.0 x16", "tdpW": 245, "vramGb": 12, "score": 1700 },
+    { "modelo": "AMD RX 6700 XT",   "interface": "PCIe 4.0 x16", "tdpW": 230, "vramGb": 12, "score": 1500 }
+  ],
+  "placasMae": [
+    { "modelo": "ASUS ROG STRIX Z790-E",   "socket": "LGA1700", "slots": ["PCIe 5.0 x16","PCIe 4.0 x16"], "ddr": "DDR5", "maxRamMhz": 7800, "maxRamGb": 128 },
+    { "modelo": "MSI MAG Z790 TOMAHAWK",   "socket": "LGA1700", "slots": ["PCIe 5.0 x16","PCIe 4.0 x4"],  "ddr": "DDR5", "maxRamMhz": 7200, "maxRamGb": 128 },
+    { "modelo": "Gigabyte B760M DS3H",     "socket": "LGA1700", "slots": ["PCIe 5.0 x16"],                 "ddr": "DDR4", "maxRamMhz": 4800, "maxRamGb": 64 },
+    { "modelo": "ASUS ROG Crosshair X670E","socket": "AM5",     "slots": ["PCIe 5.0 x16","PCIe 4.0 x16"], "ddr": "DDR5", "maxRamMhz": 6400, "maxRamGb": 128 },
+    { "modelo": "MSI MAG X670E TOMAHAWK",  "socket": "AM5",     "slots": ["PCIe 5.0 x16","PCIe 4.0 x4"],  "ddr": "DDR5", "maxRamMhz": 6000, "maxRamGb": 128 },
+    { "modelo": "Gigabyte B550 AORUS Elite","socket": "AM4",    "slots": ["PCIe 4.0 x16","PCIe 3.0 x4"],  "ddr": "DDR4", "maxRamMhz": 5100, "maxRamGb": 128 },
+    { "modelo": "MSI B450 TOMAHAWK MAX",   "socket": "AM4",     "slots": ["PCIe 3.0 x16","PCIe 2.0 x4"],  "ddr": "DDR4", "maxRamMhz": 4400, "maxRamGb": 64 }
+  ]
+}

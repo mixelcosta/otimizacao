@@ -17,7 +17,10 @@ coverage*.xml
 *.db
 *.db-shm
 *.db-wal
-data/
+## Ancorada na raiz — NUNCA remover a barra inicial: "data/" sem âncora
+## também captura src/HardwareOptimizer.Features.*/Data/ (catálogos JSON
+## versionados, ex. hardware_catalog.json, whql_catalog.json).
+/data/
 
 ## IDE / SO
 .idea/

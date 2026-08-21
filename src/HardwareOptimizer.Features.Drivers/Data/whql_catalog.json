@@ -1,0 +1,122 @@
+[
+  {
+    "hardwareIdPrefixo": "PCI\\VEN_10DE",
+    "descricao": "NVIDIA Display Adapter",
+    "fabricante": "NVIDIA",
+    "versaoDisponivel": "572.83",
+    "urlDownload": "https://www.nvidia.com/Download/index.aspx",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "PCI\\VEN_1002",
+    "descricao": "AMD/ATI Display Adapter",
+    "fabricante": "AMD",
+    "versaoDisponivel": "24.12.1",
+    "urlDownload": "https://www.amd.com/pt/support",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "PCI\\VEN_8086",
+    "descricao": "Intel Integrated Graphics / Chipset",
+    "fabricante": "Intel",
+    "versaoDisponivel": "31.0.101.5522",
+    "urlDownload": "https://www.intel.com/content/www/us/en/support/detect.html",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "PCI\\VEN_10EC",
+    "descricao": "Realtek PCIe Controller",
+    "fabricante": "Realtek Semiconductor",
+    "versaoDisponivel": "10.0.22621.1",
+    "urlDownload": "https://www.realtek.com/en/downloads",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "PCI\\VEN_14E4",
+    "descricao": "Broadcom Network Adapter",
+    "fabricante": "Broadcom",
+    "versaoDisponivel": "13.7.0",
+    "urlDownload": "https://www.broadcom.com/support/download-search",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "PCI\\VEN_1969",
+    "descricao": "Qualcomm/Atheros Network Adapter",
+    "fabricante": "Qualcomm Atheros",
+    "versaoDisponivel": "12.1.0.0",
+    "urlDownload": "https://www.qualcomm.com/support",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "PCI\\VEN_168C",
+    "descricao": "Qualcomm Atheros Wireless LAN",
+    "fabricante": "Qualcomm Atheros",
+    "versaoDisponivel": "12.0.0.1",
+    "urlDownload": "https://www.qualcomm.com/support",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "PCI\\VEN_8087",
+    "descricao": "Intel Wireless Adapter",
+    "fabricante": "Intel",
+    "versaoDisponivel": "22.200.0",
+    "urlDownload": "https://www.intel.com/content/www/us/en/support/detect.html",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "USB\\VID_8087",
+    "descricao": "Intel USB Bluetooth Device",
+    "fabricante": "Intel",
+    "versaoDisponivel": "22.200.0",
+    "urlDownload": "https://www.intel.com/content/www/us/en/support/detect.html",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "USB\\VID_046D",
+    "descricao": "Logitech USB Device",
+    "fabricante": "Logitech",
+    "versaoDisponivel": null,
+    "urlDownload": null,
+    "certificadoWhql": false
+  },
+  {
+    "hardwareIdPrefixo": "USB\\VID_045E",
+    "descricao": "Microsoft USB Device",
+    "fabricante": "Microsoft",
+    "versaoDisponivel": null,
+    "urlDownload": null,
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "USB\\VID_04F2",
+    "descricao": "Chicony USB Camera",
+    "fabricante": "Chicony Electronics",
+    "versaoDisponivel": null,
+    "urlDownload": null,
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "HDAUDIO\\FUNC_01&VEN_10EC",
+    "descricao": "Realtek High Definition Audio",
+    "fabricante": "Realtek Semiconductor",
+    "versaoDisponivel": "6.0.9614.1",
+    "urlDownload": "https://www.realtek.com/en/downloads",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "HDAUDIO\\FUNC_01&VEN_1002",
+    "descricao": "AMD High Definition Audio",
+    "fabricante": "AMD",
+    "versaoDisponivel": "10.0.1.18",
+    "urlDownload": "https://www.amd.com/pt/support",
+    "certificadoWhql": true
+  },
+  {
+    "hardwareIdPrefixo": "HDAUDIO\\FUNC_01&VEN_10DE",
+    "descricao": "NVIDIA High Definition Audio",
+    "fabricante": "NVIDIA",
+    "versaoDisponivel": "1.4.2",
+    "urlDownload": "https://www.nvidia.com/Download/index.aspx",
+    "certificadoWhql": true
+  }
+]
