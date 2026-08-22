@@ -191,6 +191,94 @@
           </TextBlock>
         </Border>
 
+        <!-- ── Software desatualizado ── -->
+        <Grid ColumnDefinitions="*,Auto" Margin="4,24,4,0">
+          <StackPanel Grid.Column="0" Spacing="3">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                      VerticalAlignment="Center" />
+              <TextBlock Text="SOFTWARE DESATUALIZADO" FontSize="13" FontWeight="Bold"
+                         Foreground="#484865" LetterSpacing="3"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Text="Comparação com catálogo oficial — apenas leitura, sem instalação pelo app"
+                       Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+          </StackPanel>
+
+          <Button Grid.Column="1"
+                  Command="{Binding VerificarSoftwareCommand}"
+                  IsEnabled="{Binding !VerificandoSoftware}"
+                  Background="#00C8FF18" Foreground="#00C8FF"
+                  BorderBrush="#00C8FF40" BorderThickness="1"
+                  Padding="12,6" CornerRadius="5"
+                  FontSize="11" FontWeight="SemiBold"
+                  VerticalAlignment="Center"
+                  Cursor="Hand">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="↻" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Verificar software" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </Grid>
+
+        <TextBlock Text="{Binding StatusTextSoftware}"
+                   Foreground="#484865" FontSize="12"
+                   Margin="4,8,4,0" TextWrapping="Wrap" />
+
+        <ItemsControl ItemsSource="{Binding Software}"
+                      IsVisible="{Binding TemResultadosSoftware}"
+                      Margin="0,8,0,0">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:InfoSoftwareViewModel">
+
+              <Border CornerRadius="8"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
+                      Padding="14,10" Margin="0,0,0,2">
+                <Border.Background>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#0C0C1E" Offset="0" />
+                    <GradientStop Color="#09091A" Offset="1" />
+                  </LinearGradientBrush>
+                </Border.Background>
+
+                <Grid ColumnDefinitions="*,120,120,90">
+
+                  <TextBlock Grid.Column="0" Text="{Binding Nome}"
+                             Foreground="#E0E0F2" FontSize="13"
+                             FontWeight="SemiBold"
+                             VerticalAlignment="Center"
+                             TextTrimming="CharacterEllipsis" />
+
+                  <TextBlock Grid.Column="1" Text="{Binding VersaoAtual}"
+                             Foreground="#484865" FontSize="11"
+                             FontFamily="Consolas,Courier New,monospace"
+                             VerticalAlignment="Center" />
+
+                  <TextBlock Grid.Column="2" Text="{Binding VersaoDisponivel}"
+                             Foreground="#00C8FF" FontSize="11"
+                             FontFamily="Consolas,Courier New,monospace"
+                             VerticalAlignment="Center" />
+
+                  <StackPanel Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="↓ abrir"
+                            IsVisible="{Binding TemDownload}"
+                            Command="{Binding $parent[ItemsControl].DataContext.AbrirDownloadSoftwareCommand}"
+                            CommandParameter="{Binding}"
+                            Background="#00C8FF18" Foreground="#00C8FF"
+                            BorderBrush="#00C8FF40" BorderThickness="1"
+                            Padding="6,2" CornerRadius="4"
+                            FontSize="10" FontWeight="SemiBold"
+                            HorizontalAlignment="Right"
+                            Cursor="Hand" />
+                  </StackPanel>
+
+                </Grid>
+              </Border>
+
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
       </StackPanel>
     </ScrollViewer>
 

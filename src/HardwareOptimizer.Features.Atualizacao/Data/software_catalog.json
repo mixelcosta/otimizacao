@@ -1,0 +1,42 @@
+[
+  {
+    "nome": "Google Chrome",
+    "versaoDisponivel": "127.0.6533.100",
+    "urlDownload": "https://www.google.com/chrome/"
+  },
+  {
+    "nome": "Mozilla Firefox",
+    "versaoDisponivel": "129.0",
+    "urlDownload": "https://www.mozilla.org/firefox/"
+  },
+  {
+    "nome": "7-Zip",
+    "versaoDisponivel": "24.07",
+    "urlDownload": "https://www.7-zip.org/"
+  },
+  {
+    "nome": "VLC media player",
+    "versaoDisponivel": "3.0.21",
+    "urlDownload": "https://www.videolan.org/vlc/"
+  },
+  {
+    "nome": "Notepad++",
+    "versaoDisponivel": "8.6.9",
+    "urlDownload": "https://notepad-plus-plus.org/"
+  },
+  {
+    "nome": "WinRAR",
+    "versaoDisponivel": "7.00",
+    "urlDownload": "https://www.win-rar.com/"
+  },
+  {
+    "nome": "Adobe Acrobat Reader DC",
+    "versaoDisponivel": "24.002.20991",
+    "urlDownload": "https://get.adobe.com/reader/"
+  },
+  {
+    "nome": "Zoom",
+    "versaoDisponivel": "6.1.6",
+    "urlDownload": "https://zoom.us/download"
+  }
+]

@@ -215,6 +215,87 @@ public sealed class IpcTests
         Assert.Contains("não encontrado", r.Erro, StringComparison.OrdinalIgnoreCase);
     }
 
+    // ---- verificarsoftware -----------------------------------------------------
+    // Cobre "conecta o fluxo real" da spec-1-3-software-desatualizado: o roteador
+    // de fato monta VerificadorSoftware + ProvedorFonteOficialSoftware +
+    // RepositorioVersoesSoftwareEstatico (catálogo embarcado real), não um fake.
+
+    [Fact]
+    public async Task VerificarSoftware_SemParametros_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("verificarsoftware"));
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    [Fact]
+    public async Task VerificarSoftware_ListaVazia_RetornaListaVazia()
+    {
+        var r = await Roteador().TratarAsync(Req("verificarsoftware", new { programas = Array.Empty<object>() }));
+
+        Assert.True(r.Sucesso);
+        var lista = Assert.IsAssignableFrom<IReadOnlyList<InfoSoftware>>(r.Resultado);
+        Assert.Empty(lista);
+    }
+
+    [Fact]
+    public async Task VerificarSoftware_ProgramaDoCatalogoComVersaoDiferente_RetornaItemComLink()
+    {
+        var r = await Roteador().TratarAsync(Req("verificarsoftware", new
+        {
+            programas = new[] { new { nome = "7-Zip 21.07 (x64)", versao = "21.07" } },
+        }));
+
+        Assert.True(r.Sucesso);
+        var lista = Assert.IsAssignableFrom<IReadOnlyList<InfoSoftware>>(r.Resultado);
+        var item = Assert.Single(lista);
+        Assert.Equal("7-Zip 21.07 (x64)", item.Nome);
+        Assert.Equal("21.07", item.VersaoAtual);
+        Assert.False(string.IsNullOrEmpty(item.VersaoDisponivel));
+        Assert.False(string.IsNullOrEmpty(item.UrlDownload));
+        Assert.Equal(StatusSoftware.AtualizacaoDisponivel, item.Status);
+    }
+
+    [Fact]
+    public async Task VerificarSoftware_ProgramaSemCoberturaNoCatalogo_NaoAparece()
+    {
+        var r = await Roteador().TratarAsync(Req("verificarsoftware", new
+        {
+            programas = new[] { new { nome = "Programa Totalmente Desconhecido XYZ", versao = "1.0" } },
+        }));
+
+        Assert.True(r.Sucesso);
+        var lista = Assert.IsAssignableFrom<IReadOnlyList<InfoSoftware>>(r.Resultado);
+        Assert.Empty(lista);
+    }
+
+    /// <summary>
+    /// Regressão do bug de casing self-caught na Story 1.3: serializa um
+    /// <see cref="ProgramaInstalado"/> real (propriedades PascalCase em C#) usando
+    /// exatamente <see cref="ProtocoloIpc.Json"/> — o mesmo codec e o mesmo shape
+    /// de payload (<c>new { programas = ... }</c>) que <c>DriversViewModel.VerificarSoftwareAsync</c>
+    /// usa em produção — em vez do <c>Req()</c> helper (que usa opções default e
+    /// fixtures já escritas em camelCase, não pega esse tipo de regressão).
+    /// </summary>
+    [Fact]
+    public async Task VerificarSoftware_PayloadSerializadoComProtocoloIpcJson_RoundTripCorreto()
+    {
+        var programas = new List<ProgramaInstalado>
+        {
+            new() { Nome = "7-Zip 21.07 (x64)", Versao = "21.07" },
+        };
+        var parametros = JsonSerializer.SerializeToElement(new { programas }, ProtocoloIpc.Json);
+        var req = new RequisicaoIpc { Metodo = "verificarsoftware", Parametros = parametros };
+
+        var r = await Roteador().TratarAsync(req);
+
+        Assert.True(r.Sucesso);
+        var lista = Assert.IsAssignableFrom<IReadOnlyList<InfoSoftware>>(r.Resultado);
+        var item = Assert.Single(lista);
+        Assert.Equal("7-Zip 21.07 (x64)", item.Nome);
+        Assert.Equal("21.07", item.VersaoAtual);
+    }
+
     // ---- analisarbiosfoto -------------------------------------------------------
 
     [Fact]

@@ -12,11 +12,13 @@ public partial class DriversViewModel : ObservableObject
 {
     private readonly IRoteadorIpc? _agente;
     private IReadOnlyList<InfoDriver> _todosDrivers = [];
+    private IReadOnlyList<ProgramaInstalado> _programasInstalados = [];
 
     public DriversViewModel(IRoteadorIpc? agente = null)
     {
         _agente = agente;
         Drivers = new ObservableCollection<InfoDriverViewModel>();
+        Software = new ObservableCollection<InfoSoftwareViewModel>();
     }
 
     [ObservableProperty] private string _statusText = "Execute o SCAN para listar os drivers instalados.";
@@ -28,6 +30,11 @@ public partial class DriversViewModel : ObservableObject
     [ObservableProperty] private bool _escaneando;
     [ObservableProperty] private bool _instalando;
     [ObservableProperty] private string _statusInstalacao = string.Empty;
+
+    // ── Software desatualizado ───────────────────────────────────────────────
+    [ObservableProperty] private bool _verificandoSoftware;
+    [ObservableProperty] private string _statusTextSoftware = "Execute o SCAN para verificar software desatualizado.";
+    [ObservableProperty] private bool _temResultadosSoftware;
 
     // ── Estado do Confirmation Panel ────────────────────────────────────────
     [ObservableProperty] private InfoDriverViewModel? _driverSelecionado;
@@ -51,11 +58,25 @@ public partial class DriversViewModel : ObservableObject
 
     public ObservableCollection<InfoDriverViewModel> Drivers { get; }
 
+    public ObservableCollection<InfoSoftwareViewModel> Software { get; }
+
     public void Popular(IReadOnlyList<InfoDriver> drivers)
     {
         _todosDrivers = drivers.OrderBy(x => x.Descricao).ToList();
         AplicarFiltro();
         UltimoScan = $"Último scan: {DateTime.Now:HH:mm  dd/MM/yyyy}";
+    }
+
+    /// <summary>
+    /// Guarda a lista de programas instalados coletada no SCAN inicial (mesmo
+    /// <c>Inventario.ProgramasInstalados</c> já usado por
+    /// <c>OtimizadorWindowsViewModel</c>) para uso posterior por
+    /// <see cref="VerificarSoftwareAsync"/> — nenhum coletor novo é criado
+    /// (Boundaries §Never).
+    /// </summary>
+    public void PopularProgramas(IReadOnlyList<ProgramaInstalado> programas)
+    {
+        _programasInstalados = programas;
     }
 
     private void AplicarFiltro()
@@ -214,6 +235,67 @@ public partial class DriversViewModel : ObservableObject
             new System.Diagnostics.ProcessStartInfo(driver.UrlDownload) { UseShellExecute = true });
     }
 
+    /// <summary>
+    /// Verifica software desatualizado via <c>verificarsoftware</c>
+    /// (IProvedorFonteOficial por trás do IPC, mesma fronteira dos drivers) —
+    /// itens sem cobertura no catálogo ou já atualizados nunca aparecem
+    /// (guard anti-alucinação, I/O Matrix da spec-1-3).
+    /// </summary>
+    [RelayCommand]
+    private async Task VerificarSoftwareAsync()
+    {
+        if (_agente is null || VerificandoSoftware) return;
+
+        VerificandoSoftware = true;
+        StatusTextSoftware = "Verificando software…";
+        try
+        {
+            // Serializado com ProtocoloIpc.Json (mesmas opções usadas pelo lado
+            // servidor em RoteadorIpc.VerificarSoftwareAsync) — sem isso, o
+            // "Nome" (PascalCase, .NET default) de ProgramaInstalado não bate
+            // com a leitura camelCase do lado servidor e a desserialização falha.
+            var payload = JsonSerializer.SerializeToElement(
+                new { programas = _programasInstalados }, ProtocoloIpc.Json);
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "verificarsoftware", Parametros = payload });
+
+            if (resp.Sucesso && resp.Resultado is IReadOnlyList<InfoSoftware> lista)
+            {
+                Software.Clear();
+                foreach (var s in lista.OrderBy(x => x.Nome))
+                    Software.Add(new InfoSoftwareViewModel(s));
+
+                TemResultadosSoftware = Software.Count > 0;
+                StatusTextSoftware = Software.Count == 0
+                    ? "Nenhum software desatualizado encontrado."
+                    : $"{Software.Count} programa(s) com atualização disponível.";
+            }
+            else
+            {
+                Software.Clear();
+                TemResultadosSoftware = false;
+                StatusTextSoftware = $"Falha ao verificar software: {resp.Erro}";
+            }
+        }
+        finally
+        {
+            VerificandoSoftware = false;
+        }
+    }
+
+    /// <summary>
+    /// Só abre a URL oficial no navegador padrão — mesmo padrão de
+    /// <see cref="AbrirDownload"/>. Nenhum download/instalação pelo app
+    /// (Boundaries §Always da spec-1-3).
+    /// </summary>
+    [RelayCommand]
+    private void AbrirDownloadSoftware(InfoSoftwareViewModel? software)
+    {
+        if (software?.UrlDownload is null) return;
+        System.Diagnostics.Process.Start(
+            new System.Diagnostics.ProcessStartInfo(software.UrlDownload) { UseShellExecute = true });
+    }
+
     [RelayCommand]
     private async Task ExportarBackupAsync()
     {
@@ -274,4 +356,33 @@ public sealed class InfoDriverViewModel
     public string? UrlDownload    { get; }
     public bool    TemDownload    { get; }
     public string  HwidCurto     { get; }
+}
+
+public sealed class InfoSoftwareViewModel
+{
+    public InfoSoftwareViewModel(InfoSoftware s)
+    {
+        Nome = s.Nome;
+        VersaoAtual = string.IsNullOrWhiteSpace(s.VersaoAtual) ? "—" : s.VersaoAtual;
+        VersaoDisponivel = string.IsNullOrWhiteSpace(s.VersaoDisponivel) ? "—" : s.VersaoDisponivel;
+
+        (StatusTexto, CorStatus, CorFundo) = s.Status switch
+        {
+            StatusSoftware.Atualizado            => ("ATUALIZADO",  new SolidColorBrush(Color.Parse("#00FF88")), new SolidColorBrush(Color.Parse("#00FF8815"))),
+            StatusSoftware.AtualizacaoDisponivel => ("ATUALIZAÇÃO", new SolidColorBrush(Color.Parse("#FFCC00")), new SolidColorBrush(Color.Parse("#FFCC0015"))),
+            _                                     => ("—",           new SolidColorBrush(Color.Parse("#484865")), new SolidColorBrush(Color.Parse("#48486510"))),
+        };
+
+        UrlDownload = s.UrlDownload;
+        TemDownload = !string.IsNullOrEmpty(s.UrlDownload);
+    }
+
+    public string  Nome             { get; }
+    public string  VersaoAtual      { get; }
+    public string  VersaoDisponivel { get; }
+    public string  StatusTexto      { get; }
+    public IBrush  CorStatus        { get; }
+    public IBrush  CorFundo         { get; }
+    public string? UrlDownload      { get; }
+    public bool    TemDownload      { get; }
 }

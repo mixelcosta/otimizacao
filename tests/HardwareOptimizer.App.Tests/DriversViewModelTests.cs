@@ -1,5 +1,6 @@
 using HardwareOptimizer.App.ViewModels;
 using HardwareOptimizer.Core.Contracts;
+using HardwareOptimizer.Ipc;
 
 namespace HardwareOptimizer.App.Tests;
 

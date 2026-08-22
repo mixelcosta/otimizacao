@@ -98,6 +98,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "reverteratualizacaodriver" => OperatingSystem.IsWindows()
                     ? await ReverterAtualizacaoDriverAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "verificarsoftware" => await VerificarSoftwareAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "desinstalarprogramas" => OperatingSystem.IsWindows()
                     ? await DesinstalarProgramasAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
@@ -541,6 +542,40 @@ public sealed class RoteadorIpc : IRoteadorIpc
         return resultado.Sucesso
             ? RespostaIpc.Ok(req.Id, true)
             : RespostaIpc.Falha(req.Id, resultado.MensagemErro);
+    }
+
+    /// <summary>
+    /// Verifica software desatualizado via <see cref="VerificadorSoftware"/> —
+    /// ponto único de comparação de versão de software (Boundaries §Never da
+    /// spec-1-3: nunca estende <see cref="OrquestradorAtualizacao"/>, acoplado a
+    /// driver). Sem dependência de Windows (só compara dados já coletados contra
+    /// o catálogo estático), por isso não é gated por
+    /// <see cref="OperatingSystem.IsWindows"/> como os métodos de driver.
+    /// </summary>
+    private static async Task<RespostaIpc> VerificarSoftwareAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p
+            || !p.TryGetProperty("programas", out var arr)
+            || arr.ValueKind != JsonValueKind.Array)
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'programas' obrigatório.");
+
+        List<ProgramaInstalado> programas;
+        try
+        {
+            programas = JsonSerializer.Deserialize<List<ProgramaInstalado>>(arr.GetRawText(), ProtocoloIpc.Json)
+                ?? [];
+        }
+        catch (JsonException ex)
+        {
+            return RespostaIpc.Falha(req.Id, $"Parâmetro 'programas' inválido: {ex.Message}");
+        }
+
+        var verificador = new VerificadorSoftware(
+            new ProvedorFonteOficialSoftware(new RepositorioVersoesSoftwareEstatico()),
+            NullLogger<VerificadorSoftware>.Instance);
+
+        var resultado = await verificador.VerificarAsync(programas, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, resultado);
     }
 
     [SupportedOSPlatform("windows")]
