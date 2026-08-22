@@ -71,7 +71,7 @@ public partial class ConfirmationPanel : UserControl
         AtualizarSeveridade();
     }
 
-    /// <summary>Severidade do painel — só <c>Driver</c> é usada nesta história.</summary>
+    /// <summary>Severidade do painel — controla a cor de destaque (<c>Driver</c>/<c>Bios</c>/<c>Manutencao</c>).</summary>
     public SeveridadeConfirmacao Severidade
     {
         get => GetValue(SeveridadeProperty);

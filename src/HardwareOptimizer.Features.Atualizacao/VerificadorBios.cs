@@ -10,7 +10,7 @@ namespace HardwareOptimizer.Features.Atualizacao;
 /// deliberadamente não estende <c>AnalisadorBios</c>/<c>ModuloBios</c>, que
 /// comparam contra <c>InfoBiosFabricante</c>, incompatível com a fronteira fina).
 ///
-/// Reaproveita <see cref="VersaoBios.Comparar"/> (comparação) e
+/// Reaproveita <see cref="VersaoBios.EhMaisRecente"/> (comparação) e
 /// <see cref="GeradorGuiaBios.Gerar"/> (guia passo a passo) — nenhuma lógica de
 /// comparação/geração de guia é recriada. Mesmo guard anti-alucinação de
 /// <c>VerificadorSoftware</c> (Story 1.3): sem cobertura no catálogo, ou já

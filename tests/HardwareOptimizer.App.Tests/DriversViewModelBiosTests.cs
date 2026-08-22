@@ -152,7 +152,7 @@ public class DriversViewModelBiosTests
     // ── VerGuiaBios ──────────────────────────────────────────────────────────
 
     [Fact]
-    public void VerGuiaBios_RevelaGuiaSemChamarAgente()
+    public void VerGuiaBios_ComConfirmacao_RevelaGuiaSemChamarAgente()
     {
         var agente = new AgenteBiosFake(Info());
         var vm = new DriversViewModel(agente);
@@ -160,10 +160,44 @@ public class DriversViewModelBiosTests
         var chamadasAntes = agente.Chamadas;
 
         vm.AbrirConfirmacaoBiosCommand.Execute(null);
+        vm.ConfirmadoBios = true;
         vm.VerGuiaBiosCommand.Execute(null);
 
         Assert.True(vm.GuiaBiosVisivel);
         Assert.Equal(chamadasAntes, agente.Chamadas);
+    }
+
+    [Fact]
+    public void VerGuiaBios_SemConfirmacao_NaoRevelaGuia()
+    {
+        var vm = new DriversViewModel(new AgenteBiosFake(Info()));
+        vm.PopularBios(Placa());
+        vm.AbrirConfirmacaoBiosCommand.Execute(null);
+
+        vm.VerGuiaBiosCommand.Execute(null);
+
+        Assert.False(vm.ConfirmadoBios);
+        Assert.False(vm.GuiaBiosVisivel, "nunca deve revelar o guia sem a confirmação de risco (defesa em profundidade, mesmo padrão do driver)");
+    }
+
+    [Fact]
+    public async Task VerificarBiosAsync_NovaVerificacao_ResetaConfirmacaoEGuiaJaAbertos()
+    {
+        var agente = new AgenteBiosFake(Info());
+        var vm = new DriversViewModel(agente);
+        vm.PopularBios(Placa());
+        vm.AbrirConfirmacaoBiosCommand.Execute(null);
+        vm.ConfirmadoBios = true;
+        vm.VerGuiaBiosCommand.Execute(null);
+        Assert.True(vm.GuiaBiosVisivel);
+
+        // Uma nova verificação (ex.: novo SCAN) não pode herdar confirmação/guia
+        // já revelados de uma verificação anterior.
+        await vm.VerificarBiosCommand.ExecuteAsync(null);
+
+        Assert.False(vm.PainelConfirmacaoBiosAberto);
+        Assert.False(vm.ConfirmadoBios);
+        Assert.False(vm.GuiaBiosVisivel);
     }
 
     // ── Fakes ────────────────────────────────────────────────────────────────

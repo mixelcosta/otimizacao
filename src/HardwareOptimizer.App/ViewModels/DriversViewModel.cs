@@ -346,6 +346,13 @@ public partial class DriversViewModel : ObservableObject
 
             InfoBiosAtual = resp.Sucesso ? resp.Resultado as InfoBios : null;
             TemBiosDesatualizada = InfoBiosAtual is not null;
+
+            // Um novo resultado nunca deve herdar confirmação/painel de uma
+            // verificação anterior — o painel precisa aparecer de novo pro
+            // alerta atual (Boundaries §Always da spec-1-4).
+            PainelConfirmacaoBiosAberto = false;
+            ConfirmadoBios = false;
+            GuiaBiosVisivel = false;
         }
         finally
         {
@@ -379,10 +386,14 @@ public partial class DriversViewModel : ObservableObject
     /// revela o guia já carregado (montado por <c>GeradorGuiaBios</c> dentro de
     /// <see cref="InfoBiosAtual"/>). Nenhuma chamada de sistema/IPC é feita aqui —
     /// o app nunca executa a gravação da BIOS (Boundaries §Never da spec-1-4).
+    /// Guard defensivo redundante com o botão desabilitado do <c>ConfirmationPanel</c>
+    /// (mesmo padrão de <see cref="AplicarAtualizacaoAsync"/> pro driver) — nunca
+    /// revela o guia sem a confirmação de risco.
     /// </summary>
     [RelayCommand]
     private void VerGuiaBios()
     {
+        if (!ConfirmadoBios) return;
         GuiaBiosVisivel = true;
     }
 
