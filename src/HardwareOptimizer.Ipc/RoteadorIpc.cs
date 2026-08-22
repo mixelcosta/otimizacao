@@ -6,6 +6,7 @@ using System.Text.Json;
 using HardwareOptimizer.Agent.Backup;
 using HardwareOptimizer.Agent.Collector;
 using HardwareOptimizer.Agent.Drivers;
+using HardwareOptimizer.Agent.EventLog;
 using HardwareOptimizer.Agent.Security;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Execution.Windows;
@@ -147,6 +148,9 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "desabilitarfeature" => OperatingSystem.IsWindows()
                     ? await DesabilitarFeatureAsync(requisicao, cancellationToken).ConfigureAwait(false)
+                    : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "diagnosticarcausaraiz" => OperatingSystem.IsWindows()
+                    ? await DiagnosticarCausaRaizAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
@@ -611,6 +615,65 @@ public sealed class RoteadorIpc : IRoteadorIpc
             NullLogger<VerificadorBios>.Instance);
 
         var resultado = await verificador.VerificarAsync(placa, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, resultado);
+    }
+
+    /// <summary>
+    /// Diagnóstico de causa-raiz (spec-1-5): lê o Event Log do Windows sob
+    /// demanda via <see cref="LeitorEventLog"/> fresco (nunca em timer/daemon —
+    /// Boundaries §Always/§Never) e correlaciona com os drivers/BIOS
+    /// desatualizados já coletados pelo cliente (Stories 1.2/1.4 — nenhum
+    /// segundo leitor de driver/BIOS é criado aqui, Boundaries §Never) via
+    /// <see cref="CorrelacionadorCausaRaiz"/>.
+    /// </summary>
+    [SupportedOSPlatform("windows")]
+    private static async Task<RespostaIpc> DiagnosticarCausaRaizAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        // Ambos os parâmetros são opcionais (uma primeira execução sem SCAN prévio
+        // de driver/BIOS ainda deve funcionar, só sem correlação possível) — mas
+        // quando presentes precisam ter o shape esperado, senão é erro do chamador.
+        List<InfoDriver> driversDesatualizados = [];
+        if (req.Parametros is { } p && p.TryGetProperty("driversDesatualizados", out var driversEl))
+        {
+            if (driversEl.ValueKind != JsonValueKind.Array)
+                return RespostaIpc.Falha(req.Id, "Parâmetro 'driversDesatualizados' deve ser uma lista.");
+
+            try
+            {
+                driversDesatualizados = JsonSerializer.Deserialize<List<InfoDriver>>(
+                    driversEl.GetRawText(), ProtocoloIpc.Json) ?? [];
+            }
+            catch (JsonException ex)
+            {
+                return RespostaIpc.Falha(req.Id, $"Parâmetro 'driversDesatualizados' inválido: {ex.Message}");
+            }
+        }
+
+        InfoBios? bios = null;
+        if (req.Parametros is { } pb && pb.TryGetProperty("bios", out var biosEl)
+            && biosEl.ValueKind != JsonValueKind.Null)
+        {
+            if (biosEl.ValueKind != JsonValueKind.Object)
+                return RespostaIpc.Falha(req.Id, "Parâmetro 'bios' deve ser um objeto.");
+
+            try
+            {
+                bios = JsonSerializer.Deserialize<InfoBios>(biosEl.GetRawText(), ProtocoloIpc.Json);
+            }
+            catch (JsonException ex)
+            {
+                return RespostaIpc.Falha(req.Id, $"Parâmetro 'bios' inválido: {ex.Message}");
+            }
+        }
+
+        var leitor = new LeitorEventLog(NullLogger<LeitorEventLog>.Instance);
+        // 30 dias: janela "recente" o bastante para capturar travamentos ainda
+        // relevantes sem sobrecarregar a UI com histórico antigo do Event Log.
+        var eventos = await leitor.LerAsync(diasRecentes: 30, ct).ConfigureAwait(false);
+
+        var correlacionador = new CorrelacionadorCausaRaiz();
+        var resultado = correlacionador.Correlacionar(eventos, driversDesatualizados, bios);
+
         return RespostaIpc.Ok(req.Id, resultado);
     }
 

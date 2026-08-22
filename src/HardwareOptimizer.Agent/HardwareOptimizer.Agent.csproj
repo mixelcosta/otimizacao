@@ -17,6 +17,10 @@
          os tipos existem mas lançam em tempo de execução). -->
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <!-- System.Management vem transitivamente via LibreHardwareMonitorLib -->
+    <!-- Leitura do Event Log (LeitorEventLog, spec-1-5) via API gerenciada nativa
+         (System.Diagnostics.Eventing.Reader) — o pacote é necessário porque o
+         tipo foi movido para fora do runtime base a partir do .NET 5+. -->
+    <PackageReference Include="System.Diagnostics.EventLog" Version="8.0.1" />
   </ItemGroup>
 
   <PropertyGroup>

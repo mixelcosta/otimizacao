@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:HardwareOptimizer.App.ViewModels"
              xmlns:controls="using:HardwareOptimizer.App.Controls"
+             xmlns:core="using:HardwareOptimizer.Core.Contracts"
              x:Class="HardwareOptimizer.App.Views.DriversView"
              x:DataType="vm:DriversViewModel">
 
@@ -396,6 +397,91 @@
           </Border>
 
         </StackPanel>
+
+        <!-- ── Diagnóstico de travamentos (causa-raiz via Event Log) ── -->
+        <Grid ColumnDefinitions="*,Auto" Margin="4,24,4,0">
+          <StackPanel Grid.Column="0" Spacing="3">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                      VerticalAlignment="Center" />
+              <TextBlock Text="DIAGNÓSTICO DE TRAVAMENTOS" FontSize="13" FontWeight="Bold"
+                         Foreground="#484865" LetterSpacing="3"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Text="Lê o Event Log sob demanda e correlaciona com driver/BIOS já sinalizados como desatualizados"
+                       Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+          </StackPanel>
+
+          <Button Grid.Column="1"
+                  Command="{Binding DiagnosticarCausaRaizCommand}"
+                  IsEnabled="{Binding !DiagnosticandoCausaRaiz}"
+                  Background="#00C8FF18" Foreground="#00C8FF"
+                  BorderBrush="#00C8FF40" BorderThickness="1"
+                  Padding="12,6" CornerRadius="5"
+                  FontSize="11" FontWeight="SemiBold"
+                  VerticalAlignment="Center"
+                  Cursor="Hand">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="⚕" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Diagnosticar causa-raiz" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </Grid>
+
+        <TextBlock Text="{Binding StatusTextDiagnostico}"
+                   Foreground="#484865" FontSize="12"
+                   Margin="4,8,4,0" TextWrapping="Wrap" />
+
+        <ItemsControl ItemsSource="{Binding Eventos}" Margin="0,8,0,0">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="core:EventoInstabilidade">
+
+              <Border CornerRadius="8"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
+                      Padding="14,10" Margin="0,0,0,2">
+                <Border.Background>
+                  <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#0C0C1E" Offset="0" />
+                    <GradientStop Color="#09091A" Offset="1" />
+                  </LinearGradientBrush>
+                </Border.Background>
+
+                <StackPanel Spacing="4">
+                  <Grid ColumnDefinitions="Auto,Auto,*">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Timestamp, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}"
+                               Foreground="#484865" FontSize="11"
+                               FontFamily="Consolas,Courier New,monospace"
+                               VerticalAlignment="Center" />
+                    <Border Grid.Column="1" Background="#48486515"
+                            CornerRadius="4" Padding="8,2" Margin="10,0,0,0">
+                      <TextBlock Text="{Binding Tipo}"
+                                 Foreground="#00C8FF" FontSize="10" FontWeight="Bold"
+                                 LetterSpacing="0.5" />
+                    </Border>
+                    <TextBlock Grid.Column="2" Text="{Binding Origem}"
+                               Foreground="#E0E0F2" FontSize="12" FontWeight="SemiBold"
+                               Margin="10,0,0,0" HorizontalAlignment="Right"
+                               TextTrimming="CharacterEllipsis" />
+                  </Grid>
+
+                  <TextBlock Text="{Binding Mensagem}"
+                             Foreground="#484865" FontSize="11"
+                             TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"
+                             IsVisible="{Binding Mensagem, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                  <Border Background="#FFAA0018" CornerRadius="4" Padding="8,3"
+                          HorizontalAlignment="Left" Margin="0,4,0,0"
+                          IsVisible="{Binding CausaProvavel, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <TextBlock Text="{Binding CausaProvavel, StringFormat='Causa provável: {0}'}"
+                               Foreground="#FFAA00" FontSize="10" FontWeight="Bold" />
+                  </Border>
+                </StackPanel>
+              </Border>
+
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
       </StackPanel>
     </ScrollViewer>

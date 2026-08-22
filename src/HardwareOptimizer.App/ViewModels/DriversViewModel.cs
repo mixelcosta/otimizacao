@@ -20,6 +20,7 @@ public partial class DriversViewModel : ObservableObject
         _agente = agente;
         Drivers = new ObservableCollection<InfoDriverViewModel>();
         Software = new ObservableCollection<InfoSoftwareViewModel>();
+        Eventos = new ObservableCollection<EventoInstabilidade>();
     }
 
     [ObservableProperty] private string _statusText = "Execute o SCAN para listar os drivers instalados.";
@@ -50,6 +51,12 @@ public partial class DriversViewModel : ObservableObject
     [ObservableProperty] private string _mensagemConfirmacaoBios = string.Empty;
     [ObservableProperty] private bool _guiaBiosVisivel;
 
+    // ── Diagnóstico de causa-raiz — Event Log correlacionado com driver/BIOS
+    // desatualizados (spec-1-5). Sempre sob demanda (botão), nunca automático. ──
+    [ObservableProperty] private bool _diagnosticandoCausaRaiz;
+    [ObservableProperty] private string _statusTextDiagnostico =
+        "Diagnostique travamentos recentes (BSOD/WHEA/crash) correlacionando com drivers e BIOS desatualizados.";
+
     // ── Estado do Confirmation Panel ────────────────────────────────────────
     [ObservableProperty] private InfoDriverViewModel? _driverSelecionado;
     [ObservableProperty] private bool _painelConfirmacaoAberto;
@@ -73,6 +80,8 @@ public partial class DriversViewModel : ObservableObject
     public ObservableCollection<InfoDriverViewModel> Drivers { get; }
 
     public ObservableCollection<InfoSoftwareViewModel> Software { get; }
+
+    public ObservableCollection<EventoInstabilidade> Eventos { get; }
 
     public void Popular(IReadOnlyList<InfoDriver> drivers)
     {
@@ -395,6 +404,54 @@ public partial class DriversViewModel : ObservableObject
     {
         if (!ConfirmadoBios) return;
         GuiaBiosVisivel = true;
+    }
+
+    /// <summary>
+    /// Diagnóstico de causa-raiz via <c>diagnosticarcausaraiz</c> — leitura sob
+    /// demanda do Event Log (nunca automática) correlacionada com os drivers já
+    /// sinalizados como desatualizados (<see cref="StatusDriver.AtualizacaoDisponivel"/>)
+    /// e com <see cref="InfoBiosAtual"/> já coletados nesta tela. Nenhum leitor
+    /// de driver/BIOS novo é criado aqui — reaproveita o que já foi verificado
+    /// (Boundaries §Never da spec-1-5).
+    /// </summary>
+    [RelayCommand]
+    private async Task DiagnosticarCausaRaizAsync()
+    {
+        if (_agente is null || DiagnosticandoCausaRaiz) return;
+
+        DiagnosticandoCausaRaiz = true;
+        StatusTextDiagnostico = "Lendo Event Log e correlacionando com drivers/BIOS desatualizados…";
+        try
+        {
+            var driversDesatualizados = _todosDrivers
+                .Where(d => d.Status == StatusDriver.AtualizacaoDisponivel)
+                .ToList();
+
+            var payload = JsonSerializer.SerializeToElement(
+                new { driversDesatualizados, bios = InfoBiosAtual }, ProtocoloIpc.Json);
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "diagnosticarcausaraiz", Parametros = payload });
+
+            if (resp.Sucesso && resp.Resultado is IReadOnlyList<EventoInstabilidade> lista)
+            {
+                Eventos.Clear();
+                foreach (var evento in lista)
+                    Eventos.Add(evento);
+
+                StatusTextDiagnostico = Eventos.Count == 0
+                    ? "Nenhum evento de instabilidade encontrado no período recente."
+                    : $"{Eventos.Count} evento(s) de instabilidade encontrado(s).";
+            }
+            else
+            {
+                Eventos.Clear();
+                StatusTextDiagnostico = $"Falha ao diagnosticar causa-raiz: {resp.Erro}";
+            }
+        }
+        finally
+        {
+            DiagnosticandoCausaRaiz = false;
+        }
     }
 
     [RelayCommand]

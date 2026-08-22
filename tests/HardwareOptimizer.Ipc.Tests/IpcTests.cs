@@ -505,6 +505,105 @@ public sealed class IpcTests
         Assert.Contains(lista, a => a.Id == "FEATURE_HYPER_V");
     }
 
+    // ---- diagnosticarcausaraiz -----------------------------------------------------
+    // Cobre "conecta o fluxo real" da spec-1-5-causa-raiz-event-log: o roteador
+    // de fato monta LeitorEventLog + CorrelacionadorCausaRaiz (leitura real do
+    // Event Log quando em Windows), não um fake.
+
+    [Fact]
+    public async Task DiagnosticarCausaRaiz_NaoWindows_RetornaFalha()
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("diagnosticarcausaraiz"));
+        Assert.False(r.Sucesso);
+        Assert.Contains("Windows", r.Erro, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task DiagnosticarCausaRaiz_Windows_SemParametros_RetornaListaDeEventos()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("diagnosticarcausaraiz"));
+        Assert.True(r.Sucesso);
+        Assert.IsAssignableFrom<IReadOnlyList<EventoInstabilidade>>(r.Resultado);
+    }
+
+    [Fact]
+    public async Task DiagnosticarCausaRaiz_Windows_ComDriversEBios_NaoLanca()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("diagnosticarcausaraiz", new
+        {
+            driversDesatualizados = new[]
+            {
+                new { hardwareId = "PCI\\VEN_10DE", descricao = "GeForce RTX 3060", fabricante = "NVIDIA" },
+            },
+            bios = new { fabricante = "ASUS", modelo = "ROG Strix B550-F", versaoAtual = "2806", teclaSetup = "Del", utilitario = "EZ Flash 3" },
+        }));
+
+        Assert.True(r.Sucesso);
+        Assert.IsAssignableFrom<IReadOnlyList<EventoInstabilidade>>(r.Resultado);
+    }
+
+    [Fact]
+    public async Task DiagnosticarCausaRaiz_Windows_ParametroDriversInvalido_RetornaFalha()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var r = await Roteador().TratarAsync(Req("diagnosticarcausaraiz", new
+        {
+            driversDesatualizados = "não é um array",
+        }));
+
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    /// <summary>
+    /// Regressão da mesma classe de bug de casing self-caught nas Stories 1.3/1.4:
+    /// serializa <see cref="InfoDriver"/>/<see cref="InfoBios"/> reais (propriedades
+    /// PascalCase em C#) usando exatamente <see cref="ProtocoloIpc.Json"/> — o
+    /// mesmo codec e o mesmo shape de payload que <c>DriversViewModel.DiagnosticarCausaRaizAsync</c>
+    /// usa em produção — em vez do helper <c>Req()</c> (que usa opções default e
+    /// fixtures já escritas à mão em camelCase, não pega esse tipo de regressão).
+    /// </summary>
+    [Fact]
+    public async Task DiagnosticarCausaRaiz_PayloadSerializadoComProtocoloIpcJson_RoundTripCorreto()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        var driversDesatualizados = new List<InfoDriver>
+        {
+            new()
+            {
+                HardwareId = "PCI\\VEN_10DE&DEV_2504",
+                Descricao = "GeForce RTX 3060",
+                Fabricante = "NVIDIA",
+                Status = StatusDriver.AtualizacaoDisponivel,
+            },
+        };
+        var bios = new InfoBios
+        {
+            Fabricante = "ASUS",
+            Modelo = "ROG STRIX B550-F",
+            VersaoAtual = "2806",
+            VersaoDisponivel = "3405",
+            TeclaSetup = "Del",
+            Utilitario = "EZ Flash 3",
+        };
+        var parametros = JsonSerializer.SerializeToElement(
+            new { driversDesatualizados, bios }, ProtocoloIpc.Json);
+        var req = new RequisicaoIpc { Metodo = "diagnosticarcausaraiz", Parametros = parametros };
+
+        var r = await Roteador().TratarAsync(req);
+
+        Assert.True(r.Sucesso);
+        Assert.IsAssignableFrom<IReadOnlyList<EventoInstabilidade>>(r.Resultado);
+    }
+
     private sealed class ColetorFake : IColetorInventario
     {
         private readonly Inventario _inventario;
