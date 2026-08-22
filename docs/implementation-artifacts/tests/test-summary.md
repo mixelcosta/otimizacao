@@ -91,3 +91,50 @@ PASSOU: Story 1.2 validada a partir de clone limpo -- fix do rollback presente, 
 
 - Story 1.3 (Épico 1) segue no ciclo Dev → Revisão → QA.
 - Item de deferred-work.md a acompanhar: `whql_catalog.json` tem URLs de landing page, não arquivo direto — o caminho de sucesso de "aprovar atualização" é inalcançável com o catálogo atual em teste manual/exploratório.
+
+---
+
+## Story validada — Story 1.3 (Épico 1)
+
+Usuário é alertado sobre software desatualizado via fonte oficial. Commits `08aa8fe` (implementação) + `8fee95a` (fixes pós-revisão independente `bmad-code-review`: cancelamento propagado corretamente, guard de versão espaços-em-branco).
+
+### Regressão de ponta a ponta
+
+- [x] `scripts/verificar-story-1-3-clone-limpo.ps1` — clona o repositório num diretório temporário isolado (com placeholder local só do clone pro bug conhecido de `Features.LifeCounter`) e valida:
+  1. **Fixes críticos da revisão independente presentes**: `VerificadorSoftware.VerificarAsync` tem um `catch (OperationCanceledException) { throw; }` dedicado antes do catch genérico (sem ele, cancelamento do `CancellationToken` seria tratado como "falha do provedor" e engolido silenciosamente) e usa `IsNullOrWhiteSpace` — não `IsNullOrEmpty` — nos dois guards de versão (`programa.Versao` e `oficial.VersaoDisponivel`; sem isso, uma versão só-com-espaços passaria como válida, reabrindo o bug de dado inventado que a primeira rodada de revisão já havia corrigido para nulo/vazio).
+  2. `HardwareOptimizer.Ipc` e `HardwareOptimizer.App` compilam sem erro a partir do clone limpo (arrastam `Features.Atualizacao`).
+  3. As 3 suítes de teste afetadas passam com as contagens exatas esperadas.
+
+### Suítes de unidade (já existentes, re-verificadas a partir de clone limpo)
+
+- [x] `tests/HardwareOptimizer.Features.Atualizacao.Tests` — 33/33 aprovados.
+- [x] `tests/HardwareOptimizer.Ipc.Tests` — 62/62 aprovados.
+- [x] `tests/HardwareOptimizer.App.Tests` — 97/97 aprovados.
+
+### Execução
+
+```
+PS> .\scripts\verificar-story-1-3-clone-limpo.ps1
+>> Clonando ... para ...
+>> Placeholder local (só neste clone) pro bug conhecido de Features.LifeCounter
+>> 1. Confirmando os fixes críticos da revisão independente
+>> 2. Compilando Ipc (arrasta Atualizacao, Drivers, LifeCounter)
+Compilação com êxito.  0 Aviso(s)  0 Erro(s)
+>> 3. Compilando App
+Compilação com êxito.  1 Aviso(s) (pré-existente, não relacionado)  0 Erro(s)
+>> Testando tests/HardwareOptimizer.Features.Atualizacao.Tests (esperado: 33)
+>> Testando tests/HardwareOptimizer.Ipc.Tests (esperado: 62)
+>> Testando tests/HardwareOptimizer.App.Tests (esperado: 97)
+PASSOU: Story 1.3 validada a partir de clone limpo -- fixes de cancelamento/versao presentes, build e 192 testes verdes.
+```
+
+### Coverage
+
+- Matrix Test Audit da spec (`spec-1-3-software-desatualizado.md`, 5 linhas: software desatualizado no catálogo, mesma versão, sem cobertura, lista vazia, exceção no provedor) — todas cobertas por `VerificadorSoftwareTests.cs`, re-confirmadas a partir de clone limpo.
+- Os dois bugs reais encontrados pela revisão independente (`bmad-code-review`, 4 lenses: Blind Hunter, Edge Case Hunter, Verification Gap, Acceptance Auditor) — cancelamento engolido e guard de versão com espaços em branco — têm checagem própria no script, além dos testes de regressão dedicados (`VerificarAsync_CancelamentoDoProvedor_Propaga`, `VerificarAsync_VersaoInstaladaSomenteEspacos_NaoAparece`, `VerificarAsync_ProvedorRetornaVersaoSomenteEspacos_TratadoComoSemCobertura`).
+- `IpcTests.VerificarSoftware_PayloadSerializadoComProtocoloIpcJson_RoundTripCorreto` fecha a lacuna de regressão do bug de casing self-caught pelo Dev — serializa um `ProgramaInstalado` real com `ProtocoloIpc.Json` (o mesmo codec e shape usados em produção por `DriversViewModel`), não fixtures escritas manualmente em camelCase.
+
+### Next Steps
+
+- Story 1.4 (Épico 1) segue no ciclo Dev → Revisão → QA.
+- Item de deferred-work.md a acompanhar: `Drivers.PopularProgramas(...)` em `ShellViewModel.cs` não tem nenhum teste automatizado — infraestrutura de teste headless do Avalonia ainda não existe no projeto `App.Tests`; se essa wiring quebrar silenciosamente, nenhum teste hoje pegaria.
