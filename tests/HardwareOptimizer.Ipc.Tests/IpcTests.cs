@@ -1,5 +1,6 @@
 using System.Text.Json;
 using HardwareOptimizer.Agent.Collector;
+using HardwareOptimizer.Agent.Sensors;
 using HardwareOptimizer.Core.Common;
 using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Features.Licensing;
@@ -637,6 +638,113 @@ public sealed class IpcTests
         Assert.IsAssignableFrom<IReadOnlyList<EventoInstabilidade>>(r.Resultado);
     }
 
+    // ---- diagnosticarmanutencao (spec-2-1) ------------------------------------
+
+    private static Sensor SensorTemperatura(double valor) =>
+        new() { Nome = "CPU Package", Tipo = TipoSensor.Temperatura, Valor = valor, Unidade = "°C" };
+
+    private static LeituraSensores LeituraComTemperatura(double? valor) => new()
+    {
+        Sensores = valor is null ? Array.Empty<Sensor>() : new[] { SensorTemperatura(valor.Value) },
+    };
+
+    /// <summary>Roteador com carga simulada curtíssima — testa o fluxo real sem
+    /// pagar o custo do laço ocupado de produção (~8s, ver Design Notes).</summary>
+    private static RoteadorIpc RoteadorManutencao(ILeitorSensores leitor) =>
+        new(sensores: new ServicoSensores(leitor), duracaoCargaManutencao: TimeSpan.FromMilliseconds(15));
+
+    [Fact]
+    public async Task DiagnosticarManutencao_TemperaturaIdleAlta_RetornaAchado()
+    {
+        var leitor = new LeitorSensoresFake(LeituraComTemperatura(60.0), LeituraComTemperatura(72.0));
+
+        var r = await RoteadorManutencao(leitor).TratarAsync(Req("diagnosticarmanutencao"));
+
+        Assert.True(r.Sucesso);
+        var achado = Assert.IsType<AchadoManutencao>(r.Resultado);
+        Assert.Equal(60.0, achado.TemperaturaIdleC);
+        Assert.Equal(72.0, achado.TemperaturaCargaC);
+    }
+
+    /// <summary>
+    /// Corrigido na revisão independente: quando a leitura sob carga não tem
+    /// sensor de temperatura, o campo fica <c>null</c> — nunca um fallback pro
+    /// valor idle (que seria um dado fabricado, exibível na própria tela desta
+    /// história).
+    /// </summary>
+    [Fact]
+    public async Task DiagnosticarManutencao_SemSensorNaLeituraDeCarga_TemperaturaCargaFicaNull()
+    {
+        var leitor = new LeitorSensoresFake(LeituraComTemperatura(60.0), LeituraComTemperatura(null));
+
+        var r = await RoteadorManutencao(leitor).TratarAsync(Req("diagnosticarmanutencao"));
+
+        Assert.True(r.Sucesso);
+        var achado = Assert.IsType<AchadoManutencao>(r.Resultado);
+        Assert.Equal(60.0, achado.TemperaturaIdleC);
+        Assert.Null(achado.TemperaturaCargaC);
+    }
+
+    /// <summary>I/O Matrix (Edge Case Hunter): leitura idle <c>NaN</c> (sensor com
+    /// falha, valor não-null) nunca deve produzir achado fabricado.</summary>
+    [Fact]
+    public async Task DiagnosticarManutencao_TemperaturaIdleNaN_RetornaNull()
+    {
+        var leitor = new LeitorSensoresFake(LeituraComTemperatura(double.NaN), LeituraComTemperatura(70.0));
+
+        var r = await RoteadorManutencao(leitor).TratarAsync(Req("diagnosticarmanutencao"));
+
+        Assert.True(r.Sucesso);
+        Assert.Null(r.Resultado);
+    }
+
+    [Fact]
+    public async Task DiagnosticarManutencao_TemperaturaIdleNormal_RetornaNull()
+    {
+        var leitor = new LeitorSensoresFake(LeituraComTemperatura(40.0), LeituraComTemperatura(65.0));
+
+        var r = await RoteadorManutencao(leitor).TratarAsync(Req("diagnosticarmanutencao"));
+
+        Assert.True(r.Sucesso);
+        Assert.Null(r.Resultado);
+    }
+
+    [Fact]
+    public async Task DiagnosticarManutencao_SemSensorDeTemperatura_RetornaNull()
+    {
+        var leitor = new LeitorSensoresFake(LeituraComTemperatura(null), LeituraComTemperatura(null));
+
+        var r = await RoteadorManutencao(leitor).TratarAsync(Req("diagnosticarmanutencao"));
+
+        Assert.True(r.Sucesso);
+        Assert.Null(r.Resultado);
+    }
+
+    /// <summary>I/O Matrix: falha inesperada na leitura de sensor é tratada como
+    /// "sem sinal" — nunca propaga como erro IPC.</summary>
+    [Fact]
+    public async Task DiagnosticarManutencao_LeituraDeSensorLancaExcecao_RetornaSucessoSemAchado()
+    {
+        var leitor = new LeitorSensoresFake(new InvalidOperationException("Falha simulada de driver de sensor."));
+
+        var r = await RoteadorManutencao(leitor).TratarAsync(Req("diagnosticarmanutencao"));
+
+        Assert.True(r.Sucesso);
+        Assert.Null(r.Resultado);
+    }
+
+    [Fact]
+    public async Task DiagnosticarManutencao_NaoExigeWindows_FuncionaEmQualquerPlataforma()
+    {
+        // Mesmo padrão do case "sensores" existente — ServicoSensores já resolve
+        // a plataforma internamente, sem gate OperatingSystem.IsWindows() aqui.
+        var leitor = new LeitorSensoresFake(LeituraComTemperatura(60.0), LeituraComTemperatura(70.0));
+
+        var r = await RoteadorManutencao(leitor).TratarAsync(Req("diagnosticarmanutencao"));
+
+        Assert.True(r.Sucesso);
+    }
+
     private sealed class ColetorFake : IColetorInventario
     {
         private readonly Inventario _inventario;
@@ -667,5 +775,34 @@ public sealed class IpcTests
 
         public Task<ResultadoAtivacao> ValidarOnlineAsync(CancellationToken ct = default) =>
             Task.FromResult(ResultadoAtivacao.Ok(_tipo));
+    }
+
+    /// <summary>
+    /// Leitor de sensores fake para os testes de <c>diagnosticarmanutencao</c>:
+    /// devolve leituras em sequência (idle, depois carga) a cada chamada de
+    /// <see cref="LerAsync"/>, ou lança a exceção configurada — simula a falha
+    /// inesperada da I/O Matrix da spec-2-1.
+    /// </summary>
+    private sealed class LeitorSensoresFake : ILeitorSensores
+    {
+        private readonly Queue<LeituraSensores> _leituras;
+        private readonly Exception? _excecao;
+
+        public LeitorSensoresFake(params LeituraSensores[] leituras) =>
+            _leituras = new Queue<LeituraSensores>(leituras);
+
+        public LeitorSensoresFake(Exception excecao)
+        {
+            _excecao = excecao;
+            _leituras = new Queue<LeituraSensores>();
+        }
+
+        public SistemaOperacionalTipo Tipo => SistemaOperacionalTipo.Windows;
+
+        public Task<LeituraSensores> LerAsync(CancellationToken cancellationToken = default)
+        {
+            if (_excecao is not null) throw _excecao;
+            return Task.FromResult(_leituras.Count > 0 ? _leituras.Dequeue() : new LeituraSensores());
+        }
     }
 }

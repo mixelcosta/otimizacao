@@ -6,6 +6,7 @@ public enum FuncionalidadePremium
     ContadorVidaUtil = 1,
     GerenciadorDrivers = 2,
     GuiaBiosIa = 3,
+    DiagnosticoManutencao = 4,
 }
 
 public enum TipoLicenca

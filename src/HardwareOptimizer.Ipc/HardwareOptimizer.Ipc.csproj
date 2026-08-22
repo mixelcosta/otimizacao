@@ -9,6 +9,7 @@
     <ProjectReference Include="..\HardwareOptimizer.Features.Licensing\HardwareOptimizer.Features.Licensing.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Features.Drivers\HardwareOptimizer.Features.Drivers.csproj" />
     <ProjectReference Include="..\HardwareOptimizer.Features.Atualizacao\HardwareOptimizer.Features.Atualizacao.csproj" />
+    <ProjectReference Include="..\HardwareOptimizer.Features.Manutencao\HardwareOptimizer.Features.Manutencao.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,6 +10,7 @@ using HardwareOptimizer.Agent.EventLog;
 using HardwareOptimizer.Agent.Security;
 using HardwareOptimizer.Agent.Execution;
 using HardwareOptimizer.Agent.Execution.Windows;
+using HardwareOptimizer.Agent.Manutencao;
 using HardwareOptimizer.Agent.Sensors;
 using HardwareOptimizer.Agent.Services;
 using HardwareOptimizer.Agent.Smart;
@@ -29,6 +30,7 @@ using HardwareOptimizer.Core.Reporting;
 using HardwareOptimizer.Features.Atualizacao;
 using HardwareOptimizer.Features.Drivers;
 using HardwareOptimizer.Features.Licensing;
+using HardwareOptimizer.Features.Manutencao;
 using HardwareOptimizer.Features.LifeCounter;
 using HardwareOptimizer.Features.Upgrade.Agente;
 using Microsoft.Extensions.Logging;
@@ -49,6 +51,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
     private readonly ICerebro _cerebro;
     private readonly ILogger _log;
     private readonly IServicoLicenca? _licenca;
+    private readonly TimeSpan _duracaoCargaManutencao;
 
     public RoteadorIpc(
         CatalogoAcoes? catalogo = null,
@@ -56,7 +59,8 @@ public sealed class RoteadorIpc : IRoteadorIpc
         ServicoSensores? sensores = null,
         ICerebro? cerebro = null,
         ILogger? logger = null,
-        IServicoLicenca? licenca = null)
+        IServicoLicenca? licenca = null,
+        TimeSpan? duracaoCargaManutencao = null)
     {
         _catalogo = catalogo ?? CatalogoPadrao.Criar();
         _coletor = coletor ?? new ColetorInventario();
@@ -64,6 +68,10 @@ public sealed class RoteadorIpc : IRoteadorIpc
         _cerebro = cerebro ?? new CerebroLocal();
         _log = logger ?? NullLogger.Instance;
         _licenca = licenca;
+        // ~8s de carga simulada em produção (Design Notes da spec-2-1); testes
+        // injetam uma janela bem menor para não pagar o custo real do laço
+        // ocupado em cada execução da suíte.
+        _duracaoCargaManutencao = duracaoCargaManutencao ?? TimeSpan.FromSeconds(8);
     }
 
     public async Task<RespostaIpc> TratarAsync(RequisicaoIpc requisicao, CancellationToken cancellationToken = default)
@@ -152,6 +160,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
                 "diagnosticarcausaraiz" => OperatingSystem.IsWindows()
                     ? await DiagnosticarCausaRaizAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
+                "diagnosticarmanutencao" => await DiagnosticarManutencaoAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 _ => RespostaIpc.Falha(requisicao.Id, $"Método desconhecido: {requisicao.Metodo}"),
             };
         }
@@ -679,6 +688,40 @@ public sealed class RoteadorIpc : IRoteadorIpc
         var resultado = correlacionador.Correlacionar(eventos, driversDesatualizados, bios);
 
         return RespostaIpc.Ok(req.Id, resultado);
+    }
+
+    /// <summary>
+    /// Diagnóstico de manutenção (spec-2-1): lê os sensores em repouso, gera uma
+    /// janela curta de carga simulada interna (<see cref="GeradorCargaSimulada"/>
+    /// — nunca ferramenta externa, ver Design Notes da spec) e lê os sensores de
+    /// novo, sob carga. <see cref="DetectorPastaTermica"/> (lógica pura) decide
+    /// se o sinal justifica um achado. Sem gate de <see cref="OperatingSystem.IsWindows"/>
+    /// — mesmo padrão do case "sensores": <see cref="ServicoSensores"/> já resolve
+    /// a plataforma internamente. Nenhuma pergunta de diagnóstico é feita ao
+    /// usuário em nenhum ponto deste fluxo (Boundaries §Always/§Never).
+    /// </summary>
+    private async Task<RespostaIpc> DiagnosticarManutencaoAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        try
+        {
+            var idle = await _sensores.LerAsync(ct).ConfigureAwait(false);
+            await new GeradorCargaSimulada().GerarAsync(_duracaoCargaManutencao, ct).ConfigureAwait(false);
+            var carga = await _sensores.LerAsync(ct).ConfigureAwait(false);
+
+            // Defesa em profundidade (revisão independente): Detectar é lógica
+            // pura sem I/O e não deveria lançar, mas mantê-la dentro do mesmo
+            // try garante que qualquer falha aqui também vira "sem sinal" em vez
+            // de propagar como erro IPC.
+            var achado = DetectorPastaTermica.Detectar(idle, carga);
+            return RespostaIpc.Ok(req.Id, achado);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            // Falha inesperada na leitura de sensor: tratado como "sem sinal" —
+            // nunca propaga, nunca inventa achado (I/O Matrix da spec-2-1).
+            _log.LogWarning(ex, "Diagnóstico de manutenção: falha na leitura de sensores — sem sinal.");
+            return RespostaIpc.Ok(req.Id, (AchadoManutencao?)null);
+        }
     }
 
     [SupportedOSPlatform("windows")]

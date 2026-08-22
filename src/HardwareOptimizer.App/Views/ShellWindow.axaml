@@ -258,6 +258,24 @@
             </StackPanel>
           </Button>
 
+          <!-- Diagnóstico de Manutenção — gated por FuncionalidadePremium.DiagnosticoManutencao
+               (corrigido na revisão da spec-2-1: mesmo padrão dos 4 módulos premium acima) -->
+          <Button Classes="nav-premium"
+                  Classes.ativo="{Binding PaginaEhDiagnosticoManutencao}"
+                  Command="{Binding IrParaDiagnosticoManutencaoCommand}"
+                  IsVisible="{Binding EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="⚕" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="Manutenção" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
+              <TextBlock Text="Manutenção" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+
           <!-- CTA: Ativar Premium (visível somente no plano gratuito) -->
           <Button Margin="12,6,12,0"
                   Command="{Binding IrParaConfiguracoesCommand}"
@@ -367,6 +385,10 @@
 
       <Panel IsVisible="{Binding PaginaEhBiosGuide}">
         <views:BiosGuideView DataContext="{Binding BiosGuide}" />
+      </Panel>
+
+      <Panel IsVisible="{Binding PaginaEhDiagnosticoManutencao}">
+        <views:DiagnosticoManutencaoView DataContext="{Binding DiagnosticoManutencao}" />
       </Panel>
 
       <Panel IsVisible="{Binding PaginaEhConfiguracoes}">

@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HardwareOptimizer.App.ViewModels"
+             x:Class="HardwareOptimizer.App.Views.DiagnosticoManutencaoView"
+             x:DataType="vm:DiagnosticoManutencaoViewModel">
+
+  <Grid RowDefinitions="Auto,*">
+
+    <!-- ── Cabeçalho ── -->
+    <Grid Grid.Row="0" Margin="24,20,24,0" ColumnDefinitions="*,Auto">
+      <StackPanel Grid.Column="0" Spacing="3">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                  VerticalAlignment="Center" />
+          <TextBlock Text="DIAGNÓSTICO DE MANUTENÇÃO" FontSize="13" FontWeight="Bold"
+                     Foreground="#484865" LetterSpacing="3"
+                     VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="Detecta sinais de pasta térmica ressecada comparando temperatura em repouso e sob carga"
+                   Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+      </StackPanel>
+
+      <Button Grid.Column="1"
+              Command="{Binding DiagnosticarCommand}"
+              IsEnabled="{Binding !Diagnosticando}"
+              Background="#00C8FF18" Foreground="#00C8FF"
+              BorderBrush="#00C8FF40" BorderThickness="1"
+              Padding="12,6" CornerRadius="5"
+              FontSize="11" FontWeight="SemiBold"
+              VerticalAlignment="Center"
+              Cursor="Hand">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <TextBlock Text="↻" FontSize="12" VerticalAlignment="Center" />
+          <TextBlock Text="Diagnosticar (usa a CPU por alguns segundos)" VerticalAlignment="Center" />
+        </StackPanel>
+      </Button>
+    </Grid>
+
+    <!-- ── Conteúdo ── -->
+    <ScrollViewer Grid.Row="1" Margin="0,12,0,0">
+      <StackPanel Margin="24,0,24,24" Spacing="14">
+
+        <!-- Status / aguardando -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="14" Margin="0,60"
+                    IsVisible="{Binding !TemAchado}">
+          <TextBlock Text="◈" FontSize="44" HorizontalAlignment="Center"
+                     Foreground="#1A1A2E" />
+          <TextBlock Text="{Binding StatusText}"
+                     Foreground="#484865" FontSize="13"
+                     HorizontalAlignment="Center" TextAlignment="Center"
+                     TextWrapping="Wrap" MaxWidth="440" />
+        </StackPanel>
+
+        <!-- Achado -->
+        <Border CornerRadius="10" Padding="18,16" BorderThickness="1"
+                IsVisible="{Binding TemAchado}">
+          <Border.Background><SolidColorBrush Color="#1A0F00" /></Border.Background>
+          <Border.BorderBrush><SolidColorBrush Color="#FFAA0060" /></Border.BorderBrush>
+          <Grid ColumnDefinitions="Auto,*">
+            <TextBlock Grid.Column="0" Text="⚠" FontSize="26"
+                       VerticalAlignment="Top" Margin="0,0,14,0"
+                       Foreground="#FFAA00" />
+            <StackPanel Grid.Column="1" Spacing="10">
+              <TextBlock Text="Possível pasta térmica ressecada ou necessidade de limpeza"
+                         Foreground="#FFAA00" FontSize="14" FontWeight="SemiBold"
+                         TextWrapping="Wrap" />
+              <TextBlock Text="{Binding Achado.Justificativa}"
+                         Foreground="#CC8800" FontSize="12" TextWrapping="Wrap" LineHeight="18" />
+
+              <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
+                <StackPanel Grid.Column="0" Spacing="3">
+                  <TextBlock Text="TEMPERATURA EM REPOUSO" FontSize="10" FontWeight="Bold"
+                             Foreground="#5A3D00" LetterSpacing="1" />
+                  <TextBlock Text="{Binding Achado.TemperaturaIdleC, StringFormat='{}{0:0.0} °C'}"
+                             Foreground="#E0E0F2" FontSize="16" FontWeight="Bold" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Spacing="3">
+                  <TextBlock Text="TEMPERATURA SOB CARGA" FontSize="10" FontWeight="Bold"
+                             Foreground="#5A3D00" LetterSpacing="1" />
+                  <TextBlock Text="{Binding TemperaturaCargaTexto}"
+                             Foreground="#E0E0F2" FontSize="16" FontWeight="Bold" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+          </Grid>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+
+  </Grid>
+</UserControl>

@@ -30,6 +30,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         VidaUtil = new VidaUtilViewModel();
         Drivers = new DriversViewModel(agente);
         BiosGuide = new BiosGuideViewModel(agente);
+        DiagnosticoManutencao = new DiagnosticoManutencaoViewModel(agente);
         Configuracoes = new ConfiguracoesViewModel(licenca, OnLicencaAlterada);
         Home = new HomeViewModel(
             agente,
@@ -83,6 +84,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     public VidaUtilViewModel VidaUtil { get; }
     public DriversViewModel Drivers { get; }
     public BiosGuideViewModel BiosGuide { get; }
+    public DiagnosticoManutencaoViewModel DiagnosticoManutencao { get; }
     public ConfiguracoesViewModel Configuracoes { get; }
 
     [ObservableProperty] private ObservableObject _paginaAtual = null!;
@@ -103,6 +105,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     public bool PaginaEhVidaUtil     => PaginaAtual == VidaUtil;
     public bool PaginaEhDrivers      => PaginaAtual == Drivers;
     public bool PaginaEhBiosGuide    => PaginaAtual == BiosGuide;
+    public bool PaginaEhDiagnosticoManutencao => PaginaAtual == DiagnosticoManutencao;
 
     partial void OnPaginaAtualChanged(ObservableObject value)
     {
@@ -116,6 +119,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(PaginaEhVidaUtil));
         OnPropertyChanged(nameof(PaginaEhDrivers));
         OnPropertyChanged(nameof(PaginaEhBiosGuide));
+        OnPropertyChanged(nameof(PaginaEhDiagnosticoManutencao));
     }
 
     [RelayCommand] private void IrParaHome() => PaginaAtual = Home;
@@ -166,6 +170,19 @@ public partial class ShellViewModel : ObservableObject, IDisposable
     {
         if (!_licenca.TemAcesso(FuncionalidadePremium.GuiaBiosIa)) return;
         PaginaAtual = BiosGuide;
+    }
+
+    /// <summary>
+    /// Gate de <see cref="FuncionalidadePremium.DiagnosticoManutencao"/> — corrigido
+    /// na revisão da spec-2-1: os 4 módulos premium existentes (Upgrade, Vida Útil,
+    /// Drivers, Guia BIOS IA) são todos, sem exceção, gated por
+    /// <see cref="IServicoLicenca.TemAcesso"/>, mesmo padrão aplicado aqui.
+    /// </summary>
+    [RelayCommand]
+    private void IrParaDiagnosticoManutencao()
+    {
+        if (!_licenca.TemAcesso(FuncionalidadePremium.DiagnosticoManutencao)) return;
+        PaginaAtual = DiagnosticoManutencao;
     }
 
     [RelayCommand]
