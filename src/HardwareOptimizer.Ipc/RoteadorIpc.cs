@@ -633,15 +633,19 @@ public sealed class RoteadorIpc : IRoteadorIpc
         // de driver/BIOS ainda deve funcionar, só sem correlação possível) — mas
         // quando presentes precisam ter o shape esperado, senão é erro do chamador.
         List<InfoDriver> driversDesatualizados = [];
-        if (req.Parametros is { } p && p.TryGetProperty("driversDesatualizados", out var driversEl))
+        if (req.Parametros is { } p && p.TryGetProperty("driversDesatualizados", out var driversEl)
+            && driversEl.ValueKind != JsonValueKind.Null)
         {
             if (driversEl.ValueKind != JsonValueKind.Array)
                 return RespostaIpc.Falha(req.Id, "Parâmetro 'driversDesatualizados' deve ser uma lista.");
 
             try
             {
-                driversDesatualizados = JsonSerializer.Deserialize<List<InfoDriver>>(
-                    driversEl.GetRawText(), ProtocoloIpc.Json) ?? [];
+                driversDesatualizados = (JsonSerializer.Deserialize<List<InfoDriver?>>(
+                    driversEl.GetRawText(), ProtocoloIpc.Json) ?? [])
+                    .Where(d => d is not null)
+                    .Select(d => d!)
+                    .ToList();
             }
             catch (JsonException ex)
             {

@@ -562,6 +562,39 @@ public sealed class IpcTests
         Assert.NotNull(r.Erro);
     }
 
+    [Fact]
+    public async Task DiagnosticarCausaRaiz_Windows_ArrayComElementoNulo_NaoLancaEIgnoraONulo()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        // Achado da revisão independente: [null] no array desserializava pra um
+        // InfoDriver? nulo dentro da lista, e o acesso a d.Fabricante em
+        // CorrelacionadorCausaRaiz lançaria NullReferenceException não capturada.
+        var r = await Roteador().TratarAsync(Req("diagnosticarcausaraiz", new
+        {
+            driversDesatualizados = new object?[] { null },
+        }));
+
+        Assert.True(r.Sucesso);
+        Assert.IsAssignableFrom<IReadOnlyList<EventoInstabilidade>>(r.Resultado);
+    }
+
+    [Fact]
+    public async Task DiagnosticarCausaRaiz_Windows_DriversDesatualizadosNuloExplicito_TratadoComoListaVazia()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+
+        // Mesmo tratamento já dado ao parâmetro 'bios': null explícito é
+        // equivalente a omitir o parâmetro, não um erro do chamador.
+        var r = await Roteador().TratarAsync(Req("diagnosticarcausaraiz", new
+        {
+            driversDesatualizados = (object?)null,
+        }));
+
+        Assert.True(r.Sucesso);
+        Assert.IsAssignableFrom<IReadOnlyList<EventoInstabilidade>>(r.Resultado);
+    }
+
     /// <summary>
     /// Regressão da mesma classe de bug de casing self-caught nas Stories 1.3/1.4:
     /// serializa <see cref="InfoDriver"/>/<see cref="InfoBios"/> reais (propriedades

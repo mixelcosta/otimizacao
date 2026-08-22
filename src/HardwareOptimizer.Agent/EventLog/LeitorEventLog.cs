@@ -50,9 +50,15 @@ public sealed class LeitorEventLog : ILeitorEventLog
     {
         try
         {
+            // Level 1/2 (Crítico/Erro) — sem esse filtro, o provider WHEA-Logger
+            // também loga eventos informativos/corrigidos que nunca causaram
+            // instabilidade real, diluindo o sinal e podendo gerar "Causa
+            // provável: BIOS desatualizada" pra eventos que não representam
+            // travamento (achado da revisão independente da Story 1.5).
             return Consultar(
                 "System",
-                $"*[System[Provider[@Name='Microsoft-Windows-WHEA-Logger'] and TimeCreated[timediff(@SystemTime) <= {LimiteMs(dias)}]]]",
+                "*[System[Provider[@Name='Microsoft-Windows-WHEA-Logger'] and (Level=1 or Level=2) " +
+                $"and TimeCreated[timediff(@SystemTime) <= {LimiteMs(dias)}]]]",
                 TipoEventoInstabilidade.Whea);
         }
         catch (Exception ex)
@@ -110,7 +116,12 @@ public sealed class LeitorEventLog : ILeitorEventLog
     private static List<EventoInstabilidade> Consultar(string canal, string xpath, TipoEventoInstabilidade tipo)
     {
         var resultado = new List<EventoInstabilidade>();
-        var query = new EventLogQuery(canal, PathType.LogName, xpath);
+        // ReverseDirection: sem isso, ReadEvent() devolve do mais antigo pro mais
+        // recente — combinado com MaxEventosPorCategoria, o corte manteria os
+        // eventos mais ANTIGOS da janela e descartaria os mais recentes, o
+        // oposto do que a história promete numa máquina com muitos eventos
+        // (achado da revisão independente da Story 1.5).
+        var query = new EventLogQuery(canal, PathType.LogName, xpath) { ReverseDirection = true };
 
         using var reader = new EventLogReader(query);
 

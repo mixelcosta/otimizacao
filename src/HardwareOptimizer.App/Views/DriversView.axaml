@@ -3,6 +3,7 @@
              xmlns:vm="using:HardwareOptimizer.App.ViewModels"
              xmlns:controls="using:HardwareOptimizer.App.Controls"
              xmlns:core="using:HardwareOptimizer.Core.Contracts"
+             xmlns:converters="using:HardwareOptimizer.App.Converters"
              x:Class="HardwareOptimizer.App.Views.DriversView"
              x:DataType="vm:DriversViewModel">
 
@@ -455,7 +456,7 @@
                                VerticalAlignment="Center" />
                     <Border Grid.Column="1" Background="#48486515"
                             CornerRadius="4" Padding="8,2" Margin="10,0,0,0">
-                      <TextBlock Text="{Binding Tipo}"
+                      <TextBlock Text="{Binding Tipo, Converter={x:Static converters:TipoEventoInstabilidadeConverter.Instance}}"
                                  Foreground="#00C8FF" FontSize="10" FontWeight="Bold"
                                  LetterSpacing="0.5" />
                     </Border>
