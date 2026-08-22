@@ -188,3 +188,113 @@ PASSOU: Story 1.4 validada a partir de clone limpo -- fixes de confirmacao/estad
 
 - Story 1.5 (Épico 1, última do épico) segue no ciclo Dev → Revisão → QA.
 - Item de deferred-work.md a acompanhar: wiring `Drivers.PopularBios(inv.Placa)` em `ShellViewModel.cs` (mesmo gap de infraestrutura já registrado pra `PopularProgramas` na Story 1.3 — sem `Avalonia.Headless` no projeto de testes, todo o callback `Home.Popular` do `ShellViewModel` fica destestado).
+
+---
+
+## Verificação integrada da sprint — Épico 1 até a Story 1.4 (1.1 + 1.2 + 1.3 + 1.4 em conjunto)
+
+Diferente das validações acima (cada história isolada, só os projetos que ela toca), esta rodada valida as **quatro histórias juntas, na solução inteira**, a partir de um clone git genuinamente limpo — não o working directory do Dev.
+
+- [x] `scripts/verificar-sprint-epico1-clone-limpo.ps1` — clona o repositório para `F:\Testes Software Otimização\otimizacao-sprint-epico1-verificacao` e valida, em sequência:
+  1. Os fixes críticos das 4 histórias presentes **ao mesmo tempo** no mesmo clone (catálogos versionados + regra do `.gitignore` da Story 1.1; flag `/subdirs` do rollback da Story 1.2; catch de cancelamento + guards `IsNullOrWhiteSpace` da Story 1.3; guard `if (!ConfirmadoBios) return;` em `VerGuiaBios` + reset de `PainelConfirmacaoBiosAberto`/`ConfirmadoBios`/`GuiaBiosVisivel` em `VerificarBiosAsync` da Story 1.4).
+  2. `HardwareOptimizer.sln` — a **solução inteira**, todos os 12 projetos de `src/`, não só os tocados pelo sprint — compila em Release sem erro.
+  3. Todas as 9 suítes de teste relevantes rodam **em conjunto** e passam.
+  4. O app real (`HardwareOptimizer.App`) sobe a partir dos binários do clone e renderiza a Dashboard corretamente (smoke test funcional, com screenshot como evidência).
+
+### Build da solução inteira
+
+```
+Compilação com êxito.  1 Aviso(s) (pré-existente, "xmpDesativado" não usada — não relacionado ao sprint)  0 Erro(s)
+```
+
+### Suítes de teste — todas juntas, clone limpo
+
+| Suíte | Aprovados | Falhas |
+|---|---|---|
+| HardwareOptimizer.Agent.Tests | 173 | 0 |
+| HardwareOptimizer.App.Tests | 109 | 0 |
+| HardwareOptimizer.Cerebro.Tests | 26 | 0 |
+| HardwareOptimizer.Core.Tests | 91 | 0 |
+| HardwareOptimizer.Features.Atualizacao.Tests | 48 | 0 |
+| HardwareOptimizer.Features.Drivers.Tests | 18 | 0 |
+| HardwareOptimizer.Features.Licensing.Tests | 20 | 0 |
+| HardwareOptimizer.Features.Upgrade.Tests | 20 | 0 |
+| HardwareOptimizer.Ipc.Tests | 68 | 0 |
+| HardwareOptimizer.WindowsService.Tests | 10 | 0 |
+| **TOTAL** | **583** | **0** |
+
+**Excluída desta rodada:** `HardwareOptimizer.Features.LifeCounter.Tests` — depende de um `tbw_database.json` real/curado que nunca existiu no repositório (gap pré-existente, já registrado em `deferred-work.md`, sem relação com o sprint do Épico 1). Um placeholder mínimo (`[]`) foi aplicado *só neste clone* para permitir que a solução inteira compilasse.
+
+### Smoke test funcional (app real, não só testes unitários)
+
+```
+>> 8. Smoke test funcional: subindo o app de verdade a partir do clone
+   App subiu, janela encontrada apos 4s.
+   Screenshot da Dashboard salvo -- prova visual de que o app renderiza corretamente a partir do clone limpo.
+PASSOU: sprint Epico 1 (Stories 1.1+1.2+1.3+1.4) validado em conjunto a partir de clone limpo -- solucao inteira compilando, todas as suites de teste verdes, app funcional.
+```
+
+Screenshot salvo em `F:\Testes Software Otimização\otimizacao-sprint-epico1-verificacao\_evidencias-qa\01-dashboard.png`.
+
+**Limitação conhecida:** navegação interativa (clique sintético via `PostMessage`) não é confiável nesta máquina — a tela está em DPI 120 (125% de escala), diferente do DPI 96/100% em que o skill `run-otimize-builder` foi calibrado. A prova funcional aqui é a renderização real do app a partir do clone (build + boot + UI correta), não a navegação entre telas.
+
+### Coverage
+
+- Cobre a lacuna que as validações por história (acima) não cobrem: certeza de que as quatro histórias não quebram uma às outras nem o resto da solução quando tudo é compilado e testado junto, a partir de um clone genuinamente limpo (não do working directory do Dev, que já acumula estado).
+- Não substitui as validações por história — é complementar a elas.
+
+### Next Steps
+
+- Story 1.5 (última do Épico 1) ainda não foi desenvolvida — quando estiver, esta rodada integrada deve ser reexecutada com o quinto conjunto de fixes.
+- Resolver o gap de `Features.LifeCounter` (`tbw_database.json` ausente) como história própria, já mapeado em `deferred-work.md` — hoje bloqueia rodar a suíte de testes completa da solução sem exclusão manual.
+- Script fica disponível em `scripts/verificar-sprint-epico1-clone-limpo.ps1` para reexecução a qualquer momento (`-DestinoBase` configurável, default `F:\Testes Software Otimização`).
+
+---
+
+## Story validada — Story 1.5 (Épico 1, última história do épico)
+
+Usuário vê a causa-raiz de travamentos, correlacionada com o Event Log. Commits `9decc42` (implementação) + `8a46615` (fixes pós-revisão independente `bmad-code-review`: `ReverseDirection` na leitura do Event Log, filtro de severidade WHEA, elemento nulo no array de drivers causando `NullReferenceException` não capturada, tradução PT-BR do tipo de evento).
+
+### Regressão de ponta a ponta
+
+- [x] `scripts/verificar-story-1-5-clone-limpo.ps1` — clona o repositório num diretório temporário isolado (com placeholder local só do clone pro bug conhecido de `Features.LifeCounter`) e valida:
+  1. **Fixes críticos da revisão independente presentes**: `EventLogQuery` usa `ReverseDirection = true` (sem isso, o corte de 200 eventos por categoria manteria os mais **antigos** da janela de 30 dias e descartaria os mais recentes — o oposto do que a história promete numa máquina com muitos eventos) e a consulta WHEA filtra por `Level=1 or Level=2` (sem isso, eventos informativos/corrigidos poluiriam a heurística de correlação com BIOS).
+  2. `HardwareOptimizer.Ipc` e `HardwareOptimizer.App` compilam sem erro a partir do clone limpo (arrastam `Features.Atualizacao`/`Agent`/`Core`).
+  3. As 4 suítes de teste afetadas passam com as contagens exatas esperadas.
+
+### Suítes de unidade (já existentes, re-verificadas a partir de clone limpo)
+
+- [x] `tests/HardwareOptimizer.Features.Atualizacao.Tests` — 63/63 aprovados.
+- [x] `tests/HardwareOptimizer.Agent.Tests` — 187/187 aprovados (leitura real do Event Log do Windows exercitada, já que a máquina de CI/dev é Windows).
+- [x] `tests/HardwareOptimizer.App.Tests` — 121/121 aprovados.
+- [x] `tests/HardwareOptimizer.Ipc.Tests` — 75/75 aprovados.
+
+### Execução
+
+```
+PS> .\scripts\verificar-story-1-5-clone-limpo.ps1
+>> Clonando ... para ...
+>> Placeholder local (só neste clone) pro bug conhecido de Features.LifeCounter
+>> 1. Confirmando os fixes críticos da revisão independente
+>> 2. Compilando Ipc (arrasta Atualizacao, Agent, Core, Drivers, LifeCounter)
+Compilação com êxito.  0 Aviso(s)  0 Erro(s)
+>> 3. Compilando App
+Compilação com êxito.  1 Aviso(s) (pré-existente, não relacionado)  0 Erro(s)
+>> Testando tests/HardwareOptimizer.Features.Atualizacao.Tests (esperado: 63)
+>> Testando tests/HardwareOptimizer.Agent.Tests (esperado: 187)
+>> Testando tests/HardwareOptimizer.App.Tests (esperado: 121)
+>> Testando tests/HardwareOptimizer.Ipc.Tests (esperado: 75)
+PASSOU: Story 1.5 validada a partir de clone limpo -- fixes de leitura/correlacao presentes, build e 446 testes verdes.
+```
+
+### Coverage
+
+- Matrix Test Audit da spec (`spec-1-5-causa-raiz-event-log.md`, 5 linhas: evento correlacionável com driver, evento WHEA com BIOS desatualizada, sem correlação plausível, nenhum evento no período, leitura falha) — as 4 primeiras cobertas por testes reais (`CorrelacionadorCausaRaizTests.cs`); a 5ª (leitura falha) coberta só por inspeção de código — sem teste que force falha real dentro do `try/catch` de `LeitorEventLog`, limitação estrutural já registrada em `deferred-work.md` (mesma aceita pro `LeitorWindows`).
+- Os defeitos reais encontrados pela revisão independente (`bmad-code-review`, 4 lenses: Blind Hunter, Edge Case Hunter, Verification Gap, Acceptance Auditor) — leitura invertida (mais antigos em vez de mais recentes), correlação sem filtro de severidade, `NullReferenceException` não capturada, tratamento inconsistente de `null` — têm checagem própria no script (os dois primeiros) e testes de regressão dedicados (`DiagnosticarCausaRaiz_Windows_ArrayComElementoNulo_NaoLancaEIgnoraONulo`, `DiagnosticarCausaRaiz_Windows_DriversDesatualizadosNuloExplicito_TratadoComoListaVazia`).
+- Fronteira única (AD-4, indireta) e Boundaries §Never respeitados: `AnalisadorRegressao`/`ModuloBios`/`ProvedorBiosComCache`/`HardwareOptimizer.Cli` intocados; nenhum segundo leitor de driver/BIOS criado (`CorrelacionadorCausaRaiz` reaproveita `InfoDriver`/`InfoBios` já coletados); leitura do Event Log comprovadamente nunca automática (`Popular_PopularProgramas_PopularBios_NuncaDisparamDiagnosticoAutomaticamente`).
+- `DiagnosticarCausaRaiz_PayloadSerializadoComProtocoloIpcJson_RoundTripCorreto` fecha a mesma classe de lacuna de regressão de casing já vista nas Stories 1.3/1.4 — serializa `InfoDriver`/`InfoBios` reais com `ProtocoloIpc.Json`, não fixtures manuais.
+
+### Next Steps
+
+- Épico 1 (Núcleo de Atualização) está completo — 5/5 histórias em ciclo Dev → Revisão → QA. Próximo: Épico 2 (Diagnóstico de Manutenção).
+- Itens de `deferred-work.md` a acompanhar (Story 1.5): sem sinalização de UI quando o corte de 200 eventos por categoria é atingido; `Eventos`/`StatusTextDiagnostico` não são limpos num novo SCAN (mesmo padrão já aceito pra Software/BIOS); `CancellationToken` não propaga de fato até `EventLogReader`; extração de driver em BSOD provavelmente `null` na maioria dos casos reais (mensagem padrão do WER 1001 não cita módulo `.sys`).
