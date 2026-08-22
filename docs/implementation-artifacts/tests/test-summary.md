@@ -138,3 +138,53 @@ PASSOU: Story 1.3 validada a partir de clone limpo -- fixes de cancelamento/vers
 
 - Story 1.4 (Épico 1) segue no ciclo Dev → Revisão → QA.
 - Item de deferred-work.md a acompanhar: `Drivers.PopularProgramas(...)` em `ShellViewModel.cs` não tem nenhum teste automatizado — infraestrutura de teste headless do Avalonia ainda não existe no projeto `App.Tests`; se essa wiring quebrar silenciosamente, nenhum teste hoje pegaria.
+
+---
+
+## Story validada — Story 1.4 (Épico 1)
+
+Usuário é orientado a atualizar a BIOS com alerta de risco obrigatório. Commits `1ce76b2` (implementação) + `3a58f93` (fixes pós-revisão independente `bmad-code-review`: guard de confirmação ausente em `VerGuiaBios`, estado de painel/guia não resetado numa nova verificação de BIOS).
+
+### Regressão de ponta a ponta
+
+- [x] `scripts/verificar-story-1-4-clone-limpo.ps1` — clona o repositório num diretório temporário isolado (com placeholder local só do clone pro bug conhecido de `Features.LifeCounter`) e valida:
+  1. **Fixes críticos da revisão independente presentes**: `VerGuiaBios()` tem o guard `if (!ConfirmadoBios) return;` (sem ele, o guia de atualização seria revelado sem o usuário ter confirmado o risco — defesa em profundidade, já que o `ConfirmationPanel` também desabilita o botão na View) e `VerificarBiosAsync` reseta `PainelConfirmacaoBiosAberto`/`ConfirmadoBios`/`GuiaBiosVisivel` ao fim de cada execução (sem isso, uma confirmação/guia já revelados numa verificação anterior sobreviveriam a um novo alerta de BIOS, violando o "aparece toda vez" da spec).
+  2. `HardwareOptimizer.Ipc` e `HardwareOptimizer.App` compilam sem erro a partir do clone limpo (arrastam `Features.Atualizacao`/`Core`).
+  3. As 4 suítes de teste afetadas passam com as contagens exatas esperadas.
+
+### Suítes de unidade (já existentes, re-verificadas a partir de clone limpo)
+
+- [x] `tests/HardwareOptimizer.Features.Atualizacao.Tests` — 48/48 aprovados.
+- [x] `tests/HardwareOptimizer.Core.Tests` — 91/91 aprovados (sem regressão em `AnalisadorBiosTests`/`GeradorGuiaBiosTests`/`VersaoBiosTests`).
+- [x] `tests/HardwareOptimizer.App.Tests` — 109/109 aprovados.
+- [x] `tests/HardwareOptimizer.Ipc.Tests` — 68/68 aprovados.
+
+### Execução
+
+```
+PS> .\scripts\verificar-story-1-4-clone-limpo.ps1
+>> Clonando ... para ...
+>> Placeholder local (só neste clone) pro bug conhecido de Features.LifeCounter
+>> 1. Confirmando os fixes críticos da revisão independente
+>> 2. Compilando Ipc (arrasta Atualizacao, Core, Drivers, LifeCounter)
+Compilação com êxito.  0 Aviso(s)  0 Erro(s)
+>> 3. Compilando App
+Compilação com êxito.  1 Aviso(s) (pré-existente, não relacionado)  0 Erro(s)
+>> Testando tests/HardwareOptimizer.Features.Atualizacao.Tests (esperado: 48)
+>> Testando tests/HardwareOptimizer.Core.Tests (esperado: 91)
+>> Testando tests/HardwareOptimizer.App.Tests (esperado: 109)
+>> Testando tests/HardwareOptimizer.Ipc.Tests (esperado: 68)
+PASSOU: Story 1.4 validada a partir de clone limpo -- fixes de confirmacao/estado presentes, build e 316 testes verdes.
+```
+
+### Coverage
+
+- Matrix Test Audit da spec (`spec-1-4-bios-alerta-risco.md`, 5 linhas: BIOS desatualizada no catálogo, mesma versão, sem cobertura, exceção no provedor, reabre orientação já vista) — todas cobertas por `VerificadorBiosTests.cs`/`DriversViewModelBiosTests.cs`, re-confirmadas a partir de clone limpo.
+- Os dois bugs reais encontrados pela revisão independente (`bmad-code-review`, 4 lenses: Blind Hunter, Edge Case Hunter, Verification Gap, Acceptance Auditor — os dois primeiros chegaram à mesma conclusão de forma independente) têm checagem própria no script, além de testes de regressão dedicados (`VerGuiaBios_SemConfirmacao_NaoRevelaGuia`, `VerificarBiosAsync_NovaVerificacao_ResetaConfirmacaoEGuiaJaAbertos`).
+- Cobertura de integração real com os 3 formatos de versão do `BancoCuradoBios` (ASUS numérico, MSI alfanumérico misto, Gigabyte prefixado) — gap encontrado pelo Edge Case Hunter e fechado na mesma rodada da revisão (`VerificadorBiosTests.cs`).
+- Fronteira única (AD-4) fechada também para BIOS: `IProvedorFonteOficial`/`ProvedorFonteOficialBios` é o único caminho pra dado de versão — `AnalisadorBios`/`ModuloBios`/`ProvedorBiosComCache`/`HardwareOptimizer.Cli` (pipeline mais rico, pré-existente) permanecem intocados e continuam a servir o CLI sem regressão (`AnalisadorBiosTests`/`GeradorGuiaBiosTests`/`VersaoBiosTests` seguem verdes).
+
+### Next Steps
+
+- Story 1.5 (Épico 1, última do épico) segue no ciclo Dev → Revisão → QA.
+- Item de deferred-work.md a acompanhar: wiring `Drivers.PopularBios(inv.Placa)` em `ShellViewModel.cs` (mesmo gap de infraestrutura já registrado pra `PopularProgramas` na Story 1.3 — sem `Avalonia.Headless` no projeto de testes, todo o callback `Home.Popular` do `ShellViewModel` fica destestado).
