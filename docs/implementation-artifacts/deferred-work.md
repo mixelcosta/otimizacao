@@ -137,3 +137,23 @@ Itens encontrados durante o desenvolvimento que não pertencem à história atua
 - source_spec: `docs/implementation-artifacts/spec-1-5-causa-raiz-event-log.md`
   summary: pontos menores de robustez/UX não corrigidos nesta rodada: mensagem de causa por driver é só `driver.Descricao` (ex. "Causa provável: GeForce RTX 3060", menos autoexplicativa que "Causa provável: BIOS desatualizada"); teste ausente pro branch de `bios` com shape inválido em `RoteadorIpc.DiagnosticarCausaRaizAsync` (só `driversDesatualizados` inválido é testado); `record.TimeCreated` nulo cai silenciosamente pra `DateTimeOffset.Now` sem log, podendo distorcer a ordenação por mais-recente-primeiro; `CorrelacionadorCausaRaiz.DeterminarCausa` usa `FirstOrDefault` sem critério de desempate documentado quando o texto de um evento cita o fabricante de mais de um driver desatualizado; janela de 30 dias é hardcoded sem controle de UI; nenhum teste verifica `DiagnosticandoCausaRaiz == true` durante a operação em andamento (só o estado final).
   evidence achados do Blind Hunter (revisão independente `bmad-code-review` da Story 1.5). Todos de baixo risco individual — nenhum quebra o guard anti-alucinação nem os Boundaries da spec — registrados juntos aqui pra não perder o rastro; revisitar se o Diagnóstico de Travamentos crescer em uso/complexidade.
+
+- source_spec: `docs/implementation-artifacts/spec-auditoria-legado-m1-m4.md`
+  summary: os `catch (Exception)` genéricos tratados nesta rodada (limpeza, coleta de inventário, sensores) continuam capturando qualquer exceção — inclusive bugs de programação genuínos (ex. `NullReferenceException`) — e logando como se fosse sempre uma condição transitória esperada ("em uso?"). O log agora existe, mas a mensagem pode confundir a triagem de um defeito real com um "arquivo bloqueado" comum.
+  evidence: achado do Blind Hunter (revisão independente do `bmad-build` desta rodada). Diferenciar exigiria filtrar por tipo de exceção esperado vs. genérico, o que muda o fluxo de tratamento de erro — fora do escopo de uma correção que deveria só adicionar rastreabilidade sem alterar comportamento.
+
+- source_spec: `docs/implementation-artifacts/spec-auditoria-legado-m1-m4.md`
+  summary: falhas por-arquivo/por-pasta dentro de `GerenciadorLimpeza.Limpar` (`LimparPasta`, `EsvaziarLixeira`, `LimparEventLogs`) são capturadas e logadas localmente, mas nunca chegam à lista `erros` de `ResultadoLimpeza` — o `catch` externo em `Limpar` só vê falhas que escapam dos handlers internos. Um usuário pode rodar uma limpeza, ver "0 erros" na UI, e ainda assim ter arquivos que não foram apagados (em uso, sem permissão).
+  evidence: achado do Blind Hunter. Corrigir exigiria decidir um comportamento de produto (agregar falhas parciais em `erros`, e como apresentá-las na UI) — decisão de UX/negócio, não uma correção de qualidade de código.
+
+- source_spec: `docs/implementation-artifacts/spec-auditoria-legado-m1-m4.md`
+  summary: `RepositorioSqlite.ContarAsync` foi corrigido para usar `CommandText` literal por tabela via `switch`, mas os nomes das três tabelas (`inventarios`, `consentimentos`, `execucoes`) ainda são strings soltas, sem vínculo em tempo de compilação com os métodos públicos (`ContarInventariosAsync` etc.) que os produzem — um typo em qualquer um dos dois lados só falha em runtime.
+  evidence: achado do Blind Hunter. Um enum ou constantes compartilhadas resolveria, mas é uma mudança de superfície pública desproporcional a uma correção pontual de SQL interpolado.
+
+- source_spec: `docs/implementation-artifacts/spec-auditoria-legado-m1-m4.md`
+  summary: `LeitorSensoresWindows.ExecutarPowerShell` não tem um `catch (Exception)` de segurança (só os três tipos específicos já tratados) e, quando `proc.WaitForExit(25_000)` expira, retorna `null` sem logar o timeout nem chamar `proc.Kill()` — o `powershell.exe` órfão continua rodando desacoplado.
+  evidence: achado do Blind Hunter. É uma melhoria de confiabilidade real (processo órfão, exceção não mapeada propagando pro timer de sensores de 500ms), mas muda o comportamento de tratamento de erro do método — vale uma história própria de robustez do leitor de sensores, não uma correção de "adicionar log".
+
+- source_spec: `docs/implementation-artifacts/spec-auditoria-legado-m1-m4.md`
+  summary: nenhum dos quatro arquivos tocados nesta correção (`GerenciadorLimpeza`, `LeitorWindows`, `RepositorioSqlite`, `LeitorSensoresWindows`) tem cobertura de teste unitário direta — mesmo achado do item M3 da auditoria original (`docs/specs/auditoria-legado.md`).
+  evidence: fora de escopo desta correção pontual, que deliberadamente não adicionou testes novos (decisão tomada antes de iniciar as mudanças, para manter o blast radius mínimo).

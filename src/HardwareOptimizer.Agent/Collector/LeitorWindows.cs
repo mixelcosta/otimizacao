@@ -38,22 +38,22 @@ public sealed class LeitorWindows : ILeitorPlataforma
 
         // Tarefas lentas (WMI/System.Management + filesystem) rodam em paralelo
         // enquanto as consultas CIM/PowerShell executam sequencialmente no thread atual.
-        var saudeTask    = Task.Run(() => ColetarSaudeDiscos(),          cancellationToken);
-        var driversTask  = Task.Run(() => ColetarDrivers(),              cancellationToken);
-        var tempTask     = Task.Run(() => ColetarArquivosTemporarios(),  cancellationToken);
-        var programasTask = Task.Run(() => ColetarProgramasInstalados(), cancellationToken);
+        var saudeTask    = Task.Run(() => ColetarSaudeDiscos(),               cancellationToken);
+        var driversTask  = Task.Run(() => ColetarDrivers(),                   cancellationToken);
+        var tempTask     = Task.Run(() => ColetarArquivosTemporarios(_log),   cancellationToken);
+        var programasTask = Task.Run(() => ColetarProgramasInstalados(_log), cancellationToken);
 
         // Coleta de hardware via PowerShell/CIM (sequencial)
-        var placa    = LerPlaca();
+        var placa    = LerPlaca(_log);
         var cpu      = LerCpu();
         var memoria  = LerMemoria();
-        var gpu      = LerGpu();
+        var gpu      = LerGpu(_log);
         var so       = LerSistemaOperacional();
         var rede     = LerRede();
         var idents   = LerIdentificadores();
         var startup  = ColetarEntradasStartup();
         var servicos = ColetarServicos();
-        var processos = ColetarProcessos();
+        var processos = ColetarProcessos(_log);
         var metricas = ColetarMetricas();
 
         await Task.WhenAll(saudeTask, driversTask, tempTask, programasTask).ConfigureAwait(false);
@@ -102,12 +102,12 @@ public sealed class LeitorWindows : ILeitorPlataforma
         return inventario;
     }
 
-    private static PlacaMae LerPlaca()
+    private static PlacaMae LerPlaca(ILogger log)
     {
         var board = PrimeiroItem("Win32_BaseBoard", "Manufacturer,Product,SerialNumber");
         var bios = PrimeiroItem("Win32_BIOS", "SMBIOSBIOSVersion,ReleaseDate");
         var modelo = Texto(board, "Product") ?? "Desconhecido";
-        var (chipset, busSpecs) = LerChipsetEBus(modelo);
+        var (chipset, busSpecs) = LerChipsetEBus(modelo, log);
 
         return new PlacaMae
         {
@@ -122,7 +122,7 @@ public sealed class LeitorWindows : ILeitorPlataforma
         };
     }
 
-    private static (string? Chipset, string? BusSpecs) LerChipsetEBus(string modeloPlaca)
+    private static (string? Chipset, string? BusSpecs) LerChipsetEBus(string modeloPlaca, ILogger log)
     {
         // Busca via Win32_PnPEntity — dispositivos de sistema AMD (VEN_1022) e Intel (VEN_8086)
         // excluindo CPU/memória/periféricos para isolar o chipset.
@@ -159,7 +159,10 @@ public sealed class LeitorWindows : ILeitorPlataforma
                 // Fallback: primeiro nome retornado
                 chipset ??= Texto(itens.FirstOrDefault(), "Name");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                log.LogTrace(ex, "Falha ao consultar WMI para detectar chipset da placa-mãe");
+            }
         }
 
         // Se WMI não retornou, tenta derivar pelo nome do modelo da placa-mãe
@@ -304,10 +307,10 @@ public sealed class LeitorWindows : ILeitorPlataforma
         _  => null,
     };
 
-    private static IReadOnlyList<PlacaVideo> LerGpu()
+    private static IReadOnlyList<PlacaVideo> LerGpu(ILogger log)
     {
         var gpus = new List<PlacaVideo>();
-        var pcie = LerPcieGpu();
+        var pcie = LerPcieGpu(log);
         bool primeiraGpu = true;
 
         foreach (var item in Itens("Win32_VideoController",
@@ -353,7 +356,7 @@ public sealed class LeitorWindows : ILeitorPlataforma
         return gpus;
     }
 
-    private static (string? WidthAtual, string? WidthMax, string? SpeedAtual, string? SpeedMax)? LerPcieGpu()
+    private static (string? WidthAtual, string? WidthMax, string? SpeedAtual, string? SpeedMax)? LerPcieGpu(ILogger log)
     {
         // DEVPKEY_PciDevice: {4340A6C5-93FA-4706-972C-7B648008A5A7}
         //   6 = CurrentLinkWidth, 7 = CurrentLinkSpeed, 8 = MaxLinkWidth, 9 = MaxLinkSpeed
@@ -389,7 +392,11 @@ public sealed class LeitorWindows : ILeitorPlataforma
                 DecodificarVelocidadePcie(sm)
             );
         }
-        catch { return null; }
+        catch (Exception ex)
+        {
+            log.LogTrace(ex, "Falha ao decodificar velocidade PCIe a partir do JSON do WMI");
+            return null;
+        }
     }
 
     private static string? DecodificarVelocidadePcie(int codigo) => codigo switch
@@ -530,7 +537,7 @@ public sealed class LeitorWindows : ILeitorPlataforma
         };
     }
 
-    private static IReadOnlyList<ProgramaInstalado> ColetarProgramasInstalados()
+    private static IReadOnlyList<ProgramaInstalado> ColetarProgramasInstalados(ILogger log)
     {
         var programas = new Dictionary<string, ProgramaInstalado>(StringComparer.OrdinalIgnoreCase);
 
@@ -590,10 +597,16 @@ public sealed class LeitorWindows : ILeitorPlataforma
                                 QuietUninstallString = sub.GetValue("QuietUninstallString") as string,
                             };
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            log.LogTrace(ex, "Falha ao ler subchave de programa instalado no registro");
+                        }
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    log.LogTrace(ex, "Falha ao enumerar chave de programas instalados no registro");
+                }
             }
         }
 
@@ -619,7 +632,7 @@ public sealed class LeitorWindows : ILeitorPlataforma
         return padroes.Any(p => lower.Contains(p));
     }
 
-    private static AnaliseTemp ColetarArquivosTemporarios()
+    private static AnaliseTemp ColetarArquivosTemporarios(ILogger log)
     {
         var vistos  = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var pastas  = new List<PastaTemp>();
@@ -643,11 +656,15 @@ public sealed class LeitorWindows : ILeitorPlataforma
 
                 long bytes    = 0;
                 int  contagem = 0;
+                int  falhas   = 0;
 
                 foreach (var fi in di.EnumerateFiles("*", SearchOption.AllDirectories).Take(10_000))
                 {
-                    try { bytes += fi.Length; contagem++; } catch { }
+                    try { bytes += fi.Length; contagem++; }
+                    catch { falhas++; }
                 }
+                if (falhas > 0)
+                    log.LogTrace("Falha ao ler tamanho de {Falhas} arquivo(s) em '{Pasta}'", falhas, caminho);
 
                 pastas.Add(new PastaTemp
                 {
@@ -656,7 +673,10 @@ public sealed class LeitorWindows : ILeitorPlataforma
                     QuantidadeArquivos = contagem,
                 });
             }
-            catch { }
+            catch (Exception ex)
+            {
+                log.LogTrace(ex, "Falha ao varrer pasta temporária '{Pasta}'", caminho);
+            }
         }
 
         return new AnaliseTemp
@@ -716,7 +736,7 @@ public sealed class LeitorWindows : ILeitorPlataforma
         return servicos;
     }
 
-    private static IReadOnlyList<ProcessoSistema> ColetarProcessos()
+    private static IReadOnlyList<ProcessoSistema> ColetarProcessos(ILogger log)
     {
         try
         {
@@ -731,8 +751,9 @@ public sealed class LeitorWindows : ILeitorPlataforma
                 })
                 .ToList();
         }
-        catch
+        catch (Exception ex)
         {
+            log.LogTrace(ex, "Falha ao listar processos em execução");
             return Array.Empty<ProcessoSistema>();
         }
     }

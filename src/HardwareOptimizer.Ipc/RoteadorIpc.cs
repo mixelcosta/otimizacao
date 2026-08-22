@@ -143,10 +143,10 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     ? AplicarEfeitoVisualWindows(requisicao)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "escanearlimpeza" => OperatingSystem.IsWindows()
-                    ? EscanearLimpezaWindows(requisicao)
+                    ? EscanearLimpezaWindows(requisicao, _log)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "executarlimpeza" => OperatingSystem.IsWindows()
-                    ? ExecutarLimpezaWindows(requisicao)
+                    ? ExecutarLimpezaWindows(requisicao, _log)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "obterfeatures" => OperatingSystem.IsWindows()
                     ? ObterFeaturesWindows(requisicao)
@@ -1111,14 +1111,14 @@ Write-Output 'OK'
             ? v.GetString() : null;
 
     [SupportedOSPlatform("windows")]
-    private static RespostaIpc EscanearLimpezaWindows(RequisicaoIpc req)
+    private static RespostaIpc EscanearLimpezaWindows(RequisicaoIpc req, ILogger log)
     {
-        var categorias = GerenciadorLimpeza.Escanear();
+        var categorias = GerenciadorLimpeza.Escanear(log);
         return RespostaIpc.Ok(req.Id, categorias);
     }
 
     [SupportedOSPlatform("windows")]
-    private static RespostaIpc ExecutarLimpezaWindows(RequisicaoIpc req)
+    private static RespostaIpc ExecutarLimpezaWindows(RequisicaoIpc req, ILogger log)
     {
         if (req.Parametros is not { } p
             || !p.TryGetProperty("ids", out var idsEl)
@@ -1130,7 +1130,7 @@ Write-Output 'OK'
             .Select(e => e.GetString()!)
             .ToList();
 
-        var resultado = GerenciadorLimpeza.Limpar(ids);
+        var resultado = GerenciadorLimpeza.Limpar(ids, log);
         return RespostaIpc.Ok(req.Id, resultado);
     }
 }

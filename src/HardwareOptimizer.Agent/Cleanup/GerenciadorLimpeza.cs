@@ -1,28 +1,33 @@
+using System.Diagnostics;
 using System.Runtime.Versioning;
 using HardwareOptimizer.Core.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HardwareOptimizer.Agent.Cleanup;
 
 [SupportedOSPlatform("windows")]
 public static class GerenciadorLimpeza
 {
-    public static IReadOnlyList<CategoriaLimpeza> Escanear()
+    public static IReadOnlyList<CategoriaLimpeza> Escanear(ILogger? logger = null)
     {
+        var log = logger ?? NullLogger.Instance;
         return
         [
-            EscanearCategoria("Arquivos Temporários do Windows",  "temp_windows",  ObterTemp()),
-            EscanearCategoria("Arquivos Temporários do Usuário",  "temp_usuario",  ObterTempUsuario()),
-            EscanearCategoria("Cache de Miniaturas",              "thumbnail",     ObterThumbnail()),
-            EscanearCategoria("Lixeira",                          "lixeira",       ObterLixeira()),
-            EscanearCategoria("Cache do Windows Update",          "update_cache",  ObterUpdateCache()),
-            EscanearCategoria("Prefetch",                         "prefetch",      ObterPrefetch()),
-            EscanearCategoria("Logs de Erros do Windows",         "event_logs",    ObterEventLogs()),
-            EscanearCategoria("Cache de DNS",                     "dns",           []),  // limpar via ipconfig /flushdns
+            EscanearCategoria("Arquivos Temporários do Windows",  "temp_windows",  ObterTemp(),         log),
+            EscanearCategoria("Arquivos Temporários do Usuário",  "temp_usuario",  ObterTempUsuario(),  log),
+            EscanearCategoria("Cache de Miniaturas",              "thumbnail",     ObterThumbnail(),    log),
+            EscanearCategoria("Lixeira",                          "lixeira",       ObterLixeira(),      log),
+            EscanearCategoria("Cache do Windows Update",          "update_cache",  ObterUpdateCache(),  log),
+            EscanearCategoria("Prefetch",                         "prefetch",      ObterPrefetch(),     log),
+            EscanearCategoria("Logs de Erros do Windows",         "event_logs",    ObterEventLogs(),    log),
+            EscanearCategoria("Cache de DNS",                     "dns",           [],                  log),  // limpar via ipconfig /flushdns
         ];
     }
 
-    public static ResultadoLimpeza Limpar(IEnumerable<string> ids)
+    public static ResultadoLimpeza Limpar(IEnumerable<string> ids, ILogger? logger = null)
     {
+        var log = logger ?? NullLogger.Instance;
         long totalBytes = 0;
         var erros = new List<string>();
 
@@ -32,13 +37,13 @@ public static class GerenciadorLimpeza
             {
                 switch (id)
                 {
-                    case "temp_windows":  totalBytes += LimparPasta(Path.GetTempPath()); break;
-                    case "temp_usuario":  totalBytes += LimparPasta(ObterTempUsuario().FirstOrDefault() ?? ""); break;
-                    case "thumbnail":     totalBytes += LimparPasta(ObterThumbnail().FirstOrDefault() ?? ""); break;
-                    case "lixeira":       totalBytes += EsvaziarLixeira(); break;
-                    case "update_cache":  totalBytes += LimparPasta(ObterUpdateCache().FirstOrDefault() ?? ""); break;
-                    case "prefetch":      totalBytes += LimparPasta(ObterPrefetch().FirstOrDefault() ?? ""); break;
-                    case "event_logs":    totalBytes += LimparEventLogs(); break;
+                    case "temp_windows":  totalBytes += LimparPasta(Path.GetTempPath(), log); break;
+                    case "temp_usuario":  totalBytes += LimparPasta(ObterTempUsuario().FirstOrDefault() ?? "", log); break;
+                    case "thumbnail":     totalBytes += LimparPasta(ObterThumbnail().FirstOrDefault() ?? "", log); break;
+                    case "lixeira":       totalBytes += EsvaziarLixeira(log); break;
+                    case "update_cache":  totalBytes += LimparPasta(ObterUpdateCache().FirstOrDefault() ?? "", log); break;
+                    case "prefetch":      totalBytes += LimparPasta(ObterPrefetch().FirstOrDefault() ?? "", log); break;
+                    case "event_logs":    totalBytes += LimparEventLogs(log); break;
                     case "dns":           LimparDns(); break;
                 }
             }
@@ -88,7 +93,7 @@ public static class GerenciadorLimpeza
 
     // ── Limpeza ──────────────────────────────────────────────────────────────
 
-    private static long LimparPasta(string pasta)
+    private static long LimparPasta(string pasta, ILogger log)
     {
         if (string.IsNullOrEmpty(pasta) || !Directory.Exists(pasta)) return 0;
         long total = 0;
@@ -100,59 +105,74 @@ public static class GerenciadorLimpeza
                 total += fi.Length;
                 fi.Delete();
             }
-            catch { /* arquivo em uso — pular */ }
+            catch (Exception ex)
+            {
+                log.LogTrace(ex, "Falha ao apagar arquivo '{Arquivo}' (em uso?)", arq);
+            }
         }
         foreach (var dir in Directory.EnumerateDirectories(pasta))
         {
-            try { Directory.Delete(dir, true); } catch { }
+            try
+            {
+                Directory.Delete(dir, true);
+            }
+            catch (Exception ex)
+            {
+                log.LogTrace(ex, "Falha ao apagar diretório '{Diretorio}' (em uso?)", dir);
+            }
         }
         return total;
     }
 
-    private static long EsvaziarLixeira()
+    private static long EsvaziarLixeira(ILogger log)
     {
-        // Usa SHEmptyRecycleBin via shell
         try
         {
-            var proc = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            var proc = Process.Start(new ProcessStartInfo
             {
                 FileName  = "cmd.exe",
                 Arguments = "/c rd /s /q %systemdrive%\\$Recycle.Bin 2>nul",
-                WindowStyle              = System.Diagnostics.ProcessWindowStyle.Hidden,
+                WindowStyle              = ProcessWindowStyle.Hidden,
                 CreateNoWindow           = true,
                 UseShellExecute          = false,
             });
             proc?.WaitForExit(5000);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            log.LogWarning(ex, "Falha ao esvaziar a Lixeira");
+        }
         return 0;
     }
 
-    private static long LimparEventLogs()
+    private static long LimparEventLogs(ILogger log)
     {
         try
         {
-            var proc = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            var proc = Process.Start(new ProcessStartInfo
             {
                 FileName  = "wevtutil.exe",
                 Arguments = "cl System",
-                WindowStyle    = System.Diagnostics.ProcessWindowStyle.Hidden,
+                WindowStyle    = ProcessWindowStyle.Hidden,
                 CreateNoWindow = true,
                 UseShellExecute = false,
             });
             proc?.WaitForExit(5000);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            log.LogWarning(ex, "Falha ao limpar o Event Log 'System'");
+        }
         return 0;
     }
 
     private static void LimparDns()
     {
-        var proc = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        var proc = Process.Start(new ProcessStartInfo
         {
             FileName  = "ipconfig.exe",
             Arguments = "/flushdns",
-            WindowStyle    = System.Diagnostics.ProcessWindowStyle.Hidden,
+            WindowStyle    = ProcessWindowStyle.Hidden,
             CreateNoWindow = true,
             UseShellExecute = false,
         });
@@ -161,7 +181,7 @@ public static class GerenciadorLimpeza
 
     // ── Scan de tamanho ──────────────────────────────────────────────────────
 
-    private static CategoriaLimpeza EscanearCategoria(string nome, string id, List<string> pastas)
+    private static CategoriaLimpeza EscanearCategoria(string nome, string id, List<string> pastas, ILogger log)
     {
         long bytes = 0;
         foreach (var pasta in pastas)
@@ -169,23 +189,19 @@ public static class GerenciadorLimpeza
             if (!Directory.Exists(pasta)) continue;
             try
             {
+                int falhas = 0;
                 foreach (var f in Directory.EnumerateFiles(pasta, "*", SearchOption.AllDirectories))
                 {
-                    try { bytes += new FileInfo(f).Length; } catch { }
+                    try { bytes += new FileInfo(f).Length; }
+                    catch { falhas++; }
                 }
+                if (falhas > 0)
+                    log.LogTrace("Falha ao ler tamanho de {Falhas} arquivo(s) em '{Pasta}' (categoria '{Categoria}')", falhas, pasta, id);
             }
-            catch { }
-        }
-
-        // Lixeira e DNS não têm pasta — reportar estimativa
-        if (id == "lixeira")
-        {
-            try
+            catch (Exception ex)
             {
-                var lixeiraDrive = new DriveInfo(Path.GetPathRoot(Environment.SystemDirectory)!);
-                // GetFolderSize via shell não disponível facilmente — reportar 0 (será limpo mesmo assim)
+                log.LogTrace(ex, "Falha ao escanear tamanho da pasta '{Pasta}' (categoria '{Categoria}')", pasta, id);
             }
-            catch { }
         }
 
         return new CategoriaLimpeza(id, nome, bytes);

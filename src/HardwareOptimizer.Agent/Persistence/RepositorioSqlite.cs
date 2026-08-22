@@ -180,10 +180,17 @@ public sealed class RepositorioSqlite : IRepositorioOtimizacao
 
     private async Task<long> ContarAsync(string tabela, CancellationToken cancellationToken)
     {
-        // 'tabela' provém apenas de chamadas internas com nomes fixos (sem entrada do usuário).
+        var commandText = tabela switch
+        {
+            "inventarios"    => "SELECT COUNT(*) FROM inventarios;",
+            "consentimentos" => "SELECT COUNT(*) FROM consentimentos;",
+            "execucoes"      => "SELECT COUNT(*) FROM execucoes;",
+            _ => throw new ArgumentOutOfRangeException(nameof(tabela), tabela, "Tabela não mapeada em ContarAsync."),
+        };
+
         await using var conexao = await AbrirAsync(cancellationToken).ConfigureAwait(false);
         await using var comando = conexao.CreateCommand();
-        comando.CommandText = $"SELECT COUNT(*) FROM {tabela};";
+        comando.CommandText = commandText;
         return Convert.ToInt64(await comando.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
     }
 

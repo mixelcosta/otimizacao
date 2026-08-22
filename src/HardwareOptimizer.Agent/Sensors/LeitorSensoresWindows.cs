@@ -188,8 +188,8 @@ $out | ConvertTo-Json -Depth 3 -Compress";
             var saida = proc.StandardOutput.ReadToEnd();
             return proc.WaitForExit(25_000) ? saida.Trim() : null;
         }
-        catch (Win32Exception) { return null; }
-        catch (InvalidOperationException) { return null; }
-        catch (IOException) { return null; }
+        catch (Win32Exception ex) { _log.LogWarning(ex, "Leitor WMI: falha ao iniciar powershell.exe."); return null; }
+        catch (InvalidOperationException ex) { _log.LogWarning(ex, "Leitor WMI: falha ao gerenciar o processo powershell.exe."); return null; }
+        catch (IOException ex) { _log.LogWarning(ex, "Leitor WMI: falha ao ler a saída do powershell.exe."); return null; }
     }
 }
