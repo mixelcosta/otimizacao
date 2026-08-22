@@ -35,7 +35,17 @@ public sealed record IdentificacaoBios
     public static IdentificacaoBios DeInventario(Inventario inventario)
     {
         ArgumentNullException.ThrowIfNull(inventario);
-        var placa = inventario.Placa;
+        return DeInventario(inventario.Placa);
+    }
+
+    /// <summary>
+    /// Overload que recebe só <see cref="PlacaMae"/> (sem o <see cref="Inventario"/>
+    /// inteiro) — necessário para consumidores que só têm a placa já coletada em
+    /// mãos, como o handler IPC "verificarbios" (spec-1-4).
+    /// </summary>
+    public static IdentificacaoBios DeInventario(PlacaMae placa)
+    {
+        ArgumentNullException.ThrowIfNull(placa);
 
         return new IdentificacaoBios
         {

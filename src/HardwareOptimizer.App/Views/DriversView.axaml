@@ -279,6 +279,105 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
 
+        <!-- ── BIOS desatualizada ── -->
+        <StackPanel IsVisible="{Binding TemBiosDesatualizada}" Spacing="8" Margin="4,24,4,0">
+
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Border Width="3" Height="16" Background="#00C8FF" CornerRadius="2"
+                    VerticalAlignment="Center" />
+            <TextBlock Text="BIOS DESATUALIZADA" FontSize="13" FontWeight="Bold"
+                       Foreground="#484865" LetterSpacing="3"
+                       VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Text="Comparação com catálogo oficial — apenas leitura, o app nunca grava a BIOS"
+                     Foreground="#282840" FontSize="11" Margin="13,0,0,0" />
+
+          <Border CornerRadius="8"
+                  BorderBrush="#1E1E3C" BorderThickness="1"
+                  Padding="14,10" Margin="0,8,0,0">
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Color="#0C0C1E" Offset="0" />
+                <GradientStop Color="#09091A" Offset="1" />
+              </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                <TextBlock Foreground="#E0E0F2" FontSize="13" FontWeight="SemiBold">
+                  <Run Text="{Binding InfoBiosAtual.Fabricante}" />
+                  <Run Text=" " />
+                  <Run Text="{Binding InfoBiosAtual.Modelo}" />
+                </TextBlock>
+                <TextBlock FontSize="11" FontFamily="Consolas,Courier New,monospace">
+                  <Run Text="Atual: " Foreground="#282840" />
+                  <Run Text="{Binding InfoBiosAtual.VersaoAtual}" Foreground="#484865" />
+                  <Run Text="   →   Oficial: " Foreground="#282840" />
+                  <Run Text="{Binding InfoBiosAtual.VersaoDisponivel}" Foreground="#00C8FF" />
+                </TextBlock>
+              </StackPanel>
+
+              <Button Grid.Column="1" Content="ver orientação"
+                      Command="{Binding AbrirConfirmacaoBiosCommand}"
+                      Background="#09091A" Foreground="#484865"
+                      BorderBrush="#1E1E3C" BorderThickness="1"
+                      Padding="10,5" CornerRadius="5"
+                      FontSize="11" FontWeight="SemiBold"
+                      VerticalAlignment="Center"
+                      Cursor="Hand" />
+            </Grid>
+          </Border>
+
+          <!-- Confirmation Panel de BIOS — aparece toda vez que o usuário clica em
+               "ver orientação", nunca "não mostrar de novo" (Boundaries §Always) -->
+          <controls:ConfirmationPanel
+              IsVisible="{Binding PainelConfirmacaoBiosAberto}"
+              Severidade="Bios"
+              Mensagem="{Binding MensagemConfirmacaoBios}"
+              PodeConfirmar="{Binding ConfirmadoBios}"
+              ConfirmarCommand="{Binding VerGuiaBiosCommand}" />
+
+          <!-- Guia passo a passo — revelado só após a confirmação de risco -->
+          <Border CornerRadius="8"
+                  BorderBrush="#1E1E3C" BorderThickness="1"
+                  Padding="14,12"
+                  IsVisible="{Binding GuiaBiosVisivel}">
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Color="#0C0C1E" Offset="0" />
+                <GradientStop Color="#09091A" Offset="1" />
+              </LinearGradientBrush>
+            </Border.Background>
+
+            <StackPanel Spacing="10">
+              <TextBlock Text="GUIA DE ATUALIZAÇÃO" FontSize="11" FontWeight="Bold"
+                         Foreground="#484865" LetterSpacing="1.5" />
+
+              <ItemsControl ItemsSource="{Binding InfoBiosAtual.Passos}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="x:String">
+                    <TextBlock Text="{Binding}" Foreground="#E0E0F2" FontSize="12"
+                               TextWrapping="Wrap" Margin="0,0,0,6" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <TextBlock Text="AVISOS" FontSize="11" FontWeight="Bold"
+                         Foreground="#CC3333" LetterSpacing="1.5" Margin="0,6,0,0" />
+
+              <ItemsControl ItemsSource="{Binding InfoBiosAtual.Avisos}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="x:String">
+                    <TextBlock Text="{Binding}" Foreground="#FFAA00" FontSize="11"
+                               TextWrapping="Wrap" Margin="0,0,0,4" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </Border>
+
+        </StackPanel>
+
       </StackPanel>
     </ScrollViewer>
 

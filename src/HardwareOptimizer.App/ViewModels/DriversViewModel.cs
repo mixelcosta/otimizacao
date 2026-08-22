@@ -13,6 +13,7 @@ public partial class DriversViewModel : ObservableObject
     private readonly IRoteadorIpc? _agente;
     private IReadOnlyList<InfoDriver> _todosDrivers = [];
     private IReadOnlyList<ProgramaInstalado> _programasInstalados = [];
+    private PlacaMae? _placaMae;
 
     public DriversViewModel(IRoteadorIpc? agente = null)
     {
@@ -35,6 +36,19 @@ public partial class DriversViewModel : ObservableObject
     [ObservableProperty] private bool _verificandoSoftware;
     [ObservableProperty] private string _statusTextSoftware = "Execute o SCAN para verificar software desatualizado.";
     [ObservableProperty] private bool _temResultadosSoftware;
+
+    // ── BIOS desatualizada (spec-1-4) ────────────────────────────────────────
+    [ObservableProperty] private bool _verificandoBios;
+    [ObservableProperty] private InfoBios? _infoBiosAtual;
+    [ObservableProperty] private bool _temBiosDesatualizada;
+
+    // ── Estado do Confirmation Panel de BIOS — espelhado e independente do de
+    // driver (Boundaries: não generaliza o estado existente, evita risco em
+    // fluxo já testado). ───────────────────────────────────────────────────
+    [ObservableProperty] private bool _painelConfirmacaoBiosAberto;
+    [ObservableProperty] private bool _confirmadoBios;
+    [ObservableProperty] private string _mensagemConfirmacaoBios = string.Empty;
+    [ObservableProperty] private bool _guiaBiosVisivel;
 
     // ── Estado do Confirmation Panel ────────────────────────────────────────
     [ObservableProperty] private InfoDriverViewModel? _driverSelecionado;
@@ -77,6 +91,19 @@ public partial class DriversViewModel : ObservableObject
     public void PopularProgramas(IReadOnlyList<ProgramaInstalado> programas)
     {
         _programasInstalados = programas;
+    }
+
+    /// <summary>
+    /// Guarda a placa-mãe já coletada no SCAN inicial (<c>Inventario.Placa</c>,
+    /// mesmo padrão de <see cref="PopularProgramas"/> da Story 1.3 — nenhum
+    /// coletor novo, Boundaries §Never) e dispara a verificação de BIOS
+    /// desatualizada em segundo plano (mesmo padrão de
+    /// <c>OtimizadorWindowsViewModel.PreAquecer</c>).
+    /// </summary>
+    public void PopularBios(PlacaMae placa)
+    {
+        _placaMae = placa;
+        _ = VerificarBiosAsync();
     }
 
     private void AplicarFiltro()
@@ -294,6 +321,69 @@ public partial class DriversViewModel : ObservableObject
         if (string.IsNullOrEmpty(software?.UrlDownload)) return;
         System.Diagnostics.Process.Start(
             new System.Diagnostics.ProcessStartInfo(software.UrlDownload) { UseShellExecute = true });
+    }
+
+    /// <summary>
+    /// Verifica BIOS desatualizada via <c>verificarbios</c> (IProvedorFonteOficial
+    /// por trás do IPC, mesma fronteira de driver/software) — sem cobertura no
+    /// catálogo ou já atualizada nunca aparece (guard anti-alucinação, I/O Matrix
+    /// da spec-1-4).
+    /// </summary>
+    [RelayCommand]
+    private async Task VerificarBiosAsync()
+    {
+        if (_agente is null || _placaMae is null || VerificandoBios) return;
+
+        VerificandoBios = true;
+        try
+        {
+            // ProtocoloIpc.Json (camelCase) — mesmo motivo do payload de
+            // verificarsoftware: sem ele, "Fabricante"/"Modelo" (PascalCase) de
+            // PlacaMae não bateria com a leitura camelCase do lado servidor.
+            var payload = JsonSerializer.SerializeToElement(new { placa = _placaMae }, ProtocoloIpc.Json);
+            var resp = await _agente.TratarAsync(
+                new RequisicaoIpc { Metodo = "verificarbios", Parametros = payload });
+
+            InfoBiosAtual = resp.Sucesso ? resp.Resultado as InfoBios : null;
+            TemBiosDesatualizada = InfoBiosAtual is not null;
+        }
+        finally
+        {
+            VerificandoBios = false;
+        }
+    }
+
+    /// <summary>
+    /// Abre o Confirmation Panel de BIOS (severidade <c>Bios</c>) — aparece toda
+    /// vez que o usuário opta por ver a orientação, mesmo que já tenha visto
+    /// antes nesta sessão (Boundaries §Always da spec-1-4): sempre reseta
+    /// <see cref="ConfirmadoBios"/> e <see cref="GuiaBiosVisivel"/>.
+    /// </summary>
+    [RelayCommand]
+    private void AbrirConfirmacaoBios()
+    {
+        if (InfoBiosAtual is null) return;
+
+        PainelConfirmacaoBiosAberto = true;
+        ConfirmadoBios = false;
+        GuiaBiosVisivel = false;
+        MensagemConfirmacaoBios =
+            $"Atualizar a BIOS de \"{InfoBiosAtual.Fabricante} {InfoBiosAtual.Modelo}\" é uma operação de risco: " +
+            "a interrupção durante a gravação pode comprometer a placa-mãe. Se você não tem experiência com " +
+            "esse procedimento, recomendamos que um profissional qualificado realize a atualização. " +
+            "O app nunca executa a gravação — apenas mostra o guia passo a passo do fabricante.";
+    }
+
+    /// <summary>
+    /// Ligado ao <c>ConfirmarCommand</c> do <c>ConfirmationPanel</c> de BIOS — só
+    /// revela o guia já carregado (montado por <c>GeradorGuiaBios</c> dentro de
+    /// <see cref="InfoBiosAtual"/>). Nenhuma chamada de sistema/IPC é feita aqui —
+    /// o app nunca executa a gravação da BIOS (Boundaries §Never da spec-1-4).
+    /// </summary>
+    [RelayCommand]
+    private void VerGuiaBios()
+    {
+        GuiaBiosVisivel = true;
     }
 
     [RelayCommand]

@@ -296,6 +296,92 @@ public sealed class IpcTests
         Assert.Equal("21.07", item.VersaoAtual);
     }
 
+    // ---- verificarbios -----------------------------------------------------------
+    // Cobre "conecta o fluxo real" da spec-1-4-bios-alerta-risco: o roteador de
+    // fato monta VerificadorBios + ProvedorFonteOficialBios + BancoCuradoBios
+    // (catálogo embarcado real), não um fake.
+
+    [Fact]
+    public async Task VerificarBios_SemParametros_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("verificarbios"));
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    [Fact]
+    public async Task VerificarBios_PlacaDoCatalogoComVersaoAntiga_RetornaAlertaComGuia()
+    {
+        var r = await Roteador().TratarAsync(Req("verificarbios", new
+        {
+            placa = new { fabricante = "ASUS", modelo = "ROG Strix B550-F", versaoBios = "2806" },
+        }));
+
+        Assert.True(r.Sucesso);
+        var info = Assert.IsType<InfoBios>(r.Resultado);
+        Assert.Equal("ASUS", info.Fabricante);
+        Assert.Equal("2806", info.VersaoAtual);
+        Assert.False(string.IsNullOrEmpty(info.VersaoDisponivel));
+        Assert.False(string.IsNullOrEmpty(info.TeclaSetup));
+        Assert.False(string.IsNullOrEmpty(info.Utilitario));
+        Assert.NotEmpty(info.Passos);
+        Assert.NotEmpty(info.Avisos);
+    }
+
+    [Fact]
+    public async Task VerificarBios_PlacaComVersaoJaAtualizada_RetornaNullSemAlerta()
+    {
+        var r = await Roteador().TratarAsync(Req("verificarbios", new
+        {
+            placa = new { fabricante = "ASUS", modelo = "ROG Strix B550-F", versaoBios = "3405" },
+        }));
+
+        Assert.True(r.Sucesso);
+        Assert.Null(r.Resultado);
+    }
+
+    [Fact]
+    public async Task VerificarBios_PlacaSemCoberturaNoCatalogo_RetornaNullSemAlerta()
+    {
+        var r = await Roteador().TratarAsync(Req("verificarbios", new
+        {
+            placa = new { fabricante = "Placa Desconhecida XYZ", modelo = "Modelo Qualquer", versaoBios = "1.0" },
+        }));
+
+        Assert.True(r.Sucesso);
+        Assert.Null(r.Resultado);
+    }
+
+    [Fact]
+    public async Task VerificarBios_ParametroPlacaAusente_RetornaFalha()
+    {
+        var r = await Roteador().TratarAsync(Req("verificarbios", new { outraCoisa = "x" }));
+        Assert.False(r.Sucesso);
+        Assert.NotNull(r.Erro);
+    }
+
+    /// <summary>
+    /// Mesma regressão de casing coberta para "verificarsoftware": serializa uma
+    /// <see cref="PlacaMae"/> real (propriedades PascalCase em C#) usando
+    /// exatamente <see cref="ProtocoloIpc.Json"/> — o mesmo codec e o mesmo shape
+    /// de payload (<c>new { placa = ... }</c>) que
+    /// <c>DriversViewModel.VerificarBiosAsync</c> usa em produção.
+    /// </summary>
+    [Fact]
+    public async Task VerificarBios_PayloadSerializadoComProtocoloIpcJson_RoundTripCorreto()
+    {
+        var placa = new PlacaMae { Fabricante = "ASUS", Modelo = "ROG Strix B550-F", VersaoBios = "2806" };
+        var parametros = JsonSerializer.SerializeToElement(new { placa }, ProtocoloIpc.Json);
+        var req = new RequisicaoIpc { Metodo = "verificarbios", Parametros = parametros };
+
+        var r = await Roteador().TratarAsync(req);
+
+        Assert.True(r.Sucesso);
+        var info = Assert.IsType<InfoBios>(r.Resultado);
+        Assert.Equal("ASUS", info.Fabricante);
+        Assert.Equal("2806", info.VersaoAtual);
+    }
+
     // ---- analisarbiosfoto -------------------------------------------------------
 
     [Fact]

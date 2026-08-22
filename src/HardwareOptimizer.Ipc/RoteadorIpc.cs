@@ -19,6 +19,7 @@ using HardwareOptimizer.Agent.Features;
 using HardwareOptimizer.Agent.VisualEffects;
 using HardwareOptimizer.Cerebro;
 using HardwareOptimizer.Cerebro.Visao;
+using HardwareOptimizer.Core.Bios;
 using HardwareOptimizer.Core.Catalog;
 using HardwareOptimizer.Core.Contracts;
 using HardwareOptimizer.Core.Privacy;
@@ -99,6 +100,7 @@ public sealed class RoteadorIpc : IRoteadorIpc
                     ? await ReverterAtualizacaoDriverAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
                 "verificarsoftware" => await VerificarSoftwareAsync(requisicao, cancellationToken).ConfigureAwait(false),
+                "verificarbios" => await VerificarBiosAsync(requisicao, cancellationToken).ConfigureAwait(false),
                 "desinstalarprogramas" => OperatingSystem.IsWindows()
                     ? await DesinstalarProgramasAsync(requisicao, cancellationToken).ConfigureAwait(false)
                     : RespostaIpc.Falha(requisicao.Id, "Requer Windows."),
@@ -575,6 +577,40 @@ public sealed class RoteadorIpc : IRoteadorIpc
             NullLogger<VerificadorSoftware>.Instance);
 
         var resultado = await verificador.VerificarAsync(programas, ct).ConfigureAwait(false);
+        return RespostaIpc.Ok(req.Id, resultado);
+    }
+
+    /// <summary>
+    /// Verifica BIOS desatualizada via <see cref="VerificadorBios"/> — ponto único
+    /// de comparação de versão de BIOS através de <see cref="ProvedorFonteOficialBios"/>
+    /// (Boundaries §Always/§Never da spec-1-4: nunca acesso direto ao
+    /// <see cref="BancoCuradoBios"/> fora dessa fronteira). Assim como
+    /// "verificarsoftware", não é gated por <see cref="OperatingSystem.IsWindows"/>
+    /// — só compara o dado de placa-mãe já coletado contra o catálogo estático.
+    /// </summary>
+    private static async Task<RespostaIpc> VerificarBiosAsync(RequisicaoIpc req, CancellationToken ct)
+    {
+        if (req.Parametros is not { } p
+            || !p.TryGetProperty("placa", out var placaEl)
+            || placaEl.ValueKind != JsonValueKind.Object)
+            return RespostaIpc.Falha(req.Id, "Parâmetro 'placa' obrigatório.");
+
+        PlacaMae placa;
+        try
+        {
+            placa = JsonSerializer.Deserialize<PlacaMae>(placaEl.GetRawText(), ProtocoloIpc.Json)
+                ?? throw new JsonException("Parâmetro 'placa' inválido.");
+        }
+        catch (JsonException ex)
+        {
+            return RespostaIpc.Falha(req.Id, $"Parâmetro 'placa' inválido: {ex.Message}");
+        }
+
+        var verificador = new VerificadorBios(
+            new ProvedorFonteOficialBios(new BancoCuradoBios()),
+            NullLogger<VerificadorBios>.Instance);
+
+        var resultado = await verificador.VerificarAsync(placa, ct).ConfigureAwait(false);
         return RespostaIpc.Ok(req.Id, resultado);
     }
 

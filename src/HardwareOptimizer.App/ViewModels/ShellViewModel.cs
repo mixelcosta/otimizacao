@@ -42,6 +42,7 @@ public partial class ShellViewModel : ObservableObject, IDisposable
                 VidaUtil.Popular(inv.SaudeDiscos);
                 Drivers.Popular(inv.Drivers);
                 Drivers.PopularProgramas(inv.ProgramasInstalados);
+                Drivers.PopularBios(inv.Placa);
                 BiosGuide.Popular(inv);
                 ScanConcluido = true;
                 OnPropertyChanged(nameof(TemAlertaBios));
