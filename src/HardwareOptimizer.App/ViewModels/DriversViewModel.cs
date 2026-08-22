@@ -291,7 +291,7 @@ public partial class DriversViewModel : ObservableObject
     [RelayCommand]
     private void AbrirDownloadSoftware(InfoSoftwareViewModel? software)
     {
-        if (software?.UrlDownload is null) return;
+        if (string.IsNullOrEmpty(software?.UrlDownload)) return;
         System.Diagnostics.Process.Start(
             new System.Diagnostics.ProcessStartInfo(software.UrlDownload) { UseShellExecute = true });
     }

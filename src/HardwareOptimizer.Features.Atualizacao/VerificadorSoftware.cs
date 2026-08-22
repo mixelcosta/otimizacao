@@ -37,11 +37,11 @@ public sealed class VerificadorSoftware
             ct.ThrowIfCancellationRequested();
             try
             {
-                if (string.IsNullOrEmpty(programa.Versao))
+                if (string.IsNullOrWhiteSpace(programa.Versao))
                     continue; // versão instalada não lida — não afirmar desatualização sem essa base (guard anti-alucinação)
 
                 var oficial = await _provedor.ConsultarAsync(programa.Nome, ct).ConfigureAwait(false);
-                if (oficial is null || string.IsNullOrEmpty(oficial.VersaoDisponivel))
+                if (oficial is null || string.IsNullOrWhiteSpace(oficial.VersaoDisponivel))
                     continue; // sem cobertura — nunca aparece com dado inventado
 
                 bool desatualizado = oficial.VersaoDisponivel != programa.Versao;
@@ -56,6 +56,10 @@ public sealed class VerificadorSoftware
                     UrlDownload = oficial.UrlDownload,
                     Status = StatusSoftware.AtualizacaoDisponivel,
                 });
+            }
+            catch (OperationCanceledException)
+            {
+                throw; // cancelamento nunca é "falha do provedor" — deve propagar, não ser tratado como sem cobertura
             }
             catch (Exception ex)
             {

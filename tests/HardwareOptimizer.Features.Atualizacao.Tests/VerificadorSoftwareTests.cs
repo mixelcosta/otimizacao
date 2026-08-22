@@ -11,7 +11,7 @@ public class VerificadorSoftwareTests
         new(provedor, NullLogger<VerificadorSoftware>.Instance);
 
     [Fact]
-    public async Task VerificarAsync_SoftwareDesatualizado_AparecComVersaoAtualEOficial()
+    public async Task VerificarAsync_SoftwareDesatualizado_ApareceComVersaoAtualEOficial()
     {
         var provedor = new ProvedorFake(new Dictionary<string, InfoFonteOficial>
         {
@@ -134,10 +134,59 @@ public class VerificadorSoftwareTests
         Assert.Empty(resultado);
     }
 
+    [Fact]
+    public async Task VerificarAsync_VersaoInstaladaSomenteEspacos_NaoAparece()
+    {
+        var provedor = new ProvedorFake(new Dictionary<string, InfoFonteOficial>
+        {
+            ["Programa Y"] = new InfoFonteOficial { VersaoDisponivel = "9.9" },
+        });
+        var verificador = Criar(provedor);
+
+        var resultado = await verificador.VerificarAsync([
+            new ProgramaInstalado { Nome = "Programa Y", Versao = "   " },
+        ]);
+
+        Assert.Empty(resultado);
+    }
+
+    [Fact]
+    public async Task VerificarAsync_ProvedorRetornaVersaoSomenteEspacos_TratadoComoSemCobertura()
+    {
+        var provedor = new ProvedorFake(new Dictionary<string, InfoFonteOficial>
+        {
+            ["Programa Z"] = new InfoFonteOficial { VersaoDisponivel = "   " },
+        });
+        var verificador = Criar(provedor);
+
+        var resultado = await verificador.VerificarAsync([
+            new ProgramaInstalado { Nome = "Programa Z", Versao = "1.0" },
+        ]);
+
+        Assert.Empty(resultado);
+    }
+
+    [Fact]
+    public async Task VerificarAsync_CancelamentoDoProvedor_Propaga()
+    {
+        var verificador = Criar(new ProvedorComCancelamento());
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            verificador.VerificarAsync([
+                new ProgramaInstalado { Nome = "Qualquer Programa", Versao = "1.0" },
+            ]));
+    }
+
     private sealed class ProvedorFake(IReadOnlyDictionary<string, InfoFonteOficial> catalogo) : IProvedorFonteOficial
     {
         public Task<InfoFonteOficial?> ConsultarAsync(string identificador, CancellationToken ct = default) =>
             Task.FromResult(catalogo.TryGetValue(identificador, out var info) ? info : null);
+    }
+
+    private sealed class ProvedorComCancelamento : IProvedorFonteOficial
+    {
+        public Task<InfoFonteOficial?> ConsultarAsync(string identificador, CancellationToken ct = default) =>
+            throw new OperationCanceledException();
     }
 
     private sealed class ProvedorComErro : IProvedorFonteOficial
