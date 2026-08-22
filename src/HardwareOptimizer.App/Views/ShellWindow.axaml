@@ -183,19 +183,13 @@
             </Rectangle>
           </Grid>
 
-          <!-- UPGRADE -->
-          <Button Classes="nav-premium"
+          <!-- UPGRADE — Trilha Grátis: ver a recomendação é livre, só a compra
+               (comissão de loja) é monetizada (EXPERIENCE.md, decisão [ADOPTED]) -->
+          <Button Classes="nav"
                   Classes.ativo="{Binding PaginaEhUpgrade}"
-                  Command="{Binding IrParaUpgradeCommand}"
-                  IsVisible="{Binding EhPremium}">
+                  Command="{Binding IrParaUpgradeCommand}">
             <StackPanel Orientation="Horizontal" Spacing="12">
               <TextBlock Text="▲" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Text="UPGRADE" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
-          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
               <TextBlock Text="UPGRADE" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
@@ -217,28 +211,20 @@
             </StackPanel>
           </Button>
 
-          <!-- Drivers -->
-          <Button Classes="nav-premium"
+          <!-- Drivers — Núcleo de Atualização é Trilha Grátis (EXPERIENCE.md, [ADOPTED]) -->
+          <Button Classes="nav"
                   Classes.ativo="{Binding PaginaEhDrivers}"
-                  Command="{Binding IrParaDriversCommand}"
-                  IsVisible="{Binding EhPremium}">
+                  Command="{Binding IrParaDriversCommand}">
             <StackPanel Orientation="Horizontal" Spacing="12">
               <TextBlock Text="≡" FontSize="14" VerticalAlignment="Center" />
               <TextBlock Text="Drivers" VerticalAlignment="Center" />
             </StackPanel>
           </Button>
-          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Text="Drivers" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
 
-          <!-- Guia BIOS IA -->
-          <Button Classes="nav-premium"
+          <!-- Guia BIOS IA — Trilha Grátis (EXPERIENCE.md, [ADOPTED]) -->
+          <Button Classes="nav"
                   Classes.ativo="{Binding PaginaEhBiosGuide}"
-                  Command="{Binding IrParaBiosGuideCommand}"
-                  IsVisible="{Binding EhPremium}">
+                  Command="{Binding IrParaBiosGuideCommand}">
             <Grid ColumnDefinitions="*,Auto">
               <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
                 <TextBlock Text="▸" FontSize="13" VerticalAlignment="Center" />
@@ -251,27 +237,16 @@
               </Border>
             </Grid>
           </Button>
-          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
-              <TextBlock Text="Guia BIOS IA" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
 
-          <!-- Diagnóstico de Manutenção — gated por FuncionalidadePremium.DiagnosticoManutencao
-               (corrigido na revisão da spec-2-1: mesmo padrão dos 4 módulos premium acima) -->
-          <Button Classes="nav-premium"
+          <!-- Diagnóstico de Manutenção — Trilha Grátis (PRD; EXPERIENCE.md [ADOPTED]
+               cobre o mesmo raciocínio pras outras telas de Trilha Grátis). Gate
+               Premium removido — a versão anterior (Story 1.4/spec-2-1) estava
+               errada, corrigida via bmad-correct-course em 2026-08-22. -->
+          <Button Classes="nav"
                   Classes.ativo="{Binding PaginaEhDiagnosticoManutencao}"
-                  Command="{Binding IrParaDiagnosticoManutencaoCommand}"
-                  IsVisible="{Binding EhPremium}">
+                  Command="{Binding IrParaDiagnosticoManutencaoCommand}">
             <StackPanel Orientation="Horizontal" Spacing="12">
               <TextBlock Text="⚕" FontSize="12" VerticalAlignment="Center" />
-              <TextBlock Text="Manutenção" VerticalAlignment="Center" />
-            </StackPanel>
-          </Button>
-          <Button Classes="nav-locked" IsVisible="{Binding !EhPremium}">
-            <StackPanel Orientation="Horizontal" Spacing="12">
-              <TextBlock Text="○" FontSize="11" VerticalAlignment="Center" />
               <TextBlock Text="Manutenção" VerticalAlignment="Center" />
             </StackPanel>
           </Button>

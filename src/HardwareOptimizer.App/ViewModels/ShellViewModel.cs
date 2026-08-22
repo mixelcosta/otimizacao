@@ -142,10 +142,15 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// Trilha Grátis (EXPERIENCE.md, decisão [ADOPTED]) — ver a Vitrine é livre,
+    /// só a compra em si (comissão de loja parceira) é monetizada. Gate Premium
+    /// removido em 2026-08-22 via bmad-correct-course (estava incorretamente
+    /// gated desde antes desta sessão).
+    /// </summary>
     [RelayCommand]
     private void IrParaUpgrade()
     {
-        if (!_licenca.TemAcesso(FuncionalidadePremium.ModuloUpgrade)) return;
         PaginaAtual = Upgrade;
         Dispatcher.UIThread.Post(async () => await Upgrade.AtivarAsync(),
             Avalonia.Threading.DispatcherPriority.Background);
@@ -158,32 +163,26 @@ public partial class ShellViewModel : ObservableObject, IDisposable
         PaginaAtual = VidaUtil;
     }
 
-    [RelayCommand]
-    private void IrParaDrivers()
-    {
-        if (!_licenca.TemAcesso(FuncionalidadePremium.GerenciadorDrivers)) return;
-        PaginaAtual = Drivers;
-    }
-
-    [RelayCommand]
-    private void IrParaBiosGuide()
-    {
-        if (!_licenca.TemAcesso(FuncionalidadePremium.GuiaBiosIa)) return;
-        PaginaAtual = BiosGuide;
-    }
-
     /// <summary>
-    /// Gate de <see cref="FuncionalidadePremium.DiagnosticoManutencao"/> — corrigido
-    /// na revisão da spec-2-1: os 4 módulos premium existentes (Upgrade, Vida Útil,
-    /// Drivers, Guia BIOS IA) são todos, sem exceção, gated por
-    /// <see cref="IServicoLicenca.TemAcesso"/>, mesmo padrão aplicado aqui.
+    /// Núcleo de Atualização é Trilha Grátis (EXPERIENCE.md, [ADOPTED]). Gate
+    /// Premium removido em 2026-08-22 via bmad-correct-course.
     /// </summary>
     [RelayCommand]
-    private void IrParaDiagnosticoManutencao()
-    {
-        if (!_licenca.TemAcesso(FuncionalidadePremium.DiagnosticoManutencao)) return;
-        PaginaAtual = DiagnosticoManutencao;
-    }
+    private void IrParaDrivers() => PaginaAtual = Drivers;
+
+    /// <summary>Trilha Grátis (EXPERIENCE.md, [ADOPTED]). Gate Premium removido
+    /// em 2026-08-22 via bmad-correct-course.</summary>
+    [RelayCommand]
+    private void IrParaBiosGuide() => PaginaAtual = BiosGuide;
+
+    /// <summary>
+    /// Diagnóstico de Manutenção é Trilha Grátis (PRD) — o gate Premium
+    /// adicionado na Story 2.1 (spec-2-1) estava errado, contrariando a decisão
+    /// [ADOPTED] do EXPERIENCE.md pras demais telas de Trilha Grátis. Corrigido
+    /// em 2026-08-22 via bmad-correct-course.
+    /// </summary>
+    [RelayCommand]
+    private void IrParaDiagnosticoManutencao() => PaginaAtual = DiagnosticoManutencao;
 
     [RelayCommand]
     private void IrParaConfiguracoes() => PaginaAtual = Configuracoes;
